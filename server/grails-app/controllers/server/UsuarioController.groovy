@@ -95,9 +95,13 @@ class UsuarioController {
 		if(params.facebookId != null){
 			def user = Usuario.findByFacebookId(params.facebookId)
 			if(user != null ){
-				user.generarToken()
-				user.save(flush:true)
-				respond user
+				if(user.activo){
+					user.generarToken()
+					user.save(flush:true)
+					respond user
+				} else {
+					render status: 401
+				}
 			} else {
 				notFound()
 			}
