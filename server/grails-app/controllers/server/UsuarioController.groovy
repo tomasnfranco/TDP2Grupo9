@@ -31,7 +31,7 @@ class UsuarioController {
             return
         }
 		usuarioInstance.activo = true;
-
+		usuarioInstance.generarToken()
         usuarioInstance.save flush:true
 
         request.withFormat {
@@ -95,7 +95,8 @@ class UsuarioController {
 		if(params.facebookId != null){
 			def user = Usuario.findByFacebookId(params.facebookId)
 			if(user != null ){
-				user.token = 123456789
+				user.generarToken()
+				user.save(flush:true)
 				respond user
 			} else {
 				notFound()

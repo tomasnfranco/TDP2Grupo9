@@ -1,5 +1,7 @@
 package server
+import groovy.transform.ToString
 
+@ToString(includeNames = true, includeFields = true, excludes = 'metaClass,class',ignoreNulls=true)
 class Usuario {
 	String username
 	String email
@@ -7,11 +9,11 @@ class Usuario {
 	long facebookId
 	String telefono
 	String direccion
-	long latitud
-	long longitud
+	long latitud = 0
+	long longitud = 0
 	boolean autoPublicar
-	boolean activo
-	long token
+	boolean activo = true
+	String token = ""
 	
     static constraints = {
 		username(nullable: true, blank:true)
@@ -32,5 +34,16 @@ class Usuario {
 				}
 			}
 		}
+		token (blank:true, nullable:true)
     }
+	
+	def generator = { String alphabet, int n ->
+	  new Random().with {
+		(1..n).collect { alphabet[ nextInt( alphabet.length() ) ] }.join()
+	  }
+	}
+
+	def generarToken = {
+		token = generator( (('A'..'Z')+('0'..'9')).join(), 15 )
+	}
 }
