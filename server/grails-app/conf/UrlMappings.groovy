@@ -1,16 +1,19 @@
 class UrlMappings {
 
 	static mappings = {
-		"/api/$controller/$id"{
+		"/api/$controller/$id"(parseRequest:true){
 			format = "json"
-			action = [GET:"show", POST:"save", PUT:"update", DELETE:"remove"]
+			action = [GET:"show", POST:"save", PUT:"update", DELETE:"delete"]
 			constraints {
 				// apply constraints here
 			}
 		}
 		"/api/$controller"{
 			format = "json"
-			action = [GET:"list", POST:"save"]
+			action = [GET:"index", POST:"save"]
+		}
+		"/api/$controller/$action"{
+			format = "json"
 		}
         "/$controller/$action?/$id?(.$format)?"{
             constraints {

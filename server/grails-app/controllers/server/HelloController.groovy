@@ -1,8 +1,10 @@
-package Grupo9server
+package server
 
 class HelloController {
 
-    def index() { }
+    def index() { 
+		render  "{Hello World!}"
+	}
 	
 	def list = {
 		render  "{Hello World!}"
