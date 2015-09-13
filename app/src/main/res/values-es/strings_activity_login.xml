@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_login">Ingresar</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña (opcional)</string>
+    <string name="action_sign_in">Ingresar o registrarse</string>
+    <string name="action_sign_in_short">Ingresar</string>
+    <string name="action_sign_in_facebook">Ingresar con Facebook</string>
+
+    <string name="error_invalid_email">Dirección de correo inválida</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_password">Contraseña incorrecta</string>
+    <string name="error_field_required">Debe completar este campo</string>
+</resources>
