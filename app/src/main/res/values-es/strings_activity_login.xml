@@ -11,4 +11,6 @@
     <string name="error_invalid_password">La contraseña es muy corta</string>
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Debe completar este campo</string>
+
+    <string name="or">O</string>
 </resources>
