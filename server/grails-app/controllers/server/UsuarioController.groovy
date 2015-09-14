@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 
 class UsuarioController {
 	static scaffold = true
-	static allowedMethods= [index:'GET',show:'GET',save:'POST',update:['POST','PUT'],delete:'DELETE',login:'POST']
+	static allowedMethods= [index:'GET',show:'GET',save:'POST',update:['POST','PUT'],delete:'DELETE',login:'POST', logout:['POST','PUT','DELETE']]
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond Usuario.list(params), model:[usuarioInstanceCount: Usuario.count()]
@@ -33,6 +33,10 @@ class UsuarioController {
 		usuarioInstance.activo = true;
 		usuarioInstance.generarToken()
         usuarioInstance.save flush:true
+        if(usuarioInstance.username?.isEmpty()){
+            usuarioInstance.username = 'NEWBIE' + usuarioInstance.id
+            usuarioInstance.save flush:true
+        }
 
         request.withFormat {
             html {
@@ -109,7 +113,18 @@ class UsuarioController {
 			respond status:NOT_FOUND
 		}
 	}
-	
+
+    def logout = {
+        println "Logout $params"
+        def user = Usuario.findByToken(params.token)
+        if (user == null) {
+            notFound()
+            return
+        }
+        user.token = ''
+        user.save flush:true
+        render status:200
+    }
 
     protected void notFound() {
         request.withFormat {

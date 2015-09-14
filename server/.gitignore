@@ -6,3 +6,9 @@
 /build
 /captures
 /target
+.idea/
+server-grailsPlugins.iml
+server.eml
+server.iml
+server.ipr
+server.iws
