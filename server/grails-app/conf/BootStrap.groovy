@@ -46,7 +46,11 @@ class BootStrap {
         new Energia(tipo: 'Enérgico').save()
         new Energia(tipo: 'Adicto a la televisión').save()
         new Energia(tipo: 'No aplica').save()
+
+        new Especie(tipo:'Perro').save()
+        new Especie(tipo:'Gato').save()
     }
     def destroy = {
     }
 }
+
