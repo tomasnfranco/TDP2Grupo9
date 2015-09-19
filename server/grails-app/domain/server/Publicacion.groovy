@@ -18,16 +18,23 @@ class Publicacion {
 	VacunasAlDia vacunasAlDia
 	//Fin Atributos de Busqueda
 	int tipoPublicacion = 1
-	int latitud = 0
-	int longitud = 0
-	String nombreMascota = ''
-	String condiciones = ''
+	/**
+	 * Tipos Publicacion
+	 * 1 = Publicación de mascota en adopción
+	 */
+	double latitud = 0
+	double longitud = 0
+	String nombreMascota = ' '
+	String condiciones = ' '
 	boolean requiereCuidadosEspeciales = false
 	boolean necesitaTransito = false
-	String videoLink
+	String videoLink = ' '
 	static hasMany = [fotos : Foto]
 	
     static constraints = {
-		
+		publicador()
+		condiciones(blank: true,nullable: true)
+		nombreMascota(blank:true,nullable: true)
+		videoLink(blank:true,nullable: true)
     }
 }

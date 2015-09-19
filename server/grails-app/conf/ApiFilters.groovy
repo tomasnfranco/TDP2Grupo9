@@ -18,6 +18,7 @@ class ApiFilters {
 						return false
 					}
 					params.usuario = userLogueado;
+					params.publicador = userLogueado.id;
 				}
 			}
 		}
