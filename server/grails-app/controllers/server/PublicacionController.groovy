@@ -1,6 +1,6 @@
 package server
 
-
+import grails.converters.JSON
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -100,5 +100,21 @@ class PublicacionController {
             }
             '*'{ render status: NOT_FOUND }
         }
+    }
+
+    def atributos(){
+        def respuesta = [:]
+        respuesta.castrado = Castrado.list()
+        respuesta.color = Color.list()
+        respuesta.compatibleCon = CompatibleCon.list()
+        respuesta.edad = Edad.list()
+        respuesta.energia = Energia.list()
+        respuesta.especie = Especie.list()
+        respuesta.papelesAlDia = PapelesAlDia.list()
+        respuesta.proteccion = Proteccion.list()
+        respuesta.sexo = Sexo.list()
+        respuesta.tamanio = Tamanio.list()
+        respuesta.vacunasAlDia = VacunasAlDia.list()
+        render respuesta as JSON
     }
 }
