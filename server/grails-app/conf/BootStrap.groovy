@@ -49,6 +49,10 @@ class BootStrap {
 
         new Especie(tipo:'Perro').save()
         new Especie(tipo:'Gato').save()
+
+        new PapelesAlDia(tipo: 'Si').save()
+        new PapelesAlDia(tipo: 'No').save()
+        new PapelesAlDia(tipo: 'No Aplica').save()
     }
     def destroy = {
     }
