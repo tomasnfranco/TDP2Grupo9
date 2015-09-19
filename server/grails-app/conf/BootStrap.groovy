@@ -19,6 +19,7 @@ class BootStrap {
         new Castrado(tipo:'Si').save()
         new Castrado(tipo:'No').save()
         new Castrado(tipo:'Desconocido').save()
+
         new Color(nombre:'Apricot').save()
         new Color(nombre:'Atigrado').save()
         new Color(nombre:'Beige').save()
@@ -33,6 +34,7 @@ class BootStrap {
         new Color(nombre:'Te').save()
         new Color(nombre:'Tricolor').save()
         new Color(nombre:'Otro').save()
+
         new CompatibleCon(compatibleCon: 'Niños').save()
         new CompatibleCon(compatibleCon: 'Otras Mascotas').save()
 
@@ -62,6 +64,14 @@ class BootStrap {
         new Sexo(tipo: 'Macho').save()
         new Sexo(tipo: 'Hembra').save()
         new Sexo(tipo: 'Desconocido').save()
+
+        new Tamanio(tipo: 'Chico').save()
+        new Tamanio(tipo: 'Mediano').save()
+        new Tamanio(tipo: 'Grande').save()
+
+        new VacunasAlDia(tipo:'Si').save()
+        new VacunasAlDia(tipo:'No').save()
+        new VacunasAlDia(tipo:'Desconocido').save()
 
     }
     def destroy = {
