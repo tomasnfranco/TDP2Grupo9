@@ -1,6 +1,15 @@
 import server.Color
 import server.Usuario
 import server.Castrado
+import server.CompatibleCon
+import server.Edad
+import server.Energia
+import server.Especie
+import server.PapelesAlDia
+import server.Proteccion
+import server.Sexo
+import server.Tamanio
+import server.VacunasAlDia
 
 class BootStrap {
 
@@ -24,6 +33,14 @@ class BootStrap {
         new Color(nombre:'Te').save()
         new Color(nombre:'Tricolor').save()
         new Color(nombre:'Otro').save()
+        new CompatibleCon(compatibleCon: 'Niños').save()
+        new CompatibleCon(compatibleCon: 'Otras Mascotas').save()
+
+        new Edad(nombre: 'Cachorro (hasta 1 año)').save()
+        new Edad(nombre: 'Adulto joven (de 2 a 4 años)').save()
+        new Edad(nombre: 'Adulto (de 5 a 9 años)').save()
+        new Edad(nombre: 'Viejitos (+ de 10 años)').save()
+        new Edad(nombre: 'Desconocido').save()
     }
     def destroy = {
     }
