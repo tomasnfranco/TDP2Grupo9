@@ -25,6 +25,7 @@ class Publicacion {
 	boolean requiereCuidadosEspeciales = false
 	boolean necesitaTransito = false
 	String videoLink
+	static hasMany = [fotos : Foto]
 	
     static constraints = {
 		
