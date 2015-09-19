@@ -41,6 +41,11 @@ class BootStrap {
         new Edad(nombre: 'Adulto (de 5 a 9 años)').save()
         new Edad(nombre: 'Viejitos (+ de 10 años)').save()
         new Edad(nombre: 'Desconocido').save()
+
+        new Energia(tipo: 'Muy enérgico').save()
+        new Energia(tipo: 'Enérgico').save()
+        new Energia(tipo: 'Adicto a la televisión').save()
+        new Energia(tipo: 'No aplica').save()
     }
     def destroy = {
     }
