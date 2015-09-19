@@ -53,6 +53,16 @@ class BootStrap {
         new PapelesAlDia(tipo: 'Si').save()
         new PapelesAlDia(tipo: 'No').save()
         new PapelesAlDia(tipo: 'No Aplica').save()
+
+        new Proteccion(tipo:'Guardián').save()
+        new Proteccion(tipo:'Algo protector').save()
+        new Proteccion(tipo:'Poco o nada protector').save()
+        new Proteccion(tipo:'No aplica').save()
+
+        new Sexo(tipo: 'Macho').save()
+        new Sexo(tipo: 'Hembra').save()
+        new Sexo(tipo: 'Desconocido').save()
+
     }
     def destroy = {
     }
