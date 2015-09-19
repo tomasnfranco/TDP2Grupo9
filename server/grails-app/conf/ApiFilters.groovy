@@ -1,8 +1,25 @@
+import static org.springframework.http.HttpStatus.UNAUTHORIZED
+import server.Usuario
+
 class ApiFilters {
    def filters = {
-        sampleFilter(uri:'/api/**') {
+        todosApi(uri:'/api/**') {
 			before = {
-				println "Entro en: $controllerName accion $actionName"
+				if(controllerName != 'usuario' || (actionName != 'save' && actionName != 'login')) {
+					//El usuario debe estar logueado, debe tener un token valido
+					//println "Entro en: $controllerName accion $actionName"
+					if(params.token == null || params.token == ''){
+						render status: UNAUTHORIZED
+						return false
+					}
+					def userLogueado = Usuario.findByToken(params.token)
+					if(userLogueado == null){
+						render status: UNAUTHORIZED
+						return false
+					}
+					params.usuario = userLogueado;
+					params.publicador = userLogueado.id;
+				}
 			}
 		}
    }

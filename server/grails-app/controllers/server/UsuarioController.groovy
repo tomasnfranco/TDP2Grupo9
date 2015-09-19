@@ -104,7 +104,7 @@ class UsuarioController {
 					user.save(flush:true)
 					respond user
 				} else {
-					render status: 401
+					render status: UNAUTHORIZED
 				}
 			} else {
 				notFound()
@@ -123,7 +123,7 @@ class UsuarioController {
         }
         user.token = ''
         user.save flush:true
-        render status:200
+        render status:OK
     }
 
     protected void notFound() {
