@@ -29,6 +29,13 @@ class PublicacionController {
             notFound()
             return
         }
+        println params.usuario
+        println ''
+        if(params.usuario)
+            publicacionInstance.publicador = params.usuario
+        println "Publicador: ${publicacionInstance.publicador}"
+        publicacionInstance.activa = true;
+        publicacionInstance.fechaPublicacion = new Date()
 
         if (publicacionInstance.hasErrors()) {
             respond publicacionInstance.errors, view:'create'
@@ -38,7 +45,7 @@ class PublicacionController {
         publicacionInstance.save flush:true
 
         request.withFormat {
-            form multipartForm {
+            html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'publicacion.label', default: 'Publicacion'), publicacionInstance.id])
                 redirect publicacionInstance
             }
