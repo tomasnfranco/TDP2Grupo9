@@ -48,7 +48,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText passwordEditText;
     private LoginButton facebookSignInButton;
     private View progressView;
-    private View loginFormView;
     CallbackManager callbackManager;
 
     @Override
@@ -63,7 +62,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         createEmailSignInButton();
         createFacebookSignInButton();
 
-        loginFormView = findViewById(R.id.login_form);
         progressView = findViewById(R.id.login_progress);
     }
 
@@ -109,8 +107,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             public void onSuccess(LoginResult loginResult) {
                 // TODO: conectarse con el servidor y pasarle la informacion pertinente
                 Toast.makeText(getApplicationContext(), "ID: " + loginResult.getAccessToken().getUserId() + "\n"
-                                + "Token: loginResult.getAccessToken().getToken()",
-                                Toast.LENGTH_LONG).show();
+                                + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -184,16 +181,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     public void showProgress(final boolean show) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            loginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
             progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             progressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
@@ -204,7 +191,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             });
         } else {
             progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
