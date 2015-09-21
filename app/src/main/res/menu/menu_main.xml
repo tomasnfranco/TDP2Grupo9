@@ -3,4 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/action_home"
+        android:title="Home"
+        android:icon="@drawable/ic_home"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_user"
+        android:title="Usuario"
+        android:icon="@drawable/ic_user"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
 </menu>
