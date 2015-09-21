@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:id="@+id/imageButton"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:id="@+id/tv_nombre"
+                android:layout_alignTop="@+id/imageButton"
+                android:layout_toRightOf="@+id/imageButton"
+                android:layout_toEndOf="@+id/imageButton"
+                android:layout_marginLeft="10dp"
+                android:textSize="24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sexo"
+                android:id="@+id/tv_sexo"
+                android:layout_below="@+id/tv_nombre"
+                android:layout_alignLeft="@+id/tv_nombre"
+                android:layout_alignStart="@+id/tv_nombre"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edad"
+                android:id="@+id/tv_edad"
+                android:layout_below="@+id/tv_sexo"
+                android:layout_alignLeft="@+id/tv_sexo"
+                android:layout_alignStart="@+id/tv_sexo"
+                android:layout_marginTop="10dp"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Raza"
+                android:id="@+id/tv_raza"
+                android:layout_below="@+id/tv_edad"
+                android:layout_toRightOf="@+id/imageButton"
+                android:layout_toEndOf="@+id/imageButton"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tamaño"
+                android:id="@+id/tv_tamanio"
+                android:layout_below="@+id/tv_raza"
+                android:layout_toRightOf="@+id/imageButton"
+                android:layout_toEndOf="@+id/imageButton"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/iv_hogar_transito"
+                android:layout_below="@+id/tv_raza"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="42dp" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/iv_cuidados_esp"
+                android:layout_below="@+id/imageButton"
+                android:layout_toRightOf="@+id/iv_hogar_transito"
+                android:layout_toEndOf="@+id/iv_hogar_transito"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="5dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="250dp">
+
+                <Gallery
+                    android:layout_width="wrap_content"
+                    android:layout_height="72dp"
+                    android:id="@+id/gallery_mascotas" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="322dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Condiciones de Adopción"
+                    android:id="@+id/tv_condiciones_adopcion"
+                    android:layout_marginLeft="24dp"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="texto de las condiciones de adopcion"
+                    android:id="@+id/tv_texto_condiciones"
+                    android:textSize="16dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginLeft="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Observaciones"
+                    android:id="@+id/tv_observaciones"
+                    android:layout_marginLeft="24dp"
+                    android:textSize="18dp"
+                    android:layout_marginTop="100dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="texto de las observaciones"
+                    android:id="@+id/tv_texto_observaciones"
+                    android:layout_marginTop="128dp"
+                    android:layout_marginLeft="24dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="474dp">
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Concretar Adopción"
+                    android:id="@+id/btn_concretar"
+                    android:textColor="#ffffffff"
+                    android:background="@color/color_primary"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginTop="24dp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
