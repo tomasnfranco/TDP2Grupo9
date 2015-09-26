@@ -8,8 +8,8 @@ class Usuario {
 	long facebookId = 0
 	String telefono = ""
 	String direccion = ""
-	long latitud = 0
-	long longitud = 0
+	double latitud = 0
+	double longitud = 0
 	boolean autoPublicar = false
 	boolean activo = true
 	String token = ""
