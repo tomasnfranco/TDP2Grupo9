@@ -19,12 +19,16 @@
     <string name="castrado_hint">Castrado</string>
     <string name="proteccion_hint">Protección</string>
     <string name="energia_hint">Energía</string>
-    <string name="cargar_foto">Cargar foto</string>
-    <string name="cargar_video">Cargar video</string>
-    <string name="zona_residencia">Zona de residencia</string>
+    <string name="cargar_fotos">Cargar fotos</string>
+    <string name="cargar_video">Ingrese el link a un video de la mascota</string>
+    <string name="zona_residencia">Ingrese la zona de residencia</string>
     <string name="requiere_hogar_transito">Requiere hogar de tránsito</string>
     <string name="requiere_cuidados_especiales">Requiere cuidados especiales</string>
     <string name="contacto_hint">Contacto</string>
     <string name="observaciones_hint">Condiciones de adopción</string>
+    <string name="eliminar_ultima_foto">Eliminar la última foto</string>
+    <string name="maximo_fotos_alcanzado">Ya ha alcanzado el máximo de fotos que puede cargar</string>
+    <string name="no_hay_fotos">No hay fotos para eliminar</string>
+
 
 </resources>
