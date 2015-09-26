@@ -313,7 +313,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (!Usuario.getInstancia().isLogueado()) {
                     //TODO: El usuario no se pudo loguear - se tiene que mostrar un cartel ofreciendo crear una cuenta
                 }
-                finish(); 
+                finish();
             } else {
             }
         }

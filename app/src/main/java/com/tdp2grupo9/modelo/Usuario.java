@@ -1,5 +1,6 @@
 package com.tdp2grupo9.modelo;
 
+import android.util.JsonReader;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -7,11 +8,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import com.google.gson.Gson;
 
 public class Usuario {
 
@@ -66,24 +66,53 @@ public class Usuario {
         this.direccion = "";
     }
 
-    private void jsonToUsuario(JSONObject json) throws JSONException {
-        this.facebookId = json.getLong("facebookId");
-        this.token = json.getString("token");
-        Log.i("BuscaSuSHuellas","Token recibido del server:"+token);
-        this.latitud = json.getInt("latitud");
-        this.longitud = json.getInt("longitud");
-
-        //this.logueado = json.getBoolean("logueado");
-        this.activo = json.getBoolean("activo");
-        this.autopublicar = json.getBoolean("autoPublicar");
-        //this.ofreceTransito = json.getBoolean("ofreceTransito");
-
-        this.email = json.getString("email");
-        this.password = json.getString("password");
-        this.token = json.getString("token");
-        this.username = json.getString("username");
-        this.telefono = json.getString("telefono");
-        this.direccion = json.getString("direccion");
+    private void jsonToUsuario(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "facebookId":
+                    this.facebookId = reader.nextLong();
+                    break;
+                case "token":
+                    this.token = reader.nextString();
+                    break;
+                case "latitud":
+                    this.latitud = reader.nextInt();
+                    break;
+                case "longitud":
+                    this.longitud = reader.nextInt();
+                    break;
+                case "activo":
+                    this.activo = reader.nextBoolean();
+                    break;
+                case "ofreceTransito":
+                    this.ofreceTransito = reader.nextBoolean();
+                    break;
+                case "autopublicar":
+                    this.autopublicar = reader.nextBoolean();
+                    break;
+                case "email":
+                    this.email = reader.nextString();
+                    break;
+                case "username":
+                    this.username = reader.nextString();
+                    break;
+                case "password":
+                    this.password = reader.nextString();
+                    break;
+                case "telefono":
+                    this.telefono = reader.nextString();
+                    break;
+                case "direccion":
+                    this.direccion = reader.nextString();
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public void registrarConFacebook(){
@@ -101,9 +130,8 @@ public class Usuario {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 Log.i("BuscaSusHuellas", "Usuario registrado " + urlConnection.getResponseMessage());
-                InputStream streamAParsear;
-                streamAParsear = urlConnection.getInputStream();
-                this.jsonToUsuario(new JSONObject(streamAParsear.toString()));
+                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                this.logueado = true;
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
@@ -132,10 +160,8 @@ public class Usuario {
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 String response = urlConnection.getResponseMessage();
                 Log.i("BuscaSusHuellas", "Login realizado correctamente " + response);
-                InputStream streamAParsear;
-                streamAParsear = urlConnection.getInputStream();
-                this.jsonToUsuario(new JSONObject(streamAParsear.toString()));
-
+                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                this.logueado = true;
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
