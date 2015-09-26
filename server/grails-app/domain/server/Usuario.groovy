@@ -1,5 +1,4 @@
 package server
-import groovy.transform.ToString
 
 class Usuario {
 	String username = ""
@@ -11,6 +10,7 @@ class Usuario {
 	double latitud = 0
 	double longitud = 0
 	boolean autoPublicar = false
+	boolean ofreceTransito = false
 	boolean activo = true
 	String token = ""
 	
