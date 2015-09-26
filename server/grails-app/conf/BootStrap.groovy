@@ -10,12 +10,13 @@ import server.Proteccion
 import server.Sexo
 import server.Tamanio
 import server.VacunasAlDia
+import server.Publicacion
 
 class BootStrap {
 
     def init = { servletContext ->
-		new Usuario(facebookId:1156897635,username:'diegomeller',telefono:'112345600',direccion:'Paseo Colon 850',token:'12345').save()
-		new Usuario(username:'email',email:'diego@meller.com',password:'test',telefono:'1145670891',direccion:'Alguna',token:'234567').save()
+		new Usuario(facebookId:1156897635,username:'diegomeller',telefono:'112345600',direccion:'Paseo Colon 850',token:'12345',latitud:-58.4621224,longitud:-34.6035515).save()
+		new Usuario(username:'email',email:'diego@meller.com',password:'test',telefono:'1145670891',direccion:'Alguna',token:'234567',latitud:-58.4621224,longitud:-34.6035515).save()
         new Castrado(tipo:'Si').save()
         new Castrado(tipo:'No').save()
         new Castrado(tipo:'Desconocido').save()
@@ -72,6 +73,11 @@ class BootStrap {
         new VacunasAlDia(tipo:'Si').save()
         new VacunasAlDia(tipo:'No').save()
         new VacunasAlDia(tipo:'Desconocido').save()
+				
+		new Publicacion(nombreMascota:'bobby',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.367289,longitud:-34.6454526).save()
+		new Publicacion(nombreMascota:'otto',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.4226265,longitud:-34.6098885).save()
+		new Publicacion(nombreMascota:'panchita tiene pelos largos blancos y sucios por estar en el patio',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.5242344,longitud:-34.6192385).save()
+		
 
     }
     def destroy = {

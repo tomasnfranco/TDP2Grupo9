@@ -35,7 +35,8 @@ class PublicacionService {
         def listado = busqueda
         listado.each {it.setDistancia(usuario.latitud,usuario.longitud)}
         listado.each{println it.distancia}
-        listado = listado.sort{it.distancia} //.collect{[id: it.id,publicador: it.publicador.username,distancia: it.distancia,foto: it.fotos ? it.fotos[0].base64 : '']}
+        listado = listado.sort{it.distancia}.collect{[id: it.id,publicador: it.publicador.username,distancia: it.distancia,foto: it.fotos ? it.fotos[0].base64 : '',necesitaTransito: it.necesitaTransito,
+		nombreMascota : it.nombreMascota, requiereCuidadosEspeciales : it.requiereCuidadosEspeciales]}
         return listado
     }
 }

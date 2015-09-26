@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,16 +35,19 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Muestra las opciones de loguearse con Facebook, email o registrar una cuenta.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private UserLoginTask authenticationTask = null;
+    private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
+    private UserFacebookLoginTask authenticationFacebookTask = null;
 
     private AutoCompleteTextView emailTextView;
     private EditText passwordEditText;
@@ -106,13 +110,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         facebookSignInButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // TODO: conectarse con el servidor y pasarle la informacion pertinente
+                if (authenticationFacebookTask != null)
+                    return;
+                Usuario.getInstancia().setFacebookId(Long.getLong(loginResult.getAccessToken().getUserId()));
+                Usuario.getInstancia().setFacebookToken(loginResult.getAccessToken().getToken());
+                authenticationFacebookTask = new UserFacebookLoginTask();
+                authenticationFacebookTask.execute((Void) null);
                 Toast.makeText(getApplicationContext(), "ID: " + loginResult.getAccessToken().getUserId() + "\n"
-                                + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();
+                        + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onCancel() {}
+            public void onCancel() {
+            }
 
             @Override
             public void onError(FacebookException e) {
@@ -125,57 +135,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         getLoaderManager().initLoader(0, null, this);
     }
 
-    public void attemptLogin() {
-        if (authenticationTask != null) {
-            return;
-        }
-        resetErrors();
-        boolean validPassword = checkForValidPassword();
-        boolean validEmail = checkForValidEmailAddress();
-
-        if (!validEmail) {
-            emailTextView.requestFocus();
-        } else if (!validPassword) {
-            passwordEditText.requestFocus();
-        } else {
-            showProgress(true);
-            authenticationTask = new UserLoginTask();
-            authenticationTask.execute((Void) null);
-        }
-    }
-
     private void resetErrors() {
         emailTextView.setError(null);
         passwordEditText.setError(null);
     }
 
-    private boolean checkForValidPassword() {
-        String password = passwordEditText.getText().toString();
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordEditText.setError(getString(R.string.error_invalid_password));
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkForValidEmailAddress() {
-        String email = emailTextView.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            emailTextView.setError(getString(R.string.error_field_required));
-            return false;
-        } else if (!isEmailValid(email)) {
-            emailTextView.setError(getString(R.string.error_invalid_email));
-            return false;
-        }
-        return true;
-    }
-
     private boolean isEmailValid(String email) {
-        return email.contains("@");
+        return email.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        //TODO: VER SI ES PARAMETRIZABLE LA LONGITUD O SI SE AGREGAN OTRAS CONDICIONES
+        return password.length() == 6;
+    }
+
+    private boolean isLoginFormValid() {
+        boolean valid = true;
+        if (!isEmailValid(emailTextView.getText().toString())){
+            emailTextView.setError(getString(R.string.error_invalid_email));
+            valid = false;
+        }
+        if (!isPasswordValid(passwordEditText.getText().toString())){
+            passwordEditText.setError(getString(R.string.error_invalid_password));
+            valid = false;
+        }
+        return valid;
+    }
+
+    public void attemptLogin() {
+        if (authenticationEmailPasswordTask != null)
+            return;
+        Log.i("BuscaSusHuellas", "Login con email y password solicitado");
+        resetErrors();
+        if (!isLoginFormValid()){
+            Log.w("BuscaSusHuellas", "El formulario de logueo no es valido");
+            if (!emailTextView.getError().toString().isEmpty())
+                emailTextView.requestFocus();
+            else if (!passwordEditText.getError().toString().isEmpty())
+                passwordEditText.requestFocus();
+        } else {
+            Log.i("BuscaSusHuellas", "El formulario de logueo es valido");
+            showProgress(true);
+            Usuario.getInstancia().setEmail(emailTextView.getText().toString());
+            Usuario.getInstancia().setPassword(passwordEditText.getText().toString());
+            authenticationEmailPasswordTask = new UserEmailPasswordLoginTask();
+            authenticationEmailPasswordTask.execute((Void) null);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -235,12 +240,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         emailTextView.setAdapter(adapter);
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserEmailPasswordLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String email;
         private final String password;
 
-        UserLoginTask() {
+        UserEmailPasswordLoginTask() {
             password = passwordEditText.getText().toString();
             email = emailTextView.getText().toString();
         }
@@ -248,7 +253,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                // TODO: aca va el codigo para conectarse con el servidor
+                Usuario.getInstancia().login();
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
@@ -265,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            authenticationTask = null;
+            authenticationEmailPasswordTask = null;
             showProgress(false);
 
             if (success) {
@@ -278,9 +283,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onCancelled() {
-            authenticationTask = null;
+            authenticationEmailPasswordTask = null;
             showProgress(false);
         }
     }
+
+    public class UserFacebookLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        UserFacebookLoginTask() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                Usuario.getInstancia().loginConFacebook();
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            authenticationFacebookTask = null;
+            showProgress(false);
+            if (success) {
+                if (!Usuario.getInstancia().isLogueado()) {
+                    //TODO: El usuario no se pudo loguear - se tiene que mostrar un cartel ofreciendo crear una cuenta
+                }
+                finish(); 
+            } else {
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            authenticationFacebookTask = null;
+            showProgress(false);
+        }
+    }
+
+
 }
 
