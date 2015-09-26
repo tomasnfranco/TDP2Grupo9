@@ -3,9 +3,8 @@ package com.tdp2grupo9.adopcion;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
+import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
@@ -25,6 +24,7 @@ public class AdopcionTabActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adopcion_tab);
         tabHost = getTabHost();
+        createUltimasPublicacionesTab();
         createPublicarAdopcionTab();
         createPublicarBusquedaTab();
         createBuscarMascotaTab();
@@ -38,9 +38,13 @@ public class AdopcionTabActivity extends TabActivity {
         for (int i = 0; i < tabCount; i++) {
             TextView title = (TextView) tabHost.getTabWidget().getChildTabViewAt(i).findViewById(android.R.id.title);
             title.setGravity(Gravity.CENTER);
-            title.setSingleLine(false);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.tabs_title_size));title.setSingleLine(false);
             title.setTextColor(getResources().getColor(R.color.white));
         }
+    }
+
+    private void createUltimasPublicacionesTab() {
+        createTab(getResources().getString(R.string.ultimas_publicaciones), UltimasPublicacionesActivity.class);
     }
 
     private void createPublicarAdopcionTab() {

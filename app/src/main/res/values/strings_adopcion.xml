@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ultimas_publicaciones"><font color='white'>Recientes</font></string>
     <string name="publicar_adopcion"><font color='white'>Publicar Adopción</font></string>
     <string name="publicar_busqueda"><font color='white'>Publicar Búsqueda</font></string>
     <string name="buscar_mascota"><font color='white'>Buscar Mascota</font></string>
     <string name="title_activity_adopcion_tab"><font color='white'>Adopción</font></string>
 
-    <string name="nombre_mascota_hint">Nombre de Mascota</string>
+    <string name="nombre_mascota_hint">Nombre/Descripción</string>
     <string name="especie_hint">Especie</string>
     <string name="raza_hint">Raza</string>
     <string name="sexo_hint">Sexo</string>
@@ -22,7 +23,8 @@
     <string name="cargar_video">Cargar video</string>
     <string name="zona_residencia">Zona de residencia</string>
     <string name="requiere_hogar_transito">Requiere hogar de tránsito</string>
+    <string name="requiere_cuidados_especiales">Requiere cuidados especiales</string>
     <string name="contacto_hint">Contacto</string>
-    <string name="observaciones_hint">Observaciones</string>
+    <string name="observaciones_hint">Condiciones de adopción</string>
 
 </resources>

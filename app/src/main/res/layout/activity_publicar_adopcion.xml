@@ -154,6 +154,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/requiere_hogar_transito"/>
 
+            <CheckBox
+                android:id="@+id/requiere_cuidados_especiales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/requiere_hogar_transito"/>
+
             <EditText
                 android:id="@+id/contacto_edit_text"
                 android:layout_width="match_parent"

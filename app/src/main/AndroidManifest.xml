@@ -67,6 +67,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".adopcion.UltimasPublicacionesActivity" />
         <activity android:name=".adopcion.BuscarMascotaActivity" />
         <activity android:name=".adopcion.PublicarAdopcionActivity" />
         <activity android:name=".adopcion.PublicarBusquedaActivity" />
