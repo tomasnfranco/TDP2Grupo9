@@ -41,6 +41,7 @@ class Publicacion {
 		condiciones(blank: true,nullable: true)
 		nombreMascota(blank:true,nullable: true)
 		videoLink(blank:true,nullable: true)
+		fotos(maxSize: 6)
     }
 
 	static marshalling = {
