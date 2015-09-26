@@ -4,9 +4,10 @@ import grails.transaction.Transactional
 
 @Transactional
 class PublicacionService {
-
+    final static def DISTANCIA_MAXIMA = 10
+    //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
-        def busqueda = Publicacion.findAll(){
+        def busqueda = Publicacion.findAll(params){
             if(params.castrado)
                 castrado.id == params.castrado
             if(params.color)
@@ -32,11 +33,18 @@ class PublicacionService {
             publicador.id != usuario.id
             activa == true
         }
-        def listado = busqueda
-        listado.each {it.setDistancia(usuario.latitud,usuario.longitud)}
-        listado.each{println it.distancia}
-        listado = listado.sort{it.distancia}.collect{[id: it.id,publicador: it.publicador.username,distancia: it.distancia,foto: it.fotos ? it.fotos[0].base64 : '',necesitaTransito: it.necesitaTransito,
-		nombreMascota : it.nombreMascota, requiereCuidadosEspeciales : it.requiereCuidadosEspeciales]}
-        return listado
+        double latitud = params.latitud ? Double.parseDouble(params.latitud) : usuario.latitud
+        double longitud = params.longitud ? Double.parseDouble(params.longitud) : usuario.longitud
+        busqueda*.setDistancia(latitud,longitud)
+        busqueda = busqueda.findAll{it.distancia <= DISTANCIA_MAXIMA}
+        println busqueda
+        busqueda = busqueda.sort{it.distancia}.collect{[id: it.id,
+                                                      publicador: it.publicador.username,
+                                                      distancia: it.distancia,
+                                                      foto: it.fotos ? it.fotos[0].base64 : '',
+                                                      necesitaTransito: it.necesitaTransito,
+                                                      nombreMascota : it.nombreMascota,
+                                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales]}
+        return busqueda
     }
 }
