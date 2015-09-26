@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="188dp"
+            android:layout_gravity="right"
+            android:layout_weight="0.74">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/editTextZona"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="18dp"
+                android:textSize="18dp"
+                android:layout_marginLeft="18dp"
+                android:autoText="true"
+                android:hint="Zona de residencia" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:inputType="phone"
+                android:ems="10"
+                android:id="@+id/editTextPhone"
+                android:layout_below="@+id/editTextZona"
+                android:layout_marginTop="10dp"
+                android:textSize="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_alignLeft="@+id/editTextZona"
+                android:layout_alignStart="@+id/editTextZona"
+                android:autoText="true"
+                android:hint="Teléfono" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Autopublicar"
+                android:id="@+id/checkBoxAutopublicar"
+                android:layout_below="@+id/editTextPhone"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="18dp"
+                android:checked="false"
+                android:textSize="18dp" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ofrece Lugar de Tránsito"
+                android:id="@+id/checkBoxOfreceTransito"
+                android:layout_below="@+id/checkBoxAutopublicar"
+                android:layout_alignLeft="@+id/checkBoxAutopublicar"
+                android:layout_alignStart="@+id/checkBoxAutopublicar"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="228dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/fragmentMap"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_weight="0.54" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrarse"
+        android:id="@+id/btnRegistrarse"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:textSize="18dp"
+        android:textColor="#ffffffff"
+        android:background="@color/color_primary" />
+
+</LinearLayout>
