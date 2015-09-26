@@ -4,7 +4,8 @@ import grails.transaction.Transactional
 
 @Transactional
 class PublicacionService {
-
+    final static def DISTANCIA_MAXIMA = 10
+    //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
         def busqueda = Publicacion.findAll(params){
             if(params.castrado)
@@ -35,6 +36,8 @@ class PublicacionService {
         double latitud = params.latitud ? Double.parseDouble(params.latitud) : usuario.latitud
         double longitud = params.longitud ? Double.parseDouble(params.longitud) : usuario.longitud
         busqueda*.setDistancia(latitud,longitud)
+        busqueda = busqueda.findAll{it.distancia <= DISTANCIA_MAXIMA}
+        println busqueda
         busqueda = busqueda.sort{it.distancia}.collect{[id: it.id,
                                                       publicador: it.publicador.username,
                                                       distancia: it.distancia,
