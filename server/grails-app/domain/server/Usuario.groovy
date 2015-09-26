@@ -1,7 +1,6 @@
 package server
 import groovy.transform.ToString
 
-@ToString(includeNames = true, includeFields = true, excludes = 'metaClass,class',ignoreNulls=true)
 class Usuario {
 	String username = ""
 	String email = ""
@@ -64,5 +63,9 @@ class Usuario {
 				return
 			}
 		}
+	}
+
+	String toString(){
+		return username ?: ''
 	}
 }

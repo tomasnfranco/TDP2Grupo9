@@ -1,4 +1,7 @@
 package server
+import com.javadocmd.simplelatlng.LatLng;
+import com.javadocmd.simplelatlng.LatLngTool;
+import com.javadocmd.simplelatlng.util.LengthUnit;
 
 class Publicacion {
 	Date fechaPublicacion = new Date()
@@ -29,6 +32,8 @@ class Publicacion {
 	boolean requiereCuidadosEspeciales = false
 	boolean necesitaTransito = false
 	String videoLink = ' '
+	double distancia = 0
+	static transients = ['distancia']
 	static hasMany = [fotos : Foto]
 	
     static constraints = {
@@ -37,4 +42,14 @@ class Publicacion {
 		nombreMascota(blank:true,nullable: true)
 		videoLink(blank:true,nullable: true)
     }
+
+	static marshalling = {
+		virtual {
+			distancia { value, json -> json.value(value.distancia) }
+		}
+	}
+
+	double setDistancia(def lat,def lon){
+		distancia = LatLngTool.distance(new LatLng(this.latitud, this.longitud),new LatLng(lat, lon),LengthUnit.KILOMETER)
+	}
 }

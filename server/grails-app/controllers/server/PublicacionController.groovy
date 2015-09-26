@@ -4,10 +4,12 @@ import grails.converters.JSON
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import grails.rest.RestfulController
 
 @Transactional(readOnly = true)
-class PublicacionController {
+class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
+    def publicacionService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -29,11 +31,10 @@ class PublicacionController {
             notFound()
             return
         }
-        println params.usuario
-        println ''
+
         if(params.usuario)
             publicacionInstance.publicador = params.usuario
-        println "Publicador: ${publicacionInstance.publicador}"
+
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
 
@@ -97,6 +98,10 @@ class PublicacionController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+    def buscar(){
+            render  publicacionService.buscar(params,params.usuario) as JSON
     }
 
     protected void notFound() {
