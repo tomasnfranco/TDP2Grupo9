@@ -32,12 +32,15 @@ class PublicacionService {
                 vacunasAlDia.id == params.vacunasAlDia
             publicador.id != usuario.id
             activa == true
+            if(params.tipoPublicacion)
+                tipoPublicacion == params.tipoPublicacion
+            else
+                tipoPublicacion == 1
         }
         double latitud = params.latitud ? Double.parseDouble(params.latitud) : usuario.latitud
         double longitud = params.longitud ? Double.parseDouble(params.longitud) : usuario.longitud
         busqueda*.setDistancia(latitud,longitud)
         busqueda = busqueda.findAll{it.distancia <= DISTANCIA_MAXIMA}
-        println busqueda
         busqueda = busqueda.sort{it.distancia}.collect{[id: it.id,
                                                       publicador: it.publicador.username,
                                                       distancia: it.distancia,
