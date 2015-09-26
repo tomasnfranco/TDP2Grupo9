@@ -31,7 +31,8 @@ class PublicacionController extends RestfulController<Publicacion>  {
             notFound()
             return
         }
-
+		publicacionInstance = new Publicacion(params)
+		
         if(params.usuario)
             publicacionInstance.publicador = params.usuario
 
