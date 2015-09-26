@@ -110,7 +110,7 @@ class UsuarioController {
 				notFound()
 			}
 		} else {
-			respond status:NOT_FOUND
+			notFound()
 		}
 	}
 
