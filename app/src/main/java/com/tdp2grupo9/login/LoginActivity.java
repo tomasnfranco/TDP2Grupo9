@@ -35,6 +35,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.inicio.HomeActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.ArrayList;
@@ -112,7 +113,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onSuccess(LoginResult loginResult) {
                 if (authenticationFacebookTask != null)
                     return;
-                Usuario.getInstancia().setFacebookId(Long.getLong(loginResult.getAccessToken().getUserId()));
+
+                Usuario.getInstancia().setFacebookId(Long.parseLong(loginResult.getAccessToken().getUserId()));
                 Usuario.getInstancia().setFacebookToken(loginResult.getAccessToken().getToken());
                 authenticationFacebookTask = new UserFacebookLoginTask();
                 authenticationFacebookTask.execute((Void) null);
@@ -142,6 +144,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         return email.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public void showProgress(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     private boolean isPasswordValid(String password) {
@@ -180,23 +199,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Usuario.getInstancia().setPassword(passwordEditText.getText().toString());
             authenticationEmailPasswordTask = new UserEmailPasswordLoginTask();
             authenticationEmailPasswordTask.execute((Void) null);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -298,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().loginConFacebook();
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -310,9 +312,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             authenticationFacebookTask = null;
             showProgress(false);
             if (success) {
-                if (!Usuario.getInstancia().isLogueado()) {
-                    //TODO: El usuario no se pudo loguear - se tiene que mostrar un cartel ofreciendo crear una cuenta
+                if (Usuario.getInstancia().isLogueado()) {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    startActivity(intent);
                 }
+
                 finish();
             } else {
             }

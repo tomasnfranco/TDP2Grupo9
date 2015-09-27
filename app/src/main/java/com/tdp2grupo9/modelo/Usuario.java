@@ -16,14 +16,14 @@ import java.net.URL;
 public class Usuario {
 
     private static final Usuario INSTANCIA = new Usuario();
-    private static final String SERVERURL = "http://10.0.3.2:8080/api/"; //TODO: pasar a un .config o algo
+    private static final String SERVERURL = "http://192.168.1.3:8080/api/"; //TODO: pasar a un .config o algo
     //10.0.2.2
     //10.0.3.2 genymotion
     private Long facebookId ;
     private String facebookToken;
 
-    private Integer latitud;
-    private Integer longitud;
+    private Double latitud;
+    private Double longitud;
 
     private Boolean logueado;
     private Boolean activo;
@@ -52,8 +52,8 @@ public class Usuario {
     private void resetearAtributos() {
         this.facebookId = Long.valueOf(0);
         this.facebookToken = "";
-        this.latitud = 0;
-        this.longitud = 0;
+        this.latitud = Double.valueOf(0);
+        this.longitud = Double.valueOf(0);
         this.logueado = false;
         this.activo = false;
         this.autopublicar = false;
@@ -71,17 +71,14 @@ public class Usuario {
         while (reader.hasNext()) {
             String name = reader.nextName();
             switch (name) {
-                case "facebookId":
-                    this.facebookId = reader.nextLong();
-                    break;
                 case "token":
                     this.token = reader.nextString();
                     break;
                 case "latitud":
-                    this.latitud = reader.nextInt();
+                    this.latitud = reader.nextDouble();
                     break;
                 case "longitud":
-                    this.longitud = reader.nextInt();
+                    this.longitud = reader.nextDouble();
                     break;
                 case "activo":
                     this.activo = reader.nextBoolean();
@@ -123,8 +120,11 @@ public class Usuario {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            Log.i("BuscaSusHuellas", "FACEBOOK ID: " + this.facebookId);
+
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("facebookid="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono);
+            out.write("facebookId="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono+"&latitud="+
+                    this.latitud+"&longitud="+this.longitud+"&autoPublicar="+this.autopublicar+"&ofreceTransito="+this.ofreceTransito);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
@@ -133,6 +133,7 @@ public class Usuario {
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
             } else {
+                this.logueado = false;
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
@@ -152,8 +153,9 @@ public class Usuario {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+
+            Log.i("BuscaSusHuellas", "FACEBOOK ID " + this.facebookId );
             out.write("facebookId="+this.facebookId);
-            out.write("");
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
@@ -163,6 +165,7 @@ public class Usuario {
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
             } else {
+                this.logueado = false;
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
@@ -226,6 +229,34 @@ public class Usuario {
         this.password = password;
     }
 
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public void setAutopublicar(Boolean autopublicar) {
+        this.autopublicar = autopublicar;
+    }
+
+    public void setOfreceTransito(Boolean ofreceTransito) {
+        this.ofreceTransito = ofreceTransito;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
     public Boolean isLogueado() {
         return logueado;
     }
@@ -266,11 +297,11 @@ public class Usuario {
         return direccion;
     }
 
-    public Integer getLatitud() {
+    public Double getLatitud() {
         return latitud;
     }
 
-    public Integer getLongitud() {
+    public Double getLongitud() {
         return longitud;
     }
 
