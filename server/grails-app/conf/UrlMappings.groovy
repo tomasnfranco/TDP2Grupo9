@@ -8,6 +8,11 @@ class UrlMappings {
 				// apply constraints here
 			}
 		}
+		"/api/publicacion/atributos"{
+			format = 'json'
+			action = 'atributos'
+			controller = 'publicacion'
+		}
 		"/api/$controller"{
 			format = "json"
 			action = [GET:"index", POST:"save"]

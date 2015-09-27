@@ -16,6 +16,7 @@ class Publicacion {
 	Especie especie
 	PapelesAlDia papelesAlDia
 	Proteccion proteccion
+	Raza raza
 	Sexo sexo
 	Tamanio tamanio
 	VacunasAlDia vacunasAlDia

@@ -125,6 +125,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
         respuesta.especie = Especie.list()
         respuesta.papelesAlDia = PapelesAlDia.list()
         respuesta.proteccion = Proteccion.list()
+        respuesta.raza = Raza.list()
         respuesta.sexo = Sexo.list()
         respuesta.tamanio = Tamanio.list()
         respuesta.vacunasAlDia = VacunasAlDia.list()
