@@ -1,5 +1,6 @@
 package com.tdp2grupo9.login;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.inicio.HomeActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
 
@@ -79,7 +81,8 @@ public class LogoutActivity extends AppCompatActivity implements View.OnClickLis
             logoutTask = null;
             if (success) {
                 if (!Usuario.getInstancia().isLogueado()) {
-
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
                 }
 
                 finish();
