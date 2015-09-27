@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tamanio {
-    int id;
-    String tipo;
+public class Tamanio extends AtributoPublicacion {
 
-    public Tamanio() {
-        this.id = 0;
-        this.tipo = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "tamanio";
 
-    public Tamanio(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
+    public void jsonToTamanio(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Tamanio> getTamaniosfromJson(JsonReader reader) throws JSONException, IOException {
         List<Tamanio> tamanios = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Tamanio tamanio = new Tamanio();
-            switch (params) {
-                case "id":
-                    tamanio.setId(reader.nextInt());
-                    break;
-                case "tipo":
-                    tamanio.setTipo(reader.nextString());
-                    break;
-            }
+            tamanio.jsonToTamanio(reader);
             tamanios.add(tamanio);
         }
         reader.endArray();
         return tamanios;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

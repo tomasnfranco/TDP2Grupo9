@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Energia {
-    private int id;
-    private String tipo;
+public class Energia extends AtributoPublicacion {
 
-    public Energia() {
-        this.id = 0;
-        this.tipo = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "energia";
 
-     public Energia(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
+    public void jsonToEnergia(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Energia> getEnergiasfromJson(JsonReader reader) throws JSONException, IOException {
         List<Energia> energias = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Energia energia = new Energia();
-            switch (params) {
-                case "id":
-                    energia.setId(reader.nextInt());
-                    break;
-                case "tipo":
-                    energia.setTipo(reader.nextString());
-                    break;
-            }
+            energia.jsonToEnergia(reader);
             energias.add(energia);
         }
         reader.endArray();
         return energias;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

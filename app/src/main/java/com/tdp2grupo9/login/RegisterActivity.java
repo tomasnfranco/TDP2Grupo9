@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: validar los datos
-                Toast.makeText(getApplicationContext(),"Aplicación probada.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Aplicacion probada.", Toast.LENGTH_LONG).show();
                 Usuario.getInstancia().setDireccion(etDireccion.getText().toString());
                 Usuario.getInstancia().setTelefono(etTelefono.getText().toString());
                 Usuario.getInstancia().setLatitud(latitud);

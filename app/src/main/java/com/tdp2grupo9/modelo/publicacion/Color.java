@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Color {
-    private int id;
-    private String nombre;
+public class Color extends AtributoPublicacion {
 
-    public Color(){
-        this.id = 0;
-        this.nombre = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "color";
 
-    public Color(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
+    public void jsonToColor(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "nombre":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Color> getColoresfromJson(JsonReader reader) throws JSONException, IOException {
         List<Color> colores = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Color color = new Color();
-            switch (params) {
-                case "id":
-                    color.setId(reader.nextInt());
-                    break;
-                case "nombre":
-                    color.setTipo(reader.nextString());
-                    break;
-            }
+            color.jsonToColor(reader);
             colores.add(color);
         }
         reader.endArray();
         return colores;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String nombre) {
-        this.nombre = nombre;
-    }
 }

@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompatibleCon {
-    private int id;
-    private String compatibleCon;
+public class CompatibleCon extends AtributoPublicacion {
 
-    public CompatibleCon() {
-        this.id = 0;
-        this.compatibleCon = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "compatibleCon";
 
-    public CompatibleCon(int id, String compatibleCon) {
-        this.id = id;
-        this.compatibleCon = compatibleCon;
+    public void jsonToCompatibleCon(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "compatibleCon":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<CompatibleCon> getCompatibilidadesfromJson(JsonReader reader) throws JSONException, IOException {
         List<CompatibleCon> compatibilidades = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             CompatibleCon compatibleCon = new CompatibleCon();
-            switch (params) {
-                case "id":
-                    compatibleCon.setId(reader.nextInt());
-                    break;
-                case "compatibleCon":
-                    compatibleCon.setCompatibleCon(reader.nextString());
-                    break;
-            }
+            compatibleCon.jsonToCompatibleCon(reader);
             compatibilidades.add(compatibleCon);
         }
         reader.endArray();
         return compatibilidades;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCompatibleCon(String compatibleCon) {
-        this.compatibleCon = compatibleCon;
-    }
 }

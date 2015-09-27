@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Castrado {
-    private int id;
-    private String tipo;
+public class Castrado extends AtributoPublicacion {
 
-    public Castrado() {
-        this.id = 0;
-        this.tipo = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "castrado";
 
-    public Castrado(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
+    public void jsonToCastrado(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Castrado> getCastradosfromJson(JsonReader reader) throws JSONException, IOException {
         List<Castrado> castrados = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Castrado castrado = new Castrado();
-            switch (params) {
-                case "id":
-                    castrado.setId(reader.nextInt());
-                    break;
-                case "tipo":
-                    castrado.setTipo(reader.nextString());
-                    break;
-            }
+            castrado.jsonToCastrado(reader);
             castrados.add(castrado);
         }
         reader.endArray();
         return castrados;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

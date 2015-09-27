@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Edad {
-    private int id;
-    private String nombre;
+public class Edad extends AtributoPublicacion {
 
-    public Edad(){
-        this.id = 0;
-        this.nombre = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "edad";
 
-    public Edad(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
+    public void jsonToEdad(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "nombre":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Edad> getEdadesfromJson(JsonReader reader) throws JSONException, IOException {
         List<Edad> edades = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Edad edad = new Edad();
-            switch (params) {
-                case "id":
-                    edad.setId(reader.nextInt());
-                    break;
-                case "nombre":
-                    edad.setNombre(reader.nextString());
-                    break;
-            }
+            edad.jsonToEdad(reader);
             edades.add(edad);
         }
         reader.endArray();
         return edades;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 }

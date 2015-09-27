@@ -8,45 +8,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Proteccion {
-    private int id;
-    private String tipo;
+public class Proteccion extends AtributoPublicacion {
 
-    public Proteccion() {
-        this.id = 0;
-        this.tipo = "DESCONOCIDO";
-    }
+    public static final String CLAVE = "proteccion";
 
-    public Proteccion(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
+    public void jsonToProteccion(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
 
     public static List<Proteccion> getProteccionesfromJson(JsonReader reader) throws JSONException, IOException {
         List<Proteccion> protecciones = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             Proteccion proteccion= new Proteccion();
-            switch (params) {
-                case "id":
-                    proteccion.setId(reader.nextInt());
-                    break;
-                case "tipo":
-                    proteccion.setTipo(reader.nextString());
-                    break;
-            }
+            proteccion.jsonToProteccion(reader);
             protecciones.add(proteccion);
         }
         reader.endArray();
         return protecciones;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

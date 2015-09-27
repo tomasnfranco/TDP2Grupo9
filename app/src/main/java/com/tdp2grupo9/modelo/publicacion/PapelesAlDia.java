@@ -8,46 +8,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PapelesAlDia {
-    private int id;
-    private String tipo;
+public class PapelesAlDia extends AtributoPublicacion {
 
-    public PapelesAlDia() {
-        this.id = 0;
-        this.tipo = "DESCONOCIDO";
+    public static final String CLAVE = "papelesAlDia";
+
+    public void jsonToPapelesAlDia(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
-
-    public PapelesAlDia(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
-    }
-
 
     public static List<PapelesAlDia> getPapelesAlDiafromJson(JsonReader reader) throws JSONException, IOException {
         List<PapelesAlDia> papelesAlDias = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            String params = reader.nextName();
             PapelesAlDia papelesAlDia = new PapelesAlDia();
-            switch (params) {
-                case "id":
-                    papelesAlDia.setId(reader.nextInt());
-                    break;
-                case "tipo":
-                    papelesAlDia.setTipo(reader.nextString());
-                    break;
-            }
+            papelesAlDia.jsonToPapelesAlDia(reader);
             papelesAlDias.add(papelesAlDia);
         }
         reader.endArray();
         return papelesAlDias;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 }

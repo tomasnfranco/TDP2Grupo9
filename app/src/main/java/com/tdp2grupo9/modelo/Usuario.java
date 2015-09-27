@@ -173,7 +173,7 @@ public class Usuario {
         try {
             urlConnection = Connection.getHttpUrlConnection("usuario/logout");
             urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());

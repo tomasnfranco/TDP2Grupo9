@@ -11,6 +11,7 @@ import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
+import com.tdp2grupo9.modelo.publicacion.RequiereCuidadosEspeciales;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
@@ -38,6 +39,7 @@ public class PublicacionAtributos {
     private List<Sexo> sexos;
     private List<Tamanio> tamanios;
     private List<VacunasAlDia> vacunasAlDia;
+    private List<RequiereCuidadosEspeciales> requiereCuidadosEspeciales;
 
     public PublicacionAtributos() {
         this.colores = new ArrayList<>();
@@ -51,6 +53,7 @@ public class PublicacionAtributos {
         this.sexos = new ArrayList<>();
         this.tamanios = new ArrayList<>();
         this.vacunasAlDia = new ArrayList<>();
+        this.requiereCuidadosEspeciales = new ArrayList<>();
     }
 
     private void resetearAtributos() {
@@ -65,6 +68,7 @@ public class PublicacionAtributos {
         this.sexos.clear();
         this.tamanios.clear();
         this.vacunasAlDia.clear();
+        this.requiereCuidadosEspeciales.clear();
     }
 
 
@@ -73,35 +77,41 @@ public class PublicacionAtributos {
         while (reader.hasNext()) {
             String name = reader.nextName();
             switch (name) {
-                case "color":
+                case Especie.CLAVE:
+                    this.especies = Especie.getEspeciesfromJson(reader);
+                    break;
+                case Color.CLAVE:
                     this.colores = Color.getColoresfromJson(reader);
                     break;
-                case "castrado":
+                case Castrado.CLAVE:
                     this.castrados = Castrado.getCastradosfromJson(reader);
                     break;
-                case "compatibleCon":
+                case CompatibleCon.CLAVE:
                     this.compatibilidades = CompatibleCon.getCompatibilidadesfromJson(reader);
                     break;
-                case "edad":
+                case Edad.CLAVE:
                     this.edades = Edad.getEdadesfromJson(reader);
                     break;
-                case "energia":
+                case Energia.CLAVE:
                     this.energias = Energia.getEnergiasfromJson(reader);
                     break;
-                case "papelesAlDia":
+                case PapelesAlDia.CLAVE:
                     this.papelesAlDia = PapelesAlDia.getPapelesAlDiafromJson(reader);
                     break;
-                case "proteccion":
+                case Proteccion.CLAVE:
                     this.protecciones = Proteccion.getProteccionesfromJson(reader);
                     break;
-                case "sexo":
+                case Sexo.CLAVE:
                     this.sexos = Sexo.getSexosfromJson(reader);
                     break;
-                case "tamanio":
+                case Tamanio.CLAVE:
                     this.tamanios = Tamanio.getTamaniosfromJson(reader);
                     break;
-                case "vacuasAlDia":
+                case VacunasAlDia.CLAVE:
                     this.vacunasAlDia = VacunasAlDia.getVacunasAlDiafromJson(reader);
+                    break;
+                case RequiereCuidadosEspeciales.CLAVE:
+                    this.requiereCuidadosEspeciales = RequiereCuidadosEspeciales.getRequiereCuidadosEspecialesfromJson(reader);
                     break;
                 default:
                     reader.skipValue();
@@ -182,6 +192,10 @@ public class PublicacionAtributos {
 
     public List<VacunasAlDia> getVacunasAlDia() {
         return vacunasAlDia;
+    }
+
+    public List<RequiereCuidadosEspeciales> getRequiereCuidadosEspeciales() {
+        return requiereCuidadosEspeciales;
     }
 
 }
