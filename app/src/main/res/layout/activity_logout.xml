@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:id="@+id/activity_log">
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="Notificaciones "
+        android:id="@+id/button2"
+        android:textStyle="bold"
+        android:enabled="false"
+        android:textSize="14dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Notificaciones en el móvil"
+        android:id="@+id/button4"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:textSize="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#ff888888" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Pestaña de notificaciones"
+        android:id="@+id/button5"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:textSize="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#FF888888" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="Otros"
+        android:id="@+id/button3"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:enabled="false"
+        android:textSize="16dp"
+        android:layout_marginTop="2dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Seguridad"
+        android:id="@+id/button6"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:textSize="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#FF888888" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Cambiar contraseña"
+        android:id="@+id/button8"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:textSize="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#FF888888" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Cerrar Sesión"
+        android:id="@+id/btnCerrarSesion"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:textSize="14dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#FF888888" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/logout_image" />
+
+</LinearLayout>

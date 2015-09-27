@@ -118,8 +118,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Usuario.getInstancia().setFacebookToken(loginResult.getAccessToken().getToken());
                 authenticationFacebookTask = new UserFacebookLoginTask();
                 authenticationFacebookTask.execute((Void) null);
-                Toast.makeText(getApplicationContext(), "ID: " + loginResult.getAccessToken().getUserId() + "\n"
-                        + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();
+                /*Toast.makeText(getApplicationContext(), "ID: " + loginResult.getAccessToken().getUserId() + "\n"
+                        + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();*/
             }
 
             @Override
