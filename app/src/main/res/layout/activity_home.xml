@@ -24,7 +24,7 @@
         <Button
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/button"
+            android:id="@+id/btnAdopcion"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -34,8 +34,8 @@
         <Button
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/button2"
-            android:layout_alignBottom="@+id/button"
+            android:id="@+id/btnPerdido"
+            android:layout_alignBottom="@+id/btnAdopcion"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="22dp"

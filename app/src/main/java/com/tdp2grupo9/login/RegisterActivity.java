@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-       /* SupportMapFragment supportMapFragment = (SupportMapFragment)
+       SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragmentMap);
 
         // Getting a reference to the map
@@ -104,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
                 markerOptions.title("Latitud: " + latLng.latitude + " : " + "Longitud: " + latLng.longitude);
+                latitud = latLng.latitude;
+                longitud = latLng.longitude;
 
 
                 // Clears the previously touched position
@@ -115,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                 // Placing a marker on the touched position
                 googleMap.addMarker(markerOptions);
             }
-        });*/
+        });
     }
 
     @Override

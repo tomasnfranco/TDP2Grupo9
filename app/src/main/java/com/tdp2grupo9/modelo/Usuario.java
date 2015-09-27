@@ -16,7 +16,7 @@ import java.net.URL;
 public class Usuario {
 
     private static final Usuario INSTANCIA = new Usuario();
-    private static final String SERVERURL = "http://192.168.1.3:8080/api/"; //TODO: pasar a un .config o algo
+    private static final String SERVERURL = "http://10.0.3.2:8080/api/"; //TODO: pasar a un .config o algo
     //10.0.2.2
     //10.0.3.2 genymotion
     private Long facebookId ;
@@ -181,10 +181,12 @@ public class Usuario {
         try {
             urlConnection = this.getHttpUrlConnection("usuario/logout");
             urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            Log.i("Buscar sus huellas", "TOKEN NNN: " + this.token);
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            Log.i("Buscar sus huellas", "TOKEN NNN: " + this.token);
             out.write("token="+this.token);
             out.close();
 

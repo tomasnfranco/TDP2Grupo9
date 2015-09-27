@@ -1,27 +1,39 @@
 package com.tdp2grupo9.inicio;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adopcion.AdopcionTabActivity;
+import com.tdp2grupo9.login.LogoutActivity;
 
 /**
  * Created by emmanuelfls371 on 22/09/2015.
  */
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+
+    Button btnAdopciones;
+    Button btnPerdidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        btnAdopciones = (Button) findViewById(R.id.btnAdopcion);
+        btnPerdidos = (Button) findViewById(R.id.btnPerdido);
+        btnAdopciones.setOnClickListener(this);
+        btnPerdidos.setOnClickListener(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -36,10 +48,20 @@ public class HomeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.action_user){
+            Intent intent = new Intent(getApplicationContext(), LogoutActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnAdopcion){
+            Intent intent = new Intent(getApplicationContext(), AdopcionTabActivity.class);
+            startActivity(intent);
+        }
+    }
 }
