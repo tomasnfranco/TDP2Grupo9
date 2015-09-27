@@ -13,3 +13,5 @@ server.iml
 server.ipr
 server.iws
 .classpath
+/bin
+/out
