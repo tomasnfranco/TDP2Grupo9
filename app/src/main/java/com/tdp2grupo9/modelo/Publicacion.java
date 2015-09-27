@@ -20,7 +20,7 @@ public class Publicacion {
     private Color color;
     private Castrado castrado;
     private Especie especie;
-    private List<CompatibleCon> compatibleCon;
+    private CompatibleCon compatibleCon;
     private Edad edad;
     private Energia energia;
     private PapelesAlDia papelesAlDia;
@@ -55,7 +55,7 @@ public class Publicacion {
         return especie;
     }
 
-    public List<CompatibleCon> getCompatibleCon() {
+    public CompatibleCon getCompatibleCon() {
         return compatibleCon;
     }
 
@@ -87,7 +87,7 @@ public class Publicacion {
         this.color = color;
     }
 
-    public void setCompatibleCon(List<CompatibleCon> compatibleCon) {
+    public void setCompatibleCon(CompatibleCon compatibleCon) {
         this.compatibleCon = compatibleCon;
     }
 

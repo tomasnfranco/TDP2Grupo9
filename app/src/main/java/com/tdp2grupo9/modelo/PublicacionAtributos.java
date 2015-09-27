@@ -1,5 +1,6 @@
 package com.tdp2grupo9.modelo;
 
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.tdp2grupo9.modelo.publicacion.Castrado;
@@ -13,21 +14,18 @@ import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
+import com.tdp2grupo9.utils.Connection;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PublicacionAtributos {
-
-    private static final String SERVERURL = "http://10.0.3.2:8080/api/"; //TODO: pasar a un .config o algo
 
     private List<Color> colores;
     private List<Castrado> castrados;
@@ -55,10 +53,6 @@ public class PublicacionAtributos {
         this.vacunasAlDia = new ArrayList<>();
     }
 
-    private HttpURLConnection getHttpUrlConnection(String controller_action) throws IOException {
-        return (HttpURLConnection) new URL(SERVERURL + controller_action).openConnection();
-    }
-
     private void resetearAtributos() {
         this.colores.clear();
         this.castrados.clear();
@@ -73,68 +67,54 @@ public class PublicacionAtributos {
         this.vacunasAlDia.clear();
     }
 
-    private void jsonToAtributos(JSONObject json) throws JSONException {
-        JSONArray jsonarray = json.getJSONArray("color");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            colores.add(new Color(childJSONObject.getInt("id"), childJSONObject.getString("nombre")));
+
+    private void jsonToAtributos(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "color":
+                    this.colores = Color.getColoresfromJson(reader);
+                    break;
+                case "castrado":
+                    this.castrados = Castrado.getCastradosfromJson(reader);
+                    break;
+                case "compatibleCon":
+                    this.compatibilidades = CompatibleCon.getCompatibilidadesfromJson(reader);
+                    break;
+                case "edad":
+                    this.edades = Edad.getEdadesfromJson(reader);
+                    break;
+                case "energia":
+                    this.energias = Energia.getEnergiasfromJson(reader);
+                    break;
+                case "papelesAlDia":
+                    this.papelesAlDia = PapelesAlDia.getPapelesAlDiafromJson(reader);
+                    break;
+                case "proteccion":
+                    this.protecciones = Proteccion.getProteccionesfromJson(reader);
+                    break;
+                case "sexo":
+                    this.sexos = Sexo.getSexosfromJson(reader);
+                    break;
+                case "tamanio":
+                    this.tamanios = Tamanio.getTamaniosfromJson(reader);
+                    break;
+                case "vacuasAlDia":
+                    this.vacunasAlDia = VacunasAlDia.getVacunasAlDiafromJson(reader);
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
         }
-        jsonarray = json.getJSONArray("castrado");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            castrados.add(new Castrado(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("compatibleCon");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            compatibilidades.add(new CompatibleCon(childJSONObject.getInt("id"), childJSONObject.getString("compatibleCon")));
-        }
-        jsonarray = json.getJSONArray("edad");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            edades.add(new Edad(childJSONObject.getInt("id"), childJSONObject.getString("nombre")));
-        }
-        jsonarray = json.getJSONArray("energia");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            energias.add(new Energia(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("especie");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            especies.add(new Especie(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("papelesAlDia");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            papelesAlDia.add(new PapelesAlDia(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("proteccion");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            protecciones.add(new Proteccion(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("sexo");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            sexos.add(new Sexo(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("tamanio");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            tamanios.add(new Tamanio(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
-        jsonarray = json.getJSONArray("vacunasAlDia");
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject childJSONObject = jsonarray.getJSONObject(i);
-            vacunasAlDia.add(new VacunasAlDia(childJSONObject.getInt("id"), childJSONObject.getString("tipo")));
-        }
+        reader.endObject();
     }
 
     public void cargarAtributos(String token){
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = this.getHttpUrlConnection("/publicacion/atributos");
+            urlConnection = Connection.getHttpUrlConnection("/publicacion/atributos");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -143,10 +123,12 @@ public class PublicacionAtributos {
             out.write("token="+token);
             out.close();
 
+            Log.i("BuscaSusHuellas", "Atributos Publicacion requeridos" + urlConnection.getResponseMessage());
+
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.i("BuscaSusHuellas", "Atributos mascota" + urlConnection.getResponseMessage());
-                this.jsonToAtributos(new JSONObject(urlConnection.getResponseMessage()));
+                Log.i("BuscaSusHuellas", "Atributos Publicacion obtenidos" + urlConnection.getResponseMessage());
+                this.jsonToAtributos(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
