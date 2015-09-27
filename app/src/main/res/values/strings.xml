@@ -7,6 +7,6 @@
 
     <string name="facebook_app_id">1646506998968561</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_resultados_busqueda_adopcion">ResultadosBusquedaAdopcionActivity
-    </string>
+    <string name="title_activity_resultados_busqueda_adopcion">ResultadosBusquedaAdopcionActivity</string>
+    <string name="nomap_error">Error: target map not found</string>
 </resources>
