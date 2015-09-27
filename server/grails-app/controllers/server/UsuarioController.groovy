@@ -94,7 +94,7 @@ class UsuarioController {
         }
     }
 	
-	def login = {
+	def login() {
 		println "Login $params"
 		if(params.facebookId != null){
 			def user = Usuario.findByFacebookId(params.facebookId)

@@ -20,6 +20,7 @@ class ApiFilters {
 					params.usuario = userLogueado;
 					params.publicador = userLogueado.id;
 				}
+				println "$controllerName : $actionName"
 			}
 		}
    }
