@@ -1,6 +1,5 @@
 package com.tdp2grupo9.inicio;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.widget.Button;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adopcion.AdopcionTabActivity;
-import com.tdp2grupo9.login.LogoutActivity;
 
 /**
  * Created by emmanuelfls371 on 22/09/2015.
@@ -49,8 +47,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.action_settings) {
             return true;
         }else if (id == R.id.action_user){
-            Intent intent = new Intent(getApplicationContext(), LogoutActivity.class);
-            startActivity(intent);
+            int i = 0;
         }
 
         return super.onOptionsItemSelected(item);
