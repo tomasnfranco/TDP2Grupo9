@@ -1,5 +1,6 @@
 package com.tdp2grupo9.modelo.publicacion;
 
+import android.support.v4.view.NestedScrollingChild;
 import android.util.JsonReader;
 
 import org.json.JSONException;
@@ -8,11 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Especie extends AtributoPublicacion {
+public class NecesitaTransito extends AtributoPublicacion {
 
-    public static final String CLAVE = "especie";
+    public static final String CLAVE = "necesitaTransito";
 
-    public void jsonToEspecie(JsonReader reader) throws JSONException, IOException {
+    public void jsonToNecesitaTransito(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
@@ -28,15 +29,16 @@ public class Especie extends AtributoPublicacion {
         reader.endObject();
     }
 
-    public static List<Especie> getEspeciesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Especie> especies = new ArrayList<>();
+    public static List<NecesitaTransito> getNecesitaTransitofromJson(JsonReader reader) throws JSONException, IOException {
+        List<NecesitaTransito> necesitaTransitos = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            Especie especie = new Especie();
-            especie.jsonToEspecie(reader);
-            especies.add(especie);
+            NecesitaTransito necesitaTransito = new NecesitaTransito();
+            necesitaTransito.jsonToNecesitaTransito(reader);
+            necesitaTransitos.add(necesitaTransito);
         }
         reader.endArray();
-        return especies;
+        return necesitaTransitos;
     }
+
 }

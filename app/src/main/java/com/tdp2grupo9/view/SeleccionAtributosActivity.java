@@ -1,24 +1,32 @@
 package com.tdp2grupo9.view;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.interpeter.AtributosJSONInterpeter;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
+import com.tdp2grupo9.modelo.Usuario;
 
 /**
  * Created by Tomás on 26/09/2015.
  */
 public class SeleccionAtributosActivity extends Activity {
 
+    private ObtenerAtributosTask obtenerAtributosTask;
     protected AtributosJSONInterpeter atributosInterpeter;
+    protected PublicacionAtributos publicacionAtributos;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         atributosInterpeter = new AtributosJSONInterpeter(this);
+        publicacionAtributos = new PublicacionAtributos();
+        obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
+        obtenerAtributosTask.execute((Void) null);
     }
 
     protected void createSpinner(int spinnerId, String key, String atributoKey) {
@@ -78,6 +86,41 @@ public class SeleccionAtributosActivity extends Activity {
 
     protected void createEnergiaSpinner() {
         createSpinner(R.id.energia_spinner, AtributosJSONInterpeter.ENERGIA_KEY, AtributosJSONInterpeter.TIPO_KEY);
+    }
+
+    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
+
+        PublicacionAtributos publicacionAtributos;
+        ObtenerAtributosTask(PublicacionAtributos publicacionAtributos) {
+            this.publicacionAtributos = publicacionAtributos;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                this.publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            obtenerAtributosTask = null;
+            if (success) {
+
+
+                finish();
+            } else {
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            obtenerAtributosTask = null;
+        }
     }
 
 }

@@ -3,22 +3,18 @@ package com.tdp2grupo9.modelo;
 import android.util.JsonReader;
 import android.util.Log;
 
+import com.tdp2grupo9.utils.Connection;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class Usuario {
 
     private static final Usuario INSTANCIA = new Usuario();
-    private static final String SERVERURL = "http://10.0.3.2:8080/api/"; //TODO: pasar a un .config o algo
-    //10.0.2.2
-    //10.0.3.2 genymotion
     private Long facebookId ;
     private String facebookToken;
 
@@ -43,10 +39,6 @@ public class Usuario {
 
     public static Usuario getInstancia() {
         return INSTANCIA;
-    }
-
-    private HttpURLConnection getHttpUrlConnection(String controller_action) throws IOException {
-        return (HttpURLConnection) new URL(SERVERURL + controller_action).openConnection();
     }
 
     private void resetearAtributos() {
@@ -115,7 +107,7 @@ public class Usuario {
     public void registrarConFacebook(){
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = this.getHttpUrlConnection("usuario");
+            urlConnection = Connection.getHttpUrlConnection("usuario");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -147,7 +139,7 @@ public class Usuario {
     public void loginConFacebook(){
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = this.getHttpUrlConnection("usuario/login");
+            urlConnection = Connection.getHttpUrlConnection("usuario/login");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -179,14 +171,12 @@ public class Usuario {
     public void logout(){
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = this.getHttpUrlConnection("usuario/logout");
+            urlConnection = Connection.getHttpUrlConnection("usuario/logout");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            Log.i("Buscar sus huellas", "TOKEN NNN: " + this.token);
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            Log.i("Buscar sus huellas", "TOKEN NNN: " + this.token);
             out.write("token="+this.token);
             out.close();
 

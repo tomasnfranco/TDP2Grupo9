@@ -1,11 +1,43 @@
 package com.tdp2grupo9.modelo.publicacion;
 
-public class CompatibleCon {
-    private int id;
-    private String compatibleCon;
+import android.util.JsonReader;
 
-    public CompatibleCon(int id, String compatibleCon) {
-        this.id = id;
-        this.compatibleCon = compatibleCon;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CompatibleCon extends AtributoPublicacion {
+
+    public static final String CLAVE = "compatibleCon";
+
+    public void jsonToCompatibleCon(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "compatibleCon":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
+
+    public static List<CompatibleCon> getCompatibilidadesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<CompatibleCon> compatibilidades = new ArrayList<>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            CompatibleCon compatibleCon = new CompatibleCon();
+            compatibleCon.jsonToCompatibleCon(reader);
+            compatibilidades.add(compatibleCon);
+        }
+        reader.endArray();
+        return compatibilidades;
+    }
+
 }

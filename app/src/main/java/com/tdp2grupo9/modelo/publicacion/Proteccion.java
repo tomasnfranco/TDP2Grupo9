@@ -1,11 +1,43 @@
 package com.tdp2grupo9.modelo.publicacion;
 
-public class Proteccion {
-    private int id;
-    private String tipo;
+import android.util.JsonReader;
 
-    public Proteccion(int id, String tipo) {
-        this.id = id;
-        this.tipo = tipo;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Proteccion extends AtributoPublicacion {
+
+    public static final String CLAVE = "proteccion";
+
+    public void jsonToProteccion(JsonReader reader) throws JSONException, IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "id":
+                    this.setId(reader.nextInt());
+                    break;
+                case "tipo":
+                    this.setValor(reader.nextString());
+                    break;
+            }
+        }
+        reader.endObject();
     }
+
+    public static List<Proteccion> getProteccionesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<Proteccion> protecciones = new ArrayList<>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            Proteccion proteccion= new Proteccion();
+            proteccion.jsonToProteccion(reader);
+            protecciones.add(proteccion);
+        }
+        reader.endArray();
+        return protecciones;
+    }
+
 }
