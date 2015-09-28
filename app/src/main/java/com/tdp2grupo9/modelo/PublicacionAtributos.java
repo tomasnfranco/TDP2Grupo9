@@ -13,7 +13,6 @@ import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
-import com.tdp2grupo9.modelo.publicacion.RequiereCuidadosEspeciales;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
@@ -23,7 +22,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,6 @@ public class PublicacionAtributos {
     private List<AtributoPublicacion> sexos;
     private List<AtributoPublicacion> tamanios;
     private List<AtributoPublicacion> vacunasAlDia;
-    private List<AtributoPublicacion> requiereCuidadosEspeciales;
     private List<AtributoPublicacion> razas;
 
     public PublicacionAtributos() {
@@ -56,7 +53,6 @@ public class PublicacionAtributos {
         this.sexos = new ArrayList<>();
         this.tamanios = new ArrayList<>();
         this.vacunasAlDia = new ArrayList<>();
-        this.requiereCuidadosEspeciales = new ArrayList<>();
         this.razas = new ArrayList<>();
     }
 
@@ -72,7 +68,6 @@ public class PublicacionAtributos {
         this.sexos.clear();
         this.tamanios.clear();
         this.vacunasAlDia.clear();
-        this.requiereCuidadosEspeciales.clear();
         this.razas.clear();
     }
 
@@ -115,9 +110,6 @@ public class PublicacionAtributos {
                     break;
                 case VacunasAlDia.CLAVE:
                     this.vacunasAlDia = VacunasAlDia.getVacunasAlDiafromJson(reader);
-                    break;
-                case RequiereCuidadosEspeciales.CLAVE:
-                    this.requiereCuidadosEspeciales = RequiereCuidadosEspeciales.getRequiereCuidadosEspecialesfromJson(reader);
                     break;
                 case Raza.CLAVE:
                     this.razas = Raza.getRazasfromJson(reader);
@@ -193,10 +185,6 @@ public class PublicacionAtributos {
 
     public List<AtributoPublicacion> getVacunasAlDia() {
         return vacunasAlDia;
-    }
-
-    public List<AtributoPublicacion> getRequiereCuidadosEspeciales() {
-        return requiereCuidadosEspeciales;
     }
 
     public List<AtributoPublicacion> getRazas() {

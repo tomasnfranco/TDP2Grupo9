@@ -10,10 +10,9 @@ import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
 import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
-import com.tdp2grupo9.modelo.publicacion.NecesitaTransito;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
-import com.tdp2grupo9.modelo.publicacion.RequiereCuidadosEspeciales;
+import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
@@ -22,6 +21,7 @@ import com.tdp2grupo9.utils.Connection;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -29,10 +29,14 @@ import java.util.List;
 
 public class Publicacion {
 
+    private Integer id;
     private Integer tipoPublicacion;
     private String nombreMascota;
     private String condiciones;
     private String videoLink;
+    private Boolean requiereCuidadosEspeciales;
+    private Boolean necesitaTransito;
+    private Raza raza;
     private Color color;
     private Castrado castrado;
     private Especie especie;
@@ -44,17 +48,17 @@ public class Publicacion {
     private Sexo sexo;
     private Tamanio tamanio;
     private VacunasAlDia vacunasAlDia;
-    private RequiereCuidadosEspeciales requiereCuidadosEspeciales;
-    private NecesitaTransito necesitaTransito;
     private List<Bitmap> imagenes;
     private Double latitud;
     private Double longitud;
 
     public Publicacion() {
+        this.id = 0;
         this.tipoPublicacion = 0;
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
+        this.raza = new Raza();
         this.color = new Color();
         this.castrado = new Castrado();
         this.especie = new Especie();
@@ -66,8 +70,8 @@ public class Publicacion {
         this.sexo = new Sexo();
         this.tamanio = new Tamanio();
         this.vacunasAlDia = new VacunasAlDia();
-        this.requiereCuidadosEspeciales = new RequiereCuidadosEspeciales();
-        this.necesitaTransito = new NecesitaTransito();
+        this.requiereCuidadosEspeciales = false;
+        this.necesitaTransito = false;
         this.imagenes = new ArrayList<>();
         this.latitud = 0.0;
         this.longitud = 0.0;
@@ -111,17 +115,14 @@ public class Publicacion {
                 case VacunasAlDia.CLAVE:
                     this.vacunasAlDia.jsonToVacuna(reader);
                     break;
-                case RequiereCuidadosEspeciales.CLAVE:
-                    this.requiereCuidadosEspeciales.jsonToRequiereCuidadosEspeciales(reader);
-                    break;
-                case NecesitaTransito.CLAVE:
-                    this.necesitaTransito.jsonToNecesitaTransito(reader);
+                case "id":
+                    this.id = reader.nextInt();
                     break;
                 case "tipoPublicacion":
                     this.tipoPublicacion = reader.nextInt();
                     break;
                 case "nombreMascota":
-                    this.tipoPublicacion = reader.nextInt();
+                    this.nombreMascota = reader.nextString();
                     break;
                 case "condiciones":
                     this.condiciones = reader.nextString();
@@ -134,6 +135,12 @@ public class Publicacion {
                     break;
                 case "longitud":
                     this.longitud = reader.nextDouble();
+                    break;
+                case "requiereCuidadosEspeciales":
+                    this.requiereCuidadosEspeciales = reader.nextBoolean();
+                    break;
+                case "necesitaTransito":
+                    this.necesitaTransito = reader.nextBoolean();
                     break;
                 default:
                     reader.skipValue();
@@ -152,26 +159,28 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+
             out.write("token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
                     "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
-            "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
-            "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
-            "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
-            "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
-                    "&necesitaTransito="+this.necesitaTransito.getId()+
-            "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales.getId()+
-            "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink);
+                    "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
+                    "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
+                    "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
+                    "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
+                    "&necesitaTransito="+this.necesitaTransito +
+                    "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
+                    "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 Log.i("BuscaSusHuellas", "Publicacion guardada");
+                this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
-        }  finally {
+        } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
@@ -258,6 +267,14 @@ public class Publicacion {
         this.imagenes.add(imagen);
     }
 
+    public void setVideoLink(String videoLink) {
+        this.videoLink = videoLink;
+    }
+
+    public void setNombreMascota(String nombreMascota) {
+        this.nombreMascota = nombreMascota;
+    }
+
     public void setCastrado(Castrado castrado) {
         this.castrado = castrado;
     }
@@ -290,6 +307,10 @@ public class Publicacion {
         this.proteccion = proteccion;
     }
 
+    public void setRaza(Raza raza) {
+        this.raza = raza;
+    }
+
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
     }
@@ -300,6 +321,14 @@ public class Publicacion {
 
     public void setVacunasAlDia(VacunasAlDia vacunasAlDia) {
         this.vacunasAlDia = vacunasAlDia;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
     }
 
 }

@@ -3,6 +3,7 @@ package com.tdp2grupo9.adopcion;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.maps.MapsActivity;
+import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
+import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.view.SeleccionAtributosActivity;
 
 /**
@@ -23,6 +27,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int MAXIMO_FOTOS_PERMITIDAS = 6;
     private int cantidadFotosCargadas = 0;
+
+    private PublicarAdopcionTask publicarAdopcionTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,5 +143,41 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity {
             }
         });
     }
+
+    public class PublicarAdopcionTask extends AsyncTask<Void, Void, Boolean> {
+
+        Publicacion publicacion;
+
+        PublicarAdopcionTask(Publicacion publicacion) {
+            this.publicacion = publicacion;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                this.publicacion.guardarPublicacion(Usuario.getInstancia().getToken());
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            publicarAdopcionTask = null;
+            if (success) {
+                //TODO CARTEL : Publicacion Guardada
+                //TODO poner los spinner en las posiciones iniciales
+            } else {
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            publicarAdopcionTask = null;
+        }
+    }
+
 
 }
