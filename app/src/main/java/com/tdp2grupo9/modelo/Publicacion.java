@@ -29,6 +29,11 @@ import java.util.List;
 
 public class Publicacion {
 
+    private static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
+    private static Integer TPUBLICACION_PEDIDO_ADOPCION = 2;
+    private static Integer TPUBLICACION_MASCOTA_PERDIDA = 3;
+    private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 4;
+
     private Integer id;
     private Integer tipoPublicacion;
     private String nombreMascota;
@@ -55,7 +60,7 @@ public class Publicacion {
 
     public Publicacion() {
         this.id = 0;
-        this.tipoPublicacion = 0;
+        this.tipoPublicacion = TPUBLICACION_MASCOTA_ADOPCION;
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
