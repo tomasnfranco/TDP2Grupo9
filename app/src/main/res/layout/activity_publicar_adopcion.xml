@@ -6,7 +6,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:background="@drawable/portada_busqueda">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,8 +106,7 @@
             
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/orange">
+                android:layout_height="wrap_content">
                 
                 <LinearLayout
                     android:id="@+id/fotos_horizontal_clickable"
@@ -254,13 +254,15 @@
                     android:padding="5dp"
                     android:background="@color/darkorange"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_map"/>
+                    android:src="@drawable/ic_map"
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/zona_residencia"/>
+                    android:text="@string/zona_residencia"
+                    android:layout_marginLeft="20dp" />
 
             </LinearLayout>
 
@@ -268,13 +270,15 @@
                 android:id="@+id/requiere_hogar_transito_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/requiere_hogar_transito"/>
+                android:text="@string/requiere_hogar_transito"
+                android:textColor="@android:color/darker_gray" />
 
             <CheckBox
                 android:id="@+id/requiere_cuidados_especiales"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/requiere_hogar_transito"/>
+                android:text="@string/requiere_cuidados_especiales"
+                android:textColor="@android:color/darker_gray" />
 
             <EditText
                 android:id="@+id/contacto_edit_text"
