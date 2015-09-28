@@ -79,6 +79,18 @@ public class Publicacion {
         this.longitud = 0.0;
     }
 
+    private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
+        List<Publicacion> publicaciones = new ArrayList<>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            Publicacion publicacion = new Publicacion();
+            publicacion.jsonToPublicacion(reader);
+            publicaciones.add(publicacion);
+        }
+        reader.endArray();
+        return publicaciones;
+    }
+
     private void jsonToPublicacion(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {
@@ -189,7 +201,8 @@ public class Publicacion {
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
-                                                        Integer cantidad, Long latitud, Long longitud) {
+                                                        Integer max, Long latitud, Long longitud, Publicacion publicacion) {
+        List<Publicacion> publicaciones = new ArrayList<>();
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("usuario/logout");
@@ -197,24 +210,55 @@ public class Publicacion {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion;
+
+            //"&offset="+offset+"max="+max
+
+            if (publicacion.getColor().getId() > 0)
+                atributos += "&color="+publicacion.getColor().getId();
+            if (publicacion.getCastrado().getId() > 0)
+                atributos += "&castrado="+publicacion.getCastrado().getId();
+            if (publicacion.getEspecie().getId() > 0)
+                atributos += "&especie="+publicacion.getEspecie().getId();
+            if (publicacion.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+publicacion.getCompatibleCon().getId();
+            if (publicacion.getEdad().getId() > 0)
+                atributos += "&edad="+publicacion.getEdad().getId();
+            if (publicacion.getEnergia().getId() > 0)
+                atributos += "&energia="+publicacion.getEnergia().getId();
+            if (publicacion.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+publicacion.getPapelesAlDia().getId();
+            if (publicacion.getProteccion().getId() > 0)
+                atributos += "&proteccion="+publicacion.getProteccion().getId();
+            if (publicacion.getSexo().getId() > 0)
+                atributos += "&sexo="+publicacion.getSexo().getId();
+            if (publicacion.getTamanio().getId() > 0)
+                atributos += "&tamanio="+publicacion.getTamanio().getId();
+            if (publicacion.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+publicacion.getVacunasAlDia().getId();
+            if (publicacion.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
+            if (publicacion.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
+
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("token="+token+"&tipoPublicacion="+tipoPublicacion+"&offset="+offset+
-                    "cantidad");
+            out.write(atributos);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.i("BuscaSusHuellas", "Logout realizado correctamente");
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        return new ArrayList<>();
+        return publicaciones;
     }
 
     public Castrado getCastrado() {
@@ -263,6 +307,14 @@ public class Publicacion {
 
     public List<Bitmap> getImagenes() {
         return imagenes;
+    }
+
+    public Boolean getRequiereCuidadosEspeciales() {
+        return this.requiereCuidadosEspeciales;
+    }
+
+    public Boolean getNecesitaTransito() {
+        return this.necesitaTransito;
     }
 
     public void addImagen(Bitmap imagen) {
