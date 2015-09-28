@@ -26,7 +26,6 @@ public class AtributosPublicacionArrayAdapter extends GenericArrayAdapter<Atribu
         return atributos.get(position);
     }
 
-
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {

@@ -41,6 +41,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     private static final String PHOTO_INTENT_TYPE = "image/*";
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int MAXIMO_FOTOS_PERMITIDAS = 6;
+    private static final int DATA_MAPA_REQUEST = 10;
     private int cantidadFotosCargadas = 0;
     private EditText nombre_descripcion;
     private EditText videoLink;
@@ -223,6 +224,12 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 e.printStackTrace();
             }
         }
+
+        if ((requestCode == DATA_MAPA_REQUEST) && (resultCode == RESULT_OK)){
+            Double lon = data.getDoubleExtra("longitud",0.0);
+            Double lat = data.getDoubleExtra("latitud", 0.0);
+            System.out.println("LAT_LON====================================== " + lon +" : "+ lat);
+        }
     }
 
     public ImageView getImageViewACargar() {
@@ -255,7 +262,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MapsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, DATA_MAPA_REQUEST);
             }
         });
     }
