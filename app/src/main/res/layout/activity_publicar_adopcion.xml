@@ -230,6 +230,7 @@
 
                 <EditText
                     android:layout_width="match_parent"
+                    android:id="@+id/cargar_video"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textSize="15sp"
@@ -282,13 +283,14 @@
                 android:hint="@string/contacto_hint"/>
 
             <EditText
-                android:id="@+id/observaciones_edit_text"
+                android:id="@+id/condiciones_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/observaciones_hint"
                 android:lines="3"/>
 
             <Button
+                android:id="@+id/btn_publicar_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

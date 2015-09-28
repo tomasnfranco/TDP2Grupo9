@@ -42,4 +42,6 @@
             android:background="@drawable/btn_perdido" />
     </RelativeLayout>
 
+    <include layout="@layout/toolbar_aplicacion"/>
+
 </RelativeLayout>

@@ -32,6 +32,18 @@ public class SeleccionAtributosActivity extends Activity {
     private ObtenerAtributosTask obtenerAtributosTask;
     protected AtributosJSONInterpeter atributosInterpeter;
     protected PublicacionAtributos publicacionAtributos;
+    protected Spinner spEspecie;
+    protected Spinner spRaza;
+    protected Spinner spSexo;
+    protected Spinner spTamanio;
+    protected Spinner spEdad;
+    protected Spinner spColor;
+    protected Spinner spCompatibleCon;
+    protected Spinner spPapeles;
+    protected Spinner spVacunas;
+    protected Spinner spCastrado;
+    protected Spinner spProteccion;
+    protected Spinner spEnergia;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,13 +52,7 @@ public class SeleccionAtributosActivity extends Activity {
         publicacionAtributos = new PublicacionAtributos();
         obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
         obtenerAtributosTask.execute((Void) null);
-    }
 
-    protected void createSpinner(int spinnerId, String key, String atributoKey) {
-        Spinner spinner = (Spinner) findViewById(spinnerId);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, atributosInterpeter.getAtributos(key, atributoKey));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 
     protected void createEspecieSpinner() {
@@ -56,8 +62,8 @@ public class SeleccionAtributosActivity extends Activity {
         especies.add(0, especie);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, especies);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.especie_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spEspecie = (Spinner) findViewById(R.id.especie_spinner);
+        spEspecie.setAdapter(atributosArrayAdapter);
     }
 
     protected void createRazaSpinner() {
@@ -67,8 +73,8 @@ public class SeleccionAtributosActivity extends Activity {
         razas.add(0, raza);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, razas);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.raza_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spRaza = (Spinner) findViewById(R.id.raza_spinner);
+        spRaza.setAdapter(atributosArrayAdapter);
     }
 
     protected void createSexoSpinner() {
@@ -78,8 +84,8 @@ public class SeleccionAtributosActivity extends Activity {
         sexos.add(0, sexo);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, sexos);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.sexo_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spSexo = (Spinner) findViewById(R.id.sexo_spinner);
+        spSexo.setAdapter(atributosArrayAdapter);
     }
 
     protected void createTamanioSpinner() {
@@ -89,8 +95,8 @@ public class SeleccionAtributosActivity extends Activity {
         tamanios.add(0, tamanio);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, tamanios);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.tamanio_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spTamanio = (Spinner) findViewById(R.id.tamanio_spinner);
+        spTamanio.setAdapter(atributosArrayAdapter);
     }
 
     protected void createEdadSpinner() {
@@ -100,8 +106,8 @@ public class SeleccionAtributosActivity extends Activity {
         edades.add(0, edad);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, edades);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.edad_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spEdad = (Spinner) findViewById(R.id.edad_spinner);
+        spEdad.setAdapter(atributosArrayAdapter);
     }
 
     protected void createColorSpinner() {
@@ -111,8 +117,8 @@ public class SeleccionAtributosActivity extends Activity {
         colores.add(0, color);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, colores);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.color_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spColor = (Spinner) findViewById(R.id.color_spinner);
+        spColor.setAdapter(atributosArrayAdapter);
     }
 
     protected void createCompatibleConSpinner() {
@@ -122,8 +128,8 @@ public class SeleccionAtributosActivity extends Activity {
         compatibilidades.add(0, compatibleCon);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, compatibilidades);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.compatible_con_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spCompatibleCon = (Spinner) findViewById(R.id.compatible_con_spinner);
+        spCompatibleCon.setAdapter(atributosArrayAdapter);
     }
 
     protected void createPapelesDiaSpinner() {
@@ -133,8 +139,8 @@ public class SeleccionAtributosActivity extends Activity {
         papelesAlDias.add(0, papelesAlDia);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, papelesAlDias);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.papeles_dia_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spPapeles = (Spinner) findViewById(R.id.papeles_dia_spinner);
+        spPapeles.setAdapter(atributosArrayAdapter);
     }
 
     protected void createVacunasDiaSpinner() {
@@ -144,8 +150,8 @@ public class SeleccionAtributosActivity extends Activity {
         vacunasAldias.add(0, vacunasAldia);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, vacunasAldias);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.vacunas_dia_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spVacunas = (Spinner) findViewById(R.id.vacunas_dia_spinner);
+        spVacunas.setAdapter(atributosArrayAdapter);
     }
 
     protected void createCastradorSpinner() {
@@ -155,8 +161,8 @@ public class SeleccionAtributosActivity extends Activity {
         castrados.add(0, castrado);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, castrados);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.castrado_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spCastrado = (Spinner) findViewById(R.id.castrado_spinner);
+        spCastrado.setAdapter(atributosArrayAdapter);
     }
 
     protected void createProteccionSpinner() {
@@ -166,8 +172,8 @@ public class SeleccionAtributosActivity extends Activity {
         protecciones.add(0, proteccion);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, protecciones);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.proteccion_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spProteccion = (Spinner) findViewById(R.id.proteccion_spinner);
+        spProteccion.setAdapter(atributosArrayAdapter);
     }
 
     protected void createEnergiaSpinner() {
@@ -177,8 +183,23 @@ public class SeleccionAtributosActivity extends Activity {
         energias.add(0, energia);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, energias);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.energia_spinner);
-        spinner.setAdapter(atributosArrayAdapter);
+        spEnergia = (Spinner) findViewById(R.id.energia_spinner);
+        spEnergia.setAdapter(atributosArrayAdapter);
+    }
+
+    private void initializeWidgets() {
+        createEspecieSpinner();
+        createRazaSpinner();
+        createSexoSpinner();
+        createTamanioSpinner();;
+        createEdadSpinner();
+        createColorSpinner();
+        createCompatibleConSpinner();
+        createPapelesDiaSpinner();
+        createVacunasDiaSpinner();
+        createCastradorSpinner();
+        createProteccionSpinner();
+        createEnergiaSpinner();
     }
 
     public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
@@ -203,9 +224,7 @@ public class SeleccionAtributosActivity extends Activity {
         protected void onPostExecute(final Boolean success) {
             obtenerAtributosTask = null;
             if (success) {
-
-
-
+                initializeWidgets();
             } else {
             }
         }

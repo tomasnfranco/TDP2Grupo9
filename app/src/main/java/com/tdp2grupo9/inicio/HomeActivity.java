@@ -1,5 +1,6 @@
 package com.tdp2grupo9.inicio;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import com.tdp2grupo9.login.LogoutActivity;
  * Created by emmanuelfls371 on 22/09/2015.
  */
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomeActivity extends Activity implements View.OnClickListener{
 
     Button btnAdopciones;
     Button btnPerdidos;
