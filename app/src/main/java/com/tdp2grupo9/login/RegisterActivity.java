@@ -305,7 +305,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private boolean isValidDireccion(){
         if (etDireccion.getText().toString().isEmpty() || etDireccion.getText().toString().length() < 4
                 || etDireccion.getText().toString().length() > 200){
-            etDireccion.setError("Dirección inválida.");
+            etDireccion.setError("Direccion invalida.");
             return false;
         }else return true;
     }
@@ -313,7 +313,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private boolean isValidTelefono(){
         if (etTelefono.getText().toString().isEmpty() || etTelefono.getText().toString().length() < 8
                 || etTelefono.getText().toString().length() > 15){
-            etTelefono.setError("Teléfono inválido");
+            etTelefono.setError("Telefono invalido");
             return false;
         }else return true;
     }

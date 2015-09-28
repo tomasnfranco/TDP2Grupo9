@@ -3,6 +3,7 @@ package com.tdp2grupo9.modelo;
 import android.util.JsonReader;
 import android.util.Log;
 
+import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
 import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
@@ -11,6 +12,7 @@ import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
+import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.RequiereCuidadosEspeciales;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
@@ -28,18 +30,19 @@ import java.util.List;
 
 public class PublicacionAtributos {
 
-    private List<Color> colores;
-    private List<Castrado> castrados;
-    private List<Especie> especies;
-    private List<CompatibleCon> compatibilidades;
-    private List<Edad> edades;
-    private List<Energia> energias;
-    private List<PapelesAlDia> papelesAlDia;
-    private List<Proteccion> protecciones;
-    private List<Sexo> sexos;
-    private List<Tamanio> tamanios;
-    private List<VacunasAlDia> vacunasAlDia;
-    private List<RequiereCuidadosEspeciales> requiereCuidadosEspeciales;
+    private List<AtributoPublicacion> colores;
+    private List<AtributoPublicacion> castrados;
+    private List<AtributoPublicacion> especies;
+    private List<AtributoPublicacion> compatibilidades;
+    private List<AtributoPublicacion> edades;
+    private List<AtributoPublicacion> energias;
+    private List<AtributoPublicacion> papelesAlDia;
+    private List<AtributoPublicacion> protecciones;
+    private List<AtributoPublicacion> sexos;
+    private List<AtributoPublicacion> tamanios;
+    private List<AtributoPublicacion> vacunasAlDia;
+    private List<AtributoPublicacion> requiereCuidadosEspeciales;
+    private List<AtributoPublicacion> razas;
 
     public PublicacionAtributos() {
         this.colores = new ArrayList<>();
@@ -54,6 +57,7 @@ public class PublicacionAtributos {
         this.tamanios = new ArrayList<>();
         this.vacunasAlDia = new ArrayList<>();
         this.requiereCuidadosEspeciales = new ArrayList<>();
+        this.razas = new ArrayList<>();
     }
 
     private void resetearAtributos() {
@@ -69,10 +73,12 @@ public class PublicacionAtributos {
         this.tamanios.clear();
         this.vacunasAlDia.clear();
         this.requiereCuidadosEspeciales.clear();
+        this.razas.clear();
     }
 
 
     private void jsonToAtributos(JsonReader reader) throws JSONException, IOException {
+        reader.setLenient(true);
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
@@ -113,6 +119,9 @@ public class PublicacionAtributos {
                 case RequiereCuidadosEspeciales.CLAVE:
                     this.requiereCuidadosEspeciales = RequiereCuidadosEspeciales.getRequiereCuidadosEspecialesfromJson(reader);
                     break;
+                case Raza.CLAVE:
+                    this.razas = Raza.getRazasfromJson(reader);
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -124,16 +133,8 @@ public class PublicacionAtributos {
     public void cargarAtributos(String token){
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = Connection.getHttpUrlConnection("/publicacion/atributos");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("token="+token);
-            out.close();
-
-            Log.i("BuscaSusHuellas", "Atributos Publicacion requeridos" + urlConnection.getResponseMessage());
+            urlConnection = Connection.getHttpUrlConnection("publicacion/atributos?token="+token);
+            Log.i("BuscaSusHuellas", "Atributos Publicacion requeridos " + token);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
@@ -150,52 +151,55 @@ public class PublicacionAtributos {
         }
     }
 
-    public List<Castrado> getCastrados() {
+    public List<AtributoPublicacion> getCastrados() {
         return castrados;
     }
 
-    public List<Color> getColores() {
+    public List<AtributoPublicacion> getColores() {
         return colores;
     }
 
-    public List<CompatibleCon> getCompatibilidades() {
+    public List<AtributoPublicacion> getCompatibilidades() {
         return compatibilidades;
     }
 
-    public List<Edad> getEdades() {
+    public List<AtributoPublicacion> getEdades() {
         return edades;
     }
 
-    public List<Energia> getEnergias() {
+    public List<AtributoPublicacion> getEnergias() {
         return energias;
     }
 
-    public List<Especie> getEspecies() {
+    public List<AtributoPublicacion> getEspecies() {
         return especies;
     }
 
-    public List<PapelesAlDia> getPapelesAlDia() {
+    public List<AtributoPublicacion> getPapelesAlDia() {
         return papelesAlDia;
     }
 
-    public List<Proteccion> getProtecciones() {
+    public List<AtributoPublicacion> getProtecciones() {
         return protecciones;
     }
 
-    public List<Sexo> getSexos() {
+    public List<AtributoPublicacion> getSexos() {
         return sexos;
     }
 
-    public List<Tamanio> getTamanios() {
+    public List<AtributoPublicacion> getTamanios() {
         return tamanios;
     }
 
-    public List<VacunasAlDia> getVacunasAlDia() {
+    public List<AtributoPublicacion> getVacunasAlDia() {
         return vacunasAlDia;
     }
 
-    public List<RequiereCuidadosEspeciales> getRequiereCuidadosEspeciales() {
+    public List<AtributoPublicacion> getRequiereCuidadosEspeciales() {
         return requiereCuidadosEspeciales;
     }
 
+    public List<AtributoPublicacion> getRazas() {
+        return razas;
+    }
 }

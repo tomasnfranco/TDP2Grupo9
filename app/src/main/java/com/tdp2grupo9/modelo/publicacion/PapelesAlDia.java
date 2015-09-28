@@ -23,13 +23,16 @@ public class PapelesAlDia extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<PapelesAlDia> getPapelesAlDiafromJson(JsonReader reader) throws JSONException, IOException {
-        List<PapelesAlDia> papelesAlDias = new ArrayList<>();
+    public static List<AtributoPublicacion> getPapelesAlDiafromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> papelesAlDias = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             PapelesAlDia papelesAlDia = new PapelesAlDia();
@@ -38,5 +41,9 @@ public class PapelesAlDia extends AtributoPublicacion {
         }
         reader.endArray();
         return papelesAlDias;
+    }
+
+    public String getName() {
+        return "Papeles al dia";
     }
 }

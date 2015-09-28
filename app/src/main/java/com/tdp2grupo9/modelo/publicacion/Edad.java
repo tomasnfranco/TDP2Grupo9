@@ -23,13 +23,16 @@ public class Edad extends AtributoPublicacion {
                 case "nombre":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Edad> getEdadesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Edad> edades = new ArrayList<>();
+    public static List<AtributoPublicacion> getEdadesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> edades = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Edad edad = new Edad();
@@ -38,6 +41,10 @@ public class Edad extends AtributoPublicacion {
         }
         reader.endArray();
         return edades;
+    }
+
+    public String getName() {
+        return "Edad";
     }
 
 }

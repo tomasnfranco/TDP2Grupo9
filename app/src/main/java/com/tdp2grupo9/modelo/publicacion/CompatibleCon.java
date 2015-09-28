@@ -23,13 +23,16 @@ public class CompatibleCon extends AtributoPublicacion {
                 case "compatibleCon":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<CompatibleCon> getCompatibilidadesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<CompatibleCon> compatibilidades = new ArrayList<>();
+    public static List<AtributoPublicacion> getCompatibilidadesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> compatibilidades = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             CompatibleCon compatibleCon = new CompatibleCon();
@@ -38,6 +41,10 @@ public class CompatibleCon extends AtributoPublicacion {
         }
         reader.endArray();
         return compatibilidades;
+    }
+
+    public String getName() {
+        return "Compatible Con";
     }
 
 }

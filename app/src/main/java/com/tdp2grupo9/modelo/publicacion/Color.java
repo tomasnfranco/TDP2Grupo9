@@ -23,13 +23,16 @@ public class Color extends AtributoPublicacion {
                 case "nombre":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Color> getColoresfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Color> colores = new ArrayList<>();
+    public static List<AtributoPublicacion> getColoresfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> colores = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Color color = new Color();
@@ -40,4 +43,7 @@ public class Color extends AtributoPublicacion {
         return colores;
     }
 
+    public String getName() {
+        return "Color";
+    }
 }

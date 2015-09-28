@@ -23,13 +23,16 @@ public class Proteccion extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Proteccion> getProteccionesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Proteccion> protecciones = new ArrayList<>();
+    public static List<AtributoPublicacion> getProteccionesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> protecciones = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Proteccion proteccion= new Proteccion();
@@ -38,6 +41,10 @@ public class Proteccion extends AtributoPublicacion {
         }
         reader.endArray();
         return protecciones;
+    }
+
+    public String getName() {
+        return "Proteccion";
     }
 
 }

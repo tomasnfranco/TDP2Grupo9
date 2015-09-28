@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"/>
 
             <Spinner
-                android:id="@+id/compatible_ninios_spinner"
+                android:id="@+id/compatible_con_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

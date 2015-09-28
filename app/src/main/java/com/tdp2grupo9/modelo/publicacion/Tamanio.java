@@ -23,13 +23,16 @@ public class Tamanio extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Tamanio> getTamaniosfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Tamanio> tamanios = new ArrayList<>();
+    public static List<AtributoPublicacion> getTamaniosfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> tamanios = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Tamanio tamanio = new Tamanio();
@@ -38,6 +41,10 @@ public class Tamanio extends AtributoPublicacion {
         }
         reader.endArray();
         return tamanios;
+    }
+
+    public String getName() {
+        return "Tamanio";
     }
 
 }

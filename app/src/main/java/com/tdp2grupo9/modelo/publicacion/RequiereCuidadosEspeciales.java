@@ -23,13 +23,16 @@ public class RequiereCuidadosEspeciales extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<RequiereCuidadosEspeciales> getRequiereCuidadosEspecialesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<RequiereCuidadosEspeciales> requiereCuidadosEspecialess = new ArrayList<>();
+    public static List<AtributoPublicacion> getRequiereCuidadosEspecialesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> requiereCuidadosEspecialess = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             RequiereCuidadosEspeciales requiereCuidadosEspeciales = new RequiereCuidadosEspeciales();
@@ -38,5 +41,9 @@ public class RequiereCuidadosEspeciales extends AtributoPublicacion {
         }
         reader.endArray();
         return requiereCuidadosEspecialess;
+    }
+
+    public String getName() {
+        return "Requiere cuidados especiales";
     }
 }

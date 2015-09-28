@@ -23,13 +23,16 @@ public class Castrado extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Castrado> getCastradosfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Castrado> castrados = new ArrayList<>();
+    public static List<AtributoPublicacion> getCastradosfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> castrados = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Castrado castrado = new Castrado();
@@ -38,6 +41,10 @@ public class Castrado extends AtributoPublicacion {
         }
         reader.endArray();
         return castrados;
+    }
+
+    public String getName() {
+        return "Castrado";
     }
 
 }

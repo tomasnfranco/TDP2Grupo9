@@ -1,6 +1,6 @@
 package com.tdp2grupo9.modelo.publicacion;
 
-public class AtributoPublicacion {
+public abstract class AtributoPublicacion {
 
     protected int id;
     protected String valor;
@@ -26,4 +26,10 @@ public class AtributoPublicacion {
         this.valor = valor;
     }
 
+    @Override
+    public String toString() {
+        return this.valor;
+    }
+
+    public abstract String getName() ;
 }

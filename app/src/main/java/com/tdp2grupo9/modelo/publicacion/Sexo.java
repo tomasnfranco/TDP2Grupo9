@@ -23,13 +23,16 @@ public class Sexo extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Sexo> getSexosfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Sexo> sexos = new ArrayList<>();
+    public static List<AtributoPublicacion> getSexosfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> sexos = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Sexo sexo = new Sexo();
@@ -38,6 +41,10 @@ public class Sexo extends AtributoPublicacion {
         }
         reader.endArray();
         return sexos;
+    }
+
+    public String getName() {
+        return "Sexo";
     }
 
 }

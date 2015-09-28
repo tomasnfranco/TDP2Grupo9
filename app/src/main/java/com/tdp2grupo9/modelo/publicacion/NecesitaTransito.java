@@ -24,6 +24,9 @@ public class NecesitaTransito extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
@@ -39,6 +42,10 @@ public class NecesitaTransito extends AtributoPublicacion {
         }
         reader.endArray();
         return necesitaTransitos;
+    }
+
+    public String getName() {
+        return "Necesita Transito";
     }
 
 }

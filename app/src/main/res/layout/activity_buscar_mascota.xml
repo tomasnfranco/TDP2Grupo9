@@ -17,7 +17,7 @@
             <Spinner
                 android:id="@+id/especie_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <Spinner
                 android:id="@+id/raza_spinner"

@@ -23,13 +23,16 @@ public class Especie extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Especie> getEspeciesfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Especie> especies = new ArrayList<>();
+    public static List<AtributoPublicacion> getEspeciesfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> especies = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Especie especie = new Especie();
@@ -39,4 +42,9 @@ public class Especie extends AtributoPublicacion {
         reader.endArray();
         return especies;
     }
+
+    public String getName() {
+        return "Especie";
+    }
+
 }

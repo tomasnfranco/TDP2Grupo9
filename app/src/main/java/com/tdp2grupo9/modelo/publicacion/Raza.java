@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VacunasAlDia extends AtributoPublicacion {
+public class Raza extends AtributoPublicacion {
 
-    public static final String CLAVE = "vacunasAlDia";
+    public static final String CLAVE = "raza";
 
-    public void jsonToVacuna(JsonReader reader) throws JSONException, IOException {
+    public void jsonToRaza(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
@@ -20,7 +20,7 @@ public class VacunasAlDia extends AtributoPublicacion {
                 case "id":
                     this.setId(reader.nextInt());
                     break;
-                case "tipo":
+                case "nombre":
                     this.setValor(reader.nextString());
                     break;
                 default:
@@ -31,20 +31,20 @@ public class VacunasAlDia extends AtributoPublicacion {
         reader.endObject();
     }
 
-    public static List<AtributoPublicacion> getVacunasAlDiafromJson(JsonReader reader) throws JSONException, IOException {
-        List<AtributoPublicacion> vacunasAlDias = new ArrayList<>();
+    public static List<AtributoPublicacion> getRazasfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> razas = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
-            VacunasAlDia vacunasAlDia = new VacunasAlDia();
-            vacunasAlDia.jsonToVacuna(reader);
-            vacunasAlDias.add(vacunasAlDia);
+            Raza raza = new Raza();
+            raza.jsonToRaza(reader);
+            razas.add(raza);
         }
         reader.endArray();
-        return vacunasAlDias;
+        return razas;
     }
 
     public String getName() {
-        return "Vacunas al dia";
+        return "Raza";
     }
 
 }

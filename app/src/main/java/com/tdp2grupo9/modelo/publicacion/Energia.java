@@ -23,13 +23,16 @@ public class Energia extends AtributoPublicacion {
                 case "tipo":
                     this.setValor(reader.nextString());
                     break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
     }
 
-    public static List<Energia> getEnergiasfromJson(JsonReader reader) throws JSONException, IOException {
-        List<Energia> energias = new ArrayList<>();
+    public static List<AtributoPublicacion> getEnergiasfromJson(JsonReader reader) throws JSONException, IOException {
+        List<AtributoPublicacion> energias = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             Energia energia = new Energia();
@@ -40,4 +43,7 @@ public class Energia extends AtributoPublicacion {
         return energias;
     }
 
+    public String getName() {
+        return "Energia";
+    }
 }

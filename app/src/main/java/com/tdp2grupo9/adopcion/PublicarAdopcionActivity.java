@@ -38,7 +38,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity {
         createTamanioSpinner();;
         createEdadSpinner();
         createColorSpinner();
-        createCompatibleNiniosSpinner();
+        createCompatibleConSpinner();
         createPapelesDiaSpinner();
         createVacunasDiaSpinner();
         createCastradorSpinner();
