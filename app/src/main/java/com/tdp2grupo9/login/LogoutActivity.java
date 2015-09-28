@@ -1,5 +1,6 @@
 package com.tdp2grupo9.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import com.tdp2grupo9.inicio.HomeActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
 
-public class LogoutActivity extends AppCompatActivity implements View.OnClickListener {
+public class LogoutActivity extends Activity implements View.OnClickListener {
 
     private UserLogoutTask logoutTask;
     Button btnCerrarSesion;

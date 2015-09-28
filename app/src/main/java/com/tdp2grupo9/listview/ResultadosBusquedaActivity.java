@@ -1,14 +1,12 @@
 package com.tdp2grupo9.listview;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -28,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ResultadosBusquedaActivity extends AppCompatActivity {
+public class ResultadosBusquedaActivity extends Activity {
 
     private ListView listView;
     private BuscarAdopcionTask buscarAdopcionTask;
@@ -87,14 +85,17 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
     private void cargarListView(){
         Publicacion p1 = new Publicacion();
         p1.setNombreMascota("Pepe");
+        Edad edad = new Edad();
+        edad.setId(2);
         p1.setRequiereCuidadosEspeciales(true);
         p1.setNecesitaTransito(true);
+        p1.setEdad(edad);
 
         Publicacion p2 = new Publicacion();
-        p2.setNombreMascota("Sarmiento");
+        p2.setNombreMascota("El es Bono un perro muy Especial");
         p2.setRequiereCuidadosEspeciales(false);
         p2.setNecesitaTransito(true);
-
+        publicaciones = new ArrayList<Publicacion>();
         publicaciones.add(p1);
         publicaciones.add(p2);
 
@@ -126,9 +127,6 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {

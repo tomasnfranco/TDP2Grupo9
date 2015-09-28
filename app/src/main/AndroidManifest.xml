@@ -26,7 +26,6 @@
             android:label="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,7 +34,6 @@
             android:label="" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.listview.ResultadosBusquedaActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

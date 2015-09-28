@@ -261,6 +261,11 @@ public class Publicacion {
         return castrado;
     }
 
+
+    public String getCondiciones() {
+        return condiciones;
+    }
+
     public Color getColor() {
         return color;
     }
@@ -291,6 +296,10 @@ public class Publicacion {
 
     public Sexo getSexo() {
         return sexo;
+    }
+
+    public Raza getRaza() {
+        return raza;
     }
 
     public Tamanio getTamanio() {

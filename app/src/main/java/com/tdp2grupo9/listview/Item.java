@@ -3,8 +3,6 @@ package com.tdp2grupo9.listview;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
@@ -32,8 +30,20 @@ public class Item {
         return publicacion.getNombreMascota();
     }
 
+    public String getRaza() {
+        return publicacion.getRaza().getValor();
+    }
+
+    public String getEdad() {
+        return publicacion.getEdad().getValor();
+    }
+
     public Boolean requiereCuidadosEspeciales() {
         return publicacion.getRequiereCuidadosEspeciales();
+    }
+
+    public Boolean tieneCondicionesDeAdopcion() {
+        return publicacion.getCondiciones().isEmpty();
     }
 
     public Boolean requiereHogarDeTransito() {
