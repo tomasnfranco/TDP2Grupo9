@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
+import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.view.SeleccionAtributosActivity;
 
 /**
@@ -42,6 +45,10 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int MAXIMO_FOTOS_PERMITIDAS = 6;
     private static final int DATA_MAPA_REQUEST = 10;
+
+    private Double latitud = Usuario.getInstancia().getLatitud();
+    private Double longitud = Usuario.getInstancia().getLongitud();
+
     private int cantidadFotosCargadas = 0;
     private EditText nombre_descripcion;
     private EditText videoLink;
@@ -98,6 +105,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 publicacion.setTamanio(((Tamanio) spTamanio.getSelectedItem()));
                 publicacion.setEdad(((Edad) spEdad.getSelectedItem()));
                 publicacion.setCompatibleCon(((CompatibleCon) spCompatibleCon.getSelectedItem()));
+                publicacion.setVacunasAlDia(((VacunasAlDia) spVacunas.getSelectedItem()));
                 publicacion.setPapelesAlDia(((PapelesAlDia) spPapeles.getSelectedItem()));
                 publicacion.setCastrado(((Castrado) spCastrado.getSelectedItem()));
                 publicacion.setProteccion(((Proteccion) spProteccion.getSelectedItem()));
@@ -107,8 +115,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 if(!videoLink.getText().toString().isEmpty())
                     publicacion.setVideoLink(videoLink.getText().toString());
 
-                publicacion.setLatitud(Usuario.getInstancia().getLatitud());
-                publicacion.setLongitud(Usuario.getInstancia().getLongitud());
+                publicacion.setLatitud(latitud);
+                publicacion.setLongitud(longitud);
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
@@ -118,6 +126,9 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
 
                 if (!condicionesAdopcion.getText().toString().isEmpty())
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
+
+                publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
+                publicarAdopcionTask.execute((Void)null);
 
 
             }
@@ -228,9 +239,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         }
 
         if ((requestCode == DATA_MAPA_REQUEST) && (resultCode == RESULT_OK)){
-            Double lon = data.getDoubleExtra("longitud",0.0);
-            Double lat = data.getDoubleExtra("latitud", 0.0);
-            System.out.println("LAT_LON====================================== " + lon +" : "+ lat);
+            longitud = data.getDoubleExtra("longitud",0.0);
+            latitud = data.getDoubleExtra("latitud", 0.0);
         }
     }
 
@@ -292,8 +302,40 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         protected void onPostExecute(final Boolean success) {
             publicarAdopcionTask = null;
             if (success) {
-                //TODO CARTEL : Publicacion Guardada
-                //TODO poner los spinner en las posiciones iniciales
+                nombre_descripcion.setText("");
+                spEspecie.setSelection(0);
+                spRaza.setSelection(0);
+                spSexo.setSelection(0);
+                spTamanio.setSelection(0);
+                spEdad.setSelection(0);
+                spColor.setSelection(0);
+                spCompatibleCon.setSelection(0);
+                spPapeles.setSelection(0);
+                spVacunas.setSelection(0);
+                spCastrado.setSelection(0);
+                spProteccion.setSelection(0);
+                spEnergia.setSelection(0);
+                latitud = Usuario.getInstancia().getLatitud();
+                longitud = Usuario.getInstancia().getLongitud();
+                videoLink.setText("");
+                requiereHogarTransito.setChecked(false);
+                cuidadosEspeciales.setChecked(false);
+                contacto.setText("");
+                condicionesAdopcion.setText("");
+
+                Toast toast3 = new Toast(getApplicationContext());
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_layout,
+                        (ViewGroup) findViewById(R.id.lytLayout));
+
+                TextView txtMsg = (TextView)layout.findViewById(R.id.txtMensaje);
+
+                toast3.setDuration(Toast.LENGTH_SHORT);
+                toast3.setView(layout);
+                toast3.show();
+
+
             } else {
             }
         }

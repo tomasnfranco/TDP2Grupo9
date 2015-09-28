@@ -161,6 +161,16 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            String atributos = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
+                    "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
+                    "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
+                    "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
+                    "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
+                    "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
+                    "&necesitaTransito="+this.necesitaTransito + "&raza="+this.raza.getId()+
+                    "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
+                    "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink;
+            Log.e("BUSCAHUELLAS : ",   atributos);
 
             out.write("token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
                     "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
@@ -168,7 +178,7 @@ public class Publicacion {
                     "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
                     "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
                     "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
-                    "&necesitaTransito="+this.necesitaTransito +
+                    "&necesitaTransito="+this.necesitaTransito +"&raza="+this.raza.getId()+
                     "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
                     "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink);
             out.close();
