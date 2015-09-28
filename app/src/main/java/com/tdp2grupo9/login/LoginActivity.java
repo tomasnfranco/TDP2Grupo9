@@ -188,9 +188,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         resetErrors();
         if (!isLoginFormValid()){
             Log.w("BuscaSusHuellas", "El formulario de logueo no es valido");
-            if (!emailTextView.getError().toString().isEmpty())
+            if (emailTextView.getError() != null && !emailTextView.getError().toString().isEmpty())
                 emailTextView.requestFocus();
-            else if (!passwordEditText.getError().toString().isEmpty())
+            else if (passwordEditText.getError() != null && !passwordEditText.getError().toString().isEmpty())
                 passwordEditText.requestFocus();
         } else {
             Log.i("BuscaSusHuellas", "El formulario de logueo es valido");
@@ -262,9 +262,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: validar si el mail corresponde a una cuenta existente y si la password es la correcta
-            if (email.equals("a@b")) {
-                return password.equals("c");
-            }
+            //if (email.equals("a@b")) {
+            //    return password.equals("c");
+            //}
 
             // TODO: aca va el codigo para registrar una nueva cuenta.
             return true;
@@ -275,11 +275,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             authenticationEmailPasswordTask = null;
             showProgress(false);
 
-            if (success) {
+            /*if (success) {
                 finish();
             } else {
                 passwordEditText.setError(getString(R.string.error_incorrect_password));
                 passwordEditText.requestFocus();
+            }*/
+
+            Usuario.getInstancia().setFacebookId(Long.valueOf(123456789));
+            Usuario.getInstancia().setFacebookToken("PPPPPPP");
+
+            if (success) {
+                if (Usuario.getInstancia().isLogueado()) {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    startActivity(intent);
+                }
+
+                finish();
+            } else {
             }
         }
 

@@ -147,8 +147,7 @@ public class ResultadosBusquedaActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                publicaciones = this.publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1,0,0, publicacion);
-
+                publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1,0,0, publicacion);
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
@@ -162,6 +161,7 @@ public class ResultadosBusquedaActivity extends Activity {
             if (success) {
                 cargarListView();
             } else {
+                //TODO: mensaje indicando por que fallo
             }
         }
 

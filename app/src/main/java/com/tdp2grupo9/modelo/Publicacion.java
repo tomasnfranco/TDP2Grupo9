@@ -1,6 +1,8 @@
 package com.tdp2grupo9.modelo;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -20,6 +22,7 @@ import com.tdp2grupo9.utils.Connection;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -28,6 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Publicacion {
+
+    private static final String LOG_TAG = "BSH.Publicacion";
+
+    private static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
+    private static Integer TPUBLICACION_PEDIDO_ADOPCION = 2;
+    private static Integer TPUBLICACION_MASCOTA_PERDIDA = 3;
+    private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 4;
 
     private Integer id;
     private Integer tipoPublicacion;
@@ -55,7 +65,7 @@ public class Publicacion {
 
     public Publicacion() {
         this.id = 0;
-        this.tipoPublicacion = 0;
+        this.tipoPublicacion = TPUBLICACION_MASCOTA_ADOPCION;
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
@@ -77,6 +87,24 @@ public class Publicacion {
         this.imagenes = new ArrayList<>();
         this.latitud = 0.0;
         this.longitud = 0.0;
+    }
+
+    private static String imageEncodeTobase64(Bitmap image) {
+        String METHOD = "imageEncodeTobase64";
+
+        Bitmap immagex=image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+
+        Log.d(LOG_TAG, METHOD + imageEncoded);
+        return imageEncoded;
+    }
+
+    private static Bitmap imageDecodeBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -156,6 +184,9 @@ public class Publicacion {
                 case "necesitaTransito":
                     this.necesitaTransito = reader.nextBoolean();
                     break;
+                case "foto":
+                    this.imagenes.add(Publicacion.imageDecodeBase64(reader.nextString()));
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -165,6 +196,8 @@ public class Publicacion {
     }
 
     public void guardarPublicacion(String token) {
+        String METHOD = "guardarPublicacion";
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("publicacion");
@@ -186,13 +219,52 @@ public class Publicacion {
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.i("BuscaSusHuellas", "Publicacion guardada");
+
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
+                Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
+
+                for(Bitmap bmp: this.imagenes)
+                    this.adjuntarImagenAPublicacion(token, bmp);
+
+                Log.d(LOG_TAG, METHOD + " finalizado.");
+
             } else {
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+    }
+
+    public void adjuntarImagenAPublicacion(String token, Bitmap bmp) {
+        String METHOD = "adjuntarImagenAPublicacion";
+
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("foto");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("PUT");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write("token=" + token + "&publicacion=" + this.id + "&base64=" + Publicacion.imageEncodeTobase64(bmp));
+            out.close();
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " imagen guardada en publicacion " + this.id);
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -201,10 +273,13 @@ public class Publicacion {
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
                                                         Integer max, Publicacion publicacion) {
+
+        String METHOD = "buscarPublicaciones";
+
         List<Publicacion> publicaciones = new ArrayList<>();
+
         HttpURLConnection urlConnection = null;
         try {
-
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
                     "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
 
@@ -237,24 +312,63 @@ public class Publicacion {
             if (publicacion.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
 
-            Log.e("BUSCAHUELLAS : ", atributos);
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
 
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                Log.i("BuscaSusHuellas", "Busqueda realizada correctamente");
+                Log.d(LOG_TAG, METHOD + " publicaciones obtenidas " + publicaciones.size());
             } else {
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
         return publicaciones;
+    }
+
+    public static Publicacion obtenerPublicacion(String token, Integer id) {
+
+        String METHOD = "obtenerPublicacion";
+
+        Publicacion publicacion = new Publicacion();
+
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = +id+"?token="+token;
+
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+
+            urlConnection = Connection.getHttpUrlConnection("publicacion/"+atributos);
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicacion.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " publicacion obtenida id: " + publicacion.getId());
+
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicacion;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNombreMascota() {
+        return nombreMascota;
     }
 
     public Castrado getCastrado() {
@@ -313,7 +427,6 @@ public class Publicacion {
     public List<Bitmap> getImagenes() {
         return imagenes;
     }
-
 
     public Double getLongitud() {
         return this.longitud;
@@ -413,7 +526,5 @@ public class Publicacion {
         this.condiciones = condiciones;
     }
 
-    public String getNombreMascota() {
-        return nombreMascota;
-    }
+
 }
