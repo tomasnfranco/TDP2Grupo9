@@ -28,6 +28,8 @@ import java.util.List;
 
 public class PublicacionAtributos {
 
+    private static final String LOG_TAG = "BSH.PubliAtributos";
+
     private List<AtributoPublicacion> colores;
     private List<AtributoPublicacion> castrados;
     private List<AtributoPublicacion> especies;
@@ -123,20 +125,23 @@ public class PublicacionAtributos {
     }
 
     public void cargarAtributos(String token){
+        String METHOD = "cargarAtributos";
+
+        Log.d(LOG_TAG, METHOD + " token " + token);
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("publicacion/atributos?token="+token);
-            Log.i("BuscaSusHuellas", "Atributos Publicacion requeridos " + token);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.i("BuscaSusHuellas", "Atributos Publicacion obtenidos" + urlConnection.getResponseMessage());
                 this.jsonToAtributos(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " atributos cargados correctamente.");
             } else {
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();

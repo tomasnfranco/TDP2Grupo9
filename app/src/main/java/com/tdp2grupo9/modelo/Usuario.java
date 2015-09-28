@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 
 public class Usuario {
 
+
+    private static final String LOG_TAG = "BSH.Publicacion";
+
     private static final Usuario INSTANCIA = new Usuario();
     private Long facebookId ;
     private String facebookToken;
@@ -105,14 +108,16 @@ public class Usuario {
     }
 
     public void registrarConFacebook(){
+        String METHOD = "registrarConFacebook";
+
+        Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("usuario");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            Log.i("BuscaSusHuellas", "FACEBOOK ID: " + this.facebookId);
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write("facebookId="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono+"&latitud="+
@@ -121,15 +126,15 @@ public class Usuario {
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
-                Log.i("BuscaSusHuellas", "Usuario registrado " + urlConnection.getResponseMessage());
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
+                Log.d(LOG_TAG, METHOD + " usuario registrado y logueado correctamente.");
             } else {
                 this.logueado = false;
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no registrado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -137,6 +142,10 @@ public class Usuario {
     }
 
     public void loginConFacebook(){
+        String METHOD = "loginConFacebook";
+
+        Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("usuario/login");
@@ -153,15 +162,15 @@ public class Usuario {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 String response = urlConnection.getResponseMessage();
-                Log.i("BuscaSusHuellas", "Login realizado correctamente " + response);
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
+                Log.d(LOG_TAG, METHOD + " usuario logueado correctamente.");
             } else {
                 this.logueado = false;
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -169,6 +178,10 @@ public class Usuario {
     }
 
     public void logout(){
+        String METHOD = "logout";
+
+        Log.d(LOG_TAG, METHOD + " token " + this.token);
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("usuario/logout");
@@ -183,12 +196,12 @@ public class Usuario {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 this.resetearAtributos();
-                Log.i("BuscaSusHuellas", "Logout realizado correctamente");
+                Log.d(LOG_TAG, METHOD + " usuario deslogueado correctamente.");
             } else {
-                Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no deslogueado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -197,12 +210,14 @@ public class Usuario {
 
     public void registrar(){
         //TODO: registrar con email y password
-        Log.w("BuscaSusHuellas", "Registrar con email y password no implementado");
+        String METHOD = "logout";
+        Log.w(LOG_TAG, METHOD + " metodo no implementado.");
     }
 
     public void login(){
         //TODO: login con email y password
-        Log.w("BuscaSusHuellas", "Login con email y password no implementado");
+        String METHOD = "logout";
+        Log.w(LOG_TAG, METHOD + " metodo no implementado.");
     }
 
     public void setFacebookId(Long facebookId) {

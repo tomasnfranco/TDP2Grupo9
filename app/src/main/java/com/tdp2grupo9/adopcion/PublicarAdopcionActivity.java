@@ -337,6 +337,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
 
 
             } else {
+                //TODO: mensaje indicando por que no se pudo publicar
             }
         }
 

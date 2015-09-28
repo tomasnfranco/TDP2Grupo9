@@ -14,6 +14,7 @@ import java.util.Map;
 /**
  * Created by Tomás on 26/09/2015.
  */
+@Deprecated
 public class AtributosJSONInterpeter {
 
     public static final String COLOR_KEY = "color";
