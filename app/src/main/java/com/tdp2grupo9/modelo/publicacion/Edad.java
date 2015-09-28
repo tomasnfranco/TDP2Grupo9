@@ -12,6 +12,7 @@ public class Edad extends AtributoPublicacion {
 
     public static final String CLAVE = "edad";
 
+
     public void jsonToEdad(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

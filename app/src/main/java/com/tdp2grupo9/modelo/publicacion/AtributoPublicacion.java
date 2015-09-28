@@ -10,6 +10,11 @@ public abstract class AtributoPublicacion {
         valor = "DESCONOCIDO";
     }
 
+    public AtributoPublicacion(Integer id) {
+        this.id = id;
+        valor = "DESCONOCIDO";
+    }
+
     public void setId(int id) {
         this.id = id;
     }

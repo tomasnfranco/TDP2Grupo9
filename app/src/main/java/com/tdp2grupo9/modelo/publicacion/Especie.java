@@ -12,6 +12,7 @@ public class Especie extends AtributoPublicacion {
 
     public static final String CLAVE = "especie";
 
+
     public void jsonToEspecie(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

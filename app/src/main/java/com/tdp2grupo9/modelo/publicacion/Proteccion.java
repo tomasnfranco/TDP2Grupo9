@@ -12,6 +12,7 @@ public class Proteccion extends AtributoPublicacion {
 
     public static final String CLAVE = "proteccion";
 
+
     public void jsonToProteccion(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

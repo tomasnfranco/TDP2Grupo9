@@ -122,46 +122,50 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createCompatibleConSpinner() {
+        spCompatibleCon = (Spinner) findViewById(R.id.compatible_con_spinner);
+        if (spCompatibleCon == null) return;
         List<AtributoPublicacion> compatibilidades = this.publicacionAtributos.getCompatibilidades();
         CompatibleCon compatibleCon = new CompatibleCon();
         compatibleCon.setValor(compatibleCon.getName());
         compatibilidades.add(0, compatibleCon);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, compatibilidades);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCompatibleCon = (Spinner) findViewById(R.id.compatible_con_spinner);
         spCompatibleCon.setAdapter(atributosArrayAdapter);
     }
 
     protected void createPapelesDiaSpinner() {
+        spPapeles = (Spinner) findViewById(R.id.papeles_dia_spinner);
+        if (spPapeles == null ) return;
         List<AtributoPublicacion> papelesAlDias = this.publicacionAtributos.getPapelesAlDia();
         PapelesAlDia papelesAlDia = new PapelesAlDia();
         papelesAlDia.setValor(papelesAlDia.getName());
         papelesAlDias.add(0, papelesAlDia);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, papelesAlDias);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spPapeles = (Spinner) findViewById(R.id.papeles_dia_spinner);
         spPapeles.setAdapter(atributosArrayAdapter);
     }
 
     protected void createVacunasDiaSpinner() {
+        spVacunas = (Spinner) findViewById(R.id.vacunas_dia_spinner);
+        if (spVacunas == null) return;
         List<AtributoPublicacion> vacunasAldias = this.publicacionAtributos.getVacunasAlDia();
         VacunasAlDia vacunasAldia = new VacunasAlDia();
         vacunasAldia.setValor(vacunasAldia.getName());
         vacunasAldias.add(0, vacunasAldia);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, vacunasAldias);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spVacunas = (Spinner) findViewById(R.id.vacunas_dia_spinner);
         spVacunas.setAdapter(atributosArrayAdapter);
     }
 
     protected void createCastradorSpinner() {
+        spCastrado = (Spinner) findViewById(R.id.castrado_spinner);
+        if (spCastrado == null) return;
         List<AtributoPublicacion> castrados = this.publicacionAtributos.getCastrados();
         Castrado castrado = new Castrado();
         castrado.setValor(castrado.getName());
         castrados.add(0, castrado);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(this, android.R.layout.simple_spinner_item, castrados);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCastrado = (Spinner) findViewById(R.id.castrado_spinner);
         spCastrado.setAdapter(atributosArrayAdapter);
     }
 

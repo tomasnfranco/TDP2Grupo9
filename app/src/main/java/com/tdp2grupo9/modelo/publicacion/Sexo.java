@@ -12,6 +12,7 @@ public class Sexo extends AtributoPublicacion {
 
     public static final String CLAVE = "sexo";
 
+
     public void jsonToSexo(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

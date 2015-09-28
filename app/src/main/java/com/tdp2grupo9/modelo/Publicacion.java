@@ -72,8 +72,8 @@ public class Publicacion {
         this.sexo = new Sexo();
         this.tamanio = new Tamanio();
         this.vacunasAlDia = new VacunasAlDia();
-        this.requiereCuidadosEspeciales = false;
-        this.necesitaTransito = false;
+        this.requiereCuidadosEspeciales = null;
+        this.necesitaTransito = null;
         this.imagenes = new ArrayList<>();
         this.latitud = 0.0;
         this.longitud = 0.0;
@@ -173,17 +173,6 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            String atributos = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
-                    "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
-                    "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
-                    "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
-                    "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
-                    "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
-                    "&necesitaTransito="+this.necesitaTransito + "&raza="+this.raza.getId()+
-                    "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
-                    "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink;
-            Log.e("BUSCAHUELLAS : ",   atributos);
-
             out.write("token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
                     "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
                     "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
@@ -211,16 +200,13 @@ public class Publicacion {
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
-                                                        Integer max, Long latitud, Long longitud, Publicacion publicacion) {
+                                                        Integer max, Publicacion publicacion) {
         List<Publicacion> publicaciones = new ArrayList<>();
         HttpURLConnection urlConnection = null;
         try {
-            urlConnection = Connection.getHttpUrlConnection("usuario/logout");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion;
+            String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
+                    "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
 
@@ -251,14 +237,14 @@ public class Publicacion {
             if (publicacion.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
 
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(atributos);
-            out.close();
+            Log.e("BUSCAHUELLAS : ", atributos);
+
+            urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                Log.i("BuscaSusHuellas", "Logout realizado correctamente");
+                Log.i("BuscaSusHuellas", "Busqueda realizada correctamente");
             } else {
                 Log.e("BuscaSusHuellas", urlConnection.getResponseMessage());
             }
@@ -318,6 +304,13 @@ public class Publicacion {
     public List<Bitmap> getImagenes() {
         return imagenes;
     }
+
+
+    public Double getLongitud() {
+        return this.longitud;
+    }
+
+    public Double getLatitud() { return this.latitud;}
 
     public Boolean getRequiereCuidadosEspeciales() {
         return this.requiereCuidadosEspeciales;
@@ -411,4 +404,7 @@ public class Publicacion {
         this.condiciones = condiciones;
     }
 
+    public String getNombreMascota() {
+        return nombreMascota;
+    }
 }

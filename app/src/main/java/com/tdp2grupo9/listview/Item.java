@@ -1,54 +1,44 @@
 package com.tdp2grupo9.listview;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
+import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Publicacion;
+
 public class Item {
 
-    private int image;
-    private String title;
-    private Boolean cuidado_especial;
-    private Boolean hogar_transito;
+    private Activity activity;
+    private Publicacion publicacion;
 
     public Item() {
         super();
     }
 
-    public Item(int image, String title, Boolean cuidado_especial, Boolean hogar_transito) {
-        super();
-        this.image = image;
-        this.title = title;
-        this.cuidado_especial = cuidado_especial;
-        this.hogar_transito = hogar_transito;
+    public Item(Publicacion publicacion, Activity activity) {
+         this.publicacion = publicacion;
+         this.activity = activity;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
+    public Bitmap getImage() {
+        if (publicacion.getImagenes().size() > 0) return publicacion.getImagenes().get(0);
+        return BitmapFactory.decodeResource(this.activity.getResources(), R.drawable.icon_default);
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        return publicacion.getNombreMascota();
     }
 
     public Boolean requiereCuidadosEspeciales() {
-        return this.cuidado_especial;
+        return publicacion.getRequiereCuidadosEspeciales();
     }
 
     public Boolean requiereHogarDeTransito() {
-        return this.hogar_transito;
+        return publicacion.getNecesitaTransito();
     }
 
-    public void setCuidadoEspecial(Boolean cuidado_especial) {
-        this.cuidado_especial = cuidado_especial;
-    }
-
-    public void setHogartransito(Boolean hogar_transito) {
-        this.hogar_transito = hogar_transito;
-    }
 
 }

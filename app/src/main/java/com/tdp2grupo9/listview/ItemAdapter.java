@@ -3,6 +3,9 @@ package com.tdp2grupo9.listview;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +54,12 @@ public class ItemAdapter extends BaseAdapter {
 
         ImageView ivItem = (ImageView) rowView.findViewById(R.id.ivItem);
         TextView tvTitle = (TextView) rowView.findViewById(R.id.tvTitle);
-        ImageView ivCuidadosEspeciales = (ImageView) rowView.findViewById(R.id.iv_cuidados_esp);
-        ImageView ivHogarEnTransito = (ImageView) rowView.findViewById(R.id.iv_hogar_transito);
+        ImageView ivCuidadosEspeciales = (ImageView) rowView.findViewById(R.id.iv_cui_especiales);
+        ImageView ivHogarEnTransito = (ImageView) rowView.findViewById(R.id.iv_home_transito);
 
         Item item = this.items.get(position);
         tvTitle.setText(item.getTitle());
-        ivItem.setImageResource(item.getImage());
+        ivItem.setImageBitmap(item.getImage());
         if(item.requiereCuidadosEspeciales()) ivCuidadosEspeciales.setImageResource(R.drawable.cuidados_especiales);
         if(item.requiereHogarDeTransito()) ivHogarEnTransito.setImageResource(R.drawable.home_transit);
 
