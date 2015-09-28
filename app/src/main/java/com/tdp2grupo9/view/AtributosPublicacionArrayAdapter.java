@@ -1,15 +1,12 @@
 package com.tdp2grupo9.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
-import com.tdp2grupo9.modelo.publicacion.Especie;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AtributosPublicacionArrayAdapter extends GenericArrayAdapter<AtributoPublicacion> {
