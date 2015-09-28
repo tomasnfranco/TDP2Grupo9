@@ -34,6 +34,7 @@ public class Publicacion {
     private String nombreMascota;
     private String condiciones;
     private String videoLink;
+    private String contacto;
     private Boolean requiereCuidadosEspeciales;
     private Boolean necesitaTransito;
     private Raza raza;
@@ -58,6 +59,7 @@ public class Publicacion {
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
+        this.contacto = "";
         this.raza = new Raza();
         this.color = new Color();
         this.castrado = new Castrado();
@@ -329,6 +331,22 @@ public class Publicacion {
 
     public void setLatitud(Double latitud) {
         this.latitud = latitud;
+    }
+
+    public void setNecesitaTransito(Boolean necesitaTransito) {
+        this.necesitaTransito = necesitaTransito;
+    }
+
+    public void setRequiereCuidadosEspeciales(Boolean requiereCuidadosEspeciales) {
+        this.requiereCuidadosEspeciales = requiereCuidadosEspeciales;
+    }
+
+    public void setContacto(String contacto) {
+        this.contacto = contacto;
+    }
+
+    public void setCondiciones(String condiciones) {
+        this.condiciones = condiciones;
     }
 
 }

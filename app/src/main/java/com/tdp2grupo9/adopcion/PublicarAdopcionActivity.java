@@ -12,13 +12,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -26,7 +26,6 @@ import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
 import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
-import com.tdp2grupo9.modelo.publicacion.NecesitaTransito;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
@@ -90,9 +89,9 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
             if (isValidAttribute()){
                 Publicacion publicacion = new Publicacion();
 
-                //publicacion.setNombreMascota(nombre_descripcion.getText().toString());
+                publicacion.setNombreMascota(nombre_descripcion.getText().toString());
                 publicacion.setEspecie(((Especie) spEspecie.getSelectedItem()));
-                //publicacion.setRaza(((Raza) spRaza.getSelectedItem()));
+                publicacion.setRaza(((Raza) spRaza.getSelectedItem()));
                 publicacion.setColor(((Color) spColor.getSelectedItem()));
                 publicacion.setSexo(((Sexo) spSexo.getSelectedItem()));
                 publicacion.setTamanio(((Tamanio) spTamanio.getSelectedItem()));
@@ -103,23 +102,23 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 publicacion.setProteccion(((Proteccion) spProteccion.getSelectedItem()));
                 publicacion.setEnergia(((Energia) spEnergia.getSelectedItem()));
 
-                /*
+
                 if(!videoLink.getText().toString().isEmpty())
                     publicacion.setVideoLink(videoLink.getText().toString());
 
-                publicacion.setLatitud();
-                publicacion.setLongitud();
+                publicacion.setLatitud(Usuario.getInstancia().getLatitud());
+                publicacion.setLongitud(Usuario.getInstancia().getLongitud());
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
-                publicacion.setNecesitaCuidadosEspeciales(cuidadosEspeciales.isChecked());
+                publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
 
                 if (!contacto.getText().toString().isEmpty())
                     publicacion.setContacto(contacto.getText().toString());
 
                 if (!condicionesAdopcion.getText().toString().isEmpty())
-                    publicacion.setCondicionesAdopcion(condicionesAdopcion.getText().toString());
+                    publicacion.setCondiciones(condicionesAdopcion.getText().toString());
 
-                */
+
             }
         }
     }
