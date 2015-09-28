@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="adopcion_toolbar_title">Adopción</string>
     <string name="ultimas_publicaciones"><font color='white'>Recientes</font></string>
     <string name="publicar_adopcion"><font color='white'>Publicar Adopción</font></string>
     <string name="publicar_busqueda"><font color='white'>Publicar Búsqueda</font></string>

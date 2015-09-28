@@ -5,4 +5,5 @@
     <dimen name="lado_logo_splash">250dp</dimen>
     <dimen name="tabs_title_size">12sp</dimen>
     <dimen name="foto_publicacion_size">85dp</dimen>
+    <dimen name="toolbar_icon_size">30dp</dimen>
 </resources>
