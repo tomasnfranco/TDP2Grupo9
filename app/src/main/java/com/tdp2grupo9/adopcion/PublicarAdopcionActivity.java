@@ -2,6 +2,8 @@ package com.tdp2grupo9.adopcion;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -111,7 +113,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 publicacion.setProteccion(((Proteccion) spProteccion.getSelectedItem()));
                 publicacion.setEnergia(((Energia) spEnergia.getSelectedItem()));
 
-
+                publicacion.setVideoLink("");
                 if(!videoLink.getText().toString().isEmpty())
                     publicacion.setVideoLink(videoLink.getText().toString());
 
@@ -121,11 +123,19 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
 
+                publicacion.setContacto("");
                 if (!contacto.getText().toString().isEmpty())
                     publicacion.setContacto(contacto.getText().toString());
 
+                publicacion.setCondiciones("");
                 if (!condicionesAdopcion.getText().toString().isEmpty())
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
+
+                Integer[] idFotos = {R.id.foto_uno, R.id.foto_dos, R.id.foto_tres, R.id.foto_cuatro, R.id.foto_cinco, R.id.foto_seis};
+
+                for (int i=0; i < cantidadFotosCargadas; i++){
+                    publicacion.addImagen(((BitmapDrawable) ((ImageView) findViewById(idFotos[i])).getDrawable()).getBitmap());
+                }
 
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
                 publicarAdopcionTask.execute((Void)null);

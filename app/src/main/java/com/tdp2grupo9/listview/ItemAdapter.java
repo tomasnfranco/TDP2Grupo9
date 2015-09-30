@@ -62,13 +62,13 @@ public class ItemAdapter extends BaseAdapter {
         Item item = this.items.get(position);
         tvTitle.setText(item.getTitle());
         ivItem.setImageBitmap(item.getImage());
-        tvRaza.setText(item.getRaza());
-        tvEdad.setText(item.getEdad());
+        //tvRaza.setText(item.getRaza());
+        //tvEdad.setText(item.getEdad());
 
         if (item.requiereCuidadosEspeciales()) ivCuidadosEspeciales.setImageResource(R.drawable.cuidados_especiales);
         if (item.requiereHogarDeTransito()) ivHogarEnTransito.setImageResource(R.drawable.home_transit);
-        if (item.tieneCondicionesDeAdopcion()) ivCondiciones.setImageResource(R.drawable.con_condiciones);
-        else ivCondiciones.setImageResource(R.drawable.sin_condiciones);
+        if (item.tieneCondicionesDeAdopcion()) ivCondiciones.setImageResource(R.drawable.sin_condiciones);
+        else ivCondiciones.setImageResource(R.drawable.con_condiciones);
 
         return rowView;
     }

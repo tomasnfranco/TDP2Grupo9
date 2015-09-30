@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import com.tdp2grupo9.modelo.publicacion.Castrado;
@@ -164,13 +165,25 @@ public class Publicacion {
                     this.tipoPublicacion = reader.nextInt();
                     break;
                 case "nombreMascota":
-                    this.nombreMascota = reader.nextString();
+                    this.nombreMascota = "";
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.nombreMascota = reader.nextString();
                     break;
                 case "condiciones":
-                    this.condiciones = reader.nextString();
+                    this.condiciones = "";
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.condiciones = reader.nextString();
                     break;
                 case "videoLink":
-                    this.videoLink = reader.nextString();
+                    this.videoLink = "";
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.videoLink = reader.nextString();
                     break;
                 case "latitud":
                     this.latitud = reader.nextDouble();
@@ -218,18 +231,11 @@ public class Publicacion {
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
+            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
 
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
 
                 Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
-                Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
-
-                for(Bitmap bmp: this.imagenes)
-                    this.adjuntarImagenAPublicacion(token, bmp);
-
-                Log.d(LOG_TAG, METHOD + " finalizado.");
-
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
@@ -240,6 +246,17 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
+
+        for(Bitmap bmp: this.imagenes)
+            this.adjuntarImagenAPublicacion(token, bmp);
+
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+
+
+
+
     }
 
     public void adjuntarImagenAPublicacion(String token, Bitmap bmp) {
@@ -249,7 +266,7 @@ public class Publicacion {
         try {
             urlConnection = Connection.getHttpUrlConnection("foto");
             urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("PUT");
+            urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -257,13 +274,12 @@ public class Publicacion {
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 Log.d(LOG_TAG, METHOD + " imagen guardada en publicacion " + this.id);
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             Log.e(LOG_TAG, METHOD + " ERROR ", e);
         } finally {
             if (urlConnection != null)
@@ -340,7 +356,7 @@ public class Publicacion {
 
         HttpURLConnection urlConnection = null;
         try {
-            String atributos = +id+"?token="+token;
+            String atributos = +id+ "?token=" + token;
 
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
 

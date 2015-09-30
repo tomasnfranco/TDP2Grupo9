@@ -282,7 +282,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 passwordEditText.requestFocus();
             }*/
 
-            Usuario.getInstancia().setFacebookId(Long.valueOf(123456789));
+            Usuario.getInstancia().setFacebookId(Long.valueOf(1457655589));
             Usuario.getInstancia().setFacebookToken("PPPPPPP");
 
             if (success) {

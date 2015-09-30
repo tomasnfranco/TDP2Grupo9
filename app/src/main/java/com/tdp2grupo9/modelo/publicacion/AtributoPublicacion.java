@@ -36,5 +36,10 @@ public abstract class AtributoPublicacion {
         return this.valor;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return this.id == ((AtributoPublicacion) o).id;
+    }
+
     public abstract String getName() ;
 }

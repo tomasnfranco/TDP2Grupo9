@@ -12,7 +12,9 @@ import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Color;
 import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
@@ -26,11 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ResultadosBusquedaActivity extends Activity {
+public class ResultadosBusquedaActivity extends AppCompatActivity {
 
     private ListView listView;
     private BuscarAdopcionTask buscarAdopcionTask;
     private List<Publicacion> publicaciones;
+    private PublicacionAtributos publicacionAtributos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +80,15 @@ public class ResultadosBusquedaActivity extends Activity {
         publicacion.setLongitud(longitud);
         publicacion.setLatitud(latitud);
 
+        publicacionAtributos = new PublicacionAtributos();
+
         buscarAdopcionTask = new BuscarAdopcionTask(publicacion);
         buscarAdopcionTask.execute((Void)null);
     }
 
 
     private void cargarListView(){
-        Publicacion p1 = new Publicacion();
+       /* Publicacion p1 = new Publicacion();
         p1.setNombreMascota("Pepe");
         Edad edad = new Edad();
         edad.setId(2);
@@ -97,12 +102,12 @@ public class ResultadosBusquedaActivity extends Activity {
         p2.setNecesitaTransito(true);
         publicaciones = new ArrayList<Publicacion>();
         publicaciones.add(p1);
-        publicaciones.add(p2);
+        publicaciones.add(p2);*/
 
         this.listView = (ListView) findViewById(R.id.listView);
         List<Item> items = new ArrayList<Item>();
         for (Publicacion p : publicaciones){
-            Item item = new Item(p, this);
+            Item item = new Item(p, this, publicacionAtributos);
             items.add(item);
         }
 
@@ -148,6 +153,7 @@ public class ResultadosBusquedaActivity extends Activity {
         protected Boolean doInBackground(Void... params) {
             try {
                 publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1,0,0, publicacion);
+                publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
