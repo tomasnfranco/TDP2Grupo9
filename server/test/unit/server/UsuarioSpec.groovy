@@ -25,4 +25,8 @@ class UsuarioSpec extends Specification {
             user2.hasErrors()
     }
 
+    //Hacer test para que no guarde usuario sin telefono ni direccion
+    //Hacer test para que guardar un usuario funcione ok
+    //Ver si no esta pasandoe l test por otra reazon...
+
 }

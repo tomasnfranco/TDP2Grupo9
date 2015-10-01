@@ -39,6 +39,7 @@ class BootStrap {
 
         new CompatibleCon(compatibleCon: 'Niños').save()
         new CompatibleCon(compatibleCon: 'Otras Mascotas').save()
+        new CompatibleCon(compatibleCon: 'No aplica').save()
 
         new Edad(nombre: 'Cachorro (hasta 1 año)').save()
         new Edad(nombre: 'Adulto joven (de 2 a 4 años)').save()
