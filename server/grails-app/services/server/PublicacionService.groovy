@@ -56,6 +56,7 @@ class PublicacionService {
                                  necesitaTransito: it.necesitaTransito,
                                  nombreMascota : it.nombreMascota,
                                  requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
+                                 condiciones: it.condiciones ? it.condiciones.trim() : '',
                                  fecha : it.fechaPublicacion]}
     }
 }
