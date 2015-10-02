@@ -40,14 +40,22 @@ class PublicacionService {
         double latitud = params.latitud ? Double.parseDouble(params.latitud) : usuario.latitud
         double longitud = params.longitud ? Double.parseDouble(params.longitud) : usuario.longitud
         busqueda*.setDistancia(latitud,longitud)
-        busqueda = busqueda.findAll{it.distancia <= DISTANCIA_MAXIMA}
-        busqueda = busqueda.sort{it.distancia}.collect{[id: it.id,
-                                                      publicador: it.publicador.username,
-                                                      distancia: it.distancia,
-                                                      foto: it.fotos ? it.fotos[0].base64 : '',
-                                                      necesitaTransito: it.necesitaTransito,
-                                                      nombreMascota : it.nombreMascota,
-                                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales]}
-        return busqueda
+        busqueda = busqueda.findAll{it.distancia <= (params.distancia ? Double.parseDouble(params.distancia) : DISTANCIA_MAXIMA)}
+        if(params.orden == null || params.orden == 'distancia')
+            busqueda = busqueda.sort{it.distancia}
+        else if (params.orden == 'fechaAsc')
+            busqueda = busqueda.sort{it.fechaPublicacion}
+        else if (params.orden == 'fechaDesc') {
+            busqueda = busqueda.sort { it.fechaPublicacion }
+            busqueda.reverse(true)
+        }
+        return busqueda.collect{[id: it.id,
+                                 publicador: it.publicador.username,
+                                 distancia: it.distancia,
+                                 foto: it.fotos ? it.fotos[0].base64 : '',
+                                 necesitaTransito: it.necesitaTransito,
+                                 nombreMascota : it.nombreMascota,
+                                 requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
+                                 fecha : it.fechaPublicacion]}
     }
 }

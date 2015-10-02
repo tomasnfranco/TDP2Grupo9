@@ -204,9 +204,9 @@ class BootStrap {
         new VacunasAlDia(tipo:'No').save()
         new VacunasAlDia(tipo:'Desconocido').save()
 				
-		new Publicacion(nombreMascota:'bobby',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.367289,longitud:-34.6454526).save()
-		new Publicacion(nombreMascota:'otto',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.4226265,longitud:-34.6098885).save()
-		new Publicacion(nombreMascota:'panchita tiene pelos largos blancos y sucios por estar en el patio',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.5242344,longitud:-34.6192385).save()
+		new Publicacion(nombreMascota:'bobby',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.367289,longitud:-34.6454526,fechaPublicacion: new Date()).save()
+		new Publicacion(nombreMascota:'otto',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.4226265,longitud:-34.6098885, fechaPublicacion: new Date()-1).save()
+		new Publicacion(nombreMascota:'panchita tiene pelos largos blancos y sucios por estar en el patio',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,fechaPublicacion: new Date()-2,latitud:-58.5242344,longitud:-34.6192385).save()
 		
 
     }
