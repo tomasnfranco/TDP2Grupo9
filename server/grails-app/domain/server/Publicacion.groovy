@@ -7,6 +7,8 @@ class Publicacion {
 	Date fechaPublicacion = new Date()
 	boolean activa = true
 	Usuario publicador
+	Usuario concretado = null
+
 	//Atributos de Busqueda
 	Castrado castrado
 	Color color
@@ -35,7 +37,7 @@ class Publicacion {
 	String videoLink = ' '
 	double distancia = 0
 	static transients = ['distancia']
-	static hasMany = [fotos : Foto]
+	static hasMany = [fotos : Foto, quierenAdoptar : Usuario]
 	
     static constraints = {
 		publicador()
@@ -43,6 +45,7 @@ class Publicacion {
 		nombreMascota(blank:true,nullable: true)
 		videoLink(blank:true,nullable: true)
 		fotos(maxSize: 6)
+		concretado nullable: true
     }
 
 	static marshalling = {
