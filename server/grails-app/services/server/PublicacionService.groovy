@@ -62,19 +62,18 @@ class PublicacionService {
 
     def misPublicaciones(params) {
         //TODO: Definir que atributos devolver de la publicacion
-        def publicaciones = Publicacion.findAllByPublicador(params.usuario)
+        def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         return publicaciones.collect{[id: it.id,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
-                                      necesitaTransito: it.necesitaTransito,
                                       nombreMascota : it.nombreMascota,
-                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
                                       fecha : it.fechaPublicacion]}
     }
 
     def misAdopciones(params) {
         //TODO: Definir que atributos devolver de la publicacion
-        def publicaciones = Publicacion.findAllByConcretado(params.usuario)
+        def publicaciones = Publicacion.findAllByConcretado(params.usuario,params)
         return publicaciones.collect{[id: it.id,
+                                     publicador: it.publicador.username,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       nombreMascota : it.nombreMascota]}
     }
