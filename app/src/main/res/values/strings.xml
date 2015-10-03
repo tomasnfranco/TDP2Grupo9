@@ -9,4 +9,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_resultados_busqueda_adopcion">ResultadosBusquedaAdopcionActivity</string>
     <string name="nomap_error">Error: target map not found</string>
+
+
+    <string name="campo_telefonico_vacio">Debe completar el campo teléfono</string>
+    <string name="campo_telefonico_fuera_rango">El telefóno debe contener entre 8-15 números</string>
+    <string name="campo_telefonico_formato_incorrecto">El telefóno debe contener sólo números</string>
 </resources>

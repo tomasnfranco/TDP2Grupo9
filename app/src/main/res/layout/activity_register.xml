@@ -12,16 +12,16 @@
         android:name="com.google.android.gms.maps.MapFragment"
         android:id="@+id/fragmentMap"
         android:layout_marginTop="15dp"
-        android:layout_weight="0.50" />
+        android:layout_weight="0.83" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvDireccion"
         android:layout_weight="0.21"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="5dp"
         android:textSize="18dp" />
 
     <EditText
@@ -45,11 +45,9 @@
         android:layout_height="wrap_content"
         android:text="@string/registrarse"
         android:id="@+id/btnRegistrarse"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
         android:textSize="18sp"
         android:textColor="#ffffffff"
-        android:background="@color/color_primary" />
+        android:background="@color/color_primary"
+        android:layout_margin="18dp" />
 
 </LinearLayout>

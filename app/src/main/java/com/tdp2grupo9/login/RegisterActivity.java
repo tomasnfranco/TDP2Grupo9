@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             prefsEditor.commit();
         }
         super.onPause();
-        Log.i(TAG,"onPause: Zoom="+currentZoom);
+        Log.i(TAG, "onPause: Zoom=" + currentZoom);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (prefs.contains("KEY_ZOOM") && map != null){
             currentZoom = prefs.getFloat("KEY_ZOOM", map.getMaxZoomLevel());
         }
-        Log.i(TAG,"onResume: Zoom="+currentZoom);
+        Log.i(TAG, "onResume: Zoom=" + currentZoom);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -365,11 +365,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
                 raw += location+"\n";
                 optionArray[opCount] = location.getAddressLine(0)+", "
-                        +location.getAddressLine(1)+country+"\n";
+                        +location.getAddressLine(1)+country;
                 if(opCount == 0){
                     if(omitCountry){
                         returnString = location.getAddressLine(0)+", "
-                                +location.getAddressLine(1)+"\n";
+                                +location.getAddressLine(1);
                     } else {
                         returnString = optionArray[opCount];
                     }
@@ -463,14 +463,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
-
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnRegistrarse){
 
-            if (isValidTelefono()) {
+            if (isValidPhoneNumber(etTelefono.getText())) {
                 Usuario.getInstancia().setDireccion(tvDireccion.getText().toString());
                 Usuario.getInstancia().setTelefono(etTelefono.getText().toString());
                 Usuario.getInstancia().setLatitud(currentLat);
@@ -481,13 +478,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private boolean isValidTelefono(){
+
+    private boolean isValidPhoneNumber(CharSequence target) {
+        String regexStr = "^[0-9]$";
+
+        if (target.toString().isEmpty()) {
+            etTelefono.setError(getText(R.string.campo_telefonico_vacio));
+            return false;
+        } else {
+            if (target.length() < 8 || target.length() > 15) {
+                etTelefono.setError(getText(R.string.campo_telefonico_fuera_rango));
+                return false;
+            } else if (target.toString().matches(regexStr) == false){
+                etTelefono.setError(getText(R.string.campo_telefonico_formato_incorrecto));
+                return false;
+            }else {
+                return android.util.Patterns.PHONE.matcher(target).matches();
+            }
+        }
+    }
+
+    /*private boolean isValidTelefono(){
         if (etTelefono.getText().toString().isEmpty() || etTelefono.getText().toString().length() < 8
                 || etTelefono.getText().toString().length() > 15){
             etTelefono.setError("Telefono invalido");
             return false;
         }else return true;
-    }
+    }*/
 
     public class UserRegisterFacebookTask  extends AsyncTask<Void, Void, Boolean> {
 
