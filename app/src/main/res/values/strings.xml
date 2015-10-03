@@ -9,4 +9,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_resultados_busqueda_adopcion">ResultadosBusquedaAdopcionActivity</string>
     <string name="nomap_error">Error: target map not found</string>
+
+    <string name="campo_requerido">Campo requerido</string>
 </resources>
