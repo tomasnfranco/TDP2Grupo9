@@ -480,7 +480,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private boolean isValidPhoneNumber(CharSequence target) {
-        String regexStr = "^[0-9]$";
+        String regexStr = "[0-9]+";
 
         if (target.toString().isEmpty()) {
             etTelefono.setError(getText(R.string.campo_telefonico_vacio));
