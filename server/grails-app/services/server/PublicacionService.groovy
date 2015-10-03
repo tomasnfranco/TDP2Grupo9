@@ -5,6 +5,7 @@ import grails.transaction.Transactional
 @Transactional
 class PublicacionService {
     final static def DISTANCIA_MAXIMA = 10
+
     //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
         def busqueda = Publicacion.findAll(params){
@@ -57,5 +58,24 @@ class PublicacionService {
                                  nombreMascota : it.nombreMascota,
                                  requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
                                  fecha : it.fechaPublicacion]}
+    }
+
+    def misPublicaciones(params) {
+        //TODO: Definir que atributos devolver de la publicacion
+        def publicaciones = Publicacion.findAllByPublicador(params.usuario)
+        return publicaciones.collect{[id: it.id,
+                                      foto: it.fotos ? it.fotos[0].base64 : '',
+                                      necesitaTransito: it.necesitaTransito,
+                                      nombreMascota : it.nombreMascota,
+                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
+                                      fecha : it.fechaPublicacion]}
+    }
+
+    def misAdopciones(params) {
+        //TODO: Definir que atributos devolver de la publicacion
+        def publicaciones = Publicacion.findAllByConcretado(params.usuario)
+        return publicaciones.collect{[id: it.id,
+                                      foto: it.fotos ? it.fotos[0].base64 : '',
+                                      nombreMascota : it.nombreMascota]}
     }
 }

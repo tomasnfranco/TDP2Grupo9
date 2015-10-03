@@ -131,4 +131,12 @@ class PublicacionController extends RestfulController<Publicacion>  {
         respuesta.vacunasAlDia = VacunasAlDia.list()
         render respuesta as JSON
     }
+
+    def misPublicaciones(){
+        render publicacionService.misPublicaciones(params) as JSON
+    }
+
+    def misAdopciones(){
+        render publicacionService.misAdopciones(params) as JSON
+    }
 }
