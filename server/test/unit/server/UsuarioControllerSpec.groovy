@@ -9,12 +9,6 @@ import static javax.servlet.http.HttpServletResponse.*
 @Mock(Usuario)
 class UsuarioControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
-    }
-
     void "Login GET"() {
         when: 'el login es metodo get'
         request.method = 'GET'
