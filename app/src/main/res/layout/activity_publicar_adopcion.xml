@@ -81,29 +81,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <LinearLayout
-                android:id="@+id/cargar_foto_clickeable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:padding="5dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_camera"/>
-
-                <TextView
+            <TextView
+                    android:id="@+id/cargar_foto_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
                     android:text="@string/cargar_fotos"/>
-
-            </LinearLayout>
             
             <HorizontalScrollView
                 android:layout_width="match_parent"
