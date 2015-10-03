@@ -2,7 +2,6 @@ package com.tdp2grupo9.adopcion;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +38,9 @@ import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.view.SeleccionAtributosActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by tfranco on 9/24/2015.
  */
@@ -50,9 +53,10 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
 
     private Double latitud = Usuario.getInstancia().getLatitud();
     private Double longitud = Usuario.getInstancia().getLongitud();
+    private Map<Integer, ImageView> photosMap;
 
     private int cantidadFotosCargadas = 0;
-    private EditText nombre_descripcion;
+    private EditText nombreDescripcion;
     private EditText videoLink;
     private CheckBox cuidadosEspeciales;
     private CheckBox requiereHogarTransito;
@@ -66,40 +70,58 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publicar_adopcion);
-        instanciarWindgets();
-        btnPublicar = (Button) findViewById(R.id.btn_publicar_adopcion);
-        btnPublicar.setOnClickListener(this);
+        inicializarWidgets();
         createAgregarFotoButton();
         createEliminarFotoButton();
         createMapsButton();
-
     }
 
-    private void instanciarWindgets(){
-        nombre_descripcion = (EditText) findViewById(R.id.nombre_mascota_edit_text);
+    private void inicializarWidgets(){
+        nombreDescripcion = (EditText) findViewById(R.id.nombre_mascota_edit_text);
         videoLink = (EditText) findViewById(R.id.cargar_video);
         cuidadosEspeciales = (CheckBox) findViewById(R.id.requiere_cuidados_especiales);
         requiereHogarTransito = (CheckBox) findViewById(R.id.requiere_hogar_transito_box);
         contacto = (EditText) findViewById(R.id.contacto_edit_text);
         condicionesAdopcion = (EditText) findViewById(R.id.condiciones_edit_text);
+        btnPublicar = (Button) findViewById(R.id.btn_publicar_adopcion);
+        btnPublicar.setOnClickListener(this);
+        initializePhotosScrollView();
+    }
+
+    private void initializePhotosScrollView() {
+        createPhotosMap();
+        photosMap.get(0).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
+        for (int i = 1; i < MAXIMO_FOTOS_PERMITIDAS; i++) {
+            photosMap.get(i).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void createPhotosMap() {
+        photosMap = new HashMap<Integer, ImageView>();
+        photosMap.put(0, (ImageView) findViewById(R.id.foto_uno));
+        photosMap.put(1, (ImageView) findViewById(R.id.foto_dos));
+        photosMap.put(2, (ImageView) findViewById(R.id.foto_tres));
+        photosMap.put(3, (ImageView) findViewById(R.id.foto_cuatro));
+        photosMap.put(4, (ImageView) findViewById(R.id.foto_cinco));
+        photosMap.put(5, (ImageView) findViewById(R.id.foto_seis));
     }
 
 
     private void createAgregarFotoButton() {
-        View agregarFotoButton = findViewById(R.id.cargar_foto_clickeable);
+        View cargarFotoTextView = findViewById(R.id.cargar_foto_text_view);
         View fotosHorizontalScrollView = findViewById(R.id.fotos_horizontal_clickable);
-        agregarFotoButton.setOnClickListener(new AgregarFotoListener());
+        cargarFotoTextView.setOnClickListener(new AgregarFotoListener());
         fotosHorizontalScrollView.setOnClickListener(new AgregarFotoListener());
     }
 
     @Override
     public void onClick(View v) {
-        instanciarWindgets();
+        inicializarWidgets();
         if (v.getId() == R.id.btn_publicar_adopcion){
             if (isValidAttribute()){
                 Publicacion publicacion = new Publicacion();
 
-                publicacion.setNombreMascota(nombre_descripcion.getText().toString());
+                publicacion.setNombreMascota(nombreDescripcion.getText().toString());
                 publicacion.setEspecie(((Especie) spEspecie.getSelectedItem()));
                 publicacion.setRaza(((Raza) spRaza.getSelectedItem()));
                 publicacion.setColor(((Color) spColor.getSelectedItem()));
@@ -145,61 +167,40 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         }
     }
 
-    private boolean isValidAttribute(){
-        Boolean valido = true;
+    private boolean validateCampoRequeridoSpinner(Spinner spinner, String campoRequeridoString) {
+        if (((AtributoPublicacion) spinner.getSelectedItem()).getId() == 0){
+            ((TextView) spinner.getSelectedView()).setError(campoRequeridoString);
+            return false;
+        }
+        return true;
+    }
 
-        if (((AtributoPublicacion) spEspecie.getSelectedItem()).getId() == 0){
-            ((TextView) spEspecie.getSelectedView()).setError("Campo Requerido");
-            valido = false;
+    private boolean validateCampoRequeridoEditText(EditText editText, String campoRequeridoString) {
+        if (editText.getText().toString().isEmpty()){
+            editText.setError(campoRequeridoString);
+            return false;
         }
-        if (((AtributoPublicacion) spRaza.getSelectedItem()).getId() == 0){
-            ((TextView) spRaza.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spSexo.getSelectedItem()).getId() == 0){
-            ((TextView) spSexo.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spTamanio.getSelectedItem()).getId() == 0){
-            ((TextView) spTamanio.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spEdad.getSelectedItem()).getId() == 0){
-            ((TextView) spEdad.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spColor.getSelectedItem()).getId() == 0){
-            ((TextView) spColor.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spCompatibleCon.getSelectedItem()).getId() == 0){
-            ((TextView) spCompatibleCon.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spPapeles.getSelectedItem()).getId() == 0){
-            ((TextView) spPapeles.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spVacunas.getSelectedItem()).getId() == 0){
-            ((TextView) spVacunas.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spCastrado.getSelectedItem()).getId() == 0){
-            ((TextView) spCastrado.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spProteccion.getSelectedItem()).getId() == 0){
-            ((TextView) spProteccion.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (((AtributoPublicacion) spEnergia.getSelectedItem()).getId() == 0){
-            ((TextView) spEnergia.getSelectedView()).setError("Campo Requerido");
-            valido = false;
-        }
-        if (nombre_descripcion.getText().toString().isEmpty()){
-            nombre_descripcion.setError("Campo Requerido");
-            valido = false;
-        }
+        return true;
+    }
+
+    private boolean isValidAttribute(){
+        boolean valido = true;
+        String campoRequeridoString = getString(R.string.campo_requerido);
+
+        if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
+        if (!validateCampoRequeridoSpinner(spRaza, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spSexo, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spTamanio, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spEdad, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spColor, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spCompatibleCon, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spPapeles, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spVacunas, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spCastrado, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spProteccion, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spEnergia, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoEditText(nombreDescripcion, campoRequeridoString)) { valido = false;}
+
         return valido;
     }
 
@@ -225,8 +226,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
             @Override
             public void onClick(View v) {
                 if (cantidadFotosCargadas > 0) {
-                    getImageViewAEliminar().setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
-                    --cantidadFotosCargadas;
+                    deleteLastPhoto();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.no_hay_fotos), Toast.LENGTH_LONG).show();
                 }
@@ -241,8 +241,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                getImageViewACargar().setImageBitmap(bitmap);
-                ++cantidadFotosCargadas;
+                loadPhotoWithBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -254,28 +253,22 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         }
     }
 
-    public ImageView getImageViewACargar() {
-        switch (cantidadFotosCargadas) {
-            case 0: return (ImageView) findViewById(R.id.foto_uno);
-            case 1: return (ImageView) findViewById(R.id.foto_dos);
-            case 2: return (ImageView) findViewById(R.id.foto_tres);
-            case 3: return (ImageView) findViewById(R.id.foto_cuatro);
-            case 4: return (ImageView) findViewById(R.id.foto_cinco);
-            case 5: return (ImageView) findViewById(R.id.foto_seis);
+    private void loadPhotoWithBitmap(Bitmap bitmap) {
+        photosMap.get(cantidadFotosCargadas).setImageBitmap(bitmap);
+        ++cantidadFotosCargadas;
+        if (cantidadFotosCargadas < MAXIMO_FOTOS_PERMITIDAS) {
+            ImageView nextPhotoHolder = photosMap.get(cantidadFotosCargadas);
+            nextPhotoHolder.setVisibility(View.VISIBLE);
+            nextPhotoHolder.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
         }
-        return null;
     }
 
-    public ImageView getImageViewAEliminar() {
-        switch (cantidadFotosCargadas) {
-            case 1: return (ImageView) findViewById(R.id.foto_uno);
-            case 2: return (ImageView) findViewById(R.id.foto_dos);
-            case 3: return (ImageView) findViewById(R.id.foto_tres);
-            case 4: return (ImageView) findViewById(R.id.foto_cuatro);
-            case 5: return (ImageView) findViewById(R.id.foto_cinco);
-            case 6: return (ImageView) findViewById(R.id.foto_seis);
+    private void deleteLastPhoto() {
+        --cantidadFotosCargadas;
+        photosMap.get(cantidadFotosCargadas).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
+        if ((cantidadFotosCargadas+1) < MAXIMO_FOTOS_PERMITIDAS) {
+            photosMap.get(cantidadFotosCargadas+1).setVisibility(View.INVISIBLE);
         }
-        return null;
     }
 
     private void createMapsButton() {
@@ -312,7 +305,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         protected void onPostExecute(final Boolean success) {
             publicarAdopcionTask = null;
             if (success) {
-                nombre_descripcion.setText("");
+                nombreDescripcion.setText("");
                 spEspecie.setSelection(0);
                 spRaza.setSelection(0);
                 spSexo.setSelection(0);
