@@ -223,23 +223,17 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/mapa_clickable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/mapa_button"
+                <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:padding="5dp"
-                    android:background="@color/darkorange"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_map"
-                    android:layout_marginLeft="5dp" />
+                    android:src="@drawable/ic_map" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -250,19 +244,18 @@
 
             </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/requiere_hogar_transito_box"
+            <com.tdp2grupo9.view.checkers.HogarTransitoCheck
+                android:id="@+id/requiere_hogar_transito"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/requiere_hogar_transito"
-                android:textColor="@android:color/darker_gray" />
+                android:layout_marginTop="15dp"/>
 
-            <CheckBox
+            <com.tdp2grupo9.view.checkers.CuidadosEspecialesCheck
                 android:id="@+id/requiere_cuidados_especiales"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/requiere_cuidados_especiales"
-                android:textColor="@android:color/darker_gray" />
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"/>
 
             <EditText
                 android:id="@+id/contacto_edit_text"

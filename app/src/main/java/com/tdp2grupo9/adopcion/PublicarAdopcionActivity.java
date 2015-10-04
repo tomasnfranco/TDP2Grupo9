@@ -11,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,8 +57,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     private int cantidadFotosCargadas = 0;
     private EditText nombreDescripcion;
     private EditText videoLink;
-    private CheckBox cuidadosEspeciales;
-    private CheckBox requiereHogarTransito;
+    private Checkable cuidadosEspeciales;
+    private Checkable requiereHogarTransito;
     private TextView contacto;
     private TextView condicionesAdopcion;
     private Button btnPublicar;
@@ -79,8 +78,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     private void inicializarWidgets(){
         nombreDescripcion = (EditText) findViewById(R.id.nombre_mascota_edit_text);
         videoLink = (EditText) findViewById(R.id.cargar_video);
-        cuidadosEspeciales = (CheckBox) findViewById(R.id.requiere_cuidados_especiales);
-        requiereHogarTransito = (CheckBox) findViewById(R.id.requiere_hogar_transito_box);
+        cuidadosEspeciales = (Checkable) findViewById(R.id.requiere_cuidados_especiales);
+        requiereHogarTransito = (Checkable) findViewById(R.id.requiere_hogar_transito);
         contacto = (EditText) findViewById(R.id.contacto_edit_text);
         condicionesAdopcion = (EditText) findViewById(R.id.condiciones_edit_text);
         btnPublicar = (Button) findViewById(R.id.btn_publicar_adopcion);
@@ -272,8 +271,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     }
 
     private void createMapsButton() {
-        ImageButton mapsButton = (ImageButton) findViewById(R.id.mapa_button);
-        mapsButton.setOnClickListener(new View.OnClickListener() {
+        View mapsClickable = findViewById(R.id.mapa_clickable);
+        mapsClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MapsActivity.class);
