@@ -1,26 +1,25 @@
 package com.tdp2grupo9.adopcion;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.listview.Item;
-import com.tdp2grupo9.listview.ItemAdapter;
+import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.Edad;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UltimasPublicacionesActivity extends Activity {
+
     private ListView listView;
     private BuscarAdopcionTask buscarAdopcionTask;
     private List<Publicacion> publicaciones;
@@ -30,72 +29,81 @@ public class UltimasPublicacionesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_listview_busqueda);
+        this.setContentView(R.layout.activity_ultimas_publicaciones);
 
         publicacionAtributos = new PublicacionAtributos();
 
         publicacion = new Publicacion();
         publicacion.setLongitud(Usuario.getInstancia().getLongitud());
         publicacion.setLatitud(Usuario.getInstancia().getLatitud());
-
         buscarAdopcionTask = new BuscarAdopcionTask(publicacion);
         buscarAdopcionTask.execute((Void)null);
     }
 
 
     private void cargarListView(){
-        /*Publicacion p1 = new Publicacion();
-        p1.setNombreMascota("Pepe");
-        Edad edad = new Edad();
-        edad.setId(2);
-        p1.setRequiereCuidadosEspeciales(true);
-        p1.setNecesitaTransito(true);
-        p1.setEdad(edad);
-
-        Publicacion p2 = new Publicacion();
-        p2.setNombreMascota("Sarmiento");
-        p2.setRequiereCuidadosEspeciales(false);
-        p2.setNecesitaTransito(true);
-        p2.setCondiciones("Tiene condiciones");
-        publicaciones = new ArrayList<Publicacion>();
-        publicaciones.add(p1);
-        publicaciones.add(p2);*/
-
-        this.listView = (ListView) findViewById(R.id.listView);
-        List<Item> items = new ArrayList<Item>();
-        for (Publicacion p : publicaciones){
-            Item item = new Item(p, this, publicacionAtributos);
-            items.add(item);
-        }
-
-        this.listView.setAdapter(new ItemAdapter(this, items));
-
+        listView = (ListView) findViewById(R.id.list_view_ultimas_publicaciones);
+        listView.setAdapter(new PublicacionesAdapter(this, publicaciones));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,
                                     int position, long arg) {
-
                 Item item = (Item) listView.getAdapter().getItem(position);
             }
         });
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    //TODO: hecho solo para ver los resultados de la busqueda, eliminar en produccion
+    private List<Publicacion> getPublicacionesMock() {
+        List<Publicacion> publicaciones = new ArrayList<Publicacion>();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        Publicacion p1 = new Publicacion();
+        p1.setNombreMascota("Firulais");
+        p1.setRequiereCuidadosEspeciales(true);
+        p1.setNecesitaTransito(true);
+        p1.setCondiciones("Tengo que ir a visitarlo una vez al mes");
+        p1.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero1));
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        Publicacion p2 = new Publicacion();
+        p2.setNombreMascota("Chuletas");
+        p2.setRequiereCuidadosEspeciales(true);
+        p2.setNecesitaTransito(true);
+        p2.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero2));
 
-        return super.onOptionsItemSelected(item);
+        Publicacion p3 = new Publicacion();
+        p3.setNombreMascota("Ayudante de Santa");
+        p3.setRequiereCuidadosEspeciales(true);
+        p3.setNecesitaTransito(false);
+        p3.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero3));
+
+        Publicacion p4 = new Publicacion();
+        p4.setNombreMascota("Huesos");
+        p4.setRequiereCuidadosEspeciales(false);
+        p4.setNecesitaTransito(true);
+        p4.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero4));
+
+        Publicacion p5 = new Publicacion();
+        p5.setNombreMascota("Bobby");
+        p5.setRequiereCuidadosEspeciales(false);
+        p5.setNecesitaTransito(false);
+        p5.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero5));
+
+        Publicacion p6 = new Publicacion();
+        p6.setNombreMascota("Max");
+        p6.setRequiereCuidadosEspeciales(true);
+        p6.setNecesitaTransito(false);
+        p6.setCondiciones("Tiene que ser adoptado por una familia con hijos");
+        p6.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero6));
+
+        publicaciones.add(p1);
+        publicaciones.add(p2);
+        publicaciones.add(p3);
+        publicaciones.add(p4);
+        publicaciones.add(p5);
+        publicaciones.add(p6);
+
+        return publicaciones;
     }
 
     public class BuscarAdopcionTask extends AsyncTask<Void, Void, Boolean> {
