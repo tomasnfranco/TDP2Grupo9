@@ -267,8 +267,7 @@
                 android:id="@+id/condiciones_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/observaciones_hint"
-                android:lines="3"/>
+                android:hint="@string/observaciones_hint"/>
 
             <Button
                 android:id="@+id/btn_publicar_adopcion"
