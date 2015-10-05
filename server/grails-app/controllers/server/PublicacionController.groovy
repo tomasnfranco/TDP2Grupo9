@@ -10,7 +10,7 @@ import grails.rest.RestfulController
 class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET']
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET',quieroAdoptar: 'POST']
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -138,5 +138,9 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def misAdopciones(){
         render publicacionService.misAdopciones(params) as JSON
+    }
+
+    def quieroAdoptar(){
+        render status: publicacionService.quieroAdoptar(params)
     }
 }

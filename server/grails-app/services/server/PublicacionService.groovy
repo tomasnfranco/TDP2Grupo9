@@ -1,6 +1,7 @@
 package server
 
 import grails.transaction.Transactional
+import static org.springframework.http.HttpStatus.*
 
 @Transactional
 class PublicacionService {
@@ -77,5 +78,22 @@ class PublicacionService {
                                      publicador: it.publicador.username,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       nombreMascota : it.nombreMascota]}
+    }
+
+    def quieroAdoptar(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        Usuario user = params.usuario
+        if(publicacion) {
+            if(publicacion.quierenAdoptar.contains(user)){
+                return METHOD_NOT_ALLOWED
+            }
+            if(publicacion.publicador.equals(user)){
+                return FORBIDDEN
+            }
+            publicacion.addToQuierenAdoptar(user)
+            publicacion.save(flush:true)
+            return OK
+        }
+        return NOT_FOUND
     }
 }
