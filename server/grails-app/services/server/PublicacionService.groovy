@@ -96,4 +96,34 @@ class PublicacionService {
         }
         return NOT_FOUND
     }
+
+    def concretarAdopcion(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        println "Publicacion: ${params.publicacion}"
+        Usuario supuestoPublicador = params.usuario
+        println "Publicador: ${params.usuario}"
+        Usuario quiereAdoptar = Usuario.get(params.quiereAdoptar)
+        println "Quiere adoptar: ${quiereAdoptar}"
+        if(!quiereAdoptar){
+            println "salio porque no existe quiereAdoptar"
+            return BAD_REQUEST
+        }
+        if(publicacion) {
+            if(!publicacion.quierenAdoptar.contains(quiereAdoptar)){
+                println "salio porque no existe quiereAdoptar en la lista de los que quieren"
+                return FORBIDDEN
+            }
+            if(!publicacion.publicador.equals(supuestoPublicador)){
+                println "salio porque no es su publicacion"
+                return UNAUTHORIZED
+            }
+            publicacion.concretado = quiereAdoptar
+            publicacion.activa = false //TODO: Ver si con esto esta bien
+            publicacion.save(flush:true)
+            println "salio todo OK"
+            return OK
+        }
+        println "salio porque no existe la publicacion"
+        return NOT_FOUND
+    }
 }
