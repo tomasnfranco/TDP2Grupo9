@@ -15,7 +15,7 @@ import com.tdp2grupo9.modelo.Publicacion;
 import java.util.List;
 
 /**
- * Created by Tomás on 04/10/2015.
+ * Created by Tomas on 04/10/2015.
  */
 public class PublicacionesAdapter extends BaseAdapter {
 

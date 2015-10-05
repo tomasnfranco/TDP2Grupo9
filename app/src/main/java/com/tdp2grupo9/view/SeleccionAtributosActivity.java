@@ -24,6 +24,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
