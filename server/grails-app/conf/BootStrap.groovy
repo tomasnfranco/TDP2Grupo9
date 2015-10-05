@@ -20,7 +20,7 @@ class BootStrap {
 		new Usuario(username:'email',email:'diego@meller.com',password:'test',telefono:'1145670891',direccion:'Alguna',token:'234567',latitud:-58.4621224,longitud:-34.6035515).save()
         new Castrado(tipo:'Si').save()
         new Castrado(tipo:'No').save()
-        new Castrado(tipo:'Desconocido').save()
+        new Castrado(tipo:'Desconocido', porDefecto: true).save()
 
         new Color(nombre:'Apricot').save()
         new Color(nombre:'Atigrado').save()
@@ -39,7 +39,7 @@ class BootStrap {
 
         new CompatibleCon(compatibleCon: 'Niños').save()
         new CompatibleCon(compatibleCon: 'Otras Mascotas').save()
-        new CompatibleCon(compatibleCon: 'No aplica').save()
+        new CompatibleCon(compatibleCon: 'No aplica', porDefecto: true).save()
 
         new Edad(nombre: 'Cachorro (hasta 1 año)').save()
         new Edad(nombre: 'Adulto joven (de 2 a 4 años)').save()
@@ -50,19 +50,19 @@ class BootStrap {
         new Energia(tipo: 'Muy enérgico').save()
         new Energia(tipo: 'Enérgico').save()
         new Energia(tipo: 'Adicto a la televisión').save()
-        new Energia(tipo: 'No aplica').save()
+        new Energia(tipo: 'No aplica', porDefecto: true).save()
 
         new Especie(tipo:'Perro').save()
         new Especie(tipo:'Gato').save()
 
         new PapelesAlDia(tipo: 'Si').save()
         new PapelesAlDia(tipo: 'No').save()
-        new PapelesAlDia(tipo: 'No Aplica').save()
+        new PapelesAlDia(tipo: 'No Aplica', porDefecto: true).save()
 
         new Proteccion(tipo:'Guardián').save()
         new Proteccion(tipo:'Algo protector').save()
         new Proteccion(tipo:'Poco o nada protector').save()
-        new Proteccion(tipo:'No aplica').save()
+        new Proteccion(tipo:'No aplica', porDefecto: true).save()
 
         new Raza(nombre:'Akita americano',especie: 1).save()
         new Raza(nombre:'Basset Griffon Vendeen',especie:1).save()
@@ -202,13 +202,11 @@ class BootStrap {
 
         new VacunasAlDia(tipo:'Si').save()
         new VacunasAlDia(tipo:'No').save()
-        new VacunasAlDia(tipo:'Desconocido').save()
+        new VacunasAlDia(tipo:'Desconocido', porDefecto: true).save()
 				
 		new Publicacion(nombreMascota:'bobby',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.367289,longitud:-34.6454526,fechaPublicacion: new Date()).save()
 		new Publicacion(nombreMascota:'otto',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,latitud:-58.4226265,longitud:-34.6098885, fechaPublicacion: new Date()-1).save()
 		new Publicacion(nombreMascota:'panchita tiene pelos largos blancos y sucios por estar en el patio',publicador:2,color:1,castrado:1,compatibleCon:1,edad:1,energia:1,especie:2,papelesAlDia:1,proteccion:2,raza:1,sexo:1,tamanio:1,vacunasAlDia:1,fechaPublicacion: new Date()-2,latitud:-58.5242344,longitud:-34.6192385).save()
-		
-
     }
     def destroy = {
     }
