@@ -35,6 +35,18 @@ class PublicacionController extends RestfulController<Publicacion>  {
 		
         if(params.usuario)
             publicacionInstance.publicador = params.usuario
+        if(!params.castrado)
+            publicacionInstance.castrado = Castrado.findByPorDefecto(true)
+        if(!params.compatibleCon)
+            publicacionInstance.compatibleCon = CompatibleCon.findByPorDefecto(true)
+        if(!params.energia)
+            publicacionInstance.energia = Energia.findByPorDefecto(true)
+        if(!params.papelesAlDia)
+            publicacionInstance.papelesAlDia = PapelesAlDia.findByPorDefecto(true)
+        if(!params.proteccion)
+            publicacionInstance.proteccion = Proteccion.findByPorDefecto(true)
+        if(!params.vacunasAlDia)
+            publicacionInstance.vacunasAlDia = VacunasAlDia.findByPorDefecto(true)
 
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
