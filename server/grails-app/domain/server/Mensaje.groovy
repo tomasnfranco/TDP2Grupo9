@@ -5,6 +5,8 @@ class Mensaje {
     String texto
     String respuesta = ''
     Usuario usuarioPregunta
+    Date fechaPregunta
+    Date fechaRespuesta
 
     static constraints = {
         texto blank: false

@@ -7,7 +7,7 @@ import grails.transaction.Transactional
 class MensajeController {
     static scaffold = true
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",responder: 'POST']
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -29,8 +29,13 @@ class MensajeController {
             return
         }
         params.usuarioPregunta = params.usuario
+        params.fechaPregunta = new Date()
+        params.fechaRespuesta = new Date()
         mensajeInstance = new Mensaje(params)
-
+        if(mensajeInstance.usuarioPregunta.equals(mensajeInstance.publicacion?.publicador)){
+            render status:FORBIDDEN
+            return
+        }
         if (mensajeInstance.hasErrors()) {
             respond mensajeInstance.errors, view:'create'
             return
@@ -101,5 +106,24 @@ class MensajeController {
             }
             '*'{ render status: NOT_FOUND }
         }
+    }
+
+    def responder(){
+        def mensaje = Mensaje.get(params.mensaje)
+        def respuesta = params.texto
+        if(!mensaje){
+            println "No existe el mensaje"
+            render status: NOT_FOUND
+            return
+        }
+        if(!mensaje.publicacion.publicador.equals(params.usuario)){
+            println "Intento responder un mensaje que no es suyo"
+            render status: FORBIDDEN
+            return
+        }
+        mensaje.fechaRespuesta = new Date()
+        mensaje.respuesta = respuesta
+        mensaje.save flush: true
+        render status: OK
     }
 }
