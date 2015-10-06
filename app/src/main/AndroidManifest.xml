@@ -24,12 +24,24 @@
         <activity
             android:name=".inicio.SplashScreenActivity"
             android:label="" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".listview.ResultadosBusquedaActivity"
             android:label="" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.listview.ResultadosBusquedaActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".drawerNavigationMenu.DrawerMenuActivity"
+            android:label="" >
+            <intent-filter>
+                <action android:name="com.tdp2grupo9.drawerNavigationMenu.DrawerMenuActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -61,10 +73,6 @@
             android:name=".adopcion.AdopcionTabActivity"
             android:label="@string/title_activity_adopcion_tab"
             android:windowSoftInputMode="adjustResize|stateVisible" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity

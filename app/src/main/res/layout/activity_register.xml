@@ -33,6 +33,7 @@
         android:layout_below="@+id/editTextZona"
         android:layout_marginTop="10dp"
         android:textSize="18sp"
+        android:maxLength="15"
         android:layout_marginRight="18dp"
         android:layout_alignLeft="@+id/editTextZona"
         android:layout_alignStart="@+id/editTextZona"

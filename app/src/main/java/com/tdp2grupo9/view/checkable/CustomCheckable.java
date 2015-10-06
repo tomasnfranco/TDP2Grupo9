@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.tdp2grupo9.R;
 
-/**
- * Created by Tomás on 03/10/2015.
- */
 public abstract class CustomCheckable extends LinearLayout implements Checkable {
 
     private String textChecked;

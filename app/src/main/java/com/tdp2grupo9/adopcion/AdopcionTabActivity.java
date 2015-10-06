@@ -54,6 +54,7 @@ public class AdopcionTabActivity extends TabActivity {
 
     private void createPublicarBusquedaTab() {
         createTab(getResources().getString(R.string.publicar_busqueda), PublicarBusquedaActivity.class);
+
     }
 
     private void createBuscarMascotaTab() {

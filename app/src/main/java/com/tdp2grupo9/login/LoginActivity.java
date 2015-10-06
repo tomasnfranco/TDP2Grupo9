@@ -35,6 +35,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawerNavigationMenu.DrawerMenuActivity;
 import com.tdp2grupo9.inicio.HomeActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
@@ -42,9 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Muestra las opciones de loguearse con Facebook, email o registrar una cuenta.
- */
+
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
@@ -287,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
@@ -329,7 +328,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);

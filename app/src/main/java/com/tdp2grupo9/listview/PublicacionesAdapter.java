@@ -1,6 +1,7 @@
 package com.tdp2grupo9.listview;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class PublicacionesAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
         ((TextView) publicacionView.findViewById(R.id.publicacion_name)).setText(publicaciones.get(i).getNombreMascota());
+        ((ImageView) publicacionView.findViewById(R.id.ivLocalizacion)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_localizacion));
         ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(publicaciones.get(i).getImagenes().get(0));
         int loadedIcons = 0;
         if (cargarIconoHogarTransito(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }

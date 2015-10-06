@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawerNavigationMenu.DrawerMenuActivity;
 import com.tdp2grupo9.inicio.HomeActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
@@ -528,7 +529,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             userRegisterFacebookTask = null;
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
                     startActivity(intent);
                 }
                 finish();
