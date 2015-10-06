@@ -10,7 +10,7 @@ import grails.rest.RestfulController
 class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET']
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -35,6 +35,22 @@ class PublicacionController extends RestfulController<Publicacion>  {
 		
         if(params.usuario)
             publicacionInstance.publicador = params.usuario
+        if(!params.castrado)
+            publicacionInstance.castrado = Castrado.findByPorDefecto(true)
+        if(!params.compatibleCon)
+            publicacionInstance.compatibleCon = CompatibleCon.findByPorDefecto(true)
+        if(!params.energia)
+            publicacionInstance.energia = Energia.findByPorDefecto(true)
+        if(!params.papelesAlDia)
+            publicacionInstance.papelesAlDia = PapelesAlDia.findByPorDefecto(true)
+        if(!params.proteccion)
+            publicacionInstance.proteccion = Proteccion.findByPorDefecto(true)
+        if(!params.vacunasAlDia)
+            publicacionInstance.vacunasAlDia = VacunasAlDia.findByPorDefecto(true)
+        if(params.latitud == null)
+            publicacionInstance.latitud = params.usuario.latitud
+        if(params.longitud == null)
+            publicacionInstance.longitud = params.usuario.longitud
 
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
@@ -138,5 +154,25 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def misAdopciones(){
         render publicacionService.misAdopciones(params) as JSON
+    }
+
+    def quieroAdoptar(){
+        render status: publicacionService.quieroAdoptar(params)
+    }
+
+    def concretarAdopcion(){
+        println params
+        render status: publicacionService.concretarAdopcion(params)
+    }
+
+    def mensajes(){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        render publicacion.preguntas.collect{[id:it.id,
+                                            fechaPregunta:it.fechaPregunta,
+                                            pregunta:it.texto,
+                                            fechaRespuesta: it.respuesta ? it.fechaRespuesta : '',
+                                            respuesta : it.respuesta ? it.respuesta : null,
+                                            usuarioPregunta : it.usuarioPregunta.username
+        ]} as JSON
     }
 }

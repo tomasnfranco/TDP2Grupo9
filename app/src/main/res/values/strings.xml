@@ -15,4 +15,24 @@
     <string name="campo_telefonico_vacio">Debe completar el campo teléfono</string>
     <string name="campo_telefonico_fuera_rango">El telefóno debe contener entre 8-15 números</string>
     <string name="campo_telefonico_formato_incorrecto">El telefóno debe contener sólo números</string>
+
+    <!-- Drawer Menu items -->
+    <string-array name="nav_drawer_items">
+        <item>Inicio</item>
+        <item>Mi Perfil</item>
+        <item>Mis Publicaciones</item>
+        <item>Notificaciones</item>
+        <item>Cerrar Sesión</item>
+    </string-array>
+
+    <!-- Sliding Menu item icons -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_inicio</item>
+        <item>@drawable/ic_mi_perfil</item>
+        <item>@drawable/ic_mis_publicaciones</item>
+        <item>@drawable/ic_notificaciones</item>
+        <item>@drawable/ic_cerrar_sesion</item>
+    </array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
