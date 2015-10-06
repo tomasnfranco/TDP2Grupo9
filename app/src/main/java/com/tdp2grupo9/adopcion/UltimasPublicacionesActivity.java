@@ -51,7 +51,6 @@ public class UltimasPublicacionesActivity extends Activity {
                 Item item = (Item) listView.getAdapter().getItem(position);
             }
         });
-
     }
 
     //TODO: hecho solo para ver los resultados de la busqueda, eliminar en produccion
