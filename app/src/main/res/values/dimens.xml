@@ -6,4 +6,6 @@
     <dimen name="tabs_title_size">12sp</dimen>
     <dimen name="foto_publicacion_size">85dp</dimen>
     <dimen name="toolbar_icon_size">30dp</dimen>
+    <dimen name="icon_side">30dp</dimen>
+    <dimen name="margin_right_icon">20dp</dimen>
 </resources>

@@ -54,30 +54,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <LinearLayout
+            <com.tdp2grupo9.view.clickable.MapaClickable
                 android:id="@+id/mapa_clickable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_map" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/zona_residencia"
-                    android:layout_marginLeft="20dp" />
-
-            </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <com.tdp2grupo9.view.clickable.ClearFiltersClickable
                 android:id="@+id/limpiar_filtros_clickable"
+                android:layout_marginTop="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

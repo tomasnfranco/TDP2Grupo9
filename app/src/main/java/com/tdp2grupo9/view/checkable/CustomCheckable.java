@@ -1,4 +1,4 @@
-package com.tdp2grupo9.view.checkers;
+package com.tdp2grupo9.view.checkable;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -14,24 +14,24 @@ import com.tdp2grupo9.R;
 /**
  * Created by Tomás on 03/10/2015.
  */
-public abstract class CustomCheck extends LinearLayout implements Checkable {
+public abstract class CustomCheckable extends LinearLayout implements Checkable {
 
     private String textChecked;
     private String textUnchecked;
     private boolean checked;
     private ImageView crossImage;
 
-    public CustomCheck(Context context) {
+    public CustomCheckable(Context context) {
         super(context);
         initialize(context);
     }
 
-    public CustomCheck(Context context, AttributeSet attrs) {
+    public CustomCheckable(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
     }
 
-    public CustomCheck(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomCheckable(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize(context);
     }

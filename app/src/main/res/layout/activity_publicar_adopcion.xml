@@ -174,28 +174,10 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <LinearLayout
+            <com.tdp2grupo9.view.clickable.EliminarUltimaFotoClickable
                 android:id="@+id/eliminar_foto_clickeable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:padding="5dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_delete"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/eliminar_ultima_foto"/>
-
-            </LinearLayout>
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,12 +186,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/icon_side"
+                    android:layout_height="@dimen/icon_side"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:padding="5dp"
                     android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/margin_right_icon"
                     android:src="@drawable/ic_videocamera"/>
 
                 <EditText
@@ -222,35 +203,19 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <com.tdp2grupo9.view.clickable.MapaClickable
                 android:id="@+id/mapa_clickable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_map" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/zona_residencia"
-                    android:layout_marginLeft="20dp" />
-
-            </LinearLayout>
-
-            <com.tdp2grupo9.view.checkers.HogarTransitoCheck
+            <com.tdp2grupo9.view.checkable.HogarTransitoCheckable
                 android:id="@+id/requiere_hogar_transito"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"/>
 
-            <com.tdp2grupo9.view.checkers.CuidadosEspecialesCheck
+            <com.tdp2grupo9.view.checkable.CuidadosEspecialesCheckable
                 android:id="@+id/requiere_cuidados_especiales"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
