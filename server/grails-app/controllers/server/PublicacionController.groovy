@@ -47,6 +47,10 @@ class PublicacionController extends RestfulController<Publicacion>  {
             publicacionInstance.proteccion = Proteccion.findByPorDefecto(true)
         if(!params.vacunasAlDia)
             publicacionInstance.vacunasAlDia = VacunasAlDia.findByPorDefecto(true)
+        if(params.latitud == null)
+            publicacionInstance.latitud = params.usuario.latitud
+        if(params.longitud == null)
+            publicacionInstance.longitud = params.usuario.longitud
 
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
