@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollableView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <include
+                android:id="@+id/cardview_basica"
+                layout="@layout/cardview_informacion_basica" />
+            <include
+                android:id="@+id/cardview_localizacion"
+                layout="@layout/cardview_localizacion" />
+            <include
+                android:id="@+id/cardview_fotos"
+                layout="@layout/cardview_fotos" />
+            <include
+                android:id="@+id/cardview_videos"
+                layout="@layout/cardview_videos" />
+            <include
+                android:id="@+id/cardview_adicional"
+                layout="@layout/cardview_informacion_adicional" />
+
+            <Button
+                android:id="@+id/btn_publicar_adopcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@color/darkorange"
+                android:text="@string/publicar_adopcion"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

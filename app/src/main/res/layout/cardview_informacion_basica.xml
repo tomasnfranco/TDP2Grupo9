@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="12dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:focusable="false"
+        android:backgroundTint="#ff000000"
+        android:backgroundTintMode="src_in"
+        android:baselineAligned="false"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información básica"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:textColor="#9E9E9E"
+                android:textSize="18dp"
+                android:textStyle="italic" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentStart="false"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:background="@drawable/ic_icono" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nombre_mascota_edit_text"
+            android:hint="Nombre/Descripción"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:autoText="true"
+            android:textColorHint="@color/primary_dark_material_light"
+            android:layout_marginTop="10dp" />
+
+        <Spinner
+            android:id="@+id/especie_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/raza_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/sexo_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/tamanio_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/edad_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/color_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

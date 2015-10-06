@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.fragments.PublicarAdopcionFragment;
+import com.tdp2grupo9.fragments.TestFragment;
 import com.tdp2grupo9.fragments.UltimasPublicacionesFragment;
 
 import java.util.Locale;
@@ -62,9 +64,9 @@ public class TabbedFragment extends Fragment {
                 case 0: // Fragment # 0 - This will show FirstFragment
                     return  UltimasPublicacionesFragment.newInstance(0, "Page # 1");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return new Fragment(); //CarFragment.newInstance(1, "Page # 2");
+                    return PublicarAdopcionFragment.newInstance(1, "Page # 2");
                 case 2: // Fragment # 1 - This will show SecondFragment
-                    return new Fragment(); //BikeFragment.newInstance(2, "Page # 3");
+                    return new Fragment(); //TestFragment.newInstance(2, "Page # 3");
                 default:
                     return null;
             }
