@@ -1,4 +1,4 @@
-package com.tdp2grupo9.view.checkers;
+package com.tdp2grupo9.view.checkable;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,19 +7,19 @@ import android.util.AttributeSet;
 import com.tdp2grupo9.R;
 
 /**
- * Created by Tomás on 03/10/2015.
+ * Created by Tomas on 03/10/2015.
  */
-public class CuidadosEspecialesCheck extends CustomCheck {
+public class CuidadosEspecialesCheckable extends CustomCheckable {
 
-    public CuidadosEspecialesCheck(Context context) {
+    public CuidadosEspecialesCheckable(Context context) {
         super(context);
     }
 
-    public CuidadosEspecialesCheck(Context context, AttributeSet attrs) {
+    public CuidadosEspecialesCheckable(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CuidadosEspecialesCheck(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CuidadosEspecialesCheckable(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

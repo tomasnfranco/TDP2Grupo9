@@ -1,6 +1,7 @@
 package server
 
 import grails.transaction.Transactional
+import static org.springframework.http.HttpStatus.*
 
 @Transactional
 class PublicacionService {
@@ -31,6 +32,8 @@ class PublicacionService {
                 tamanio.id == params.tamanio
             if(params.vacunasAlDia)
                 vacunasAlDia.id == params.vacunasAlDia
+            if(params.raza)
+                raza.id == params.raza
             publicador.id != usuario.id
             activa == true
             if(params.tipoPublicacion)
@@ -77,5 +80,52 @@ class PublicacionService {
                                      publicador: it.publicador.username,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       nombreMascota : it.nombreMascota]}
+    }
+
+    def quieroAdoptar(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        Usuario user = params.usuario
+        if(publicacion) {
+            if(publicacion.quierenAdoptar.contains(user)){
+                return METHOD_NOT_ALLOWED
+            }
+            if(publicacion.publicador.equals(user)){
+                return FORBIDDEN
+            }
+            publicacion.addToQuierenAdoptar(user)
+            publicacion.save(flush:true)
+            return OK
+        }
+        return NOT_FOUND
+    }
+
+    def concretarAdopcion(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        println "Publicacion: ${params.publicacion}"
+        Usuario supuestoPublicador = params.usuario
+        println "Publicador: ${params.usuario}"
+        Usuario quiereAdoptar = Usuario.get(params.quiereAdoptar)
+        println "Quiere adoptar: ${quiereAdoptar}"
+        if(!quiereAdoptar){
+            println "salio porque no existe quiereAdoptar"
+            return BAD_REQUEST
+        }
+        if(publicacion) {
+            if(!publicacion.quierenAdoptar.contains(quiereAdoptar)){
+                println "salio porque no existe quiereAdoptar en la lista de los que quieren"
+                return FORBIDDEN
+            }
+            if(!publicacion.publicador.equals(supuestoPublicador)){
+                println "salio porque no es su publicacion"
+                return UNAUTHORIZED
+            }
+            publicacion.concretado = quiereAdoptar
+            publicacion.activa = false //TODO: Ver si con esto esta bien
+            publicacion.save(flush:true)
+            println "salio todo OK"
+            return OK
+        }
+        println "salio porque no existe la publicacion"
+        return NOT_FOUND
     }
 }

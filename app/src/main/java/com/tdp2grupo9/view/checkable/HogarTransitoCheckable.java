@@ -1,4 +1,4 @@
-package com.tdp2grupo9.view.checkers;
+package com.tdp2grupo9.view.checkable;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,19 +7,19 @@ import android.util.AttributeSet;
 import com.tdp2grupo9.R;
 
 /**
- * Created by Tomás on 03/10/2015.
+ * Created by Tomas on 03/10/2015.
  */
-public class HogarTransitoCheck extends CustomCheck {
+public class HogarTransitoCheckable extends CustomCheckable {
 
-    public HogarTransitoCheck(Context context) {
+    public HogarTransitoCheckable(Context context) {
         super(context);
     }
 
-    public HogarTransitoCheck(Context context, AttributeSet attrs) {
+    public HogarTransitoCheckable(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public HogarTransitoCheck(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HogarTransitoCheckable(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

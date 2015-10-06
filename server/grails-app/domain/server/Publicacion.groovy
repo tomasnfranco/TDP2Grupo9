@@ -37,7 +37,7 @@ class Publicacion {
 	String videoLink = ' '
 	double distancia = 0
 	static transients = ['distancia']
-	static hasMany = [fotos : Foto, quierenAdoptar : Usuario]
+	static hasMany = [fotos : Foto, quierenAdoptar : Usuario, preguntas : Mensaje]
 	
     static constraints = {
 		publicador()

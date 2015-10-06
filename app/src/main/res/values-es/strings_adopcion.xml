@@ -32,5 +32,6 @@
     <string name="eliminar_ultima_foto">Eliminar la última foto</string>
     <string name="maximo_fotos_alcanzado">Ya ha alcanzado el máximo de fotos que puede cargar</string>
     <string name="no_hay_fotos">No hay fotos para eliminar</string>
+    <string name="limpiar_filtros">Limpiar filtros</string>
 
 </resources>

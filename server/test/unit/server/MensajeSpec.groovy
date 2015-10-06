@@ -6,15 +6,12 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
-@TestFor(Energia)
-class EnergiaSpec extends Specification {
+@TestFor(Mensaje)
+class MensajeSpec extends Specification {
 
     def setup() {
     }
 
     def cleanup() {
-    }
-
-    void "test something"() {
     }
 }
