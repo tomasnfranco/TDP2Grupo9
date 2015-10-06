@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.adopcion.UltimasPublicacionesFragment;
+import com.tdp2grupo9.fragments.UltimasPublicacionesFragment;
 
 import java.util.Locale;
 

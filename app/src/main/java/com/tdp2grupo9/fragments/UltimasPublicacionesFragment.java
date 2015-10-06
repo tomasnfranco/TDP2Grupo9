@@ -1,4 +1,4 @@
-package com.tdp2grupo9.adopcion;
+package com.tdp2grupo9.fragments;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;

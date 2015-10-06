@@ -18,7 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.inicio.HomeActivity;
+import com.tdp2grupo9.fragments.MiPerfilFragment;
+import com.tdp2grupo9.fragments.MisNotificacionesFragment;
+import com.tdp2grupo9.fragments.MisPostulacionesFragment;
+import com.tdp2grupo9.fragments.MisPublicacionesFragment;
 import com.tdp2grupo9.login.LoginActivity;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.tabbedMain.TabbedFragment;
@@ -73,18 +76,16 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
                 setFragment(1, TabbedFragment.class);
                 break;
             case 2:
-                mDrawerLayout.closeDrawer(mLvDrawerMenu);
-                mLvDrawerMenu.invalidateViews();
+                setFragment(2, MiPerfilFragment.class);
+                break;
             case 3:
-                mDrawerLayout.closeDrawer(mLvDrawerMenu);
-                mLvDrawerMenu.invalidateViews();
+                setFragment(3, MisPublicacionesFragment.class);
+                break;
             case 4:
-                mDrawerLayout.closeDrawer(mLvDrawerMenu);
-                mLvDrawerMenu.invalidateViews();
+                setFragment(4, MisPostulacionesFragment.class);
                 break;
             case 5:
-                mDrawerLayout.closeDrawer(mLvDrawerMenu);
-                mLvDrawerMenu.invalidateViews();
+                setFragment(5, MisNotificacionesFragment.class);
                 break;
             case 6:
                 logoutTask = new UserLogoutTask();
