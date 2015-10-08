@@ -73,9 +73,14 @@ class PublicacionService {
                                       fecha : it.fechaPublicacion]}
     }
 
-    def misAdopciones(params) {
+    def misPostulaciones(params) {
         //TODO: Definir que atributos devolver de la publicacion
-        def publicaciones = Publicacion.findAllByConcretado(params.usuario,params)
+        def publicaciones = Publicacion.withCriteria(params) {
+            quierenAdoptar {
+                eq('id',params.usuario.id)
+            }
+            eq('activa',true)
+        }
         return publicaciones.collect{[id: it.id,
                                      publicador: it.publicador.username,
                                       foto: it.fotos ? it.fotos[0].base64 : '',

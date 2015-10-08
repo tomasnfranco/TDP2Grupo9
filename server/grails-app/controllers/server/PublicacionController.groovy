@@ -152,8 +152,8 @@ class PublicacionController extends RestfulController<Publicacion>  {
         render publicacionService.misPublicaciones(params) as JSON
     }
 
-    def misAdopciones(){
-        render publicacionService.misAdopciones(params) as JSON
+    def misPostulaciones(){
+        render publicacionService.misPostulaciones(params) as JSON
     }
 
     def quieroAdoptar(){
