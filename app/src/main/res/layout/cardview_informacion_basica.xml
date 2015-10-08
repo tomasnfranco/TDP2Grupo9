@@ -64,32 +64,43 @@
         <Spinner
             android:id="@+id/especie_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/raza_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/sexo_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/tamanio_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/edad_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/color_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
     </LinearLayout>
 

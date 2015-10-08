@@ -59,27 +59,37 @@
         <Spinner
             android:id="@+id/papeles_dia_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/vacunas_dia_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:layout_marginTop="8dp" />
 
         <Spinner
             android:id="@+id/castrado_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
         <Spinner
             android:id="@+id/proteccion_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:layout_marginTop="8dp" />
 
         <Spinner
             android:id="@+id/energia_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="5dp" />
 
 
 

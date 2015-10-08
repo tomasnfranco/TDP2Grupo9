@@ -3,11 +3,14 @@ package com.tdp2grupo9.view;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.interpeter.AtributosJSONInterpeter;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
@@ -46,8 +49,8 @@ public class SeleccionAtributosFragment extends Fragment {
     protected Spinner spProteccion;
     protected Spinner spEnergia;
     protected View viewMain;
+    protected GoogleMap map;
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_publicar_mascotas, container, false);
@@ -56,6 +59,7 @@ public class SeleccionAtributosFragment extends Fragment {
         publicacionAtributos = new PublicacionAtributos();
         obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
         obtenerAtributosTask.execute((Void) null);
+
        return v;
     }
 
