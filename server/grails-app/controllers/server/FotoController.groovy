@@ -38,7 +38,7 @@ class FotoController {
         fotoInstance.save flush:true
 
         request.withFormat {
-            form multipartForm {
+            html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'foto.label', default: 'Foto'), fotoInstance.id])
                 redirect fotoInstance
             }
