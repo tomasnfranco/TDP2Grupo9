@@ -12,6 +12,14 @@ public class VacunasAlDia extends AtributoPublicacion {
 
     public static final String CLAVE = "vacunasAlDia";
 
+    public VacunasAlDia() {
+        super();
+    }
+
+    public VacunasAlDia(int id) {
+        super(id);
+    }
+
     public void jsonToVacuna(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

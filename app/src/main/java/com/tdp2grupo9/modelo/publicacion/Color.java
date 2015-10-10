@@ -12,6 +12,14 @@ public class Color extends AtributoPublicacion {
 
     public static final String CLAVE = "color";
 
+    public Color() {
+        super();
+    }
+
+    public Color(int id) {
+        super(id);
+    }
+
     public void jsonToColor(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

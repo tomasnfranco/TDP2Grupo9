@@ -12,6 +12,13 @@ public class Especie extends AtributoPublicacion {
 
     public static final String CLAVE = "especie";
 
+    public Especie() {
+        super();
+    }
+
+    public Especie(int id) {
+        super(id);
+    }
 
     public void jsonToEspecie(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();

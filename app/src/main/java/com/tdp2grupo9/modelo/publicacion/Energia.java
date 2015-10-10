@@ -12,6 +12,14 @@ public class Energia extends AtributoPublicacion {
 
     public static final String CLAVE = "energia";
 
+    public Energia() {
+        super();
+    }
+
+    public Energia(int id) {
+        super(id);
+    }
+
     public void jsonToEnergia(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

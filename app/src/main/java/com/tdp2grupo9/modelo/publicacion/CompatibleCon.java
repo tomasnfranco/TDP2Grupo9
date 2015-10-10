@@ -12,6 +12,14 @@ public class CompatibleCon extends AtributoPublicacion {
 
     public static final String CLAVE = "compatibleCon";
 
+    public CompatibleCon() {
+        super();
+    }
+
+    public CompatibleCon(int id) {
+        super(id);
+    }
+
     public void jsonToCompatibleCon(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

@@ -12,6 +12,14 @@ public class PapelesAlDia extends AtributoPublicacion {
 
     public static final String CLAVE = "papelesAlDia";
 
+    public PapelesAlDia() {
+        super();
+    }
+
+    public PapelesAlDia(int id) {
+        super(id);
+    }
+
     public void jsonToPapelesAlDia(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

@@ -35,6 +35,8 @@ public class Usuario {
     private String username;
     private String telefono;
     private String direccion;
+    
+    private byte[] foto;
 
     private Usuario() {
         this.resetearAtributos();
@@ -44,7 +46,7 @@ public class Usuario {
         return INSTANCIA;
     }
 
-    private void resetearAtributos() {
+    public void resetearAtributos() {
         this.facebookId = Long.valueOf(0);
         this.facebookToken = "";
         this.latitud = Double.valueOf(0);
@@ -59,6 +61,7 @@ public class Usuario {
         this.username = "";
         this.telefono = "";
         this.direccion = "";
+        this.foto = null;
     }
 
     private void jsonToUsuario(JsonReader reader) throws JSONException, IOException {
@@ -220,6 +223,10 @@ public class Usuario {
         Log.w(LOG_TAG, METHOD + " metodo no implementado.");
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+    
     public void setFacebookId(Long facebookId) {
         this.facebookId = facebookId;
     }

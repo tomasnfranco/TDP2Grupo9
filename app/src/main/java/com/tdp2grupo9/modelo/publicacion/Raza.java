@@ -12,6 +12,14 @@ public class Raza extends AtributoPublicacion {
 
     public static final String CLAVE = "raza";
 
+    public Raza() {
+        super();
+    }
+
+    public Raza(int id) {
+        super(id);
+    }
+
     public void jsonToRaza(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {

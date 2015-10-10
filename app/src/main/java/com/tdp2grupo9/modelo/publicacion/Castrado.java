@@ -12,6 +12,14 @@ public class Castrado extends AtributoPublicacion {
 
     public static final String CLAVE = "castrado";
 
+    public Castrado() {
+        super();
+    }
+
+    public Castrado(int id) {
+        super(id);
+    }
+
     public void jsonToCastrado(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();
         while (reader.hasNext()) {
