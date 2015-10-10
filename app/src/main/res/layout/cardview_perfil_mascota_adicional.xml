@@ -39,7 +39,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_icono" />
         </RelativeLayout>
-        <View style="@style/HorizontalDivider"/>
+        <!--<View style="@style/HorizontalDivider"/>-->
 
         <TextView
             style="@style/Base.TextAppearance.AppCompat.Body1"
