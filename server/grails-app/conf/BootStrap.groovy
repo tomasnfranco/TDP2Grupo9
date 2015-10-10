@@ -16,8 +16,8 @@ import server.Publicacion
 class BootStrap {
 
     def init = { servletContext ->
-		new Usuario(facebookId:1156897635,username:'diegomeller',telefono:'112345600',direccion:'Paseo Colon 850',token:'12345',latitud:-58.4621224,longitud:-34.6035515).save()
-		new Usuario(username:'email',email:'diego@meller.com',password:'test',telefono:'1145670891',direccion:'Alguna',token:'234567',latitud:-58.4621224,longitud:-34.6035515).save()
+		new Usuario(facebookId:1156897635,email:'grupo9tdp2@gmail.com',username:'diegomeller',telefono:'112345600',direccion:'Paseo Colon 850',token:'12345',latitud:-58.4621224,longitud:-34.6035515).save()
+		new Usuario(username:'email',email:'grupo9tdp2@gmail.com',password:'test',telefono:'1145670891',direccion:'Alguna',token:'234567',latitud:-58.4621224,longitud:-34.6035515).save()
         new Castrado(tipo:'Si').save()
         new Castrado(tipo:'No').save()
         new Castrado(tipo:'Desconocido', porDefecto: true).save()

@@ -13,10 +13,8 @@ class Usuario {
 	boolean ofreceTransito = false
 	boolean activo = true
 	String token = ""
-	
-    static constraints = {
-		username(nullable: true, blank:true)
-		email(nullable:true, blank:true,email:true, validator:{val,obj ->
+	/* Validador para email unico
+	, validator:{val,obj ->
 			if(val == null || val == '')
 				return true
 			else {
@@ -28,7 +26,11 @@ class Usuario {
 				}
 				return false;
 			}
-		})
+		}
+	 */
+    static constraints = {
+		username(nullable: true, blank:true)
+		email(nullable:true, blank:true,email:true)
 		password(nullable: true, blank:true,password:true)
 		facebookId validator:{val,obj ->
 			if(val == null || val == 0)

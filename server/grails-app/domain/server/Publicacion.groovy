@@ -52,6 +52,7 @@ class Publicacion {
 		virtual {
 			distancia { value, json -> json.value(value.distancia) }
 		}
+		deep 'fotos'
 	}
 
 	double setDistancia(def lat,def lon){

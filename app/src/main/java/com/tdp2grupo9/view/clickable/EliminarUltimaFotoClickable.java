@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import com.tdp2grupo9.R;
 
 /**
- * Created by Tomás on 05/10/2015.
+ * Created by Tomas on 05/10/2015.
  */
 public class EliminarUltimaFotoClickable extends CustomClickable {
 

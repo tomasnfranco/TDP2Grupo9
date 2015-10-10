@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.*
 @Transactional
 class PublicacionService {
     final static def DISTANCIA_MAXIMA = 10
+    def notificacionesService
 
     //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
@@ -99,6 +100,7 @@ class PublicacionService {
             }
             publicacion.addToQuierenAdoptar(user)
             publicacion.save(flush:true)
+            notificacionesService.nuevaPostulacion(user.username,publicacion.nombreMascota,publicacion.publicador);
             return OK
         }
         return NOT_FOUND
@@ -127,6 +129,14 @@ class PublicacionService {
             publicacion.concretado = quiereAdoptar
             publicacion.activa = false //TODO: Ver si con esto esta bien
             publicacion.save(flush:true)
+            //Notificaciones
+            notificacionesService.concretarAdopcionElegido(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
+            notificacionesService.concretarAdopcionPublicador(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
+            publicacion.quierenAdoptar.each {
+                if(it.id != quiereAdoptar.id){
+                    notificacionesService.concretarAdopcionNoElegido(it,publicacion.nombreMascota,publicacion.publicador)
+                }
+            }
             println "salio todo OK"
             return OK
         }
