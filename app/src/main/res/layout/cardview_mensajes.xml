@@ -45,7 +45,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_icono" />
         </RelativeLayout>
-        <!--<View style="@style/HorizontalDivider"/>-->
+        <View style="@style/HorizontalDivider"/>
 
         <EditText
             android:layout_width="fill_parent"
@@ -68,7 +68,7 @@
             android:singleLine="false"
             android:paddingStart="10dp"
             android:paddingEnd="10dp" />
-        <!--android:background="@drawable/button_drawable"-->
+            android:background="@drawable/button_drawable"
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scrollableView"
