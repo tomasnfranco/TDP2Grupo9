@@ -129,6 +129,14 @@ class PublicacionService {
             publicacion.concretado = quiereAdoptar
             publicacion.activa = false //TODO: Ver si con esto esta bien
             publicacion.save(flush:true)
+            //Notificaciones
+            notificacionesService.concretarAdopcionElegido(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
+            notificacionesService.concretarAdopcionPublicador(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
+            publicacion.quierenAdoptar.each {
+                if(it.id != quiereAdoptar.id){
+                    notificacionesService.concretarAdopcionNoElegido(it,publicacion.nombreMascota,publicacion.publicador)
+                }
+            }
             println "salio todo OK"
             return OK
         }

@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class MensajeController {
     static scaffold = true
-
+    def notificacionesService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE",responder: 'POST']
 
     def index(Integer max) {
@@ -42,7 +42,7 @@ class MensajeController {
         }
 
         mensajeInstance.save flush:true
-
+        notificacionesService.nuevaPregunta(mensajeInstance,mensajeInstance.publicacion.nombreMascota,mensajeInstance.publicacion.publicador)
         request.withFormat {
             html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'mensaje.label', default: 'Mensaje'), mensajeInstance.id])
@@ -124,6 +124,7 @@ class MensajeController {
         mensaje.fechaRespuesta = new Date()
         mensaje.respuesta = respuesta
         mensaje.save flush: true
+        notificacionesService.respuestaAPregunta(mensaje,mensaje.publicacion.nombreMascota,mensaje.publicacion.publicador)
         render status: OK
     }
 }
