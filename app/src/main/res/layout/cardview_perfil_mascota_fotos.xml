@@ -38,7 +38,7 @@
                 android:src="@drawable/ic_camera"/>
         </RelativeLayout>
 
-        <!--<View style="@style/HorizontalDivider"/>-->
+        <View style="@style/HorizontalDivider"/>
 
                 <com.daimajia.slider.library.SliderLayout
                     android:id="@+id/photo_slider"

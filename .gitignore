@@ -16,3 +16,9 @@
 TDP2Grupo9.iml
 app/app.iml
 facebook/facebook.iml
+
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*.orig

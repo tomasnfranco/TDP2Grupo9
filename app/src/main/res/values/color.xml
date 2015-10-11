@@ -3,4 +3,8 @@
     <color name="color_primary">#FFFF4909</color>
     <color name="color_primary_dark">#FFFF2405</color>
     <color name="color_accent">#FFFFAA00</color>
+    <color name="button_disable">#B2DFDB</color>
+    <color name="black_trans80">#14000000</color>
+    <color name="translucent_scrim_bottom">#88000000</color>
+    <color name="translucent_scrim_bottom_center">#44000000</color>
 </resources>
