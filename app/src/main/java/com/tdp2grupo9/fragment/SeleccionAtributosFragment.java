@@ -3,9 +3,6 @@ package com.tdp2grupo9.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -45,26 +42,22 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     protected Spinner spCastrado;
     protected Spinner spProteccion;
     protected Spinner spEnergia;
-    protected View viewMain;
     protected GoogleMap map;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_publicar_mascotas, container, false);
-        viewMain = v;
+    @Override
+    public void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         publicacionAtributos = new PublicacionAtributos();
         obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
         obtenerAtributosTask.execute((Void) null);
-
-       return v;
     }
 
     private void createSpinner(List<AtributoPublicacion> atributos, AtributoPublicacion atributoPublicacion, Spinner spinner, int id) {
         atributoPublicacion.setValor(atributoPublicacion.getName());
         atributos.add(0, atributoPublicacion);
-        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(viewMain.getContext(), android.R.layout.simple_spinner_item, atributos);
+        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(getActivity().getBaseContext(), android.R.layout.simple_spinner_item, atributos);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner = (Spinner) viewMain.findViewById(id);
+        spinner = (Spinner) getActivity().findViewById(id);
         spinner.setAdapter(atributosArrayAdapter);
     }
 
@@ -116,7 +109,7 @@ public abstract class SeleccionAtributosFragment extends Fragment {
         createSpinner(publicacionAtributos.getEnergias(), new Energia(), spEnergia, R.id.energia_spinner);
     }
 
-    protected abstract void initializeWidgets();
+    protected abstract void initializeSpinners();
 
     public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -140,7 +133,7 @@ public abstract class SeleccionAtributosFragment extends Fragment {
         protected void onPostExecute(final Boolean success) {
             obtenerAtributosTask = null;
             if (success) {
-                initializeWidgets();
+                initializeSpinners();
             } else {
             }
         }

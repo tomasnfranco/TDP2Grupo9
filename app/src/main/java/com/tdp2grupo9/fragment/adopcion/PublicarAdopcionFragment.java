@@ -122,8 +122,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
-
-
+    private View mFragmentView;
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -134,19 +133,20 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
         inicializarWidgets();
-        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragmentMapPublicacion)).getMap();
+        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion)).getMap();
 
         if(map != null){
             currentZoom = map.getMaxZoomLevel()-zoomOffset;
             map.setOnMapClickListener(this);
 
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
 
-        googleApiClient = new GoogleApiClient.Builder(viewMain.getContext())
+        googleApiClient = new GoogleApiClient.Builder(mFragmentView.getContext())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -163,11 +163,11 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         markerOptions = new MarkerOptions();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        return viewMain;
+        return mFragmentView;
     }
 
     @Override
-    protected void initializeWidgets() {
+    protected void initializeSpinners() {
         createEspecieSpinner();
         createRazaSpinner();
         createSexoSpinner();
@@ -183,16 +183,16 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     }
 
     private void inicializarWidgets(){
-        nombreDescripcion = (EditText) viewMain.findViewById(R.id.nombre_mascota_edit_text);
-        videoLink = (EditText) viewMain.findViewById(R.id.cargar_video);
-        cuidadosEspeciales = (Checkable) viewMain.findViewById(R.id.requiere_cuidados_especiales);
-        requiereHogarTransito = (Checkable) viewMain.findViewById(R.id.requiere_hogar_transito);
-        contacto = (EditText) viewMain.findViewById(R.id.contacto_edit_text);
-        condicionesAdopcion = (EditText) viewMain.findViewById(R.id.condiciones_edit_text);
-        btnPublicar = (Button) viewMain.findViewById(R.id.btn_publicar_adopcion);
+        nombreDescripcion = (EditText) mFragmentView.findViewById(R.id.nombre_mascota_edit_text);
+        videoLink = (EditText) mFragmentView.findViewById(R.id.cargar_video);
+        cuidadosEspeciales = (Checkable) mFragmentView.findViewById(R.id.requiere_cuidados_especiales);
+        requiereHogarTransito = (Checkable) mFragmentView.findViewById(R.id.requiere_hogar_transito);
+        contacto = (EditText) mFragmentView.findViewById(R.id.contacto_edit_text);
+        condicionesAdopcion = (EditText) mFragmentView.findViewById(R.id.condiciones_edit_text);
+        btnPublicar = (Button) mFragmentView.findViewById(R.id.btn_publicar_adopcion);
         btnPublicar.setOnClickListener(this);
-        tvZona = (TextView) viewMain.findViewById(R.id.tvZona);
-        mFotoPicker = (FotoPicker) viewMain.findViewById(R.id.foto_picker);
+        tvZona = (TextView) mFragmentView.findViewById(R.id.tvZona);
+        mFotoPicker = (FotoPicker) mFragmentView.findViewById(R.id.foto_picker);
         mFotoPicker.setFragment(this);
     }
 
@@ -353,7 +353,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View layout = inflater.inflate(R.layout.toast_layout,
-                        (ViewGroup) viewMain.findViewById(R.id.lytLayout));
+                        (ViewGroup) mFragmentView.findViewById(R.id.lytLayout));
 
                 TextView txtMsg = (TextView)layout.findViewById(R.id.txtMensaje);
 
@@ -437,7 +437,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         if(map != null) {
             initializeMap();
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -466,7 +466,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private void startTracking(){
         googleApiClient.connect();
-        Toast.makeText(viewMain.getContext(), "Location tracking started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mFragmentView.getContext(), "Location tracking started", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -476,7 +476,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
         }
         googleApiClient.disconnect();
-        Toast.makeText(viewMain.getContext(), "Location tracking halted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mFragmentView.getContext(), "Location tracking halted", Toast.LENGTH_SHORT).show();
     }
 
     private void addMapMarker (double lat, double lon, float markerColor,
@@ -492,7 +492,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             marker.setDraggable(false);
             marker.showInfoWindow();
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
 
@@ -563,7 +563,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                         bearing, map.getCameraPosition().tilt, true);
             }
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -572,7 +572,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         boolean omitCountry = true;
         String returnString = "";
 
-        Geocoder gcoder = new Geocoder(viewMain.getContext());
+        Geocoder gcoder = new Geocoder(mFragmentView.getContext());
 
         try{
             List<Address> results = null;
@@ -650,7 +650,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                              String strokeColor, String fillColor){
 
         if(map == null){
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
             return null;
         }
 
@@ -700,3 +700,5 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
 
 }
+
+
