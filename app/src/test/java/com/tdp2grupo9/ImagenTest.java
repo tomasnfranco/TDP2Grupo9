@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 @Config(manifest=Config.NONE)
 public class ImagenTest {
 
-    Usuario usuario;
+    private Usuario usuario;
 
     @Before
     public void inicializar() {
@@ -38,19 +38,18 @@ public class ImagenTest {
         Imagen imagen = new Imagen();
         imagen.setImg(Imagen.bytesFromBase64DEFAULT(base64));
 
-        byte[] original = imagen.getImg();
-
         //LA ENVIO AL SERVIDOR CON URL SAFE
         String urlSafe = Imagen.base64URL_SAFEFromBytes(imagen.getImg());
+
+        byte[] bytes = imagen.getImg();
 
         //CUANDO VUELVE DEL SERVIDOR VUELVE COMO URL SAFE
         imagen.setImg(Imagen.bytesFromBase64URL_SAFE(urlSafe));
 
-        byte[] devuelto = imagen.getImg();
-
         //COMPARO LOS BYTES
 
-        assertTrue(Arrays.equals(original, devuelto));
+        assertTrue("Los bytes enviados y devueltos no coinciden", Arrays.equals(bytes, imagen.getImg()));
+        assertEquals("La imagen no coincide con la original", base64, imagen.getBase64());
 
     }
 
@@ -63,15 +62,13 @@ public class ImagenTest {
         imagen.setPublicacionId(1);
 
         int id = imagen.getId();
-        byte[] original = imagen.getImg();
+        byte[] bytes = imagen.getImg();
 
         imagen.guardarImagen(usuario.getToken());
 
-        byte[] devuelto = imagen.getImg();
-
-        assertTrue(Arrays.equals(original, devuelto));
-        assertNotEquals(id, imagen.getId());
-        assertEquals(base64, imagen.getBase64());
+        assertNotEquals("El id de la imagen no cambio", id, imagen.getId());
+        assertTrue("Los bytes enviados y devueltos no coinciden", Arrays.equals(bytes, imagen.getImg()));
+        assertEquals("La imagen no coincide con la original", base64, imagen.getBase64());
     }
 
     @Test
@@ -83,13 +80,13 @@ public class ImagenTest {
         imagen.setPublicacionId(1);
 
         int id = imagen.getId();
-        byte[] original = imagen.getImg();
+        byte[] bytes = imagen.getImg();
 
         imagen.guardarImagen(usuario.getToken());
 
-        assertTrue(Arrays.equals(original, imagen.getImg()));
-        assertNotEquals(id, imagen.getId());
-        assertEquals(base64, imagen.getBase64());
+        assertNotEquals("El id de la imagen no cambio", id, imagen.getId());
+        assertTrue("Los bytes enviados y devueltos no coinciden", Arrays.equals(bytes, imagen.getImg()));
+        assertEquals("La imagen no coincide con la original", base64, imagen.getBase64());
 
     }
 
@@ -102,13 +99,13 @@ public class ImagenTest {
         imagen.setPublicacionId(2);
 
         int id = imagen.getId();
-        byte[] original = imagen.getImg();
+        byte[] bytes = imagen.getImg();
 
         imagen.guardarImagen(usuario.getToken());
 
-        assertTrue(Arrays.equals(original, imagen.getImg()));
-        assertNotEquals(id, imagen.getId());
-        assertEquals(base64, imagen.getBase64());
+        assertNotEquals("El id de la imagen no cambio", id, imagen.getId());
+        assertTrue("Los bytes enviados y devueltos no coinciden", Arrays.equals(bytes, imagen.getImg()));
+        assertEquals("La imagen no coincide con la original", base64, imagen.getBase64());
 
     }
 

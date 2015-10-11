@@ -145,8 +145,6 @@ public class PublicacionTest {
 
         List<Publicacion> publicaciones = Publicacion.buscarPublicaciones(usuario.getToken(), 1, 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() == 0);
-        //assertTrue(publicaciones.get(0).getId() == 4);
-
 	}
 
     @Test
@@ -154,26 +152,11 @@ public class PublicacionTest {
 
         Publicacion publicacionFiltros = new Publicacion();
         publicacionFiltros.setEspecie(new Especie(1));
-        //publicacionFiltros.setRaza(new Raza(1));
-        //publicacionFiltros.setColor(new Color(1));
-        //publicacionFiltros.setSexo(new Sexo(1));
-        //publicacionFiltros.setTamanio(new Tamanio(1));
-        //publicacionFiltros.setEdad(new Edad(2));
-        //publicacionFiltros.setCompatibleCon(new CompatibleCon(1));
-        //publicacionFiltros.setVacunasAlDia(new VacunasAlDia(1));
-        //publicacionFiltros.setPapelesAlDia(new PapelesAlDia(1));
-        //publicacionFiltros.setCastrado(new Castrado(1));
-        //publicacionFiltros.setProteccion(new Proteccion(1));
-        //publicacionFiltros.setEnergia(new Energia(1));
-        publicacionFiltros.setLatitud(10.0);
         publicacionFiltros.setLongitud(10.0);
-        //publicacionFiltros.setNecesitaTransito(false);
-        //publicacionFiltros.setRequiereCuidadosEspeciales(false);
+        publicacionFiltros.setLatitud(10.0);
 
         List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
-        //assertTrue(publicaciones.get(0).getId() == 4);
-
     }
 
     @Test

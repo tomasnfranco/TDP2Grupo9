@@ -1,35 +1,28 @@
 package com.tdp2grupo9.adopcion;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
-import com.tdp2grupo9.modelo.consulta.Consulta;
-import com.tdp2grupo9.modelo.consulta.ConsultaAdapter;
+import com.tdp2grupo9.view.MensajeAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
 public class PerfilMascotaActivity extends Activity{
 
     private Publicacion publicacion;
+    private List<Mensaje> mensajes;
     private ListView listView;
-    private List<Consulta> consultas;
     //private SliderLayout video_slider;
     //private SliderLayout photo_slider;
     private double currentLat = -34.5976786;
@@ -65,7 +58,7 @@ public class PerfilMascotaActivity extends Activity{
 
     private void cargarListViewConsultas(){
         listView = (ListView) findViewById(R.id.listView_consultas);
-        listView.setAdapter(new ConsultaAdapter(this, consultas));
+        listView.setAdapter(new MensajeAdapter(this, mensajes));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,

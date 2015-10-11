@@ -47,7 +47,7 @@ public class Imagen {
     }
     
     public static byte[] bytesFromBase64URL_SAFE(String base64){
-        return Base64.decode(base64,Base64.URL_SAFE);
+        return Base64.decode(base64.replaceAll("(\\r|\\n)", ""),Base64.URL_SAFE);
     }
     
     public static byte[] bytesFromBitmap(Bitmap bmp) {
@@ -157,6 +157,6 @@ public class Imagen {
     }
 
     public String getBase64() {
-        return Imagen.base64DEFAULTFromBytes(this.img);
+        return Imagen.base64DEFAULTFromBytes(this.img).replaceAll("(\\r|\\n)", "");
     }
 }

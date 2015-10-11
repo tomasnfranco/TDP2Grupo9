@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,9 +58,9 @@ public class Publicacion {
     private Sexo sexo;
     private Tamanio tamanio;
     private VacunasAlDia vacunasAlDia;
-    private List<Imagen> imagenes;
     private Double latitud;
     private Double longitud;
+    private List<Imagen> imagenes;
 
     public Publicacion() {
         this.id = 0;
@@ -84,9 +83,9 @@ public class Publicacion {
         this.vacunasAlDia = new VacunasAlDia();
         this.requiereCuidadosEspeciales = null;
         this.necesitaTransito = null;
-        this.imagenes = new ArrayList<>();
         this.latitud = 0.0;
         this.longitud = 0.0;
+        this.imagenes = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -279,6 +278,7 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
         return publicacion;
     }
 
