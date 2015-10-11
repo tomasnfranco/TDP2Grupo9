@@ -62,7 +62,8 @@ class PublicacionController extends RestfulController<Publicacion>  {
         }
 
         publicacionInstance.save flush:true
-        alertaService.verificarSiCumpleAlgunaAlerta(publicacionInstance)
+        if(alertaService)
+            alertaService.verificarSiCumpleAlgunaAlerta(publicacionInstance)
 
         request.withFormat {
             html {

@@ -5,6 +5,7 @@ import grails.transaction.Transactional
 @Transactional
 class AlertaService {
     def notificacionesService
+
     def verificarSiCumpleAlgunaAlerta(Publicacion publicacion) {
         def alertas = Alerta.where{
             color == publicacion.color
