@@ -29,11 +29,6 @@ public class CuidadosEspecialesCheckable extends CustomCheckable {
     }
 
     @Override
-    protected String getTextUnhecked() {
-        return getResources().getString(R.string.no_requiere_cuidados_especiales);
-    }
-
-    @Override
     protected Drawable getImageDrawable() {
         return getResources().getDrawable(R.drawable.cuidados_especiales);
     }

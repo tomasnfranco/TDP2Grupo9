@@ -29,11 +29,6 @@ public class HogarTransitoCheckable extends CustomCheckable {
     }
 
     @Override
-    protected String getTextUnhecked() {
-        return getResources().getString(R.string.no_requiere_hogar_transito);
-    }
-
-    @Override
     protected Drawable getImageDrawable() {
         return getResources().getDrawable(R.drawable.home_transit);
     }
