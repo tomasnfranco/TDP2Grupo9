@@ -82,8 +82,8 @@ class AlertaController {
             notFound()
             return
         }
-
-        alertaInstance = Alerta.get(params.alerta)
+        if(alertaInstance.id == null)
+            alertaInstance = Alerta.get(params.alerta)
 
         alertaInstance.delete flush:true
 
