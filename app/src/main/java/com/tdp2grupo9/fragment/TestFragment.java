@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tdp2grupo9.view.SeleccionAtributosFragment;
-
 
 public class TestFragment extends SeleccionAtributosFragment {
 
@@ -18,6 +16,22 @@ public class TestFragment extends SeleccionAtributosFragment {
         args.putString("someTitle", title);
         testFragment.setArguments(args);
         return testFragment;
+    }
+
+    @Override
+    protected void initializeWidgets() {
+        createEspecieSpinner();
+        createRazaSpinner();
+        createSexoSpinner();
+        createTamanioSpinner();;
+        createEdadSpinner();
+        createColorSpinner();
+        createCompatibleConSpinner();
+        createPapelesDiaSpinner();
+        createVacunasDiaSpinner();
+        createCastradorSpinner();
+        createProteccionSpinner();
+        createEnergiaSpinner();
     }
 
     @Override

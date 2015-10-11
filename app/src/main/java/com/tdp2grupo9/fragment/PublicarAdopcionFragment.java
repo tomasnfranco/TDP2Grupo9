@@ -55,7 +55,6 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
-import com.tdp2grupo9.view.SeleccionAtributosFragment;
 import com.tdp2grupo9.view.foto.FotoPicker;
 
 import java.io.IOException;
@@ -123,6 +122,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
 
+
+
     public static PublicarAdopcionFragment newInstance(int page, String title) {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
         Bundle args = new Bundle();
@@ -168,6 +169,21 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         return viewMain;
     }
 
+    @Override
+    protected void initializeWidgets() {
+        createEspecieSpinner();
+        createRazaSpinner();
+        createSexoSpinner();
+        createTamanioSpinner();;
+        createEdadSpinner();
+        createColorSpinner();
+        createCompatibleConSpinner();
+        createPapelesDiaSpinner();
+        createVacunasDiaSpinner();
+        createCastradorSpinner();
+        createProteccionSpinner();
+        createEnergiaSpinner();
+    }
 
     private void inicializarWidgets(){
         nombreDescripcion = (EditText) viewMain.findViewById(R.id.nombre_mascota_edit_text);
