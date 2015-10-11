@@ -1,6 +1,7 @@
 package com.tdp2grupo9.tabbedMain;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragments.PublicarAdopcionFragment;
-import com.tdp2grupo9.fragments.TestFragment;
-import com.tdp2grupo9.fragments.UltimasPublicacionesFragment;
+import com.tdp2grupo9.fragment.PublicarAdopcionFragment;
+import com.tdp2grupo9.fragment.UltimasPublicacionesFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class TabbedFragment extends Fragment {
@@ -109,6 +110,18 @@ public class TabbedFragment extends Fragment {
             dummyTextView.setText(Integer.toString(getArguments().getInt(
                     ARG_SECTION_NUMBER)));
             return rootView;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<Fragment> childFragments = getChildFragmentManager().getFragments();
+        if (childFragments != null) {
+            for (Fragment fragment : childFragments) {
+                if (fragment != null)
+                    fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

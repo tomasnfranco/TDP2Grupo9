@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DDEA9A"
-    tools:context="com.tdp2grupo9.fragments.MisNotificacionesFragment">
+    tools:context="com.tdp2grupo9.fragment.MisNotificacionesFragment">
 
     <TextView
         android:layout_width="match_parent"

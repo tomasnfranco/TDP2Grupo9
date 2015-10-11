@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF4A1"
-    tools:context="com.tdp2grupo9.fragments.MisPublicacionesFragment">
+    tools:context="com.tdp2grupo9.fragment.MisPublicacionesFragment">
 
     <TextView
         android:layout_width="match_parent"

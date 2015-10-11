@@ -1,4 +1,4 @@
-package com.tdp2grupo9.drawerNavigationMenu;
+package com.tdp2grupo9.drawer;
 
 
 import android.content.Intent;
@@ -18,10 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragments.MiPerfilFragment;
-import com.tdp2grupo9.fragments.MisNotificacionesFragment;
-import com.tdp2grupo9.fragments.MisPostulacionesFragment;
-import com.tdp2grupo9.fragments.MisPublicacionesFragment;
+import com.tdp2grupo9.fragment.MiPerfilFragment;
+import com.tdp2grupo9.fragment.MisNotificacionesFragment;
+import com.tdp2grupo9.fragment.MisPostulacionesFragment;
+import com.tdp2grupo9.fragment.MisPublicacionesFragment;
 import com.tdp2grupo9.login.LoginActivity;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.tabbedMain.TabbedFragment;
@@ -184,6 +184,18 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         @Override
         protected void onCancelled() {
             logoutTask = null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<Fragment> childFragments = getSupportFragmentManager().getFragments();
+        if (childFragments != null) {
+            for (Fragment fragment : childFragments) {
+                if (fragment != null)
+                    fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

@@ -14,7 +14,7 @@
     <item name="darkred" type="color">#FFCC0000</item>
     <color name="gray_transparent">#A6212121</color>
     <color name="black_transparent">#D9000000</color>
-
+    <color name="white_transparent">#80FFFFFF</color>
 
     <integer-array name="androidcolors">
         <item>@color/white</item>

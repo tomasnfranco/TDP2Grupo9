@@ -1,4 +1,4 @@
-package com.tdp2grupo9.drawerNavigationMenu;
+package com.tdp2grupo9.drawer;
 
 import android.content.Context;
 import android.view.LayoutInflater;

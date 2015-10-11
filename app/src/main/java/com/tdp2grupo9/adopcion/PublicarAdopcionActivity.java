@@ -2,7 +2,6 @@ package com.tdp2grupo9.adopcion;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,9 +34,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.view.SeleccionAtributosActivity;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.tdp2grupo9.view.foto.FotoPicker;
 
 /**
  * Created by tfranco on 9/24/2015.
@@ -47,14 +43,11 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
 
     private static final String PHOTO_INTENT_TYPE = "image/*";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int MAXIMO_FOTOS_PERMITIDAS = 6;
     private static final int DATA_MAPA_REQUEST = 10;
 
     private Double latitud = Usuario.getInstancia().getLatitud();
     private Double longitud = Usuario.getInstancia().getLongitud();
-    private Map<Integer, ImageView> photosMap;
 
-    private int cantidadFotosCargadas = 0;
     private EditText nombreDescripcion;
     private EditText videoLink;
     private Checkable cuidadosEspeciales;
@@ -64,14 +57,13 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
     private Button btnPublicar;
 
     private PublicarAdopcionTask publicarAdopcionTask;
+    private FotoPicker mFotoPicker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publicar_adopcion);
         inicializarWidgets();
-        createAgregarFotoButton();
-        createEliminarFotoButton();
         createMapsButton();
     }
 
@@ -84,33 +76,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         condicionesAdopcion = (EditText) findViewById(R.id.condiciones_edit_text);
         btnPublicar = (Button) findViewById(R.id.btn_publicar_adopcion);
         btnPublicar.setOnClickListener(this);
-        initializePhotosScrollView();
-    }
-
-    private void initializePhotosScrollView() {
-        createPhotosMap();
-        photosMap.get(0).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        for (int i = 1; i < MAXIMO_FOTOS_PERMITIDAS; i++) {
-            photosMap.get(i).setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void createPhotosMap() {
-        photosMap = new HashMap<Integer, ImageView>();
-        photosMap.put(0, (ImageView) findViewById(R.id.foto_uno));
-        photosMap.put(1, (ImageView) findViewById(R.id.foto_dos));
-        photosMap.put(2, (ImageView) findViewById(R.id.foto_tres));
-        photosMap.put(3, (ImageView) findViewById(R.id.foto_cuatro));
-        photosMap.put(4, (ImageView) findViewById(R.id.foto_cinco));
-        photosMap.put(5, (ImageView) findViewById(R.id.foto_seis));
-    }
-
-
-    private void createAgregarFotoButton() {
-        View cargarFotoTextView = findViewById(R.id.cargar_foto_text_view);
-        View fotosHorizontalScrollView = findViewById(R.id.fotos_horizontal_clickable);
-        cargarFotoTextView.setOnClickListener(new AgregarFotoListener());
-        fotosHorizontalScrollView.setOnClickListener(new AgregarFotoListener());
+        mFotoPicker = (FotoPicker) findViewById(R.id.foto_picker);
     }
 
     @Override
@@ -152,10 +118,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 if (!condicionesAdopcion.getText().toString().isEmpty())
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
 
-                Integer[] idFotos = {R.id.foto_uno, R.id.foto_dos, R.id.foto_tres, R.id.foto_cuatro, R.id.foto_cinco, R.id.foto_seis};
-
-                for (int i=0; i < cantidadFotosCargadas; i++){
-                    publicacion.addImagen(((BitmapDrawable) ((ImageView) findViewById(idFotos[i])).getDrawable()).getBitmap());
+                for (Bitmap bitmap : mFotoPicker.getImagesBitmaps()) {
+                    publicacion.addImagen(bitmap);
                 }
 
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
@@ -203,35 +167,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         return valido;
     }
 
-    private class AgregarFotoListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View v) {
-            if (cantidadFotosCargadas < MAXIMO_FOTOS_PERMITIDAS) {
-                Intent intent = new Intent();
-                intent.setType(PHOTO_INTENT_TYPE);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-            }
-            else {
-                Toast.makeText(getApplicationContext(), getString(R.string.maximo_fotos_alcanzado), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void createEliminarFotoButton() {
-        View eliminarFotoButton = findViewById(R.id.eliminar_foto_clickeable);
-        eliminarFotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cantidadFotosCargadas > 0) {
-                    deleteLastPhoto();
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.no_hay_fotos), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,7 +176,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                loadPhotoWithBitmap(bitmap);
+                mFotoPicker.addFoto(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -249,24 +185,6 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
         if ((requestCode == DATA_MAPA_REQUEST) && (resultCode == RESULT_OK)){
             longitud = data.getDoubleExtra("longitud",0.0);
             latitud = data.getDoubleExtra("latitud", 0.0);
-        }
-    }
-
-    private void loadPhotoWithBitmap(Bitmap bitmap) {
-        photosMap.get(cantidadFotosCargadas).setImageBitmap(bitmap);
-        ++cantidadFotosCargadas;
-        if (cantidadFotosCargadas < MAXIMO_FOTOS_PERMITIDAS) {
-            ImageView nextPhotoHolder = photosMap.get(cantidadFotosCargadas);
-            nextPhotoHolder.setVisibility(View.VISIBLE);
-            nextPhotoHolder.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        }
-    }
-
-    private void deleteLastPhoto() {
-        --cantidadFotosCargadas;
-        photosMap.get(cantidadFotosCargadas).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        if ((cantidadFotosCargadas+1) < MAXIMO_FOTOS_PERMITIDAS) {
-            photosMap.get(cantidadFotosCargadas+1).setVisibility(View.INVISIBLE);
         }
     }
 

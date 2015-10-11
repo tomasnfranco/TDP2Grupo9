@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cargar_foto_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/cargar_fotos"
+        android:textSize="16dp" />
+
+    <HorizontalScrollView
+        android:id="@+id/fotos_horizontal_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/fotos_horizontal_clickable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/add_foto_image_view"
+                android:layout_width="@dimen/foto_publicacion_size"
+                android:layout_height="@dimen/foto_publicacion_size"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_camera"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</LinearLayout>
