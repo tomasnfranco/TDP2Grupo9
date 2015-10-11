@@ -123,8 +123,9 @@ public class Usuario {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("facebookId="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono+"&latitud="+
-                    this.latitud+"&longitud="+this.longitud+"&autoPublicar="+this.autopublicar+"&ofreceTransito="+this.ofreceTransito);
+            out.write("facebookId="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono+
+                    "&latitud="+this.latitud.toString().replace('.', ',')+"&longitud="+this.longitud.toString().replace('.', ',')+
+                    "&autoPublicar="+this.autopublicar+"&ofreceTransito="+this.ofreceTransito);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();

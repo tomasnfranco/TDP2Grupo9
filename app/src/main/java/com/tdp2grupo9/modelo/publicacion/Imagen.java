@@ -43,7 +43,7 @@ public class Imagen {
     }
 
     public static byte[] bytesFromBase64DEFAULT(String base64){
-        return Base64.decode(base64,Base64.DEFAULT);
+        return Base64.decode(base64, Base64.DEFAULT);
     }
     
     public static byte[] bytesFromBase64URL_SAFE(String base64){
@@ -100,8 +100,6 @@ public class Imagen {
         try {
         	String content = "token=" + token + "&publicacion=" + this.publicacionId + "&base64=" + Imagen.base64URL_SAFEFromBytes(this.img);
 
-            System.out.println(content);
-            
             urlConnection = Connection.getHttpUrlConnection("foto");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
@@ -110,8 +108,6 @@ public class Imagen {
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(content);
             out.close();
-            
-
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
@@ -142,12 +138,25 @@ public class Imagen {
 	public void setPublicacionId(Integer publicacionId) {
 		this.publicacionId = publicacionId;
 	}
-	
-	public byte[] getImg() {
+
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
+
+
+    public byte[] getImg() {
 		return this.img;
 	}
-		
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
+
+    public Bitmap getBitmap() {
+        return Imagen.bitmapFromBytes(this.img);
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getBase64() {
+        return Imagen.base64DEFAULTFromBytes(this.img);
+    }
 }

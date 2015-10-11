@@ -46,7 +46,7 @@ public class PerfilMascotaActivity extends Activity{
 
     public void cargarPortada() {
         ((TextView) findViewById(R.id.publicacion_name)).setText(publicacion.getNombreMascota());
-        ((ImageView) findViewById(R.id.publicacion_image)).setImageBitmap(publicacion.getImagenes().get(0));
+        ((ImageView) findViewById(R.id.publicacion_image)).setImageBitmap(publicacion.getImagenes().get(0).getBitmap());
         int loadedIcons = 0;
         //if (cargarIconoHogarTransito(publicacion, view, loadedIcons)) { ++loadedIcons; }
         //if (cargarIconoCuidadosEspeciales(publicacion, view, loadedIcons)) { ++loadedIcons; }

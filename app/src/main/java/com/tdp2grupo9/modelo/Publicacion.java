@@ -207,8 +207,7 @@ public class Publicacion {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
+            String parametros = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
                     "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
                     "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
                     "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
@@ -216,8 +215,13 @@ public class Publicacion {
                     "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
                     "&necesitaTransito="+this.necesitaTransito +"&raza="+this.raza.getId()+
                     "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
-                    "&latitud="+this.latitud+"&longitud="+this.longitud+"&videoLink="+this.videoLink);
+                    "&latitud="+this.latitud.toString().replace('.', ',')+"&longitud="+this.longitud.toString().replace('.', ',')+"&videoLink="+this.videoLink;
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
             out.close();
+
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
@@ -245,6 +249,37 @@ public class Publicacion {
         
         Log.d(LOG_TAG, METHOD + " finalizado.");
 
+    }
+
+    public static Publicacion obtenerPublicacion(String token, Integer id) {
+
+        String METHOD = "obtenerPublicacion";
+
+        Publicacion publicacion = new Publicacion();
+
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = +id+ "?token=" + token;
+
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+
+            urlConnection = Connection.getHttpUrlConnection("publicacion/"+atributos);
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicacion.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " publicacion obtenida id: " + publicacion.getId());
+
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicacion;
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
@@ -306,37 +341,6 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
         return publicaciones;
-    }
-
-    public static Publicacion obtenerPublicacion(String token, Integer id) {
-
-        String METHOD = "obtenerPublicacion";
-
-        Publicacion publicacion = new Publicacion();
-
-        HttpURLConnection urlConnection = null;
-        try {
-            String atributos = +id+ "?token=" + token;
-
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
-
-            urlConnection = Connection.getHttpUrlConnection("publicacion/"+atributos);
-
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                publicacion.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                Log.d(LOG_TAG, METHOD + " publicacion obtenida id: " + publicacion.getId());
-
-            } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
-            }
-        } catch (IOException | JSONException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        }  finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-        return publicacion;
     }
 
     public Integer getId() {
