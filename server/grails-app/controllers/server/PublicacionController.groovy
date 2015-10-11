@@ -10,6 +10,7 @@ import grails.rest.RestfulController
 class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
+    def alertaService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
 
     def index(Integer max) {
@@ -61,6 +62,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
         }
 
         publicacionInstance.save flush:true
+        alertaService.verificarSiCumpleAlgunaAlerta(publicacionInstance)
 
         request.withFormat {
             html {
