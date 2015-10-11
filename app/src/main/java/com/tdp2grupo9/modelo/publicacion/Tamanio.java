@@ -12,6 +12,13 @@ public class Tamanio extends AtributoPublicacion {
 
     public static final String CLAVE = "tamanio";
 
+    public Tamanio() {
+        super();
+    }
+
+    public Tamanio(int id) {
+        super(id);
+    }
 
     public void jsonToTamanio(JsonReader reader) throws JSONException, IOException {
         reader.beginObject();

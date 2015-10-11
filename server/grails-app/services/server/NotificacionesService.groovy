@@ -7,6 +7,7 @@ class NotificacionesService {
 
     def mailService
     def pie = "<br/><br/>"
+    def logoApp = "<img width='114px' height='114px' src='https://raw.githubusercontent.com/tomasnfranco/TDP2Grupo9/master/app/src/main/res/drawable/logo_aplicacion.png'/><br/>"
 
     def nuevaPostulacion(def postulante, def mascota, Usuario publicador){
         if(publicador.email && !publicador.email.empty) {
@@ -14,7 +15,7 @@ class NotificacionesService {
                 async true
                 to "${publicador.email}"
                 subject "[BUSCA SUS HUELLAS]: Solicitud de Adopción de $mascota"
-                html "<html><body>Hola ${publicador.username},<br/> <b>$postulante</b> se postuló para adoptar a <b><em>$mascota</em></b> " +
+                html "<html><body>${logoApp}Hola ${publicador.username},<br/> <b>$postulante</b> se postuló para adoptar a <b><em>$mascota</em></b> " +
                         '<br/><br/>Entra a BUSCA SUS HUELLAS y concreta esta adopción. </body></html>'
             }
             println "E-mail enviado al usuario ${publicador.username} al mail ${publicador.email} porque $postulante se postulo por $mascota"
@@ -29,7 +30,7 @@ class NotificacionesService {
                 async true
                 to "${postulante.email}"
                 subject "[BUSCA SUS HUELLAS]: Felicidades, $mascota es tuyo!"
-                html "<html><body>Hola ${postulante.username},<br/> <b>${publicador.username}</b> ha decidido que te entregará a <b><em>$mascota</em></b> " +
+                html "<html><body>${logoApp}Hola ${postulante.username},<br/> <b>${publicador.username}</b> ha decidido que te entregará a <b><em>$mascota</em></b> " +
                         "<br/>Estos son los datos de ${publicador.username} para que lo contactes y puedan coordinar la adopción:<br/>" +
                         "Email: ${publicador.email}<br/>" +
                         "Teléfono: ${publicador.telefono}<br/>" +
@@ -48,7 +49,7 @@ class NotificacionesService {
                 async true
                 to "${postulante.email}"
                 subject "[BUSCA SUS HUELLAS]: $mascota ha encontrado otro hogar"
-                html "<html><body><b>${publicador.username}</b> ha decidido que entregará a <b><em>$mascota</em></b> a otro usuario," +
+                html "<html><body>${logoApp}<b>${publicador.username}</b> ha decidido que entregará a <b><em>$mascota</em></b> a otro usuario," +
                         " seguí buscando y dentro de poco vas a encontrar esa mascota que queres." +
                         "<br/><br/>Atentamente,<br/>" +
                         "El Equipo de BUSCA SUS HUELLAS</body></html>"
@@ -65,7 +66,7 @@ class NotificacionesService {
                 async true
                 to "${publicador.email}"
                 subject "[BUSCA SUS HUELLAS]: Has encontrado un hogar para $mascota!"
-                html "<html><body>Hola ${publicador.username},<br/>" +
+                html "<html><body>${logoApp}Hola ${publicador.username},<br/>" +
                         "Recientemente has concretado la adopción de <b><em>$mascota</em></b>. " +
                         "<br/>Estos son los datos de ${postulante.username} para que lo contactes y puedan coordinar la adopción:<br/>" +
                         "Email: ${postulante.email}<br/>" +
@@ -85,9 +86,9 @@ class NotificacionesService {
                 async true
                 to "${publicador.email}"
                 subject "[BUSCA SUS HUELLAS]: Preguntaron por $mascota"
-                html "<html><body>Hola ${publicador.username},<br/>" +
+                html "<html><body>${logoApp}Hola ${publicador.username},<br/>" +
                         "${mensaje.usuarioPregunta.username} ha preguntado" +
-                        "<br/><img src='https://photos-4.dropbox.com/t/2/AAD-g3fUvh2c0MuTeX0r6uJxHmztfDhAotfQlIhupi4NOA/12/114874040/jpeg/32x32/1/1444496400/0/2/Pregunta.gif/CLit4zYgASACIAMgBiAHKAEoAigH/tWAphwZclRnYLCy62smJsp9AVDcTy8HdqBglS_gb044?size_mode=5'/> ${mensaje.texto}" +
+                        "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.texto}" +
                         "<br/><br/>" +
                         "Entra a BUSCA SUS HUELLAS para responderle y conseguirle un hogar a $mascota</body></html>"
             }
@@ -103,10 +104,10 @@ class NotificacionesService {
                 async true
                 to "${mensaje.usuarioPregunta.email}"
                 subject "[BUSCA SUS HUELLAS]: Respondieron tu consulta por $mascota"
-                html "<html><body>Hola ${mensaje.usuarioPregunta.username},<br/>" +
+                html "<html><body>${logoApp}Hola ${mensaje.usuarioPregunta.username},<br/>" +
                         "${publicador.username} respondió tu consulta" +
-                        "<br/><img src='https://photos-4.dropbox.com/t/2/AAD-g3fUvh2c0MuTeX0r6uJxHmztfDhAotfQlIhupi4NOA/12/114874040/jpeg/32x32/1/1444496400/0/2/Pregunta.gif/CLit4zYgASACIAMgBiAHKAEoAigH/tWAphwZclRnYLCy62smJsp9AVDcTy8HdqBglS_gb044?size_mode=5'/> ${mensaje.texto}" +
-                        "<br/><span style='padding-left:5px;'><img src='https://photos-1.dropbox.com/t/2/AAAWNx_KV7oyZKasURm0P6uQVphIAtyTyhcv34xHOcycsQ/12/114874040/jpeg/32x32/1/1444496400/0/2/respuesta.gif/CLit4zYgASACIAMgBiAHKAEoAigH/R9Kk5f6VHxU_LfFSslcTyMR1b7yTR7DVzC5_Zvvx_IA?size_mode=5'/>${mensaje.respuesta}</span>"+
+                        "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.texto}" +
+                        "<br/><span style='padding-left:5px;'><img src='http://i61.tinypic.com/2h84mz5.jpg'/>${mensaje.respuesta}</span>"+
                         "<br/><br/>" +
                         "Entra a BUSCA SUS HUELLAS para realizar otra consulta o adoptar a $mascota</body></html>"
             }
@@ -122,7 +123,7 @@ class NotificacionesService {
                 async true
                 to "${usuario.email}"
                 subject "[BUSCA SUS HUELLAS]: Han Publicado una mascota que cumple tus requisitos"
-                html "<html><body>Hola ${usuario.username},<br/>" +
+                html "<html><body>${logoApp}Hola ${usuario.username},<br/>" +
                         "Recientemente publicaron a  <b><em>$mascota</em></b> que cumple tus requisitos de búsqueda." +
                         "<br/><br/>Entra a BUSCA SUS HUELLAS y en la sección Mis Alertas podes ver la publicación</body></html>"
             }

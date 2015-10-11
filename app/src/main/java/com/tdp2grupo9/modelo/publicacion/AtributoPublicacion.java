@@ -31,6 +31,8 @@ public abstract class AtributoPublicacion {
         this.valor = valor;
     }
 
+    public abstract String getName() ;
+
     @Override
     public String toString() {
         return this.valor;
@@ -40,6 +42,4 @@ public abstract class AtributoPublicacion {
     public boolean equals(Object o) {
         return this.id == ((AtributoPublicacion) o).id;
     }
-
-    public abstract String getName() ;
 }

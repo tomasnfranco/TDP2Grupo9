@@ -1,4 +1,4 @@
-package com.tdp2grupo9.modelo.consulta;
+package com.tdp2grupo9.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,29 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Mensaje;
 
 import java.util.List;
 
 
-public class ConsultaAdapter extends BaseAdapter {
+public class MensajeAdapter extends BaseAdapter {
 
-    private List<Consulta> consultas;
+    private List<Mensaje> mensajes;
     private Context context;
 
-    public ConsultaAdapter(Context context, List<Consulta> consultas) {
-        this.consultas = consultas;
+    public MensajeAdapter(Context context, List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
         this.context = context;
     }
 
-
     @Override
     public int getCount() {
-        return consultas.size();
+        return mensajes.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return consultas.get(i);
+        return mensajes.get(i);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ConsultaAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup parent) {
         View consultasView = getInflatedViewIfNecessary(view, parent);
-        ((TextView) consultasView.findViewById(R.id.infConsulta)).setText(consultas.get(i).getPregunta());
-        ((TextView) consultasView.findViewById(R.id.infRespuesta)).setText(consultas.get(i).getRespuesta());
+        ((TextView) consultasView.findViewById(R.id.infConsulta)).setText(mensajes.get(i).getPregunta());
+        ((TextView) consultasView.findViewById(R.id.infRespuesta)).setText(mensajes.get(i).getRespuesta());
         return consultasView;
     }
 

@@ -93,6 +93,9 @@ environments {
         grails.logging.jul.usebridge = false
         // grails.serverURL = "http://www.changeme.com"
     }
+    test {
+        grails.mail.disabled = true
+    }
 }
 
 // log4j configuration
