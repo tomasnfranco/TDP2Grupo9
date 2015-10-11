@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragment.PublicarAdopcionFragment;
+import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
 
 import java.util.ArrayList;
 import java.util.List;

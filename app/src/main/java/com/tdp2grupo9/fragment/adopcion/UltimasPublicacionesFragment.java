@@ -1,4 +1,4 @@
-package com.tdp2grupo9.fragment;
+package com.tdp2grupo9.fragment.adopcion;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -34,13 +34,8 @@ public class UltimasPublicacionesFragment extends Fragment {
     private Context context;
     private View viewContext;
 
-    public static UltimasPublicacionesFragment newInstance(int page, String title) {
-        UltimasPublicacionesFragment publicacionReciente = new UltimasPublicacionesFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        publicacionReciente.setArguments(args);
-        return publicacionReciente;
+    public static UltimasPublicacionesFragment newInstance() {
+        return new UltimasPublicacionesFragment();
     }
 
     @Override
@@ -55,14 +50,13 @@ public class UltimasPublicacionesFragment extends Fragment {
         publicacion.setLatitud(Usuario.getInstancia().getLatitud());
         buscarAdopcionTask = new BuscarAdopcionTask(publicacion);
         buscarAdopcionTask.execute((Void)null);
-        /*publicaciones = getPublicacionesMock();
-        cargarListView();*/
+        cargarListView();
         return v;
     }
 
     private void cargarListView(){
         listView = (ListView) viewContext.findViewById(R.id.list_view_ultimas_publicaciones);
-        listView.setAdapter(new PublicacionesAdapter(context, publicaciones));
+        listView.setAdapter(new PublicacionesAdapter(context, getPublicacionesMock()));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,

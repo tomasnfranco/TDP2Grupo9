@@ -1,4 +1,4 @@
-package com.tdp2grupo9.fragment;
+package com.tdp2grupo9.fragment.adopcion;
 
 import android.app.Activity;
 import android.content.Context;
@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -124,12 +125,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
 
 
-    public static PublicarAdopcionFragment newInstance(int page, String title) {
+    public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        publicarAdopcion.setArguments(args);
         return publicarAdopcion;
     }
 
