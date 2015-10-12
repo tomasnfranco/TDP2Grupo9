@@ -69,7 +69,7 @@ class PublicacionService {
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
-                                      publicador: it.publicador.username,
+                                      publicador: [nombre: it.publicador.username, id: it.publicador.id],
                                       distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       necesitaTransito: it.necesitaTransito,
@@ -88,7 +88,7 @@ class PublicacionService {
         }
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
-                                      publicador: it.publicador.username,
+                                      publicador: [nombre: it.publicador.username, id: it.publicador.id],
                                       distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       necesitaTransito: it.necesitaTransito,
