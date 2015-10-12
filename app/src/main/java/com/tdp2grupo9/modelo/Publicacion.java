@@ -19,6 +19,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.utils.Connection;
+import com.tdp2grupo9.utils.Fecha;
 
 import org.json.JSONException;
 
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Publicacion {
@@ -39,6 +41,7 @@ public class Publicacion {
     private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 4;
 
     private Integer id;
+    private Integer publicadorId;
     private Integer tipoPublicacion;
     private String nombreMascota;
     private String condiciones;
@@ -60,10 +63,14 @@ public class Publicacion {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
+    private Date fechaPublicacion;
     private List<Imagen> imagenes;
+    private List<Integer> postulantes;
+    private List<Integer> mensajes;
 
     public Publicacion() {
         this.id = 0;
+        this.publicadorId = 0;
         this.tipoPublicacion = TPUBLICACION_MASCOTA_ADOPCION;
         this.nombreMascota = "";
         this.condiciones = "";
@@ -85,7 +92,10 @@ public class Publicacion {
         this.necesitaTransito = null;
         this.latitud = 0.0;
         this.longitud = 0.0;
+        this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
+        this.postulantes = new ArrayList<>();
+        this.mensajes = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -141,6 +151,21 @@ public class Publicacion {
                 case "id":
                     this.id = reader.nextInt();
                     break;
+                case "publicador":
+                    reader.beginObject();
+                    while (reader.hasNext()) {
+                        String namepub = reader.nextName();
+                        switch (namepub) {
+                            case "id":
+                                this.publicadorId = reader.nextInt();
+                                break;
+                            default:
+                                reader.skipValue();
+                                break;
+                        }
+                    }
+                    reader.endObject();
+                    break;
                 case "tipoPublicacion":
                     this.tipoPublicacion = reader.nextInt();
                     break;
@@ -178,15 +203,71 @@ public class Publicacion {
                     this.necesitaTransito = reader.nextBoolean();
                     break;
                 case "foto":
-                	Imagen img = new Imagen();
-                	img.setImg(Imagen.bytesFromBase64URL_SAFE(reader.nextString()));
-                    this.imagenes.add(img);
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        Imagen img = new Imagen();
+                        img.setImg(Imagen.bytesFromBase64URL_SAFE(reader.nextString()));
+                        this.imagenes.add(img);
+                    }
                     break;
                 case "fotos":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else
                     	this.imagenes = Imagen.getImagenesfromJson(reader);
+                    break;
+                case "fecha":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.fechaPublicacion = Fecha.parseStringToDateTime(reader.nextString());
+                    break;
+                case "preguntas":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String namepreg = reader.nextName();
+                                switch (namepreg) {
+                                    case "id":
+                                        this.mensajes.add(reader.nextInt());
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        }
+                        reader.endArray();
+                    }
+                    break;
+                case "postulantes":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String namepost = reader.nextName();
+                                switch (namepost) {
+                                    case "id":
+                                        this.postulantes.add(reader.nextInt());
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        }
+                        reader.endArray();
+                    }
                     break;
                 default:
                     reader.skipValue();
@@ -198,14 +279,12 @@ public class Publicacion {
 
     public void guardarPublicacion(String token) {
         String METHOD = "guardarPublicacion";
-
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("publicacion");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
             String parametros = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
                     "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
                     "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
@@ -219,51 +298,37 @@ public class Publicacion {
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
             out.close();
-
             Log.d(LOG_TAG, METHOD + " url= " + parametros);
-
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
-
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-
                 Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
-
         } catch (IOException | JSONException e) {
             Log.e(LOG_TAG, METHOD + " ERROR ", e);
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-
         Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
-
         for(Imagen bmp: this.imagenes) {
         	bmp.setPublicacionId(this.id);
             bmp.guardarImagen(token);
         }
-        
         Log.d(LOG_TAG, METHOD + " finalizado.");
 
     }
 
     public static Publicacion obtenerPublicacion(String token, Integer id) {
-
         String METHOD = "obtenerPublicacion";
-
         Publicacion publicacion = new Publicacion();
-
         HttpURLConnection urlConnection = null;
         try {
             String atributos = +id+ "?token=" + token;
-
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
-
             urlConnection = Connection.getHttpUrlConnection("publicacion/"+atributos);
-
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicacion.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
@@ -278,24 +343,19 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-
         return publicacion;
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
                                                         Integer max, Publicacion publicacion) {
-
         String METHOD = "buscarPublicaciones";
-
         List<Publicacion> publicaciones = new ArrayList<>();
-
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
                     "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
-
             if (publicacion.getColor().getId() > 0)
                 atributos += "&color="+publicacion.getColor().getId();
             if (publicacion.getCastrado().getId() > 0)
@@ -322,15 +382,62 @@ public class Publicacion {
                 atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
             if (publicacion.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
-
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
-
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
-
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.d(LOG_TAG, METHOD + " publicaciones obtenidas " + publicaciones.size());
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicaciones;
+    }
+
+    public static List<Publicacion> obtenerPublicacionesDeUsuario(String token, Integer offset, Integer max) {
+        String METHOD = "obtenerPublicacionesDeUsuario";
+        List<Publicacion> publicaciones = new ArrayList<>();
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = "?token="+token;
+            //"&offset="+offset+"max="+max
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            urlConnection = Connection.getHttpUrlConnection("publicacion/misPublicaciones"+atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " misPublicaciones obtenidas " + publicaciones.size());
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicaciones;
+    }
+
+    public static List<Publicacion> obtenerPostulacionesDeUsuario(String token, Integer offset, Integer max) {
+        String METHOD = "obtenerPostulacionesDeUsuario";
+        List<Publicacion> publicaciones = new ArrayList<>();
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = "?token="+token;
+            //"&offset="+offset+"max="+max
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            urlConnection = Connection.getHttpUrlConnection("publicacion/misPostulaciones"+atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " misPostulaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
             }
@@ -406,6 +513,14 @@ public class Publicacion {
 
     public List<Imagen> getImagenes() {
         return imagenes;
+    }
+
+    public List<Integer> getMensajes() {
+        return mensajes;
+    }
+
+    public List<Integer> getPostulantes() {
+        return postulantes;
     }
 
     public Double getLongitud() {

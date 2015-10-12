@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_checker"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/custom_check_image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
-
-        <ImageView
-            android:id="@+id/custom_check_cross"
-            android:layout_width="@dimen/icon_side"
-            android:layout_height="@dimen/icon_side"
-            android:layout_marginRight="@dimen/margin_right_icon"
-            android:src="@drawable/ic_cross"/>
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/custom_check_text"
+    <CheckBox
+        android:id="@+id/custom_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textSize="16dp" />
+        android:layout_centerVertical="true"
+        android:textSize="14dp" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/custom_check_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

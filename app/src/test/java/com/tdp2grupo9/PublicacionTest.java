@@ -38,7 +38,7 @@ public class PublicacionTest {
 	@Before
 	public void inicializar() {
 		Usuario.getInstancia().resetearAtributos();
-		Usuario.getInstancia().setFacebookId(new Long(1156897635));
+		Usuario.getInstancia().setFacebookId(1156897635L);
 		Usuario.getInstancia().setToken("12345");
 		usuario = Usuario.getInstancia();
 	}
@@ -149,7 +149,6 @@ public class PublicacionTest {
 
     @Test
     public void buscarPublicacionesConTokenDistintoSiDevuelve() {
-
         Publicacion publicacionFiltros = new Publicacion();
         publicacionFiltros.setEspecie(new Especie(1));
         publicacionFiltros.setLongitud(10.0);

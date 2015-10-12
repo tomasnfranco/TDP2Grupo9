@@ -21,7 +21,7 @@ public class MensajeTest {
     @Before
     public void inicializar() {
         Usuario.getInstancia().resetearAtributos();
-        Usuario.getInstancia().setFacebookId(new Long(1156897635));
+        Usuario.getInstancia().setFacebookId(1156897635L);
         Usuario.getInstancia().setToken("12345");
         usuario = Usuario.getInstancia();
     }

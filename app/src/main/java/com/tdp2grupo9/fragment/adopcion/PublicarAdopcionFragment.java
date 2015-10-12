@@ -1,11 +1,10 @@
-package com.tdp2grupo9.fragments;
+package com.tdp2grupo9.fragment.adopcion;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -41,7 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.maps.MapsActivity;
+import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -57,11 +56,10 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
-import com.tdp2grupo9.view.SeleccionAtributosFragment;
+import com.tdp2grupo9.view.foto.FotoPicker;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +74,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private static final String PHOTO_INTENT_TYPE = "image/*";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int MAXIMO_FOTOS_PERMITIDAS = 6;
     private static final int DATA_MAPA_REQUEST = 10;
 
     private Double latitud = Usuario.getInstancia().getLatitud();
@@ -109,6 +106,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private float speed;
     private float acc = 1.2f;
     private Circle localCircle;
+    private FotoPicker mFotoPicker;
 
     private double lon;
     private double lat;
@@ -125,34 +123,28 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
 
-    public static PublicarAdopcionFragment newInstance(int page, String title) {
+    public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        publicarAdopcion.setArguments(args);
         return publicarAdopcion;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
         inicializarWidgets();
-        createAgregarFotoButton();
-        createEliminarFotoButton();
-        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragmentMapPublicacion)).getMap();
+        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion)).getMap();
 
         if(map != null){
             currentZoom = map.getMaxZoomLevel()-zoomOffset;
             map.setOnMapClickListener(this);
 
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
 
-        googleApiClient = new GoogleApiClient.Builder(viewMain.getContext())
+        googleApiClient = new GoogleApiClient.Builder(mFragmentView.getContext())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -169,47 +161,39 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         markerOptions = new MarkerOptions();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        return viewMain;
+        obtenerAtributos();
+        return mFragmentView;
     }
 
+    @Override
+    protected void initializeSpinners() {
+        createEspecieSpinner();
+        createRazaSpinner();
+        createSexoSpinner();
+        createTamanioSpinner();
+        ;
+        createEdadSpinner();
+        createColorSpinner();
+        createCompatibleConSpinner();
+        createPapelesDiaSpinner();
+        createVacunasDiaSpinner();
+        createCastradorSpinner();
+        createProteccionSpinner();
+        createEnergiaSpinner();
+    }
 
     private void inicializarWidgets(){
-        nombreDescripcion = (EditText) viewMain.findViewById(R.id.nombre_mascota_edit_text);
-        videoLink = (EditText) viewMain.findViewById(R.id.cargar_video);
-        cuidadosEspeciales = (Checkable) viewMain.findViewById(R.id.requiere_cuidados_especiales);
-        requiereHogarTransito = (Checkable) viewMain.findViewById(R.id.requiere_hogar_transito);
-        contacto = (EditText) viewMain.findViewById(R.id.contacto_edit_text);
-        condicionesAdopcion = (EditText) viewMain.findViewById(R.id.condiciones_edit_text);
-        btnPublicar = (Button) viewMain.findViewById(R.id.btn_publicar_adopcion);
+        nombreDescripcion = (EditText) mFragmentView.findViewById(R.id.nombre_mascota_edit_text);
+        videoLink = (EditText) mFragmentView.findViewById(R.id.cargar_video);
+        cuidadosEspeciales = (Checkable) mFragmentView.findViewById(R.id.requiere_cuidados_especiales);
+        requiereHogarTransito = (Checkable) mFragmentView.findViewById(R.id.requiere_hogar_transito);
+        contacto = (EditText) mFragmentView.findViewById(R.id.contacto_edit_text);
+        condicionesAdopcion = (EditText) mFragmentView.findViewById(R.id.condiciones_edit_text);
+        btnPublicar = (Button) mFragmentView.findViewById(R.id.btn_publicar_adopcion);
         btnPublicar.setOnClickListener(this);
-        tvZona = (TextView) viewMain.findViewById(R.id.tvZona);
-        initializePhotosScrollView();
-    }
-
-    private void initializePhotosScrollView() {
-        createPhotosMap();
-        photosMap.get(0).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        for (int i = 1; i < MAXIMO_FOTOS_PERMITIDAS; i++) {
-            photosMap.get(i).setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void createPhotosMap() {
-        photosMap = new HashMap<Integer, ImageView>();
-        photosMap.put(0, (ImageView) viewMain.findViewById(R.id.foto_uno));
-        photosMap.put(1, (ImageView) viewMain.findViewById(R.id.foto_dos));
-        photosMap.put(2, (ImageView) viewMain.findViewById(R.id.foto_tres));
-        photosMap.put(3, (ImageView) viewMain.findViewById(R.id.foto_cuatro));
-        photosMap.put(4, (ImageView) viewMain.findViewById(R.id.foto_cinco));
-        photosMap.put(5, (ImageView) viewMain.findViewById(R.id.foto_seis));
-    }
-
-
-    private void createAgregarFotoButton() {
-        View cargarFotoTextView = viewMain.findViewById(R.id.cargar_foto_text_view);
-        View fotosHorizontalScrollView = viewMain.findViewById(R.id.fotos_horizontal_clickable);
-        cargarFotoTextView.setOnClickListener(new AgregarFotoListener());
-        fotosHorizontalScrollView.setOnClickListener(new AgregarFotoListener());
+        tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
+        mFotoPicker = (FotoPicker) mFragmentView.findViewById(R.id.foto_picker);
+        mFotoPicker.setFragment(this);
     }
 
     @Override
@@ -251,10 +235,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 if (!condicionesAdopcion.getText().toString().isEmpty())
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
 
-                Integer[] idFotos = {R.id.foto_uno, R.id.foto_dos, R.id.foto_tres, R.id.foto_cuatro, R.id.foto_cinco, R.id.foto_seis};
-
-                for (int i=0; i < cantidadFotosCargadas; i++){
-                    publicacion.addImagen(((BitmapDrawable) ((ImageView) viewMain.findViewById(idFotos[i])).getDrawable()).getBitmap());
+                for (Bitmap bitmap : mFotoPicker.getImagesBitmaps()) {
+                    publicacion.addImagen(bitmap);
                 }
 
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
@@ -302,34 +284,11 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         return valido;
     }
 
-    private class AgregarFotoListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (cantidadFotosCargadas < MAXIMO_FOTOS_PERMITIDAS) {
-                Intent intent = new Intent();
-                intent.setType(PHOTO_INTENT_TYPE);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-            }
-            else {
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.maximo_fotos_alcanzado), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void createEliminarFotoButton() {
-        View eliminarFotoButton = viewMain.findViewById(R.id.eliminar_foto_clickeable);
-        eliminarFotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cantidadFotosCargadas > 0) {
-                    deleteLastPhoto();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.no_hay_fotos), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+    public void loadImageRequest() {
+        Intent intent = new Intent();
+        intent.setType(PHOTO_INTENT_TYPE);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        getActivity().startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -339,31 +298,12 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                loadPhotoWithBitmap(bitmap);
+                mFotoPicker.addFoto(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private void loadPhotoWithBitmap(Bitmap bitmap) {
-        photosMap.get(cantidadFotosCargadas).setImageBitmap(bitmap);
-        ++cantidadFotosCargadas;
-        if (cantidadFotosCargadas < MAXIMO_FOTOS_PERMITIDAS) {
-            ImageView nextPhotoHolder = photosMap.get(cantidadFotosCargadas);
-            nextPhotoHolder.setVisibility(View.VISIBLE);
-            nextPhotoHolder.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        }
-    }
-
-    private void deleteLastPhoto() {
-        --cantidadFotosCargadas;
-        photosMap.get(cantidadFotosCargadas).setImageDrawable(getResources().getDrawable(R.drawable.ic_camera));
-        if ((cantidadFotosCargadas+1) < MAXIMO_FOTOS_PERMITIDAS) {
-            photosMap.get(cantidadFotosCargadas+1).setVisibility(View.INVISIBLE);
-        }
-    }
-
 
     public class PublicarAdopcionTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -413,7 +353,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View layout = inflater.inflate(R.layout.toast_layout,
-                        (ViewGroup) viewMain.findViewById(R.id.lytLayout));
+                        (ViewGroup) mFragmentView.findViewById(R.id.lytLayout));
 
                 TextView txtMsg = (TextView)layout.findViewById(R.id.txtMensaje);
 
@@ -497,7 +437,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         if(map != null) {
             initializeMap();
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -526,7 +466,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private void startTracking(){
         googleApiClient.connect();
-        Toast.makeText(viewMain.getContext(), "Location tracking started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mFragmentView.getContext(), "Location tracking started", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -536,7 +476,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
         }
         googleApiClient.disconnect();
-        Toast.makeText(viewMain.getContext(), "Location tracking halted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mFragmentView.getContext(), "Location tracking halted", Toast.LENGTH_SHORT).show();
     }
 
     private void addMapMarker (double lat, double lon, float markerColor,
@@ -552,7 +492,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             marker.setDraggable(false);
             marker.showInfoWindow();
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
 
@@ -623,7 +563,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                         bearing, map.getCameraPosition().tilt, true);
             }
         } else {
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -632,7 +572,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         boolean omitCountry = true;
         String returnString = "";
 
-        Geocoder gcoder = new Geocoder(viewMain.getContext());
+        Geocoder gcoder = new Geocoder(mFragmentView.getContext());
 
         try{
             List<Address> results = null;
@@ -710,7 +650,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                              String strokeColor, String fillColor){
 
         if(map == null){
-            Toast.makeText(viewMain.getContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
             return null;
         }
 
@@ -760,3 +700,5 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
 
 }
+
+

@@ -1,6 +1,7 @@
-package com.tdp2grupo9.tabbedMain;
+package com.tdp2grupo9.tabbed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,27 +13,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragments.PublicarAdopcionFragment;
-import com.tdp2grupo9.fragments.TestFragment;
-import com.tdp2grupo9.fragments.UltimasPublicacionesFragment;
+import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
+import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
+import com.tdp2grupo9.fragment.adopcion.UltimasPublicacionesFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class TabbedFragment extends Fragment {
 
-    public static final String TAG = TabbedFragment.class.getSimpleName();
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    Context context;
-
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private Context context;
 
     public static TabbedFragment newInstance() {
         return new TabbedFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -61,14 +56,10 @@ public class TabbedFragment extends Fragment {
             fragment.setArguments(args);
 
             switch (position) {
-                case 0: // Fragment # 0 - This will show FirstFragment
-                    return  UltimasPublicacionesFragment.newInstance(0, "Page # 1");
-                case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return PublicarAdopcionFragment.newInstance(1, "Page # 2");
-                case 2: // Fragment # 1 - This will show SecondFragment
-                    return new Fragment(); //TestFragment.newInstance(2, "Page # 3");
-                default:
-                    return null;
+                case 0: return  UltimasPublicacionesFragment.newInstance();
+                case 1: return PublicarAdopcionFragment.newInstance();
+                case 2: return BuscarMascotaFragment.newInstance();
+                default: return null;
             }
         }
 
@@ -81,14 +72,11 @@ public class TabbedFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0:
-                    return context.getResources().getString(R.string.ultimas_publicaciones);
-                case 1:
-                    return context.getResources().getString(R.string.publicar_adopcion);
-                case 2:
-                    return context.getResources().getString(R.string.publicar_busqueda);
+                case 0: return context.getResources().getString(R.string.ultimas_publicaciones);
+                case 1: return context.getResources().getString(R.string.publicar_adopcion);
+                case 2: return context.getResources().getString(R.string.buscar_mascota);
             }
-            return null;
+            return "";
         }
     }
 
@@ -109,6 +97,18 @@ public class TabbedFragment extends Fragment {
             dummyTextView.setText(Integer.toString(getArguments().getInt(
                     ARG_SECTION_NUMBER)));
             return rootView;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<Fragment> childFragments = getChildFragmentManager().getFragments();
+        if (childFragments != null) {
+            for (Fragment fragment : childFragments) {
+                if (fragment != null)
+                    fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

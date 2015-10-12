@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Usuario {
 
@@ -18,6 +20,8 @@ public class Usuario {
     private static final String LOG_TAG = "BSH.Publicacion";
 
     private static final Usuario INSTANCIA = new Usuario();
+
+    private Integer id;
     private Long facebookId ;
     private String facebookToken;
 
@@ -47,10 +51,11 @@ public class Usuario {
     }
 
     public void resetearAtributos() {
-        this.facebookId = Long.valueOf(0);
+        this.id = 0;
+        this.facebookId = 0L;
         this.facebookToken = "";
-        this.latitud = Double.valueOf(0);
-        this.longitud = Double.valueOf(0);
+        this.latitud = 0.0;
+        this.longitud = 0.0;
         this.logueado = false;
         this.activo = false;
         this.autopublicar = false;
@@ -69,6 +74,9 @@ public class Usuario {
         while (reader.hasNext()) {
             String name = reader.nextName();
             switch (name) {
+                case "id":
+                    this.id = reader.nextInt();
+                    break;
                 case "token":
                     this.token = reader.nextString();
                     break;
@@ -194,7 +202,7 @@ public class Usuario {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("token="+this.token);
+            out.write("token=" + this.token);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
@@ -222,6 +230,88 @@ public class Usuario {
         //TODO: login con email y password
         String METHOD = "logout";
         Log.w(LOG_TAG, METHOD + " metodo no implementado.");
+    }
+
+    public void quieroAdoptar(int publicacionId) {
+        String METHOD = "quieroAdoptar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/quieroAdoptar");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+this.token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para adoptar ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " ya se ha postulado en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public void concretarAdopcion(int publicacionId, int postulanteId) {
+        String METHOD = "concretarAdopcion";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/concretarAdopcion");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+this.token+"&publicacion="+publicacionId+"&quiereAdoptar="+postulanteId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                Log.d(LOG_TAG, METHOD + " falta elegir el usuario adoptante ");
+            } else if (HttpResult == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado a concretar esta publicacion. El token no es valido. ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " el postulante no esta postulado en la publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public List<Publicacion> obtenerMisPublicaciones(Integer offset, Integer max) {
+        return Publicacion.obtenerPublicacionesDeUsuario(this.token, offset, max);
+    }
+
+    public List<Publicacion> obtenerMisPostulaciones(Integer offset, Integer max) {
+        return Publicacion.obtenerPublicacionesDeUsuario(this.token, offset, max);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setToken(String token) {
@@ -276,6 +366,10 @@ public class Usuario {
         return logueado;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public Long getFacebookId() {
         return this.facebookId;
     }
@@ -319,6 +413,5 @@ public class Usuario {
     public Double getLongitud() {
         return longitud;
     }
-
 
 }

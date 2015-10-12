@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EF9A9A"
-    tools:context="com.tdp2grupo9.fragments.MiPerfilFragment">
+    tools:context="com.tdp2grupo9.fragment.MiPerfilFragment">
 
     <TextView
         android:layout_width="match_parent"
