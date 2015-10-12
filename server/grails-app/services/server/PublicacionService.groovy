@@ -69,8 +69,13 @@ class PublicacionService {
         //TODO: Definir que atributos devolver de la publicacion
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         return publicaciones.collect{[id: it.id,
+                                      publicador: it.publicador.username,
+                                      distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
+                                      necesitaTransito: it.necesitaTransito,
                                       nombreMascota : it.nombreMascota,
+                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
+                                      condiciones: it.condiciones ? it.condiciones.trim() : '',
                                       fecha : it.fechaPublicacion]}
     }
 
@@ -83,9 +88,14 @@ class PublicacionService {
             eq('activa',true)
         }
         return publicaciones.collect{[id: it.id,
-                                     publicador: it.publicador.username,
+                                      publicador: it.publicador.username,
+                                      distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
-                                      nombreMascota : it.nombreMascota]}
+                                      necesitaTransito: it.necesitaTransito,
+                                      nombreMascota : it.nombreMascota,
+                                      requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
+                                      condiciones: it.condiciones ? it.condiciones.trim() : '',
+                                      fecha : it.fechaPublicacion]}
     }
 
     def quieroAdoptar(params){
