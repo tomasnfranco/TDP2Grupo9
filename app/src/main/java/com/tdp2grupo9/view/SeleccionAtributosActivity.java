@@ -3,10 +3,10 @@ package com.tdp2grupo9.view;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adapter.AtributosPublicacionArrayAdapter;
 import com.tdp2grupo9.interpeter.AtributosJSONInterpeter;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
@@ -24,7 +24,6 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

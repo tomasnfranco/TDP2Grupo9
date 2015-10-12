@@ -1,4 +1,4 @@
-package com.tdp2grupo9.view;
+package com.tdp2grupo9.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,12 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GenericArrayAdapter<T> extends ArrayAdapter<T> {
