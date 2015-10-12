@@ -54,9 +54,6 @@ class Publicacion {
 			publicadorNombre {value,json -> json.value(value.publicador?.username ?: '')}
 			publicadorId {value,json -> json.value(value.publicador?.id ?: '')}
 		}
-		serializer {
-			publicador {value,json -> json.value("{id:${value.publicador.id},nombre:'${value.publicador.username}'}")}
-		}
 		deep 'fotos'
 	}
 
