@@ -279,6 +279,14 @@ public class Mensaje {
         return fechaRespuesta;
     }
 
+    public int getUsuarioPreguntaId() {
+        return usuarioPreguntaId;
+    }
+
+    public String getUsuarioPreguntaNombre() {
+        return usuarioPreguntaNombre;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -301,5 +309,13 @@ public class Mensaje {
 
     public void setFechaRespuesta(Date fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
+    }
+
+    public void setUsuarioPreguntaId(int usuarioPreguntaId) {
+        this.usuarioPreguntaId = usuarioPreguntaId;
+    }
+
+    public void setUsuarioPreguntaNombre(String usuarioPreguntaNombre) {
+        this.usuarioPreguntaNombre = usuarioPreguntaNombre;
     }
 }
