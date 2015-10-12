@@ -3,17 +3,12 @@ package com.tdp2grupo9.modelo;
 import android.util.JsonReader;
 import android.util.Log;
 
-import com.tdp2grupo9.modelo.publicacion.Imagen;
-import com.tdp2grupo9.utils.Connection;
-import com.tdp2grupo9.utils.Fecha;
-
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

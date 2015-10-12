@@ -18,8 +18,6 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
-import com.tdp2grupo9.utils.Connection;
-import com.tdp2grupo9.utils.Fecha;
 
 import org.json.JSONException;
 
@@ -41,12 +39,15 @@ public class Publicacion {
     private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 4;
 
     private Integer id;
-    private Integer publicadorId;
     private Integer tipoPublicacion;
+    private Integer postulanteConcretadoId;
+    private Integer publicadorId;
+    private String publicadorNombre;
     private String nombreMascota;
     private String condiciones;
     private String videoLink;
     private String contacto;
+    private Boolean concreatada;
     private Boolean requiereCuidadosEspeciales;
     private Boolean necesitaTransito;
     private Raza raza;
@@ -90,6 +91,8 @@ public class Publicacion {
         this.vacunasAlDia = new VacunasAlDia();
         this.requiereCuidadosEspeciales = null;
         this.necesitaTransito = null;
+        this.concreatada = false;
+        this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
         this.fechaPublicacion = null;
@@ -151,20 +154,32 @@ public class Publicacion {
                 case "id":
                     this.id = reader.nextInt();
                     break;
-                case "publicador":
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        String namepub = reader.nextName();
-                        switch (namepub) {
-                            case "id":
-                                this.publicadorId = reader.nextInt();
-                                break;
-                            default:
-                                reader.skipValue();
-                                break;
+                case "publicadorId":
+                    this.publicadorId = reader.nextInt();
+                    break;
+                case "publicadorNombre":
+                    this.publicadorNombre = reader.nextString();
+                    break;
+                case "concretado":
+                    this.concreatada = false;
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            String nameconcret = reader.nextName();
+                            switch (nameconcret) {
+                                case "id":
+                                    this.postulanteConcretadoId = reader.nextInt();
+                                    this.concreatada = true;
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
                         }
+                        reader.endObject();
                     }
-                    reader.endObject();
                     break;
                 case "tipoPublicacion":
                     this.tipoPublicacion = reader.nextInt();
@@ -246,7 +261,7 @@ public class Publicacion {
                         reader.endArray();
                     }
                     break;
-                case "postulantes":
+                case "quierenAdoptar":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else {
@@ -450,6 +465,76 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public static void quieroAdoptar(String token, Integer publicacionId) {
+        String METHOD = "quieroAdoptar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/quieroAdoptar");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para adoptar ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " ya se ha postulado en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static void concretarAdopcion(String token, Integer publicacionId, Integer postulanteId) {
+        String METHOD = "concretarAdopcion";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/concretarAdopcion");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId+"&quiereAdoptar="+postulanteId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                Log.d(LOG_TAG, METHOD + " falta elegir el usuario adoptante ");
+            } else if (HttpResult == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado a concretar esta publicacion. El token no es valido. ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " el postulante no esta postulado en la publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
     public Integer getId() {
         return id;
     }
@@ -628,4 +713,11 @@ public class Publicacion {
     }
 
 
+    public Boolean getConcreatada() {
+        return this.concreatada;
+    }
+
+    public Integer getPostulanteConcretadoId() {
+        return this.postulanteConcretadoId;
+    }
 }

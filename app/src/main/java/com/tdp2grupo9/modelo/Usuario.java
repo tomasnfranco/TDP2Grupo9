@@ -3,15 +3,12 @@ package com.tdp2grupo9.modelo;
 import android.util.JsonReader;
 import android.util.Log;
 
-import com.tdp2grupo9.utils.Connection;
-
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
@@ -233,73 +230,11 @@ public class Usuario {
     }
 
     public void quieroAdoptar(int publicacionId) {
-        String METHOD = "quieroAdoptar";
-        HttpURLConnection urlConnection = null;
-        try {
-            urlConnection = Connection.getHttpUrlConnection("publicacion/quieroAdoptar");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            String parametros = "token="+this.token+"&publicacion="+publicacionId;
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
-            out.close();
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
-            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
-                Log.d(LOG_TAG, METHOD + " no esta autorizado para adoptar ");
-            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
-                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
-            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
-                Log.d(LOG_TAG, METHOD + " ya se ha postulado en esta publicacion ");
-            } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        } finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-        Log.d(LOG_TAG, METHOD + " finalizado.");
+        Publicacion.quieroAdoptar(this.token, publicacionId);
     }
 
-    public void concretarAdopcion(int publicacionId, int postulanteId) {
-        String METHOD = "concretarAdopcion";
-        HttpURLConnection urlConnection = null;
-        try {
-            urlConnection = Connection.getHttpUrlConnection("publicacion/concretarAdopcion");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            String parametros = "token="+this.token+"&publicacion="+publicacionId+"&quiereAdoptar="+postulanteId;
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
-            out.close();
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
-            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
-                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
-            } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
-                Log.d(LOG_TAG, METHOD + " falta elegir el usuario adoptante ");
-            } else if (HttpResult == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                Log.d(LOG_TAG, METHOD + " no esta autorizado a concretar esta publicacion. El token no es valido. ");
-            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
-                Log.d(LOG_TAG, METHOD + " el postulante no esta postulado en la publicacion ");
-            } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        } finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-        Log.d(LOG_TAG, METHOD + " finalizado.");
+    public void concretarAdopcion(Integer publicacionId, Integer postulanteId) {
+        Publicacion.concretarAdopcion(this.token, publicacionId, postulanteId);
     }
 
     public List<Publicacion> obtenerMisPublicaciones(Integer offset, Integer max) {
@@ -307,7 +242,7 @@ public class Usuario {
     }
 
     public List<Publicacion> obtenerMisPostulaciones(Integer offset, Integer max) {
-        return Publicacion.obtenerPublicacionesDeUsuario(this.token, offset, max);
+        return Publicacion.obtenerPostulacionesDeUsuario(this.token, offset, max);
     }
 
     public void setId(int id) {

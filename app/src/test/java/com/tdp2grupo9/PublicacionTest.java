@@ -34,6 +34,33 @@ import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 public class PublicacionTest {
 	
 	Usuario usuario;
+
+    private Integer crearPublicacion(String token) {
+        Publicacion publicacion = new Publicacion();
+        publicacion.setNombreMascota("PRUEBAPUBLICACION");
+        publicacion.setEspecie(new Especie(1));
+        publicacion.setRaza(new Raza(1));
+        publicacion.setColor(new Color(1));
+        publicacion.setSexo(new Sexo(1));
+        publicacion.setTamanio(new Tamanio(1));
+        publicacion.setEdad(new Edad(2));
+        publicacion.setCompatibleCon(new CompatibleCon(1));
+        publicacion.setVacunasAlDia(new VacunasAlDia(1));
+        publicacion.setPapelesAlDia(new PapelesAlDia(1));
+        publicacion.setCastrado(new Castrado(1));
+        publicacion.setProteccion(new Proteccion(1));
+        publicacion.setEnergia(new Energia(1));
+        publicacion.setVideoLink("");
+        publicacion.setLatitud(10.0);
+        publicacion.setLongitud(15.0);
+        publicacion.setNecesitaTransito(false);
+        publicacion.setRequiereCuidadosEspeciales(false);
+        publicacion.setContacto("ROMI");
+        publicacion.setCondiciones("");
+
+        publicacion.guardarPublicacion(token);
+        return publicacion.getId();
+    }
 	
 	@Before
 	public void inicializar() {
@@ -160,9 +187,9 @@ public class PublicacionTest {
 
     @Test
 	public void obtenerPublicacion() {
-		Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), 4);
-        assertTrue(publicacion.getId() == 4);
-        assertTrue(publicacion.getImagenes().size() == 3);
+		Integer publicacionId = crearPublicacion(usuario.getToken());
+        Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), publicacionId);
+        assertTrue("El id de la publicacion no coincide con el guardado", publicacion.getId().equals(publicacionId));
 	}
 
 }

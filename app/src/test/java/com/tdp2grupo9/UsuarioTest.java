@@ -2,6 +2,18 @@ package com.tdp2grupo9;
 
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.publicacion.Castrado;
+import com.tdp2grupo9.modelo.publicacion.Color;
+import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
+import com.tdp2grupo9.modelo.publicacion.Edad;
+import com.tdp2grupo9.modelo.publicacion.Energia;
+import com.tdp2grupo9.modelo.publicacion.Especie;
+import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
+import com.tdp2grupo9.modelo.publicacion.Proteccion;
+import com.tdp2grupo9.modelo.publicacion.Raza;
+import com.tdp2grupo9.modelo.publicacion.Sexo;
+import com.tdp2grupo9.modelo.publicacion.Tamanio;
+import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +21,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -19,6 +32,33 @@ import static org.junit.Assert.assertTrue;
 public class UsuarioTest {
 
     private Usuario usuario;
+
+    private Integer crearPublicacion(String token) {
+        Publicacion publicacion = new Publicacion();
+        publicacion.setNombreMascota("PRUEBAUSUARIO");
+        publicacion.setEspecie(new Especie(1));
+        publicacion.setRaza(new Raza(1));
+        publicacion.setColor(new Color(1));
+        publicacion.setSexo(new Sexo(1));
+        publicacion.setTamanio(new Tamanio(1));
+        publicacion.setEdad(new Edad(2));
+        publicacion.setCompatibleCon(new CompatibleCon(1));
+        publicacion.setVacunasAlDia(new VacunasAlDia(1));
+        publicacion.setPapelesAlDia(new PapelesAlDia(1));
+        publicacion.setCastrado(new Castrado(1));
+        publicacion.setProteccion(new Proteccion(1));
+        publicacion.setEnergia(new Energia(1));
+        publicacion.setVideoLink("");
+        publicacion.setLatitud(10.0);
+        publicacion.setLongitud(15.0);
+        publicacion.setNecesitaTransito(false);
+        publicacion.setRequiereCuidadosEspeciales(false);
+        publicacion.setContacto("ROMI");
+        publicacion.setCondiciones("");
+
+        publicacion.guardarPublicacion(token);
+        return publicacion.getId();
+    }
 
     @Before
     public void inicializar() {
@@ -30,45 +70,76 @@ public class UsuarioTest {
     }
 
     @Test
-    public void postularmeEnPublicacion() {
-        Integer idPublicacion = 4;
+    public void postularmeEnPublicacionDeOtroUsuario() {
+        Integer idPublicacion = crearPublicacion("234567");
         usuario.quieroAdoptar(idPublicacion);
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        assertTrue("El postulante tiene que estar una vez", publicacion.getPostulantes().size() == 1);
-        for (Integer idPostulante : publicacion.getPostulantes()) {
-            assertEquals("El id del postulante no coincide con el id del usuario", usuario.getId(), idPostulante);
-        }
+        assertTrue("No se encuentra el usuario entre los postulantes", Collections.frequency(publicacion.getPostulantes(), usuario.getId()) == 1);
     }
 
     @Test
-    public void postularmeDosVecesEnUnaMismaPublicacion() {
-        Integer idPublicacion = 2;
+    public void postularmeDosVecesEnUnaMismaPublicacionNoEsPosible() {
+        Integer idPublicacion = crearPublicacion("234567");
         usuario.quieroAdoptar(idPublicacion);
         usuario.quieroAdoptar(idPublicacion);
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        assertTrue("El postulante tiene que estar una vez", publicacion.getPostulantes().size() == 1);
+        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getPostulantes(), usuario.getId()) == 1);
     }
+
+    @Test
+    public void postularmeEnMiPublicacionNoEsPosible() {
+        Integer idPublicacion = crearPublicacion(usuario.getToken());
+        usuario.quieroAdoptar(idPublicacion);
+        Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
+        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getPostulantes(), usuario.getId()) == 0);
+    }
+
 
     @Test
     public void misPublicaciones() {
+        Integer publicacionId1 = crearPublicacion(usuario.getToken());
+        Integer publicacionId2 = crearPublicacion(usuario.getToken());
+        Integer publicacionId3 = crearPublicacion(usuario.getToken());
         List<Publicacion> publicaciones = usuario.obtenerMisPublicaciones(0, 0);
-        assertTrue(publicaciones.size() > 0);
+        List<Integer> publicacionesIds = new ArrayList<>();
+        for (Publicacion p : publicaciones) {
+            publicacionesIds.add(p.getId());
+        }
+        assertTrue("La publicacion no se encuentra", Collections.frequency(publicacionesIds, publicacionId1) == 1);
+        assertTrue("La publicacion no se encuentra", Collections.frequency(publicacionesIds, publicacionId2) == 1);
+        assertTrue("La publicacion no se encuentra", Collections.frequency(publicacionesIds, publicacionId3) == 1);
     }
 
     @Test
     public void misPostulaciones() {
-        List<Publicacion> publicaciones = usuario.obtenerMisPostulaciones(0, 0);
-        assertTrue(publicaciones.size() > 0);
+        Integer publicacionId1 = crearPublicacion("234567");
+        Integer publicacionId2 = crearPublicacion("234567");
+        Integer publicacionId3 = crearPublicacion("234567");
+        usuario.quieroAdoptar(publicacionId1);
+        usuario.quieroAdoptar(publicacionId2);
+        usuario.quieroAdoptar(publicacionId3);
+        List<Publicacion> postulaciones = usuario.obtenerMisPostulaciones(0, 0);
+        List<Integer> postulacionesIds = new ArrayList<>();
+        for (Publicacion p : postulaciones) {
+            postulacionesIds.add(p.getId());
+        }
+        assertTrue("La postulacion no se encuentra", Collections.frequency(postulacionesIds, publicacionId1) == 1);
+        assertTrue("La postulacion no se encuentra", Collections.frequency(postulacionesIds, publicacionId2) == 1);
+        assertTrue("La postulacion no se encuentra", Collections.frequency(postulacionesIds, publicacionId3) == 1);
     }
 
     @Test
     public void concretarAdopcion() {
-        Integer idPublicacion = 2;
-        Integer idPostulante = 2;
-        usuario.concretarAdopcion(idPublicacion, idPostulante);
+        Integer postulanteId = 2;
+        String postulanteToken = "234567";
 
-        Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        //TODO PROBAR QUE ESTA CERRADA
+        Integer publicacionId = crearPublicacion(usuario.getToken());
+        Publicacion.quieroAdoptar(postulanteToken, publicacionId);
+        usuario.concretarAdopcion(publicacionId, postulanteId);
+
+        Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), publicacionId);
+        assertTrue("La publicacion no esta concreatada", publicacion.getConcreatada());
+        assertTrue("El postulante no es el elegido", publicacion.getPostulanteConcretadoId().equals(postulanteId));
     }
 
 }

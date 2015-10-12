@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import com.tdp2grupo9.utils.Connection;
+import com.tdp2grupo9.modelo.Connection;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

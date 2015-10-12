@@ -1,4 +1,4 @@
-package com.tdp2grupo9.utils;
+package com.tdp2grupo9.modelo;
 
 import java.io.IOException;
 import java.net.URL;
