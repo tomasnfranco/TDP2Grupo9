@@ -66,7 +66,6 @@ class PublicacionService {
     }
 
     def misPublicaciones(params) {
-        //TODO: Definir que atributos devolver de la publicacion
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
@@ -81,7 +80,6 @@ class PublicacionService {
     }
 
     def misPostulaciones(params) {
-        //TODO: Definir que atributos devolver de la publicacion
         def publicaciones = Publicacion.withCriteria(params) {
             quierenAdoptar {
                 eq('id',params.usuario.id)
