@@ -1,4 +1,4 @@
-package com.tdp2grupo9.view;
+package com.tdp2grupo9.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

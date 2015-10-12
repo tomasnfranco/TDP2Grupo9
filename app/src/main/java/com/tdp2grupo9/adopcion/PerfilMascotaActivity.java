@@ -13,7 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
-import com.tdp2grupo9.view.MensajeAdapter;
+import com.tdp2grupo9.adapter.MensajeAdapter;
 
 import java.util.List;
 
