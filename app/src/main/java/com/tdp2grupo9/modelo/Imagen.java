@@ -1,4 +1,4 @@
-package com.tdp2grupo9.modelo.publicacion;
+package com.tdp2grupo9.modelo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
-
-import com.tdp2grupo9.modelo.Connection;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

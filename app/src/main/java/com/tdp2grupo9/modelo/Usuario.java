@@ -245,6 +245,10 @@ public class Usuario {
         return Publicacion.obtenerPostulacionesDeUsuario(this.token, offset, max);
     }
 
+    public List<Alerta> obtenerMisAlertas(Integer offset, Integer max) {
+        return Alerta.obtenerAlertasDeUsuario(this.token, offset, max);
+    }
+
     public void setId(int id) {
         this.id = id;
     }

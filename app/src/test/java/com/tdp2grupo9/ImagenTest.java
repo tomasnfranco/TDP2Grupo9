@@ -1,7 +1,7 @@
 package com.tdp2grupo9;
 
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.Imagen;
+import com.tdp2grupo9.modelo.Imagen;
 
 import org.junit.Before;
 import org.junit.Test;
