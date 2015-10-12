@@ -55,7 +55,8 @@ class PublicacionService {
             busqueda.reverse(true)
         }
         return busqueda.collect{[id: it.id,
-                                 publicador: [nombre: it.publicador.username, id: it.publicador.id],
+                                 publicadorNombre: it.publicador.username,
+                                 publicadorId: it.publicador.id,
                                  distancia: it.distancia,
                                  foto: it.fotos ? it.fotos[0].base64 : '',
                                  necesitaTransito: it.necesitaTransito,
@@ -69,7 +70,8 @@ class PublicacionService {
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
-                                      publicador: [nombre: it.publicador.username, id: it.publicador.id],
+                                      publicadorNombre: it.publicador.username,
+                                      publicadorId: it.publicador.id,
                                       distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       necesitaTransito: it.necesitaTransito,
@@ -88,7 +90,8 @@ class PublicacionService {
         }
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
-                                      publicador: [nombre: it.publicador.username, id: it.publicador.id],
+                                      publicadorNombre: it.publicador.username,
+                                      publicadorId: it.publicador.id,
                                       distancia: it.distancia,
                                       foto: it.fotos ? it.fotos[0].base64 : '',
                                       necesitaTransito: it.necesitaTransito,
