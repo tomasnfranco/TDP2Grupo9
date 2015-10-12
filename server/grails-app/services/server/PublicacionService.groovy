@@ -68,6 +68,7 @@ class PublicacionService {
     def misPublicaciones(params) {
         //TODO: Definir que atributos devolver de la publicacion
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
+        publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
                                       publicador: it.publicador.username,
                                       distancia: it.distancia,
@@ -87,6 +88,7 @@ class PublicacionService {
             }
             eq('activa',true)
         }
+        publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
         return publicaciones.collect{[id: it.id,
                                       publicador: it.publicador.username,
                                       distancia: it.distancia,
