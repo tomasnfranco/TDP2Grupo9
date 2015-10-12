@@ -55,7 +55,7 @@ class PublicacionService {
             busqueda.reverse(true)
         }
         return busqueda.collect{[id: it.id,
-                                 publicador: it.publicador.username,
+                                 publicador: [nombre: it.publicador.username, id: it.publicador.id],
                                  distancia: it.distancia,
                                  foto: it.fotos ? it.fotos[0].base64 : '',
                                  necesitaTransito: it.necesitaTransito,
