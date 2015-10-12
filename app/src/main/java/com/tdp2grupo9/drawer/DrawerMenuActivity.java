@@ -24,7 +24,7 @@ import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.fragment.MisPublicacionesFragment;
 import com.tdp2grupo9.login.LoginActivity;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.tabbedMain.TabbedFragment;
+import com.tdp2grupo9.tabbed.TabbedFragment;
 
 import java.util.ArrayList;
 import java.util.List;

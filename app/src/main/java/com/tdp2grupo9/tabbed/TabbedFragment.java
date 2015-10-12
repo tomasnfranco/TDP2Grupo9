@@ -1,4 +1,4 @@
-package com.tdp2grupo9.tabbedMain;
+package com.tdp2grupo9.tabbed;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
 import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
 import com.tdp2grupo9.fragment.adopcion.UltimasPublicacionesFragment;
 
@@ -57,7 +58,7 @@ public class TabbedFragment extends Fragment {
             switch (position) {
                 case 0: return  UltimasPublicacionesFragment.newInstance();
                 case 1: return PublicarAdopcionFragment.newInstance();
-                case 2: return new Fragment();
+                case 2: return BuscarMascotaFragment.newInstance();
                 default: return null;
             }
         }
@@ -73,7 +74,7 @@ public class TabbedFragment extends Fragment {
             switch (position) {
                 case 0: return context.getResources().getString(R.string.ultimas_publicaciones);
                 case 1: return context.getResources().getString(R.string.publicar_adopcion);
-                case 2: return context.getResources().getString(R.string.publicar_busqueda);
+                case 2: return context.getResources().getString(R.string.buscar_mascota);
             }
             return "";
         }

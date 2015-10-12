@@ -50,13 +50,13 @@ public class UltimasPublicacionesFragment extends Fragment {
         publicacion.setLatitud(Usuario.getInstancia().getLatitud());
         buscarAdopcionTask = new BuscarAdopcionTask(publicacion);
         buscarAdopcionTask.execute((Void)null);
-        cargarListView();
+        //cargarListView();
         return v;
     }
 
     private void cargarListView(){
         listView = (ListView) viewContext.findViewById(R.id.list_view_ultimas_publicaciones);
-        listView.setAdapter(new PublicacionesAdapter(context, getPublicacionesMock()));
+        listView.setAdapter(new PublicacionesAdapter(context, publicaciones));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,

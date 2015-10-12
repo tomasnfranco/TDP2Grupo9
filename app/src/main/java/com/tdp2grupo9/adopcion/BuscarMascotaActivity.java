@@ -34,7 +34,7 @@ public class BuscarMascotaActivity extends SeleccionAtributosActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_buscar_mascota);
+        setContentView(R.layout.fragment_buscar_mascota);
         createMapsButton();
         createLimpiarFiltrosButton();
         createBuscarMascotaButton();
@@ -50,7 +50,7 @@ public class BuscarMascotaActivity extends SeleccionAtributosActivity implements
     }
 
     private void createBuscarMascotaButton() {
-        btnBuscarMascota = (Button) findViewById(R.id.btn_buscar_mascota);
+        btnBuscarMascota = (Button) findViewById(R.id.buscar_mascota_button);
         btnBuscarMascota.setOnClickListener(this);
     }
 
@@ -92,7 +92,7 @@ public class BuscarMascotaActivity extends SeleccionAtributosActivity implements
         spinner.setSelection(0);
     }
 
-    private boolean isvalidEspecie(){
+    private boolean isValidEspecie(){
         if (((AtributoPublicacion) spEspecie.getSelectedItem()).getId() == 0){
             ((TextView) spEspecie.getSelectedView()).setError("Campo Requerido");
             return false;
@@ -102,7 +102,7 @@ public class BuscarMascotaActivity extends SeleccionAtributosActivity implements
 
     @Override
     public void onClick(View v) {
-        if (isvalidEspecie()){
+        if (isValidEspecie()){
             Intent intent = new Intent(getApplicationContext(), ResultadosBusquedaActivity.class);
             intent.putExtra("especie",((Especie) spEspecie.getSelectedItem()).getId());
             intent.putExtra("raza",((Raza) spRaza.getSelectedItem()).getId());

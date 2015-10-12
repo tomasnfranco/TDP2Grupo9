@@ -54,14 +54,14 @@
             android:layout_height="150dp"
             android:name="com.google.android.gms.maps.MapFragment"
 
-            android:id="@+id/fragmentMapPublicacion"
+            android:id="@+id/fragment_map_publicacion"
             android:layout_marginTop="10dp" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Localización"
-            android:id="@+id/tvZona"
+            android:id="@+id/tv_zona"
             android:layout_marginTop="10dp"
             android:textSize="16dp" />
 

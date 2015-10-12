@@ -1,11 +1,8 @@
 package com.tdp2grupo9.fragment;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -45,78 +42,74 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     protected Spinner spCastrado;
     protected Spinner spProteccion;
     protected Spinner spEnergia;
-    protected View viewMain;
     protected GoogleMap map;
+    protected View mFragmentView;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_publicar_mascotas, container, false);
-        viewMain = v;
+    protected void obtenerAtributos() {
         publicacionAtributos = new PublicacionAtributos();
         obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
         obtenerAtributosTask.execute((Void) null);
-
-       return v;
     }
 
-    private void createSpinner(List<AtributoPublicacion> atributos, AtributoPublicacion atributoPublicacion, Spinner spinner, int id) {
+    private Spinner createSpinner(List<AtributoPublicacion> atributos, AtributoPublicacion atributoPublicacion, int id) {
         atributoPublicacion.setValor(atributoPublicacion.getName());
         atributos.add(0, atributoPublicacion);
-        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(viewMain.getContext(), android.R.layout.simple_spinner_item, atributos);
+        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(mFragmentView.getContext(), android.R.layout.simple_spinner_item, atributos);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner = (Spinner) viewMain.findViewById(id);
+        Spinner spinner = (Spinner) mFragmentView.findViewById(id);
         spinner.setAdapter(atributosArrayAdapter);
+        return spinner;
     }
 
     protected void createEspecieSpinner() {
-        createSpinner(publicacionAtributos.getEspecies(), new Especie(), spEspecie, R.id.especie_spinner);
+        spEspecie = createSpinner(publicacionAtributos.getEspecies(), new Especie(), R.id.especie_spinner);
     }
 
     protected void createRazaSpinner() {
-        createSpinner(publicacionAtributos.getRazas(), new Raza(), spRaza, R.id.raza_spinner);
+        spRaza = createSpinner(publicacionAtributos.getRazas(), new Raza(), R.id.raza_spinner);
     }
 
     protected void createSexoSpinner() {
-        createSpinner(publicacionAtributos.getSexos(), new Sexo(), spSexo, R.id.sexo_spinner);
+        spSexo = createSpinner(publicacionAtributos.getSexos(), new Sexo(), R.id.sexo_spinner);
     }
 
     protected void createTamanioSpinner() {
-        createSpinner(publicacionAtributos.getTamanios(), new Tamanio(), spTamanio, R.id.tamanio_spinner);
+        spTamanio = createSpinner(publicacionAtributos.getTamanios(), new Tamanio(), R.id.tamanio_spinner);
     }
 
     protected void createEdadSpinner() {
-        createSpinner(publicacionAtributos.getEdades(), new Edad(), spEdad, R.id.edad_spinner);
+        spEdad = createSpinner(publicacionAtributos.getEdades(), new Edad(), R.id.edad_spinner);
     }
 
     protected void createColorSpinner() {
-        createSpinner(publicacionAtributos.getColores(), new Color(), spColor, R.id.color_spinner);
+        spColor = createSpinner(publicacionAtributos.getColores(), new Color(), R.id.color_spinner);
     }
 
     protected void createCompatibleConSpinner() {
-        createSpinner(publicacionAtributos.getCompatibilidades(), new CompatibleCon(), spCompatibleCon, R.id.compatible_con_spinner);
+        spCompatibleCon = createSpinner(publicacionAtributos.getCompatibilidades(), new CompatibleCon(), R.id.compatible_con_spinner);
     }
 
     protected void createPapelesDiaSpinner() {
-        createSpinner(publicacionAtributos.getPapelesAlDia(), new PapelesAlDia(), spPapeles, R.id.papeles_dia_spinner);
+        spPapeles = createSpinner(publicacionAtributos.getPapelesAlDia(), new PapelesAlDia(), R.id.papeles_dia_spinner);
     }
 
     protected void createVacunasDiaSpinner() {
-        createSpinner(publicacionAtributos.getVacunasAlDia(), new VacunasAlDia(), spVacunas, R.id.vacunas_dia_spinner);
+        spVacunas = createSpinner(publicacionAtributos.getVacunasAlDia(), new VacunasAlDia(), R.id.vacunas_dia_spinner);
     }
 
     protected void createCastradorSpinner() {
-        createSpinner(publicacionAtributos.getCastrados(), new Castrado(), spCastrado, R.id.castrado_spinner);
+        spCastrado = createSpinner(publicacionAtributos.getCastrados(), new Castrado(), R.id.castrado_spinner);
     }
 
     protected void createProteccionSpinner() {
-        createSpinner(publicacionAtributos.getProtecciones(), new Proteccion(), spProteccion, R.id.proteccion_spinner);
+        spProteccion = createSpinner(publicacionAtributos.getProtecciones(), new Proteccion(), R.id.proteccion_spinner);
     }
 
     protected void createEnergiaSpinner() {
-        createSpinner(publicacionAtributos.getEnergias(), new Energia(), spEnergia, R.id.energia_spinner);
+        spEnergia = createSpinner(publicacionAtributos.getEnergias(), new Energia(), R.id.energia_spinner);
     }
 
-    protected abstract void initializeWidgets();
+    protected abstract void initializeSpinners();
 
     public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -140,7 +133,7 @@ public abstract class SeleccionAtributosFragment extends Fragment {
         protected void onPostExecute(final Boolean success) {
             obtenerAtributosTask = null;
             if (success) {
-                initializeWidgets();
+                initializeSpinners();
             } else {
             }
         }
