@@ -57,7 +57,7 @@ public class ItemAdapter extends BaseAdapter {
 
         TextView tvRaza = (TextView) rowView.findViewById(R.id.tvRaza);
         TextView tvEdad = (TextView) rowView.findViewById(R.id.tvEdad);
-        TextView tvZona = (TextView) rowView.findViewById(R.id.tvZona);
+        TextView tvZona = (TextView) rowView.findViewById(R.id.tv_zona);
 
         Item item = this.items.get(position);
         tvTitle.setText(item.getTitle());

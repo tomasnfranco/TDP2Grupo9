@@ -122,7 +122,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
-    private View mFragmentView;
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -130,8 +129,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
         inicializarWidgets();
@@ -163,6 +161,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         markerOptions = new MarkerOptions();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        obtenerAtributos();
         return mFragmentView;
     }
 
@@ -171,7 +170,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         createEspecieSpinner();
         createRazaSpinner();
         createSexoSpinner();
-        createTamanioSpinner();;
+        createTamanioSpinner();
+        ;
         createEdadSpinner();
         createColorSpinner();
         createCompatibleConSpinner();
@@ -191,7 +191,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         condicionesAdopcion = (EditText) mFragmentView.findViewById(R.id.condiciones_edit_text);
         btnPublicar = (Button) mFragmentView.findViewById(R.id.btn_publicar_adopcion);
         btnPublicar.setOnClickListener(this);
-        tvZona = (TextView) mFragmentView.findViewById(R.id.tvZona);
+        tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
         mFotoPicker = (FotoPicker) mFragmentView.findViewById(R.id.foto_picker);
         mFotoPicker.setFragment(this);
     }
