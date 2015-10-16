@@ -29,7 +29,7 @@ public class UltimasPublicacionesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_ultimas_publicaciones);
+        this.setContentView(R.layout.fragment_ultimas_publicaciones);
 
         publicacionAtributos = new PublicacionAtributos();
 

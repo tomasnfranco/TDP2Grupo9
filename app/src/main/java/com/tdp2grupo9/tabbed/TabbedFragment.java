@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
 import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
+import com.tdp2grupo9.fragment.adopcion.ResultadosBusquedaFragment;
 import com.tdp2grupo9.fragment.adopcion.UltimasPublicacionesFragment;
 
 import java.util.List;
@@ -59,13 +60,16 @@ public class TabbedFragment extends Fragment {
                 case 0: return  UltimasPublicacionesFragment.newInstance();
                 case 1: return PublicarAdopcionFragment.newInstance();
                 case 2: return BuscarMascotaFragment.newInstance();
+                //TODO remover esto es solo con los fines de verlo
+                case 3: return ResultadosBusquedaFragment.newInstance();
                 default: return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 3;
+            //TODO volver a poner el numero correcto de fragments
+            return 4;
         }
 
         @Override
@@ -75,6 +79,8 @@ public class TabbedFragment extends Fragment {
                 case 0: return context.getResources().getString(R.string.ultimas_publicaciones);
                 case 1: return context.getResources().getString(R.string.publicar_adopcion);
                 case 2: return context.getResources().getString(R.string.buscar_mascota);
+                //TODO remover esto es solo con los fines de verlo
+                case 3: return "Resultados Busqueda";
             }
             return "";
         }

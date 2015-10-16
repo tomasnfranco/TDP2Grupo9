@@ -1,6 +1,5 @@
 package com.tdp2grupo9.listview;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Color;
 import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
@@ -141,7 +139,7 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class BuscarAdopcionTask extends AsyncTask<Void, Void, Boolean> {
+    protected class BuscarAdopcionTask extends AsyncTask<Void, Void, Boolean> {
 
         Publicacion publicacion;
 
@@ -152,8 +150,7 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1,0,0, publicacion);
-                publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
+                publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1, 0, 0, publicacion);
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
