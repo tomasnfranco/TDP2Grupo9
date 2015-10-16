@@ -1,5 +1,6 @@
 package com.tdp2grupo9.modelo;
 
+import android.graphics.Bitmap;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -36,6 +37,8 @@ public class Usuario {
     private String username;
     private String telefono;
     private String direccion;
+    private String nombre;
+    private String apellido;
     
     private byte[] foto;
 
@@ -55,8 +58,8 @@ public class Usuario {
         this.longitud = 0.0;
         this.logueado = false;
         this.activo = false;
-        this.autopublicar = false;
-        this.ofreceTransito = false;
+        this.autopublicar = null;
+        this.ofreceTransito = null;
         this.email = "";
         this.password = "";
         this.token = "";
@@ -127,11 +130,26 @@ public class Usuario {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            String parametros = "";
+            parametros += "facebookId="+this.facebookId;
+            parametros += "&direccion="+this.direccion;
+            parametros += "&telefono="+this.telefono;
+            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
+            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
+            if (this.getAutoPublicar() != null)
+                parametros += "&autoPublicar="+this.autopublicar;
+            if (this.getOfreceTransito() != null)
+                parametros += "&ofreceTransito="+this.ofreceTransito;
+            if (!this.getEmail().isEmpty())
+                parametros += "&email="+this.getEmail();
+            if (!this.getUsername().isEmpty())
+                parametros += "&username="+this.getUsername();
+
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("facebookId="+this.facebookId+"&direccion="+this.direccion+"&telefono="+this.telefono+
-                    "&latitud="+this.latitud.toString().replace('.', ',')+"&longitud="+this.longitud.toString().replace('.', ',')+
-                    "&autoPublicar="+this.autopublicar+"&ofreceTransito="+this.ofreceTransito);
+            out.write(parametros);
             out.close();
+
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
@@ -353,4 +371,45 @@ public class Usuario {
         return longitud;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        if (this.username.isEmpty())
+            return this.nombre.concat(".").concat(this.apellido).toLowerCase();
+        return this.username;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getApellido() {
+        return this.apellido;
+    }
+
+    public void setImagen(Bitmap imagen) {
+        //this.imagen = imagen;
+    }
+
+    public String getFacebookToken() {
+        return this.facebookToken;
+    }
+
+    public Boolean getOfreceTransito() {
+        return ofreceTransito;
+    }
+
+    public Object getAutoPublicar() {
+        return this.autopublicar;
+    }
 }

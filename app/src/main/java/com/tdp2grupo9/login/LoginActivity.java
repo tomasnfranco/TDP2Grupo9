@@ -8,6 +8,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -30,26 +32,41 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
     private UserFacebookLoginTask authenticationFacebookTask = null;
+    private UserFacebookGetPhoto authenticationFacebookGetPhoto = null;
 
     private AutoCompleteTextView emailTextView;
     private EditText passwordEditText;
     private LoginButton facebookSignInButton;
     private View progressView;
     CallbackManager callbackManager;
+    ProfileTracker profileTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +81,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         createFacebookSignInButton();
 
         progressView = findViewById(R.id.login_progress);
+
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(
+                    Profile oldProfile,
+                    Profile currentProfile) {
+                if (currentProfile != null) {
+                    //Usuario.getInstancia().setNombre(currentProfile.getName());
+                    //Usuario.getInstancia().setApellido(currentProfile.getLastName());
+                }
+            }
+        };
     }
 
     @Override
@@ -101,24 +130,54 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
     }
 
+    private void getFacebookData(JSONObject object) {
+        try {
+            String id = object.getString("id");
+            if (object.has("first_name"))
+                Usuario.getInstancia().setNombre(object.getString("first_name"));
+            if (object.has("last_name"))
+                Usuario.getInstancia().setApellido(object.getString("last_name"));
+            if (object.has("email"))
+                Usuario.getInstancia().setEmail(object.getString("email"));
+
+            if (authenticationFacebookGetPhoto != null)
+                return;
+            authenticationFacebookGetPhoto = new UserFacebookGetPhoto();
+            authenticationFacebookGetPhoto.execute((Void) null);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createFacebookSignInButton() {
         facebookSignInButton = (LoginButton) findViewById(R.id.facebook_sign_in_button);
+        facebookSignInButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
         facebookSignInButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if (authenticationFacebookTask != null)
-                    return;
 
                 Usuario.getInstancia().setFacebookId(Long.parseLong(loginResult.getAccessToken().getUserId()));
                 Usuario.getInstancia().setFacebookToken(loginResult.getAccessToken().getToken());
-                authenticationFacebookTask = new UserFacebookLoginTask();
-                authenticationFacebookTask.execute((Void) null);
-                /*Toast.makeText(getApplicationContext(), "ID: " + loginResult.getAccessToken().getUserId() + "\n"
-                        + "Token: " + loginResult.getAccessToken().getToken(), Toast.LENGTH_LONG).show();*/
+
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        getFacebookData(object);
+                    }
+                });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, first_name, last_name, email"); // Parámetros que pedimos a facebook
+                request.setParameters(parameters);
+                request.executeAsync();
+
             }
 
             @Override
             public void onCancel() {
+
             }
 
             @Override
@@ -301,6 +360,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    public class UserFacebookGetPhoto extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            URL profile_pic = null;
+            try {
+                profile_pic = new URL("https://graph.facebook.com/" + Usuario.getInstancia().getFacebookId() + "/picture?width=200&height=150");
+                Log.i("profile_pic", profile_pic + "");
+                InputStream stream = profile_pic.openConnection().getInputStream();
+                //Bitmap imagen = BitmapFactory.decodeStream(stream);
+                //Usuario.getInstancia().setImagen(imagen);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            authenticationFacebookGetPhoto = null;
+            authenticationFacebookTask = new UserFacebookLoginTask();
+            authenticationFacebookTask.execute((Void) null);
+        }
+
+        @Override
+        protected void onCancelled() {
+            authenticationFacebookGetPhoto = null;
+        }
+    }
+
     public class UserFacebookLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         UserFacebookLoginTask() {
@@ -343,6 +433,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        profileTracker.stopTracking();
+    }
 }
 
