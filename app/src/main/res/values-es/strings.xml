@@ -11,4 +11,5 @@
     <string name="nomap_error">Error: target map not found</string>
 
     <string name="campo_requerido">Campo requerido</string>
+    <string name="error_busqueda_publicaciones">Se ha producido un error durante la búsqueda de publicaciones. Por favor vuelva a intentarlo en unos instantes.</string>
 </resources>
