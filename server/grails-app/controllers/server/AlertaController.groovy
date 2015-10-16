@@ -40,6 +40,11 @@ class AlertaController {
             alertaInstance.nombre = "Alerta${alertaInstance.id}"
         }
 
+        if(params.latitud == null)
+            alertaInstance.latitud = params.usuario.latitud
+        if(params.longitud == null)
+            alertaInstance.longitud = params.usuario.longitud
+
         request.withFormat {
             html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'alerta.label', default: 'Alerta'), alertaInstance.id])
