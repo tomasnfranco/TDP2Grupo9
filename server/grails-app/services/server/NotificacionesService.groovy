@@ -16,7 +16,7 @@ class NotificacionesService {
                 to "${publicador.email}"
                 subject "[BUSCA SUS HUELLAS]: Solicitud de Adopción de $mascota"
                 html "<html><body>Hola ${publicador.username},<br/> <b>$postulante</b> se postuló para adoptar a <b><em>$mascota</em></b> " +
-                        '<br/><br/>Entra a BUSCA SUS HUELLAS y concreta esta adopción. ${logoApp}</body></html>'
+                        "<br/><br/>Entra a BUSCA SUS HUELLAS y concreta esta adopción. ${logoApp}</body></html>"
             }
             println "E-mail enviado al usuario ${publicador.username} al mail ${publicador.email} porque $postulante se postulo por $mascota"
         } else {
