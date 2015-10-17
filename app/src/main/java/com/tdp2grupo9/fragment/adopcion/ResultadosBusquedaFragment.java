@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -55,7 +56,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentView = inflater.inflate(R.layout.fragment_resultados_busqueda, container, false);
-        mListView = (ListView) mFragmentView.findViewById(R.id.list_view_resultados_busqueda);
+        mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_resultados_busqueda);
         configureReturnSearchButton();
         startSearch(getArguments());
         return mFragmentView;
@@ -84,7 +85,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         publicacion.setLongitud(arguments.getDouble("longitud", 0.0));
         publicacion.setLatitud(arguments.getDouble("latitud", 0.0));
 
-        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion);
+        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, Tipos.BUSQUEDA);
         mBuscarAdopcionesTask.execute((Void) null);
     }
 

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.inicio.HomeActivity;
 
 /**
  * Boton para navegar al Home desde la Toolbar.
@@ -35,7 +34,6 @@ public class HomeButton extends ImageView {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(), HomeActivity.class));
             }
         });
     }

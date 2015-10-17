@@ -330,7 +330,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             } catch (InterruptedException e) {
                 return false;
             }
-            return true;
+            return this.publicacion.getId() > 0;
         }
 
         @Override

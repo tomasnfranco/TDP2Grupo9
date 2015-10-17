@@ -7,18 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Tomas on 04/10/2015.
  */
-public class PublicacionesAdapter extends BaseAdapter {
+public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private List<Publicacion> publicaciones;
     private Context context;
@@ -28,33 +30,6 @@ public class PublicacionesAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    @Override
-    public int getCount() {
-        return publicaciones.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return publicaciones.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
-        ((TextView) publicacionView.findViewById(R.id.publicacion_name)).setText(publicaciones.get(i).getNombreMascota());
-        ((ImageView) publicacionView.findViewById(R.id.ivLocalizacion)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_localizacion));
-        ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(publicaciones.get(i).getImagenes().get(0).getBitmap());
-        int loadedIcons = 0;
-        if (cargarIconoHogarTransito(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
-        if (cargarIconoCuidadosEspeciales(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
-        if (cargarIconoCondicionesAdopcion(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
-        return publicacionView;
-    }
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
         View publicacionView;
@@ -66,6 +41,17 @@ public class PublicacionesAdapter extends BaseAdapter {
             limpiarPublicacionView(publicacionView);
         }
         return publicacionView;
+    }
+
+    private View getInflatedViewItemIfNecessary(View view, ViewGroup viewGroup) {
+        View publicacionItemView;
+        if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            publicacionItemView = inflater.inflate(R.layout.activity_perfil_mascota, viewGroup, false);
+        } else {
+            publicacionItemView = view;
+        }
+        return publicacionItemView;
     }
 
     private void limpiarPublicacionView(View publicacionView) {
@@ -103,5 +89,90 @@ public class PublicacionesAdapter extends BaseAdapter {
     private boolean cargarIconoCondicionesAdopcion(Publicacion publicacion, View view, int loadedIcons) {
         return cargarIconoSiEsNecesario(publicacion, view, !publicacion.getCondiciones().isEmpty(), view.getResources().getDrawable(R.drawable.ic_condiciones), loadedIcons);
     }
+
+    private String parserDateText(Date fecha){
+        int dia = fecha.getDate();
+        int mes = fecha.getMonth() + 1;
+        int anio = fecha.getYear() + 1900;
+
+        String date = dia + "/" + mes + "/" + anio;
+
+        return date;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return publicaciones.size();
+    }
+
+    @Override
+    public int getChildrenCount(int i) {
+        return 1;
+    }
+
+    @Override
+    public Object getGroup(int i) {
+        return publicaciones.get(i);
+    }
+
+    @Override
+    public Object getChild(int i, int i1) {
+        return null;
+    }
+
+    @Override
+    public long getGroupId(int i) {
+        return i;
+    }
+
+    @Override
+    public long getChildId(int i, int i1) {
+        return 0;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+        View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
+        ((TextView) publicacionView.findViewById(R.id.publicacion_name)).setText(publicaciones.get(i).getNombreMascota());
+        ((ImageView) publicacionView.findViewById(R.id.ivLocalizacion)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_localizacion));
+        if (publicaciones.get(i).getImagenes().size() > 0)
+            ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(publicaciones.get(i).getImagenes().get(0).getBitmap());
+        ((TextView) publicacionView.findViewById(R.id.tv_fecha_publicacion)).setText(parserDateText(publicaciones.get(i).getFechaPublicacion()));
+        //((TextView) publicacionView.findViewById(R.id.tvLocalizacion)).setText(publicaciones.get(i).get);
+        int loadedIcons = 0;
+        if (cargarIconoHogarTransito(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
+        if (cargarIconoCuidadosEspeciales(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
+        if (cargarIconoCondicionesAdopcion(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
+        return publicacionView;
+    }
+
+    @Override
+    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+        //final String children = (String) getChild(i, i1);
+        //TextView textvw = null;
+        View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        cargarInformacionBasica(i, itemView);
+
+        return itemView;
+    }
+
+    private void cargarInformacionBasica(int i, View v){
+        ((TextView) v.findViewById(R.id.infSexo)).setText(publicaciones.get(i).getSexo().toString());
+        ((TextView) v.findViewById(R.id.infEdad)).setText(publicaciones.get(i).getEdad().toString());
+        ((TextView) v.findViewById(R.id.infColor)).setText(publicaciones.get(i).getColor().toString());
+        ((TextView) v.findViewById(R.id.infRaza)).setText(publicaciones.get(i).getRaza().toString());
+        ((TextView) v.findViewById(R.id.infTamanio)).setText(publicaciones.get(i).getTamanio().toString());
+    }
+
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return false;
+    }
+
 
 }
