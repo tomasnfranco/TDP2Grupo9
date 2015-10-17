@@ -63,6 +63,7 @@ public class Publicacion {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
+    private Double distancia;
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
     private List<Integer> postulantes;
@@ -94,6 +95,7 @@ public class Publicacion {
         this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
+        this.distancia = 0.0;
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
         this.postulantes = new ArrayList<>();
@@ -209,6 +211,9 @@ public class Publicacion {
                     break;
                 case "longitud":
                     this.longitud = reader.nextDouble();
+                    break;
+                case "distancia":
+                    this.distancia = reader.nextDouble();
                     break;
                 case "requiereCuidadosEspeciales":
                     this.requiereCuidadosEspeciales = reader.nextBoolean();
@@ -395,7 +400,8 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
+                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud()+
+                    "&distancia="+publicacion.getDistancia();
 
             //"&offset="+offset+"max="+max
             if (publicacion.getRaza().getId() > 0)
@@ -426,6 +432,7 @@ public class Publicacion {
                 atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
             if (publicacion.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
+
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
             int HttpResult = urlConnection.getResponseCode();
@@ -744,5 +751,41 @@ public class Publicacion {
 
     public Integer getPostulanteConcretadoId() {
         return this.postulanteConcretadoId;
+    }
+
+    public Integer getPublicadorId() {
+        return publicadorId;
+    }
+
+    public void setPublicadorId(Integer publicadorId) {
+        this.publicadorId = publicadorId;
+    }
+
+    public String getPublicadorNombre() {
+        return publicadorNombre;
+    }
+
+    public void setPublicadorNombre(String publicadorNombre) {
+        this.publicadorNombre = publicadorNombre;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
+
+    public Date getFechaPublicacion() {
+        return fechaPublicacion;
+    }
+
+    public void setFechaPublicacion(Date fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public Double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(Double distancia) {
+        this.distancia = distancia;
     }
 }
