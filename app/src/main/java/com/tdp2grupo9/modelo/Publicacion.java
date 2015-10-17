@@ -670,6 +670,10 @@ public class Publicacion {
         this.imagenes.add(img);
     }
 
+    public void addImagen(Imagen imagen) {
+        this.imagenes.add(imagen);
+    }
+
     public void setVideoLink(String videoLink) {
         this.videoLink = videoLink;
     }

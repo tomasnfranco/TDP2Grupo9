@@ -99,6 +99,7 @@ public class AlertaTest {
         for (Alerta a : alertas) {
             alertasIds.add(a.getId());
         }
+
         assertTrue("La alerta no se encuentra", Collections.frequency(alertasIds, alertaId1) == 1);
         assertTrue("La alerta no se encuentra", Collections.frequency(alertasIds, alertaId2) == 1);
         assertTrue("La alerta no se encuentra", Collections.frequency(alertasIds, alertaId3) == 1);
