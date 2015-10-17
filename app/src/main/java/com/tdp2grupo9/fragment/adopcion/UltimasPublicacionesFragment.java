@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 import com.tdp2grupo9.R;
@@ -32,9 +33,9 @@ public class UltimasPublicacionesFragment extends PublicacionesFragment {
         publicacion.setLongitud(Usuario.getInstancia().getLongitud());
         publicacion.setLatitud(Usuario.getInstancia().getLatitud());
 
-        mListView = (ListView) mFragmentView.findViewById(R.id.list_view_ultimas_publicaciones);
+        mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_ultimas_publicaciones);
 
-        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion);
+        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, Tipos.RECIENTES);
         mBuscarAdopcionesTask.execute((Void) null);
         return mFragmentView;
     }

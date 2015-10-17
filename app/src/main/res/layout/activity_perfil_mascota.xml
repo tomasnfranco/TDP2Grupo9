@@ -4,18 +4,12 @@
     android:layout_height="match_parent"
     android:background="#fff">
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/header_publicacion" />
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
         android:scrollbars="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,6 +19,9 @@
                 android:id="@+id/cardview_basica_pm"
                 layout="@layout/cardview_perfil_mascota_basica" />
             <include
+                android:id="@+id/cardview_fotos_pm"
+                layout="@layout/cardview_perfil_mascota_fotos" />
+            <!--<include
                 android:id="@+id/cardview_localizacion_pm"
                 layout="@layout/cardview_localizacion" />
             <include
@@ -32,7 +29,7 @@
                 layout="@layout/cardview_perfil_mascota_fotos" />
             <include
                 android:id="@+id/cardview_videos_pm"
-                layout="@layout/cardview_perfil_mascota_video" />
+                layout="@layout/cardview_perfil_mascota_video" />-->
             <include
                 android:id="@+id/cardview_adicional_pm"
                 layout="@layout/cardview_perfil_mascota_adicional" />

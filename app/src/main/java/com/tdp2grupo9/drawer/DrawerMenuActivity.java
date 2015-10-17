@@ -130,6 +130,15 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     }
 
     public void setFragment(int position, Class<? extends Fragment> fragmentClass) {
+        List<Fragment> childFragments = getSupportFragmentManager().getFragments();
+        if (childFragments != null) {
+            if (!childFragments.isEmpty()) {
+                if (childFragments.get(0).getClass() == fragmentClass) {
+                    mDrawerLayout.closeDrawer(mLvDrawerMenu);
+                    return;
+                }
+            }
+        }
         try {
             Fragment fragment = fragmentClass.newInstance();
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();

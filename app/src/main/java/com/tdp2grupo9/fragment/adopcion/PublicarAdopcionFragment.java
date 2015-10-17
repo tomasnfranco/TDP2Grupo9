@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +123,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
+    private MapFragment mapFragment;
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -138,21 +138,17 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             if (parent != null)
                 parent.removeView(mFragmentView);
         }*/
-        try {
-            mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
-            map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion)).getMap();
+        mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
+        mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
+        map = mapFragment.getMap();
 
-            if(map != null){
-                currentZoom = map.getMaxZoomLevel()-zoomOffset;
-                map.setOnMapClickListener(this);
+        if(map != null){
+            currentZoom = map.getMaxZoomLevel()-zoomOffset;
+            map.setOnMapClickListener(this);
 
-            } else {
-                Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
-                        Toast.LENGTH_LONG).show();
-            }
-
-        } catch (InflateException e) {
-        /* map is already there, just return view as it is */
+        } else {
+            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
+                    Toast.LENGTH_LONG).show();
         }
 
         inicializarWidgets();
@@ -186,7 +182,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         createRazaSpinner();
         createSexoSpinner();
         createTamanioSpinner();
-        ;
         createEdadSpinner();
         createColorSpinner();
         createCompatibleConSpinner();
@@ -331,7 +326,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             } catch (InterruptedException e) {
                 return false;
             }
-            return true;
+            return this.publicacion.getId() > 0;
         }
 
         @Override
@@ -443,7 +438,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
         map_center = new LatLng(currentLat,currentLon);
 
-        if(map != null) {
+        if (map != null) {
             initializeMap();
         } else {
             Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
@@ -707,6 +702,18 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mapFragment != null) {
+            getActivity()
+                    .getFragmentManager()
+                    .beginTransaction()
+                    .remove(mapFragment)
+                    .commit();
+            map = null;
+        }
+    }
 
 }
 

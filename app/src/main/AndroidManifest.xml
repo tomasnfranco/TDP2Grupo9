@@ -46,14 +46,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".inicio.HomeActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="com.tdp2grupo9.inicio.HomeActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".login.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -69,11 +61,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".adopcion.AdopcionTabActivity"
-            android:label="@string/title_activity_adopcion_tab"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
 
         <activity
             android:name=".login.RegisterActivity"
@@ -83,7 +70,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".adopcion.UltimasPublicacionesActivity" />
         <activity android:name=".adopcion.BuscarMascotaActivity" />
         <activity android:name=".adopcion.PublicarAdopcionActivity" />
         <activity android:name=".adopcion.PublicarBusquedaActivity" />
