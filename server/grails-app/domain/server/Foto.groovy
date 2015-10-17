@@ -1,7 +1,6 @@
 package server
 import grails.rest.*
 
-@Resource(uri='/api/foto',formats=['json', 'xml','html'])
 class Foto {
     String base64
 
