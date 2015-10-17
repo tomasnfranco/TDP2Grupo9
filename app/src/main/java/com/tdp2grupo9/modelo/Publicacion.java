@@ -242,6 +242,12 @@ public class Publicacion {
                     else
                         this.fechaPublicacion = Fecha.parseStringToDateTime(reader.nextString());
                     break;
+                case "fechaPublicacion":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.fechaPublicacion = Fecha.parseStringToDateTime(reader.nextString());
+                    break;
                 case "preguntas":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
