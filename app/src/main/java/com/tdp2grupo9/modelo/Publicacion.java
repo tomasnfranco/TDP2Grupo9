@@ -63,14 +63,7 @@ public class Publicacion {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
-
-    public Date getFechaPublicacion() {
-        return fechaPublicacion;
-    }
-
-    public void setFechaPublicacion(Date fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
-    }
+    private Double distancia;
 
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
@@ -103,6 +96,7 @@ public class Publicacion {
         this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
+        this.distancia = 0.0;
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
         this.postulantes = new ArrayList<>();
@@ -219,6 +213,9 @@ public class Publicacion {
                 case "longitud":
                     this.longitud = reader.nextDouble();
                     break;
+                case "distancia":
+                    this.distancia = reader.nextDouble();
+                    break;
                 case "requiereCuidadosEspeciales":
                     this.requiereCuidadosEspeciales = reader.nextBoolean();
                     break;
@@ -241,6 +238,12 @@ public class Publicacion {
                     	this.imagenes = Imagen.getImagenesfromJson(reader);
                     break;
                 case "fecha":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.fechaPublicacion = Fecha.parseStringToDateTime(reader.nextString());
+                    break;
+                case "fechaPublicacion":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else
@@ -308,24 +311,49 @@ public class Publicacion {
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            String parametros = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
-                    "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
-                    "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
-                    "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
-                    "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
-                    "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
-                    "&necesitaTransito="+this.necesitaTransito +"&raza="+this.raza.getId()+
-                    "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
-                    "&latitud="+this.latitud.toString().replace('.', ',')+"&longitud="+this.longitud.toString().replace('.', ',')+"&videoLink="+this.videoLink;
+
+            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion+
+                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
+                    "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
+
+            if (this.getRaza().getId() > 0)
+                atributos += "&raza="+this.getRaza().getId();
+            if (this.getColor().getId() > 0)
+                atributos += "&color="+this.getColor().getId();
+            if (this.getCastrado().getId() > 0)
+                atributos += "&castrado="+this.getCastrado().getId();
+            if (this.getEspecie().getId() > 0)
+                atributos += "&especie="+this.getEspecie().getId();
+            if (this.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+this.getCompatibleCon().getId();
+            if (this.getEdad().getId() > 0)
+                atributos += "&edad="+this.getEdad().getId();
+            if (this.getEnergia().getId() > 0)
+                atributos += "&energia="+this.getEnergia().getId();
+            if (this.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+this.getPapelesAlDia().getId();
+            if (this.getProteccion().getId() > 0)
+                atributos += "&proteccion="+this.getProteccion().getId();
+            if (this.getSexo().getId() > 0)
+                atributos += "&sexo="+this.getSexo().getId();
+            if (this.getTamanio().getId() > 0)
+                atributos += "&tamanio="+this.getTamanio().getId();
+            if (this.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+this.getVacunasAlDia().getId();
+            if (this.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+this.getRequiereCuidadosEspeciales();
+            if (this.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+this.getNecesitaTransito();
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
+            out.write(atributos);
             out.close();
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            Log.d(LOG_TAG, METHOD + " url= " + atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
+
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
@@ -335,12 +363,15 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
-        for(Imagen bmp: this.imagenes) {
-        	bmp.setPublicacionId(this.id);
-            bmp.guardarImagen(token);
+
+        if (this.getId() > 0) {
+            Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
+            for (Imagen bmp : this.imagenes) {
+                bmp.setPublicacionId(this.id);
+                bmp.guardarImagen(token);
+            }
+            Log.d(LOG_TAG, METHOD + " finalizado.");
         }
-        Log.d(LOG_TAG, METHOD + " finalizado.");
 
     }
 
@@ -376,9 +407,12 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
+                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud()+
+                    "&distancia="+publicacion.getDistancia();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getRaza().getId() > 0)
+                atributos += "&raza="+publicacion.getRaza();
             if (publicacion.getColor().getId() > 0)
                 atributos += "&color="+publicacion.getColor().getId();
             if (publicacion.getCastrado().getId() > 0)
@@ -405,6 +439,7 @@ public class Publicacion {
                 atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
             if (publicacion.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
+
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
             int HttpResult = urlConnection.getResponseCode();
@@ -632,12 +667,8 @@ public class Publicacion {
 
     public void addImagen(Bitmap imagen) {
     	Imagen img = new Imagen();
-    	img.setImg(Imagen.bytesFromBitmap(imagen));
+    	img.setBitmap(imagen);
         this.imagenes.add(img);
-    }
-    
-    public void addImagen(Imagen imagen) {
-        this.imagenes.add(imagen);
     }
 
     public void setVideoLink(String videoLink) {
@@ -727,5 +758,41 @@ public class Publicacion {
 
     public Integer getPostulanteConcretadoId() {
         return this.postulanteConcretadoId;
+    }
+
+    public Integer getPublicadorId() {
+        return publicadorId;
+    }
+
+    public void setPublicadorId(Integer publicadorId) {
+        this.publicadorId = publicadorId;
+    }
+
+    public String getPublicadorNombre() {
+        return publicadorNombre;
+    }
+
+    public void setPublicadorNombre(String publicadorNombre) {
+        this.publicadorNombre = publicadorNombre;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
+
+    public Date getFechaPublicacion() {
+        return fechaPublicacion;
+    }
+
+    public void setFechaPublicacion(Date fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public Double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(Double distancia) {
+        this.distancia = distancia;
     }
 }

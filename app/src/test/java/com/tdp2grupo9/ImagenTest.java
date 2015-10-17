@@ -92,7 +92,7 @@ public class ImagenTest {
 
     @Test
     public void guardarImagenGrande() {
-        String base64 = IMAGEN_GRANDE2;
+        String base64 = IMAGEN_GRANDE1;
 
         Imagen imagen = new Imagen();
         imagen.setImg(Imagen.bytesFromBase64DEFAULT(base64));

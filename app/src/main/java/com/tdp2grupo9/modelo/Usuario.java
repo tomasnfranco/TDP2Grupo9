@@ -40,7 +40,7 @@ public class Usuario {
     private String nombre;
     private String apellido;
     
-    private byte[] foto;
+    private Imagen foto;
 
     private Usuario() {
         this.resetearAtributos();
@@ -397,8 +397,9 @@ public class Usuario {
         return this.apellido;
     }
 
-    public void setImagen(Bitmap imagen) {
-        //this.imagen = imagen;
+    public void setFoto(Bitmap imagen) {
+        this.foto = new Imagen();
+        foto.setBitmap(imagen);
     }
 
     public String getFacebookToken() {
