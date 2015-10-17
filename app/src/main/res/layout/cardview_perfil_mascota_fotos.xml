@@ -38,29 +38,21 @@
                 android:src="@drawable/ic_camera"/>
         </RelativeLayout>
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/parent"
+        <View style="@style/HorizontalDivider"/>¿
+
+        <view
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
+            android:layout_height="100dp"
+            class="com.daimajia.slider.library.SliderLayout"
+            android:id="@+id/photo_slider" />
 
-            <Gallery
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:spacing="8dp"
-                android:background="@android:color/darker_gray"
-                android:paddingTop="4dp"
-                android:id="@+id/gallery_view" />
-
-            <ImageView
-                android:id="@+id/image_seleccionada"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/gallery_view"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:contentDescription="@string/imagen_seleccionada" />
-        </RelativeLayout>
+        <com.daimajia.slider.library.Indicators.PagerIndicator
+                    android:id="@+id/custom_indicator"
+                    style="@style/AndroidImageSlider_Magnifier_Oval_Black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:layout_gravity="center" />
     </LinearLayout>
 
         </android.support.v7.widget.CardView>
