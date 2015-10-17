@@ -12,6 +12,7 @@ import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
+import com.tdp2grupo9.modelo.publicacion.Postulante;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
@@ -71,6 +72,7 @@ public class Publicacion {
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
     private List<Mensaje> mensajes;
+    private List<Postulante> postulantes;
 
     public Publicacion() {
         this.id = 0;
@@ -407,6 +409,10 @@ public class Publicacion {
         if (publicacion.getId() > 0) {
             publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
 
+            for (Integer postulanteId: publicacion.getPostulantesIds()) {
+                publicacion.addPostulante(Postulante.obtenerPostulante(token, postulanteId));
+            }
+
         }
 
         return publicacion;
@@ -419,10 +425,11 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud()+
-                    "&distancia="+publicacion.getDistancia();
+                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getDistancia() != null)
+                atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)
                 atributos += "&raza="+publicacion.getRaza();
             if (publicacion.getColor().getId() > 0)
@@ -674,6 +681,15 @@ public class Publicacion {
 
     public Boolean getNecesitaTransito() {
         return this.necesitaTransito;
+    }
+
+
+    private void addMensaje(Mensaje mensaje) {
+        this.mensajes.add(mensaje);
+    }
+
+    private void addPostulante(Postulante postulante) {
+        this.postulantes.add(postulante);
     }
 
     public void addImagen(Bitmap imagen) {
