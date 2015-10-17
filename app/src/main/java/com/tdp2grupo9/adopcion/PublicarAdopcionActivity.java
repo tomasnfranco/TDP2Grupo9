@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -251,7 +252,7 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                 View layout = inflater.inflate(R.layout.toast_layout,
                         (ViewGroup) findViewById(R.id.lytLayout));
 
-                TextView txtMsg = (TextView)layout.findViewById(R.id.txtMensaje);
+                ImageView txtMsg = (ImageView)layout.findViewById(R.id.imageMensaje);
 
                 toast3.setDuration(Toast.LENGTH_SHORT);
                 toast3.setView(layout);

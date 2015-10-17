@@ -1,5 +1,6 @@
 package com.tdp2grupo9.fragment;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.adapter.AtributosPublicacionArrayAdapter;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class SeleccionAtributosFragment extends Fragment {
@@ -52,13 +54,24 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     }
 
     private Spinner createSpinner(List<AtributoPublicacion> atributos, AtributoPublicacion atributoPublicacion, int id) {
-        atributoPublicacion.setValor(atributoPublicacion.getName());
+        try {
+            Field resourceField = R.string.class.getDeclaredField(atributoPublicacion.getName());
+            int resourceId = resourceField.getInt(resourceField);
+            atributoPublicacion.setValor(mFragmentView.getContext().getString(resourceId));
+        } catch (Exception e) {
+            atributoPublicacion.setValor(atributoPublicacion.getName());
+        }
+
         atributos.add(0, atributoPublicacion);
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(mFragmentView.getContext(), android.R.layout.simple_spinner_item, atributos);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinner = (Spinner) mFragmentView.findViewById(id);
         spinner.setAdapter(atributosArrayAdapter);
         return spinner;
+    }
+
+    public static int getStringIdentifier(Context context, String name) {
+        return context.getResources().getIdentifier(name, "string", context.getPackageName());
     }
 
     protected void createEspecieSpinner() {

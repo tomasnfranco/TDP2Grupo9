@@ -52,7 +52,7 @@ public class Tamanio extends AtributoPublicacion {
     }
 
     public String getName() {
-        return "Tamanio";
+        return "tamanio";
     }
 
 }

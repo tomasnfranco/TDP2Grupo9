@@ -52,7 +52,7 @@ public class VacunasAlDia extends AtributoPublicacion {
     }
 
     public String getName() {
-        return "Vacunas al dia";
+        return "vacunas_al_dia";
     }
 
 }

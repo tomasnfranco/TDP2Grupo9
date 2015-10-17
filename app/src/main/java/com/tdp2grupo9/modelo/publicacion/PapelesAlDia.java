@@ -52,6 +52,6 @@ public class PapelesAlDia extends AtributoPublicacion {
     }
 
     public String getName() {
-        return "Papeles al dia";
+        return "papeles_al_dia";
     }
 }
