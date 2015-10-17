@@ -120,6 +120,9 @@ public class Publicacion {
         while (reader.hasNext()) {
             String name = reader.nextName();
             switch (name) {
+                case Raza.CLAVE:
+                    this.raza.jsonToRaza(reader);
+                    break;
                 case Especie.CLAVE:
                     this.especie.jsonToEspecie(reader);
                     break;
@@ -227,7 +230,7 @@ public class Publicacion {
                         reader.nextNull();
                     else {
                         Imagen img = new Imagen();
-                        img.setImg(Imagen.bytesFromBase64URL_SAFE(reader.nextString()));
+                        img.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
                         this.imagenes.add(img);
                     }
                     break;

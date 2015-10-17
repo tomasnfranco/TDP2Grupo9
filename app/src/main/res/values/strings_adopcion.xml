@@ -42,4 +42,11 @@
     <string name="proteccion">Protección</string>
     <string name="campo_anonimo">Anónimo</string>
 
+
+    <string name="tiene_vacunas">Tiene vacunas al día</string>
+    <string name="tiene_papeles">Tiene papeles al día</string>
+    <string name="es_compatible">Es compatible con</string>
+    <string name="esta_castrado">Está castrado</string>
+
+
 </resources>
