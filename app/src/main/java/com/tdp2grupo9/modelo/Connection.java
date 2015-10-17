@@ -15,4 +15,8 @@ public abstract class Connection {
     public static HttpURLConnection getHttpUrlConnection(String controller_action) throws IOException {
         return (HttpURLConnection) new URL(SERVERURL + controller_action).openConnection();
     }
+
+    public static String getHttpStringConnection(String controller_action) throws IOException {
+        return SERVERURL + controller_action;
+    }
 }

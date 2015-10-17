@@ -8,7 +8,16 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,7 +64,7 @@ public class Imagen {
     }
 
     public static Bitmap resizeDefault(Bitmap bmp) {
-    	return Bitmap.createScaledBitmap(bmp, 200, 200, false);
+    	return Bitmap.createScaledBitmap(bmp, 300, 300, true);
     }
         
 	public static List<Imagen> getImagenesfromJson(JsonReader reader) throws IOException, JSONException {
@@ -81,7 +90,8 @@ public class Imagen {
                 case "base64":
                 	//URL SAFE
                 	String base64 = reader.nextString();
-                    this.setImg(Imagen.bytesFromBase64URL_SAFE(base64));
+                    this.setImg(Imagen.bytesFromBase64DEFAULT(base64));
+                    //this.setImg(Imagen.bytesFromBase64URL_SAFE(base64));
                     break;
                 default:
                     reader.skipValue();
@@ -90,13 +100,15 @@ public class Imagen {
         }
         reader.endObject();
     }
-	
-    public void guardarImagen(String token) {
+
+    @Deprecated
+    public void guardarImagen2(String token) {
         String METHOD = "guardarImagen";
 
         HttpURLConnection urlConnection = null;
         try {
-        	String content = "token=" + token + "&publicacion=" + this.publicacionId + "&base64=" + Imagen.base64URL_SAFEFromBytes(this.img);
+            String base64Posta = this.getBase64();
+            String content = "token=" + token + "&publicacion=" + this.publicacionId + "&base64=" + Imagen.base64URL_SAFEFromBytes(this.img).replaceAll("(\\r|\\n)", "");
 
             urlConnection = Connection.getHttpUrlConnection("foto");
             urlConnection.setDoOutput(true);
@@ -105,6 +117,46 @@ public class Imagen {
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(content);
+            out.close();
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
+                this.jsonToImagen(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " imagen guardada id " + this.id);
+            } else {
+                System.out.println("RESPUESTA NO ESPERADA " + HttpResult);
+                System.out.println(urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+    }
+	
+    public void guardarImagen(String token) {
+        String METHOD = "guardarImagen";
+
+        HttpURLConnection urlConnection = null;
+        try {
+
+            JSONObject params = new JSONObject();
+            try {
+                params.put("token", token);
+                params.put("publicacion", this.publicacionId);
+                params.put("base64", this.getBase64());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            urlConnection = Connection.getHttpUrlConnection("foto");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(params.toString());
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
@@ -126,7 +178,7 @@ public class Imagen {
 
     public void resizeDefault() {
     	Bitmap bmp = Imagen.bitmapFromBytes(this.img);
-    	this.setImg(Imagen.bytesFromBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false)));
+    	this.setImg(Imagen.bytesFromBitmap(Bitmap.createScaledBitmap(bmp, 300, 300, true)));
     }
     
 	public void setId(int id) {
@@ -155,6 +207,6 @@ public class Imagen {
     }
 
     public String getBase64() {
-        return Imagen.base64DEFAULTFromBytes(this.img).replaceAll("(\\r|\\n)", "");
+        return Imagen.base64DEFAULTFromBytes(this.img);//.replaceAll("(\\r|\\n)", "");
     }
 }
