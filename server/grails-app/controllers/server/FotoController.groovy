@@ -29,14 +29,22 @@ class FotoController {
             notFound()
             return
         }
+        println "fotoInstance != null"
 
         if (fotoInstance.hasErrors()) {
-            respond fotoInstance.errors, view:'create'
-            return
+            println "FotoInstance tiene errores"
+            fotoInstance = new Foto(request.getJSON())
+            println "FotoInstance tiene el json ahora"
+            fotoInstance.validate()
+            if(fotoInstance.hasErrors()) {
+                println "FotoInstance con el Json sigue teniendo errores"
+                respond fotoInstance.errors, view: 'create'
+                return
+            }
         }
-
+        println "fotoInstance no tiene errores"
         fotoInstance.save flush:true
-
+        println "la foto fue guardada correctamente"
         request.withFormat {
             html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'foto.label', default: 'Foto'), fotoInstance.id])
