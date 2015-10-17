@@ -425,10 +425,11 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud()+
-                    "&distancia="+publicacion.getDistancia();
+                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getDistancia() != null)
+                atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)
                 atributos += "&raza="+publicacion.getRaza();
             if (publicacion.getColor().getId() > 0)
