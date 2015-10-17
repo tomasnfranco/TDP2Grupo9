@@ -58,7 +58,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="25dp"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/ivLocalizacion" />
+            android:layout_alignStart="@+id/ivLocalizacion"
+            android:textColor="#ffffffff" />
 
     </RelativeLayout>
 

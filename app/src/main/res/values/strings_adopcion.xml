@@ -41,6 +41,7 @@
     <string name="tamanio">Tamaño</string>
     <string name="proteccion">Protección</string>
     <string name="campo_anonimo">Anónimo</string>
+    <string name="imagen_seleccionada">Imagen Seleccionada</string>
 
 
     <string name="tiene_vacunas">Tiene vacunas al día</string>

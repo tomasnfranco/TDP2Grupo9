@@ -18,6 +18,9 @@
             <include
                 android:id="@+id/cardview_basica_pm"
                 layout="@layout/cardview_perfil_mascota_basica" />
+            <include
+                android:id="@+id/cardview_fotos_pm"
+                layout="@layout/cardview_perfil_mascota_fotos" />
             <!--<include
                 android:id="@+id/cardview_localizacion_pm"
                 layout="@layout/cardview_localizacion" />

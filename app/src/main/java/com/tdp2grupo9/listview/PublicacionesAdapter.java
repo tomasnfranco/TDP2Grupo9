@@ -9,15 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -27,6 +37,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ObtenerAtributosTask obtenerAtributosTask;
     protected PublicacionAtributos publicacionAtributos;
+    private SliderLayout photo_slider;
+    private GoogleMap mMap;
+    private Gallery photo_gallery;
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
@@ -153,7 +166,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         if (publicaciones.get(i).getImagenes().size() > 0)
             ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(publicaciones.get(i).getImagenes().get(0).getBitmap());
         ((TextView) publicacionView.findViewById(R.id.tv_fecha_publicacion)).setText(parserDateText(publicaciones.get(i).getFechaPublicacion()));
-        //((TextView) publicacionView.findViewById(R.id.tvLocalizacion)).setText(publicaciones.get(i).get);
+        String distancia = publicaciones.get(i).getDistancia().toString() + "km";
+        ((TextView) publicacionView.findViewById(R.id.tvLocalizacion)).setText(distancia);
         int loadedIcons = 0;
         if (cargarIconoHogarTransito(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
         if (cargarIconoCuidadosEspeciales(publicaciones.get(i), publicacionView, loadedIcons)) { ++loadedIcons; }
@@ -163,11 +177,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        //final String children = (String) getChild(i, i1);
-        //TextView textvw = null;
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
         cargarInformacionBasica(i, itemView);
         cargarInformacionAdicional(i, itemView);
+        ArrayList<String> urlFotos = new ArrayList<>();
+
+        for (Imagen imagen : publicaciones.get(i).getImagenes()){
+            urlFotos.add(imagen.getBase64());
+        }
+
+        cargarFotos(urlFotos, itemView);
 
         return itemView;
     }
@@ -221,6 +240,30 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         ((TextView) v.findViewById(R.id.infAdicional)).setText(mensaje);
     }
 
+    private void cargarFotos(ArrayList<String> urlPhotos, View view) {
+        photo_gallery = (Gallery) view.findViewById(R.id.gallery_view);
+
+
+        photo_slider = (SliderLayout) view.findViewById(R.id.photo_slider_new);
+        final HashMap<String, String> photos = new HashMap<>();
+        int aux = 0;
+        for (String url : urlPhotos) {
+            photos.put("Photo " + aux, url);
+            aux++;
+        }
+
+        for (String name : photos.keySet()) {
+            DefaultSliderView slide = new DefaultSliderView(view.getContext());
+            slide.image(photos.get(name));
+
+            slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
+            photo_slider.addSlider(slide);
+        }
+
+        photo_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
+        photo_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator));
+    }
+
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
@@ -255,4 +298,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             obtenerAtributosTask = null;
         }
     }
+
+
 }
