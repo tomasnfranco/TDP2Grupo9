@@ -7,10 +7,12 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
@@ -22,7 +24,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adapter.MensajeAdapter;
 import com.tdp2grupo9.modelo.Imagen;
+import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
@@ -42,10 +46,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private SliderLayout photo_slider;
     private GoogleMap mMap;
     private Gallery photo_gallery;
+    private ListView listView;
+    private List<Mensaje> mensajes;
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
         this.context = context;
+        mensajes = new ArrayList<>();
         obtenerAtributos();
     }
 
@@ -194,6 +201,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             e.printStackTrace();
         }
 
+        Mensaje m1 = new Mensaje();
+        m1.setPregunta("Hola como estas");
+        m1.setRespuesta("Bien y vos");
+        Mensaje m2 = new Mensaje();
+        m2.setPregunta("Che cuando va a terminar esto");
+        m2.setRespuesta("No se, espero que pronto");
+        mensajes.add(m1);
+        mensajes.add(m2);
+        cargarListViewMensajes(itemView);
+
         return itemView;
     }
 
@@ -263,9 +280,19 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
             photo_slider.addSlider(slide);
         }
-
         photo_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
         photo_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator));
+    }
+
+    private void cargarListViewMensajes(View v){
+        listView = (ListView) v.findViewById(R.id.listView_consultas);
+        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view,
+                                    int position, long arg) {
+            }
+        });
     }
 
     @Override
