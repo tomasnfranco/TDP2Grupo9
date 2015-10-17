@@ -19,6 +19,8 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
@@ -181,12 +183,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         cargarInformacionBasica(i, itemView);
         cargarInformacionAdicional(i, itemView);
         ArrayList<String> urlFotos = new ArrayList<>();
-
-        for (Imagen imagen : publicaciones.get(i).getImagenes()){
-            urlFotos.add(imagen.getBase64());
+        try{
+            for (Imagen imagen : publicaciones.get(i).getImagenes()){
+                ParseFile file = new ParseFile("imagen.png",imagen.getImg());
+                //file.save();
+                urlFotos.add(file.getUrl());
+            }
+            cargarFotos(urlFotos, itemView);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-        cargarFotos(urlFotos, itemView);
 
         return itemView;
     }
@@ -241,10 +247,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void cargarFotos(ArrayList<String> urlPhotos, View view) {
-        photo_gallery = (Gallery) view.findViewById(R.id.gallery_view);
 
-
-        photo_slider = (SliderLayout) view.findViewById(R.id.photo_slider_new);
+        photo_slider = (SliderLayout) view.findViewById(R.id.photo_slider);
         final HashMap<String, String> photos = new HashMap<>();
         int aux = 0;
         for (String url : urlPhotos) {

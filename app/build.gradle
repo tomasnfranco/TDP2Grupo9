@@ -30,6 +30,6 @@ dependencies {
     compile 'com.daimajia.slider:library:1.1.5'
     compile 'com.daimajia.swipelayout:library:1.2.0'
     testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.0"
-
+    testCompile 'org.robolectric:robolectric:3.0'
+    compile 'com.parse:parse-android:1.10.3'
 }
