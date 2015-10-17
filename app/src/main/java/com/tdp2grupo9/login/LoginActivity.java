@@ -369,9 +369,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 profile_pic = new URL("https://graph.facebook.com/" + Usuario.getInstancia().getFacebookId() + "/picture?width=200&height=150");
                 Log.i("profile_pic", profile_pic + "");
-                InputStream stream = profile_pic.openConnection().getInputStream();
-                //Bitmap imagen = BitmapFactory.decodeStream(stream);
-                //Usuario.getInstancia().setImagen(imagen);
+                Usuario.getInstancia().setFoto(BitmapFactory.decodeStream(profile_pic.openConnection().getInputStream()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
