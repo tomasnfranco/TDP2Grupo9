@@ -12,6 +12,7 @@ import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
+import com.tdp2grupo9.modelo.publicacion.Postulante;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
@@ -71,6 +72,7 @@ public class Publicacion {
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
     private List<Mensaje> mensajes;
+    private List<Postulante> postulantes;
 
     public Publicacion() {
         this.id = 0;
@@ -407,6 +409,10 @@ public class Publicacion {
         if (publicacion.getId() > 0) {
             publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
 
+            for (Integer postulanteId: publicacion.getPostulantesIds()) {
+                publicacion.addPostulante(Postulante.obtenerPostulante(token, postulanteId));
+            }
+
         }
 
         return publicacion;
@@ -674,6 +680,15 @@ public class Publicacion {
 
     public Boolean getNecesitaTransito() {
         return this.necesitaTransito;
+    }
+
+
+    private void addMensaje(Mensaje mensaje) {
+        this.mensajes.add(mensaje);
+    }
+
+    private void addPostulante(Postulante postulante) {
+        this.postulantes.add(postulante);
     }
 
     public void addImagen(Bitmap imagen) {
