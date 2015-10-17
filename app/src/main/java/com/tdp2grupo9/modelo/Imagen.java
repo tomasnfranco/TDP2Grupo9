@@ -64,7 +64,7 @@ public class Imagen {
     }
 
     public static Bitmap resizeDefault(Bitmap bmp) {
-    	return Bitmap.createScaledBitmap(bmp, 300, 300, true);
+    	return Bitmap.createScaledBitmap(bmp, 200, 200, true);
     }
         
 	public static List<Imagen> getImagenesfromJson(JsonReader reader) throws IOException, JSONException {
@@ -143,13 +143,9 @@ public class Imagen {
         try {
 
             JSONObject params = new JSONObject();
-            try {
-                params.put("token", token);
-                params.put("publicacion", this.publicacionId);
-                params.put("base64", this.getBase64());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            params.put("token", token);
+            params.put("publicacion", this.publicacionId);
+            params.put("base64", this.getBase64());
 
             urlConnection = Connection.getHttpUrlConnection("foto");
             urlConnection.setDoOutput(true);

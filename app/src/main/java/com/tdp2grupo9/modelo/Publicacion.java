@@ -301,8 +301,11 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',');
+                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
+                    "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
 
+            if (this.getRaza().getId() > 0)
+                atributos += "&raza="+this.getRaza().getId();
             if (this.getColor().getId() > 0)
                 atributos += "&color="+this.getColor().getId();
             if (this.getCastrado().getId() > 0)
@@ -339,14 +342,6 @@ public class Publicacion {
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
 
-                Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
-                for (Imagen bmp : this.imagenes) {
-                    bmp.setPublicacionId(this.id);
-                    bmp.guardarImagen(token);
-                }
-                Log.d(LOG_TAG, METHOD + " finalizado.");
-
-
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
@@ -355,6 +350,15 @@ public class Publicacion {
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
+        }
+
+        if (this.getId() > 0) {
+            Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
+            for (Imagen bmp : this.imagenes) {
+                bmp.setPublicacionId(this.id);
+                bmp.guardarImagen(token);
+            }
+            Log.d(LOG_TAG, METHOD + " finalizado.");
         }
 
     }
@@ -394,6 +398,8 @@ public class Publicacion {
                     "&longitud="+publicacion.getLongitud() + "&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getRaza().getId() > 0)
+                atributos += "&raza="+publicacion.getRaza();
             if (publicacion.getColor().getId() > 0)
                 atributos += "&color="+publicacion.getColor().getId();
             if (publicacion.getCastrado().getId() > 0)

@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
+import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -251,7 +252,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
 
                 for (Bitmap bitmap : mFotoPicker.getImagesBitmaps()) {
-                    publicacion.addImagen(bitmap);
+                    publicacion.addImagen(Imagen.resizeDefault(bitmap));
                 }
 
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
