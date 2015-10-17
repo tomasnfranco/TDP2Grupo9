@@ -159,6 +159,9 @@ public class Imagen {
             out.write(params.toString());
             out.close();
 
+
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + params.toString());
+
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 this.jsonToImagen(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
@@ -176,11 +179,6 @@ public class Imagen {
         }
     }
 
-    public void resizeDefault() {
-    	Bitmap bmp = Imagen.bitmapFromBytes(this.img);
-    	this.setImg(Imagen.bytesFromBitmap(Bitmap.createScaledBitmap(bmp, 300, 300, true)));
-    }
-    
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -191,6 +189,10 @@ public class Imagen {
 
     public void setImg(byte[] img) {
         this.img = img;
+    }
+
+    public void setBitmap(Bitmap bmp) {
+        this.img = Imagen.bytesFromBitmap(bmp);
     }
 
 
@@ -207,6 +209,6 @@ public class Imagen {
     }
 
     public String getBase64() {
-        return Imagen.base64DEFAULTFromBytes(this.img);//.replaceAll("(\\r|\\n)", "");
+        return Imagen.base64DEFAULTFromBytes(this.img);
     }
 }

@@ -299,24 +299,54 @@ public class Publicacion {
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            String parametros = "token="+token+"&tipoPublicacion="+this.tipoPublicacion+ "&especie="+this.especie.getId()+
-                    "&nombreMascota="+this.nombreMascota+"&color="+this.color.getId()+
-                    "&edad="+this.edad.getId()+"&sexo="+this.sexo.getId()+"&tamanio="+this.tamanio.getId()+
-                    "&castrado="+this.castrado.getId()+"&compatibleCon="+this.compatibleCon.getId()+
-                    "&energia="+this.energia.getId()+"&papelesAlDia="+this.papelesAlDia.getId()+
-                    "&proteccion="+this.proteccion.getId()+"&vacunasAlDia="+this.vacunasAlDia.getId()+
-                    "&necesitaTransito="+this.necesitaTransito +"&raza="+this.raza.getId()+
-                    "&condiciones="+this.condiciones+"&requiereCuidadosEspeciales="+this.requiereCuidadosEspeciales+
-                    "&latitud="+this.latitud.toString().replace('.', ',')+"&longitud="+this.longitud.toString().replace('.', ',')+"&videoLink="+this.videoLink;
+
+            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion+
+                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',');
+
+            if (this.getColor().getId() > 0)
+                atributos += "&color="+this.getColor().getId();
+            if (this.getCastrado().getId() > 0)
+                atributos += "&castrado="+this.getCastrado().getId();
+            if (this.getEspecie().getId() > 0)
+                atributos += "&especie="+this.getEspecie().getId();
+            if (this.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+this.getCompatibleCon().getId();
+            if (this.getEdad().getId() > 0)
+                atributos += "&edad="+this.getEdad().getId();
+            if (this.getEnergia().getId() > 0)
+                atributos += "&energia="+this.getEnergia().getId();
+            if (this.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+this.getPapelesAlDia().getId();
+            if (this.getProteccion().getId() > 0)
+                atributos += "&proteccion="+this.getProteccion().getId();
+            if (this.getSexo().getId() > 0)
+                atributos += "&sexo="+this.getSexo().getId();
+            if (this.getTamanio().getId() > 0)
+                atributos += "&tamanio="+this.getTamanio().getId();
+            if (this.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+this.getVacunasAlDia().getId();
+            if (this.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+this.getRequiereCuidadosEspeciales();
+            if (this.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+this.getNecesitaTransito();
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
+            out.write(atributos);
             out.close();
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            Log.d(LOG_TAG, METHOD + " url= " + atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.d(LOG_TAG, METHOD + " publicacion guardada id " + this.id);
+
+                Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
+                for (Imagen bmp : this.imagenes) {
+                    bmp.setPublicacionId(this.id);
+                    bmp.guardarImagen(token);
+                }
+                Log.d(LOG_TAG, METHOD + " finalizado.");
+
+
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
@@ -326,12 +356,6 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        Log.d(LOG_TAG, METHOD + " adjuntando " + this.imagenes.size() + " imagenes....");
-        for(Imagen bmp: this.imagenes) {
-        	bmp.setPublicacionId(this.id);
-            bmp.guardarImagen(token);
-        }
-        Log.d(LOG_TAG, METHOD + " finalizado.");
 
     }
 
@@ -623,12 +647,8 @@ public class Publicacion {
 
     public void addImagen(Bitmap imagen) {
     	Imagen img = new Imagen();
-    	img.setImg(Imagen.bytesFromBitmap(imagen));
+    	img.setBitmap(imagen);
         this.imagenes.add(img);
-    }
-    
-    public void addImagen(Imagen imagen) {
-        this.imagenes.add(imagen);
     }
 
     public void setVideoLink(String videoLink) {

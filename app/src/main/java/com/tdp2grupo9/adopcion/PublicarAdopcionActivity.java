@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.maps.MapsActivity;
+import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -119,7 +120,8 @@ public class PublicarAdopcionActivity extends SeleccionAtributosActivity impleme
                     publicacion.setCondiciones(condicionesAdopcion.getText().toString());
 
                 for (Bitmap bitmap : mFotoPicker.getImagesBitmaps()) {
-                    publicacion.addImagen(bitmap);
+                    Bitmap bmpScaled = Imagen.resizeDefault(bitmap);
+                    publicacion.addImagen(bmpScaled);
                 }
 
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);

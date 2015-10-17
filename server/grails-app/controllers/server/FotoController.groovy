@@ -38,6 +38,7 @@ class FotoController {
             fotoInstance.validate()
             if(fotoInstance.hasErrors()) {
                 println "FotoInstance con el Json sigue teniendo errores"
+                println fotoInstance.errors
                 respond fotoInstance.errors, view: 'create'
                 return
             }
