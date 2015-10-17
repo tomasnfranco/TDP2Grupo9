@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:background="@color/darkorange"
+                android:background="@drawable/button_drawable"
                 android:text="@string/publicar_adopcion"
                 android:textColor="@color/white"/>
         </LinearLayout>

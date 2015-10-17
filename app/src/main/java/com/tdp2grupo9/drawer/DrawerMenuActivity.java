@@ -37,6 +37,8 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     private ListView mLvDrawerMenu;
     private DrawerMenuItemAdapter mDrawerMenuAdapter;
     private UserLogoutTask logoutTask;
+    private String username;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,17 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mLvDrawerMenu = (ListView) findViewById(R.id.lv_drawer_menu);
+        email = getString(R.string.campo_anonimo);
+        username = getString(R.string.campo_anonimo);
+
+        if (!Usuario.getInstancia().getEmail().isEmpty())
+            email = Usuario.getInstancia().getEmail();
+
+        if (!Usuario.getInstancia().getNombre().isEmpty())
+            username = Usuario.getInstancia().getNombre() + " " + Usuario.getInstancia().getApellido();
 
         List<DrawerMenuItem> menuItems = generateDrawerMenuItems();
-        //TODO cambiar lo del mail y el username
-        mDrawerMenuAdapter = new DrawerMenuItemAdapter(getApplicationContext(), menuItems, "emmanuelfls371@gmail.com","Emmanuel");
+        mDrawerMenuAdapter = new DrawerMenuItemAdapter(getApplicationContext(), menuItems, email, username);
         mLvDrawerMenu.setAdapter(mDrawerMenuAdapter);
 
         mLvDrawerMenu.setOnItemClickListener(this);

@@ -52,7 +52,7 @@ public class Proteccion extends AtributoPublicacion {
     }
 
     public String getName() {
-        return "Proteccion";
+        return "proteccion";
     }
 
 }

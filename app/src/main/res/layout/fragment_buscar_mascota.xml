@@ -32,6 +32,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+                <com.tdp2grupo9.view.clickable.CrearAlertaClickable
+                    android:id="@+id/crear_alerta_clickable"
+                    android:layout_marginLeft="10dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
             </RelativeLayout>
 
             <Button
@@ -39,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/darkorange"
+                android:background="@drawable/button_drawable"
                 android:text="@string/buscar_mascota"
                 android:textColor="@color/white"/>
 

@@ -58,6 +58,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         mFragmentView = inflater.inflate(R.layout.fragment_buscar_mascota, container, false);
         createBuscarMascotaButton();
         createLimpiarFiltrosButton();
+        createCrearAlerta();
         hideInnecessaryFields();
         obtenerAtributos();
         return mFragmentView;
@@ -78,6 +79,17 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         });
     }
 
+
+    private void createCrearAlerta() {
+        View crearAlertaClickable = mFragmentView.findViewById(R.id.crear_alerta_clickable);
+        crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crearAlerta();
+            }
+        });
+    }
+
     private void hideInnecessaryFields() {
         mFragmentView.findViewById(R.id.nombre_mascota_edit_text).setVisibility(View.GONE);
         mFragmentView.findViewById(R.id.requiere_hogar_transito).setVisibility(View.GONE);
@@ -90,6 +102,10 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         spinner.setSelection(0);
     }
 
+    private void crearAlerta(){
+        //TODO
+    }
+
     private void cleanFilters() {
         cleanSpinner(spEspecie);
         cleanSpinner(spRaza);
@@ -99,6 +115,10 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         cleanSpinner(spColor);
         cleanSpinner(spProteccion);
         cleanSpinner(spEnergia);
+        cleanSpinner(spCastrado);
+        cleanSpinner(spCompatibleCon);
+        cleanSpinner(spVacunas);
+        cleanSpinner(spPapeles);
         mLatitud = Usuario.getInstancia().getLatitud();
         mLongitud = Usuario.getInstancia().getLongitud();
     }

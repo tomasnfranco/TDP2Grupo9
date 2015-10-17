@@ -33,5 +33,13 @@
     <string name="maximo_fotos_alcanzado">Ya ha alcanzado el máximo de fotos que puede cargar</string>
     <string name="no_hay_fotos">No hay fotos para eliminar</string>
     <string name="limpiar_filtros">Limpiar filtros</string>
+    <string name="crear_alerta">Crear alerta</string>
+    <string name="publicacion_guardada">Publicación guardada</string>
+    <string name="energia">Energía</string>
+    <string name="vacunas_al_dia">Vacunas al día</string>
+    <string name="papeles_al_dia">Papeles al día</string>
+    <string name="tamanio">Tamaño</string>
+    <string name="proteccion">Protección</string>
+    <string name="campo_anonimo">Anónimo</string>
 
 </resources>

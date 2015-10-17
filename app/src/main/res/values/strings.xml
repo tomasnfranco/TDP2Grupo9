@@ -5,13 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="registrarse">Registrarse</string>
 
-
-    <string name="energia">Energía</string>
-    <string name="vacunas_al_dia">Vacunas al día</string>
-    <string name="papeles_al_dia">Papeles al día</string>
-    <string name="tamanio">Tamaño</string>
-    <string name="proteccion">Protección</string>
-
     <string name="facebook_app_id">1646506998968561</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_resultados_busqueda_adopcion">ResultadosBusquedaAdopcionActivity</string>

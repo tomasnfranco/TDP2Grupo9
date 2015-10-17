@@ -1,5 +1,6 @@
 package com.tdp2grupo9.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, GoogleMap.OnMapClickListener,
+public class RegisterActivity extends Activity implements View.OnClickListener, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,

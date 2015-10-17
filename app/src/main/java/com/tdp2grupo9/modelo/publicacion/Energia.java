@@ -52,6 +52,6 @@ public class Energia extends AtributoPublicacion {
     }
 
     public String getName() {
-        return "Energia";
+        return "energia";
     }
 }

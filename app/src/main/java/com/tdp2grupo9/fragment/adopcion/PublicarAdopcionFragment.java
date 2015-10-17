@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,18 +132,29 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
-        inicializarWidgets();
-        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion)).getMap();
+       /* if (mFragmentView != null) {
+            ViewGroup parent = (ViewGroup) mFragmentView.getParent();
+            if (parent != null)
+                parent.removeView(mFragmentView);
+        }*/
+        try {
+            mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
+            map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion)).getMap();
 
-        if(map != null){
-            currentZoom = map.getMaxZoomLevel()-zoomOffset;
-            map.setOnMapClickListener(this);
+            if(map != null){
+                currentZoom = map.getMaxZoomLevel()-zoomOffset;
+                map.setOnMapClickListener(this);
 
-        } else {
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
-                    Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
+                        Toast.LENGTH_LONG).show();
+            }
+
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
         }
+
+        inicializarWidgets();
 
         googleApiClient = new GoogleApiClient.Builder(mFragmentView.getContext())
                 .addConnectionCallbacks(this)
@@ -162,6 +174,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         obtenerAtributos();
+
+
         return mFragmentView;
     }
 
@@ -210,6 +224,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 publicacion.setSexo(((Sexo) spSexo.getSelectedItem()));
                 publicacion.setTamanio(((Tamanio) spTamanio.getSelectedItem()));
                 publicacion.setEdad(((Edad) spEdad.getSelectedItem()));
+
                 publicacion.setCompatibleCon(((CompatibleCon) spCompatibleCon.getSelectedItem()));
                 publicacion.setVacunasAlDia(((VacunasAlDia) spVacunas.getSelectedItem()));
                 publicacion.setPapelesAlDia(((PapelesAlDia) spPapeles.getSelectedItem()));
@@ -273,12 +288,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         if (!validateCampoRequeridoSpinner(spTamanio, campoRequeridoString)) { valido = false;}
         if (!validateCampoRequeridoSpinner(spEdad, campoRequeridoString)) { valido = false;}
         if (!validateCampoRequeridoSpinner(spColor, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spCompatibleCon, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spPapeles, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spVacunas, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spCastrado, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spProteccion, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spEnergia, campoRequeridoString)) { valido = false;}
         if (!validateCampoRequeridoEditText(nombreDescripcion, campoRequeridoString)) { valido = false;}
 
         return valido;
@@ -343,6 +352,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 spEnergia.setSelection(0);
                 latitud = Usuario.getInstancia().getLatitud();
                 longitud = Usuario.getInstancia().getLongitud();
+                //TODO borrar imagenes cargadas
                 videoLink.setText("");
                 requiereHogarTransito.setChecked(false);
                 cuidadosEspeciales.setChecked(false);
@@ -355,13 +365,11 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 View layout = inflater.inflate(R.layout.toast_layout,
                         (ViewGroup) mFragmentView.findViewById(R.id.lytLayout));
 
-                TextView txtMsg = (TextView)layout.findViewById(R.id.txtMensaje);
+                ImageView imageViewMsg = (ImageView)layout.findViewById(R.id.imageMensaje);
 
                 toast3.setDuration(Toast.LENGTH_SHORT);
                 toast3.setView(layout);
                 toast3.show();
-
-
             } else {
                 //TODO: mensaje indicando por que no se pudo publicar
             }
