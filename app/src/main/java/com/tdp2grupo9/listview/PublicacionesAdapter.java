@@ -52,7 +52,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
         this.context = context;
-        mensajes = new ArrayList<>();
         obtenerAtributos();
     }
 
@@ -201,15 +200,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             e.printStackTrace();
         }
 
-        Mensaje m1 = new Mensaje();
-        m1.setPregunta("Hola como estas");
-        m1.setRespuesta("Bien y vos");
-        Mensaje m2 = new Mensaje();
-        m2.setPregunta("Che cuando va a terminar esto");
-        m2.setRespuesta("No se, espero que pronto");
-        mensajes.add(m1);
-        mensajes.add(m2);
-        cargarListViewMensajes(itemView);
+        mensajes = publicaciones.get(i).getMensajes();
+
+        if(!mensajes.isEmpty())
+            cargarListViewMensajes(itemView);
 
         return itemView;
     }

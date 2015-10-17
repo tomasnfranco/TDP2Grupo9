@@ -76,7 +76,6 @@
                 android:layout_toStartOf="@+id/imageButton" />
 
         </RelativeLayout>
-        android:background="@drawable/button_drawable"
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scrollableView"
