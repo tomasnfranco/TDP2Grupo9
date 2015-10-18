@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.utils.TiposEnum;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,16 +23,15 @@ public abstract class PublicacionesFragment extends Fragment {
     protected List<Publicacion> mPublicaciones;
     protected ExpandableListView mListView;
     protected BuscarAdopcionesTask mBuscarAdopcionesTask;
-    protected enum Tipos {RECIENTES, MIS_PUBLICACIONES, BUSQUEDA, MIS_POSTULACIONES};
 
     protected abstract void cargarListView();
 
     public class BuscarAdopcionesTask extends AsyncTask<Void, Void, Boolean> {
 
         private Publicacion mPublicacion;
-        private Tipos tipo;
+        private TiposEnum tipo;
 
-        public BuscarAdopcionesTask(Publicacion publicacion, Tipos tipo) {
+        public BuscarAdopcionesTask(Publicacion publicacion, TiposEnum tipo) {
             this.mPublicacion = publicacion;
             this.tipo = tipo;
             mPublicaciones = new ArrayList<>();
@@ -42,11 +42,11 @@ public abstract class PublicacionesFragment extends Fragment {
             try {
                 List<Publicacion> publicacionesReducidas = new ArrayList<Publicacion>();
 
-                if (tipo == Tipos.BUSQUEDA || tipo == Tipos.RECIENTES)
+                if (tipo == TiposEnum.BUSQUEDA || tipo == TiposEnum.RECIENTES)
                     publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1, 0, 0, mPublicacion);
-                else if (tipo == Tipos.MIS_PUBLICACIONES)
-                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0,0);
-                else if (tipo == Tipos.MIS_POSTULACIONES)
+                else if (tipo == TiposEnum.MIS_PUBLICACIONES)
+                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
+                else if (tipo == TiposEnum.MIS_POSTULACIONES)
                     publicacionesReducidas = Usuario.getInstancia().obtenerMisPostulaciones(0,0);
 
                 for (Publicacion publicacionReducida : publicacionesReducidas){

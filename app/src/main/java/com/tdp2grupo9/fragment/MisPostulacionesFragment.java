@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.utils.TiposEnum;
 
 
 public class MisPostulacionesFragment extends PublicacionesFragment {
@@ -27,13 +28,13 @@ public class MisPostulacionesFragment extends PublicacionesFragment {
         Publicacion publicacion = null;
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_mis_postulaciones);
 
-        mBuscarAdopcionesTask = new PublicacionesFragment.BuscarAdopcionesTask(publicacion, PublicacionesFragment.Tipos.MIS_POSTULACIONES);
+        mBuscarAdopcionesTask = new PublicacionesFragment.BuscarAdopcionesTask(publicacion, TiposEnum.MIS_POSTULACIONES);
         mBuscarAdopcionesTask.execute((Void) null);
         return mFragmentView;
     }
 
     @Override
     protected void cargarListView() {
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_POSTULACIONES));
     }
 }

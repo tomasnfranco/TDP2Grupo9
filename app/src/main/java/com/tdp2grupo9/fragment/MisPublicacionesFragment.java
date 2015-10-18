@@ -12,6 +12,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.utils.TiposEnum;
 
 
 public class MisPublicacionesFragment  extends PublicacionesFragment {
@@ -30,13 +31,13 @@ public class MisPublicacionesFragment  extends PublicacionesFragment {
         Publicacion publicacion = null;
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_mis_publicaciones);
 
-        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, Tipos.MIS_PUBLICACIONES);
+        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.MIS_PUBLICACIONES);
         mBuscarAdopcionesTask.execute((Void) null);
         return mFragmentView;
     }
 
     @Override
     protected void cargarListView() {
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_PUBLICACIONES));
     }
 }

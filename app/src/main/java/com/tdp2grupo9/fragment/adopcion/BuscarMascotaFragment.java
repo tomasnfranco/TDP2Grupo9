@@ -1,6 +1,7 @@
 package com.tdp2grupo9.fragment.adopcion;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.MapFragment;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.listview.ResultadosBusquedaActivity;
+import com.tdp2grupo9.modelo.Alerta;
+import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -40,6 +45,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     private Button mBuscarMascotaButton;
     private Spinner mMaximasDistanciasSpinner;
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
+    private CrearAlertaTask crearAlertaTask;
 
     public static BuscarMascotaFragment newInstance() {
         return new BuscarMascotaFragment();
@@ -156,7 +162,8 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                crearAlerta();
+                crearAlertaTask = new CrearAlertaTask(Usuario.getInstancia().getToken());
+                crearAlertaTask.execute((Void)null);
             }
         });
     }
@@ -173,9 +180,6 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         spinner.setSelection(0);
     }
 
-    private void crearAlerta(){
-        //TODO
-    }
 
     private void cleanFilters() {
         cleanSpinner(spEspecie);
@@ -223,5 +227,35 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
             startActivity(intent);
       }
     }
+
+
+    public class CrearAlertaTask extends AsyncTask<Void, Void, Boolean> {
+
+        String token;
+
+        CrearAlertaTask(String token) {
+            this.token = token;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Alerta alerta = new Alerta();
+            alerta.guardarAlerta(token);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            crearAlertaTask = null;
+        }
+    }
+
+
+
 
 }

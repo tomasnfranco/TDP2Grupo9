@@ -20,6 +20,7 @@ import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
+import com.tdp2grupo9.utils.TiposEnum;
 
 /**
  * Created by Tomas on 15/10/2015.
@@ -85,7 +86,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         publicacion.setLongitud(arguments.getDouble("longitud", 0.0));
         publicacion.setLatitud(arguments.getDouble("latitud", 0.0));
 
-        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, Tipos.BUSQUEDA);
+        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.BUSQUEDA);
         mBuscarAdopcionesTask.execute((Void) null);
     }
 
@@ -139,7 +140,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
 
     @Override
     protected void cargarListView(){
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), getPublicacionesMock()));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones ,TiposEnum.BUSQUEDA));
     }
 
 }

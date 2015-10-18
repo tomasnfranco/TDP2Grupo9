@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,12 +35,14 @@ import com.parse.ParseFile;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
+import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.utils.TiposEnum;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,12 +68,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private Double latitud;
     private Double longitud;
     private String nombreMascota;
+    private TiposEnum tipos;
+    private Button btnPostularme;
 
-    public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
+
+    public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
         this.publicaciones = publicaciones;
         this.context = context;
         this.mensajes = new ArrayList<>();
         this.imagenes = new ArrayList<>();
+        this.tipos = tipos;
         obtenerAtributos();
     }
 
@@ -205,6 +212,17 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        btnPostularme = (Button) itemView.findViewById(R.id.buttonPublicacion);
+        if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES)
+            btnPostularme.setVisibility(View.GONE);
+
+        btnPostularme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         cargarInformacionBasica(i, itemView);
         cargarLocalizacionMascota(i, itemView);
         cargarFotos(i, itemView);

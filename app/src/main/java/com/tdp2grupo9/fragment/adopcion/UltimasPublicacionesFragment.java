@@ -12,6 +12,7 @@ import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.utils.TiposEnum;
 
 /**
  * Created by emmanuelfls371 on 06/10/2015.
@@ -35,13 +36,13 @@ public class UltimasPublicacionesFragment extends PublicacionesFragment {
 
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_ultimas_publicaciones);
 
-        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, Tipos.RECIENTES);
+        mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.RECIENTES);
         mBuscarAdopcionesTask.execute((Void) null);
         return mFragmentView;
     }
 
     protected void cargarListView(){
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.RECIENTES));
     }
 
 }
