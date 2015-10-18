@@ -200,7 +200,20 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             e.printStackTrace();
         }
 
-        mensajes = publicaciones.get(i).getMensajes();
+        //mensajes = publicaciones.get(i).getMensajes();
+        mensajes = new ArrayList<Mensaje>();
+        Mensaje m1 = new Mensaje();
+        m1.setPregunta("Hola como estas");
+        m1.setRespuesta("Bien y vos");
+        Mensaje m2 = new Mensaje();
+        m2.setPregunta("Che cuando va a terminar esto");
+        m2.setRespuesta("No se, espero que pronto");
+        Mensaje m3 = new Mensaje();
+        m3.setPregunta("Che cuando va a terminar esto");
+        m3.setRespuesta("No se, espero que pronto");
+        mensajes.add(m2);
+        mensajes.add(m2);
+        mensajes.add(m3);
 
         if(!mensajes.isEmpty())
             cargarListViewMensajes(itemView);

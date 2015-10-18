@@ -37,7 +37,6 @@ public class MensajeAdapter extends BaseAdapter {
     public long getItemId(int i) {
         return i;
     }
-
     @Override
     public View getView(int i, View view, ViewGroup parent) {
         View consultasView = getInflatedViewIfNecessary(view, parent);
