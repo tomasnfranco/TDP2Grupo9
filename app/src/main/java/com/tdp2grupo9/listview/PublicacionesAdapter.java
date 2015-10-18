@@ -1,6 +1,5 @@
 package com.tdp2grupo9.listview;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +9,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
@@ -26,16 +25,10 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
-import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
@@ -389,6 +382,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         //mensajes = publicaciones.get(i).getMensajes();
         mensajes = loadMensajesMock();
         listView = (ListView) v.findViewById(R.id.listView_consultas);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
         if (!mensajes.isEmpty()) {
             listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
