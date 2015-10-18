@@ -18,6 +18,10 @@
                 layout="@layout/cardview_informacion_basica" />
 
             <include
+                android:id="@+id/cardview_localizacion"
+                layout="@layout/cardview_localizacion" />
+
+            <include
                 android:id="@+id/cardview_adicional"
                 layout="@layout/cardview_informacion_adicional" />
 

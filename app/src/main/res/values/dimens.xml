@@ -10,4 +10,13 @@
     <dimen name="icon_side">30dp</dimen>
     <dimen name="margin_right_icon">20dp</dimen>
     <dimen name="return_search_button_size">60dp</dimen>
+    <array name="distancias">
+        <item name="un_kilometro">1</item>
+        <item name="dos_kilometro">2</item>
+        <item name="cinco_kilometros">5</item>
+        <item name="diez_kilometros">10</item>
+        <item name="veinte_kilometros">20</item>
+        <item name="cincuenta_kilometros">50</item>
+        <item name="cien_kilometros">100</item>
+    </array>
 </resources>

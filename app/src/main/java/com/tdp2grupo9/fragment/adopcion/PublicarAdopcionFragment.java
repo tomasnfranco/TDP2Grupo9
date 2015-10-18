@@ -123,7 +123,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private PublicarAdopcionTask publicarAdopcionTask;
     private TextView tvZona;
-    private MapFragment mapFragment;
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -133,14 +132,9 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-       /* if (mFragmentView != null) {
-            ViewGroup parent = (ViewGroup) mFragmentView.getParent();
-            if (parent != null)
-                parent.removeView(mFragmentView);
-        }*/
         mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
-        mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
-        map = mapFragment.getMap();
+        mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
+        map = mMapFragment.getMap();
 
         if(map != null){
             currentZoom = map.getMaxZoomLevel()-zoomOffset;
@@ -170,10 +164,14 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         markerOptions = new MarkerOptions();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        hideInnecessaryFields();
         obtenerAtributos();
 
-
         return mFragmentView;
+    }
+
+    private void hideInnecessaryFields() {
+        mFragmentView.findViewById(R.id.maxima_distancia).setVisibility(View.GONE);
     }
 
     @Override
@@ -465,7 +463,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         map.clear();
         map.animateCamera(CameraUpdateFactory.newLatLng(map_center));
         map.addMarker(markerOptions);
-        tvZona.setText(reverseGeocodeLocation(map_center.latitude,map_center.longitude));
+        tvZona.setText(reverseGeocodeLocation(map_center.latitude, map_center.longitude));
     }
 
     private void startTracking(){
@@ -700,19 +698,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mapFragment != null) {
-            getActivity()
-                    .getFragmentManager()
-                    .beginTransaction()
-                    .remove(mapFragment)
-                    .commit();
-            map = null;
-        }
     }
 
 }

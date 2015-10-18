@@ -39,6 +39,7 @@ public class TabbedFragment extends Fragment {
 
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(1);
         this.context = v.getContext();
         return v;
     }
@@ -57,30 +58,29 @@ public class TabbedFragment extends Fragment {
             fragment.setArguments(args);
 
             switch (position) {
-                case 0: return  UltimasPublicacionesFragment.newInstance();
-                case 1: return PublicarAdopcionFragment.newInstance();
-                case 2: return BuscarMascotaFragment.newInstance();
-                //TODO remover esto es solo con los fines de verlo
+                case 0: return PublicarAdopcionFragment.newInstance();
+                case 1: return  UltimasPublicacionesFragment.newInstance();
+                case 2: return new Fragment();
                 case 3: return ResultadosBusquedaFragment.newInstance();
+                case 4: return BuscarMascotaFragment.newInstance();
                 default: return null;
             }
         }
 
         @Override
         public int getCount() {
-            //TODO volver a poner el numero correcto de fragments
-            return 4;
+            return 5;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0: return context.getResources().getString(R.string.ultimas_publicaciones);
-                case 1: return context.getResources().getString(R.string.publicar_adopcion);
-                case 2: return context.getResources().getString(R.string.buscar_mascota);
-                //TODO remover esto es solo con los fines de verlo
-                case 3: return "Resultados Busqueda";
+                case 0: return context.getResources().getString(R.string.publicar_adopcion);
+                case 1: return context.getResources().getString(R.string.ultimas_publicaciones);
+                case 2: return context.getResources().getString(R.string.publicar_busqueda);
+                case 3: return context.getResources().getString(R.string.resultados_busqueda);
+                case 4: return context.getResources().getString(R.string.buscar_mascota);
             }
             return "";
         }
