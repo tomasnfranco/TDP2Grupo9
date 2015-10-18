@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adapter.AtributosPublicacionArrayAdapter;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -23,7 +25,6 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
-import com.tdp2grupo9.adapter.AtributosPublicacionArrayAdapter;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -45,6 +46,7 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     protected Spinner spProteccion;
     protected Spinner spEnergia;
     protected GoogleMap map;
+    protected MapFragment mMapFragment;
     protected View mFragmentView;
 
     protected void obtenerAtributos() {
@@ -156,5 +158,20 @@ public abstract class SeleccionAtributosFragment extends Fragment {
             obtenerAtributosTask = null;
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mMapFragment != null) {
+            getActivity()
+                    .getFragmentManager()
+                    .beginTransaction()
+                    .remove(mMapFragment)
+                    .commit();
+            map = null;
+            mMapFragment = null;
+        }
+    }
+
 
 }

@@ -39,4 +39,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mensaje_no_hay_publicaciones">No se encontraron publicaciones</string>
     <string name="error_busqueda_publicaciones">Se ha producido un error durante la búsqueda de publicaciones. Por favor vuelva a intentarlo en unos instantes.</string>
+    <string name="distancia_hasta_km">Hasta % km</string>
+    <string name="maxima_distancia_mi_localizacion">Máxima distancia desde mi localización</string>
 </resources>

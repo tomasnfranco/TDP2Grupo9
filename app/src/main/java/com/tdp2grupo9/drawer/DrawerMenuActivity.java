@@ -130,14 +130,9 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     }
 
     public void setFragment(int position, Class<? extends Fragment> fragmentClass) {
-        List<Fragment> childFragments = getSupportFragmentManager().getFragments();
-        if (childFragments != null) {
-            if (!childFragments.isEmpty()) {
-                if (childFragments.get(0).getClass() == fragmentClass) {
-                    mDrawerLayout.closeDrawer(mLvDrawerMenu);
-                    return;
-                }
-            }
+        if (shouldCreateNewFragment(fragmentClass)) {
+            mDrawerLayout.closeDrawer(mLvDrawerMenu);
+            return;
         }
         try {
             Fragment fragment = fragmentClass.newInstance();
@@ -153,6 +148,18 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         catch (Exception ex){
             Log.e("setFragment", ex.getMessage());
         }
+    }
+
+    private boolean shouldCreateNewFragment(Class<? extends Fragment> fragmentClass) {
+        List<Fragment> childFragments = getSupportFragmentManager().getFragments();
+        if (childFragments != null) {
+            if (!childFragments.isEmpty()) {
+                if (childFragments.get(0).getClass() == fragmentClass) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private List<DrawerMenuItem> generateDrawerMenuItems() {

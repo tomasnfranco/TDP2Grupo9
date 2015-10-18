@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapFragment;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.listview.ResultadosBusquedaActivity;
@@ -23,6 +26,10 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Set;
+
 /**
  * Created by Tomas on 11/10/2015.
  */
@@ -31,6 +38,8 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     private Double mLatitud = Usuario.getInstancia().getLatitud();
     private Double mLongitud = Usuario.getInstancia().getLongitud();
     private Button mBuscarMascotaButton;
+    private Spinner mMaximasDistanciasSpinner;
+    private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
 
     public static BuscarMascotaFragment newInstance() {
         return new BuscarMascotaFragment();
@@ -56,12 +65,19 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFragmentView = inflater.inflate(R.layout.fragment_buscar_mascota, container, false);
+        createMap();
         createBuscarMascotaButton();
         createLimpiarFiltrosButton();
+        createMaximaDistanciaSpinner();
         createCrearAlerta();
         hideInnecessaryFields();
         obtenerAtributos();
         return mFragmentView;
+    }
+
+    private void createMap() {
+        mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
+        map = mMapFragment.getMap();
     }
 
     private void createBuscarMascotaButton() {
@@ -77,6 +93,61 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
                 cleanFilters();
             }
         });
+    }
+
+    /**
+     * @return distancia en kilometros elegida por el usuario y null si no eligio ninguna
+     */
+    private Integer getDistanciaElegida() {
+        return mMaximasDistanciasMap.get(mMaximasDistanciasSpinner.getSelectedItem());
+    }
+
+    private void createMaximaDistanciaSpinner() {
+        createMaximaDistanciasMap();
+        String[] distancias = createMaximaDistanciaMapKeySet();
+        mMaximasDistanciasSpinner = (Spinner) mFragmentView.findViewById(R.id.maxima_distancia);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mFragmentView.getContext(), android.R.layout.simple_spinner_item, distancias);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mMaximasDistanciasSpinner.setAdapter(adapter);
+
+        mMaximasDistanciasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String string;
+                System.out.println("DISTANCIA ELEGIDA" + getDistanciaElegida());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private String[] createMaximaDistanciaMapKeySet() {
+        Set<String> keySet = mMaximasDistanciasMap.keySet();
+        String[] distanciasString = new String[keySet.size()+1];
+        distanciasString[0] = mFragmentView.getResources().getString(R.string.maxima_distancia_mi_localizacion);
+        Iterator<String> iterator = keySet.iterator();
+        int i = 1;
+        while (iterator.hasNext()) {
+            distanciasString[i] = iterator.next();
+            ++i;
+        }
+        return distanciasString;
+    }
+
+    private void createMaximaDistanciasMap() {
+        mMaximasDistanciasMap = new LinkedHashMap<String, Integer>();
+        int[] distancias = mFragmentView.getResources().getIntArray(R.array.distancias);
+        for (int i = 0; i < distancias.length; i++) {
+            int distancia = distancias[i];
+            mMaximasDistanciasMap.put(getHastaDistanciaString(distancia), distancia);
+        }
+    }
+
+    private String getHastaDistanciaString(int distancia) {
+        return mFragmentView.getResources().getString(R.string.distancia_hasta_km).replace("%", Integer.toString(distancia));
     }
 
 
