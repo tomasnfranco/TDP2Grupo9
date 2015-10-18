@@ -77,8 +77,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int DATA_MAPA_REQUEST = 10;
 
-    private Double latitud = Usuario.getInstancia().getLatitud();
-    private Double longitud = Usuario.getInstancia().getLongitud();
+    //private Double latitud = Usuario.getInstancia().getLatitud();
+    //private Double longitud = Usuario.getInstancia().getLongitud();
     private Map<Integer, ImageView> photosMap;
 
     private int cantidadFotosCargadas = 0;
@@ -97,8 +97,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private static final String TAG = "Mapper";
     private Location currentLocation;
-    private double currentLat = -34.5976786;
-    private double currentLon = -58.4430195;
+    private double currentLat = Usuario.getInstancia().getLatitud();
+    private double currentLon = Usuario.getInstancia().getLongitud();
     private GoogleMap map;
     private LatLng map_center;
     private int zoomOffset = 5;
@@ -108,9 +108,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private float acc = 1.2f;
     private Circle localCircle;
     private FotoPicker mFotoPicker;
-
-    private double lon;
-    private double lat;
     static final int numberOptions = 10;
     String [] optionArray = new String[numberOptions];
 
@@ -230,8 +227,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 if(!videoLink.getText().toString().isEmpty())
                     publicacion.setVideoLink(videoLink.getText().toString());
 
-                publicacion.setLatitud(latitud);
-                publicacion.setLongitud(longitud);
+                publicacion.setLatitud(currentLat);
+                publicacion.setLongitud(currentLon);
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
@@ -344,8 +341,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 spCastrado.setSelection(0);
                 spProteccion.setSelection(0);
                 spEnergia.setSelection(0);
-                latitud = Usuario.getInstancia().getLatitud();
-                longitud = Usuario.getInstancia().getLongitud();
+                currentLat = Usuario.getInstancia().getLatitud();
+                currentLon = Usuario.getInstancia().getLongitud();
                 //TODO borrar imagenes cargadas
                 videoLink.setText("");
                 requiereHogarTransito.setChecked(false);
@@ -466,39 +463,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         tvZona.setText(reverseGeocodeLocation(map_center.latitude, map_center.longitude));
     }
 
-    private void startTracking(){
-        googleApiClient.connect();
-        Toast.makeText(mFragmentView.getContext(), "Location tracking started", Toast.LENGTH_SHORT).show();
-
-    }
-
-    private void stopTracking(){
-        if (googleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-
-        }
-        googleApiClient.disconnect();
-        Toast.makeText(mFragmentView.getContext(), "Location tracking halted", Toast.LENGTH_SHORT).show();
-    }
-
-    private void addMapMarker (double lat, double lon, float markerColor,
-                               String title, String snippet){
-
-        if(map != null){
-            Marker marker = map.addMarker(new MarkerOptions()
-                            .title(title)
-                            .snippet(snippet)
-                            .position(new LatLng(lat,lon))
-                            .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
-            );
-            marker.setDraggable(false);
-            marker.showInfoWindow();
-        } else {
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
 
     public String formatDecimal(double number, String formatPattern){
 
@@ -533,9 +497,9 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         speed = newLocation.getSpeed();
         acc = newLocation.getAccuracy();
 
-        double lat = newLocation.getLatitude();
-        double lon = newLocation.getLongitude();
-        LatLng currentLatLng = new LatLng(lat, lon);
+        currentLat = newLocation.getLatitude();
+        currentLon = newLocation.getLongitude();
+        LatLng currentLatLng = new LatLng(currentLat, currentLon);
 
 
         Bundle locationExtras = newLocation.getExtras();
@@ -546,13 +510,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 numberSatellites = locationExtras.getInt("satellites");
             }
         }
-
-        Log.i(TAG,"Lat="+formatDecimal(lat,"0.00000")
-                +" Lon="+formatDecimal(lon,"0.00000")
-                +" Bearing="+formatDecimal(bearing, "0.0")
-                +" deg Speed="+formatDecimal(speed, "0.0")+" m/s"
-                +" Accuracy="+formatDecimal(acc, "0.0")+" m"
-                +" Sats="+numberSatellites);
 
         if(map != null) {
 
@@ -591,8 +548,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             while(locations.hasNext()){
                 Address location = locations.next();
                 if(opCount==0 && location != null){
-                    lat = location.getLatitude();
-                    lon = location.getLongitude();
+                    currentLat = location.getLatitude();
+                    currentLon = location.getLongitude();
                 }
                 country = location.getCountryName();
                 if(country == null) {
@@ -618,7 +575,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
             for(int i=0; i<opCount; i++){
                 Log.i(TAG,"("+(i+1)+") "+optionArray[i]);
             }
-            Log.i(TAG,"lat="+lat+" lon="+lon);
+            Log.i(TAG,"lat="+currentLat+" lon="+currentLon);
 
 
         } catch (IOException e){

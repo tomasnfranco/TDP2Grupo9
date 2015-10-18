@@ -256,12 +256,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
     }
 
-    public String formatDecimal(double number, String formatPattern){
-
-        DecimalFormat df = new DecimalFormat(formatPattern);
-        return df.format(number);
-
-    }
 
 
     private void changeCamera(GoogleMap map, LatLng center, float zoom,
@@ -302,13 +296,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 numberSatellites = locationExtras.getInt("satellites");
             }
         }
-
-        Log.i(TAG,"Lat="+formatDecimal(lat,"0.00000")
-                +" Lon="+formatDecimal(lon,"0.00000")
-                +" Bearing="+formatDecimal(bearing, "0.0")
-                +" deg Speed="+formatDecimal(speed, "0.0")+" m/s"
-                +" Accuracy="+formatDecimal(acc, "0.0")+" m"
-                +" Sats="+numberSatellites);
 
         if(map != null) {
 

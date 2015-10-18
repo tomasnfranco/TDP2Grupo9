@@ -34,6 +34,7 @@ import com.parse.ParseFile;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
+import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
@@ -59,6 +60,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ImageView imagenSeleccionada;
     private Gallery gallery;
     private List<Imagen> imagenes;
+    private String especieView;
+    private ImageView imagenPosicion;
+    private Double latitud;
+    private Double longitud;
+    private String nombreMascota;
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
@@ -200,10 +206,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
         cargarInformacionBasica(i, itemView);
-        cargarInformacionAdicional(i, itemView);
+        cargarLocalizacionMascota(i, itemView);
         cargarFotos(i, itemView);
-        cargarListViewMensajes(i, itemView);
         cargarVideos(i, itemView);
+        cargarInformacionAdicional(i, itemView);
+        cargarListViewMensajes(i, itemView);
 
         return itemView;
     }
@@ -330,6 +337,32 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             video_slider.setCustomAnimation(new DescriptionAnimation());
             video_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator_video));
         }
+    }
+    
+    private void cargarLocalizacionMascota(int i, View v){
+
+        especieView = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
+        imagenPosicion = (ImageView) v.findViewById(R.id.iv_localizacion_mascota);
+        imagenPosicion.setImageBitmap(BitmapFactory.decodeResource(v.getResources(),R.drawable.localizacion_perro));
+
+        latitud = publicaciones.get(i).getLatitud();
+        longitud = publicaciones.get(i).getLongitud();
+        nombreMascota = publicaciones.get(i).getNombreMascota();
+
+        if (especieView.equals("Gato"))
+            imagenPosicion.setImageBitmap(BitmapFactory.decodeResource(v.getResources(),R.drawable.localizacion_gato));
+
+        imagenPosicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MapsActivity.class);
+                intent.putExtra("latitud", latitud);
+                intent.putExtra("longitud", longitud);
+                intent.putExtra("nombre", nombreMascota);
+                context.startActivity(intent);
+            }
+        });
+        
     }
 
     private void cargarListViewMensajes(int i, View v){

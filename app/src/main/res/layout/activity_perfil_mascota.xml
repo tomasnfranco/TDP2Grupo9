@@ -19,14 +19,11 @@
                 android:id="@+id/cardview_basica_pm"
                 layout="@layout/cardview_perfil_mascota_basica" />
             <include
-                android:id="@+id/cardview_fotos_pm"
-                layout="@layout/cardview_perfil_mascota_fotos" />
-            <!--<include
                 android:id="@+id/cardview_localizacion_pm"
-                layout="@layout/cardview_localizacion" />
+                layout="@layout/cardview_perfil_mascota_localizacion" />
             <include
                 android:id="@+id/cardview_fotos_pm"
-                layout="@layout/cardview_perfil_mascota_fotos" />-->
+                layout="@layout/cardview_perfil_mascota_fotos" />
             <include
                 android:id="@+id/cardview_videos_pm"
                 layout="@layout/cardview_perfil_mascota_video" />

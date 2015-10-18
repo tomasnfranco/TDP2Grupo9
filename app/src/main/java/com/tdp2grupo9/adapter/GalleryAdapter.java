@@ -51,22 +51,6 @@ public class GalleryAdapter extends BaseAdapter {
         imageView.setLayoutParams(new Gallery.LayoutParams(300, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         return imageView;
-        /*
-        View imagenesView;
-        ImageView imagen = new ImageView(context);
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            //imagenesView = new View(context);
-            imagenesView = inflater.inflate(R.layout.cardview_perfil_mascota_fotos, null);
-        } else {
-            imagenesView = (View) convertView;
-        }
-        Bitmap bmp = Bitmap.createScaledBitmap(imagenes.get(position).getBitmap(), 150, 150, true);
-        imagen.setImageBitmap(bmp);
-        return imagenesView;
-        */
     }
 
 

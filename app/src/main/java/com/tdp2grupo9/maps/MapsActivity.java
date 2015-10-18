@@ -11,21 +11,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adopcion.PublicarAdopcionActivity;
 import com.tdp2grupo9.modelo.Usuario;
 
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnMapClickListener {
+public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap;
-    private double currentLat = Usuario.getInstancia().getLatitud();
-    private double currentLon = Usuario.getInstancia().getLongitud();
+    private double currentLat;
+    private double currentLon;
+    private String nombreMascota = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentLat = getIntent().getDoubleExtra("latitud", 0.0);
+        currentLon = getIntent().getDoubleExtra("longitud", 0.0);
+        nombreMascota = getIntent().getStringExtra("nombre");
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         createGuardarUbicacionButton();
@@ -48,10 +53,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMapCli
     }
 
     private void setUpMap() {
-
-        mMap.addMarker(new MarkerOptions().position(new LatLng(currentLon, currentLat)).title("").icon(BitmapDescriptorFactory.fromResource(R.drawable.market_mascota)));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(3));
-        mMap.setOnMapClickListener(this);
+        String msg = nombreMascota + " " +getBaseContext().getString(R.string.esta_aca);
+        mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_mascota)));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(currentLat, currentLon),16)));
     }
 
     private void createGuardarUbicacionButton() {
@@ -60,27 +64,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMapCli
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
-                data.putExtra("longitud", currentLon);
-                data.putExtra("latitud", currentLat);
                 setResult(RESULT_OK, data);
                 finish();
             }
         });
     }
 
-    @Override
-    public void onMapClick(LatLng latLng) {
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        markerOptions.position(latLng);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.market_mascota));
-        markerOptions.title("Latitud: " + latLng.latitude + " : " + "Longitud: " + latLng.longitude);
-
-        currentLat = latLng.latitude;
-        currentLon = latLng.longitude;
-
-        mMap.clear();
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.addMarker(markerOptions);
-    }
 }
