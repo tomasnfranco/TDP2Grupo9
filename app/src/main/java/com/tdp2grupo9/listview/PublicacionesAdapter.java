@@ -341,7 +341,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     
     private void cargarLocalizacionMascota(int i, View v){
 
-        especieView = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
+        especieView = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
         imagenPosicion = (ImageView) v.findViewById(R.id.iv_localizacion_mascota);
         imagenPosicion.setImageBitmap(BitmapFactory.decodeResource(v.getResources(),R.drawable.localizacion_perro));
 
@@ -359,6 +359,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 intent.putExtra("latitud", latitud);
                 intent.putExtra("longitud", longitud);
                 intent.putExtra("nombre", nombreMascota);
+                intent.putExtra("especie", especieView);
                 context.startActivity(intent);
             }
         });
