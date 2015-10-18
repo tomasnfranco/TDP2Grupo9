@@ -41,7 +41,7 @@ public class UltimasPublicacionesFragment extends PublicacionesFragment {
     }
 
     protected void cargarListView(){
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), getPublicacionesMock()));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones));
     }
 
 }

@@ -32,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
@@ -53,15 +54,17 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     protected PublicacionAtributos publicacionAtributos;
     private SliderLayout photo_slider;
     private SliderLayout video_slider;
-    private GoogleMap mMap;
-    private Gallery photo_gallery;
     private ListView listView;
     private List<Mensaje> mensajes;
+    private ImageView imagenSeleccionada;
+    private Gallery gallery;
+    private List<Imagen> imagenes;
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
         this.context = context;
         this.mensajes = new ArrayList<>();
+        this.imagenes = new ArrayList<>();
         obtenerAtributos();
     }
 
@@ -255,40 +258,33 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void cargarFotos(int i, View view) {
+        imagenes = publicaciones.get(i).getImagenes();
 
-        ArrayList<String> urlPhotos = new ArrayList<>();
-
-        try{
-            for (Imagen imagen : publicaciones.get(i).getImagenes()){
-                ParseFile file = new ParseFile("imagenByte.png",imagen.getImg());
-                file.saveInBackground();
-                urlPhotos.add(file.getUrl());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        photo_slider = (SliderLayout) view.findViewById(R.id.photo_slider);
-        final HashMap<String, String> photos = new HashMap<>();
-        int aux = 0;
-        for (String url : urlPhotos) {
-            photos.put("Photo " + aux, url);
-            aux++;
-        }
-        if (photos.isEmpty()) {
+        if (imagenes.isEmpty()) {
             CardView cardview_photos = (CardView) view.findViewById(R.id.cardview_fotos_pm);
             cardview_photos.setVisibility(View.GONE);
         } else {
-            for (String name : photos.keySet()) {
-                DefaultSliderView slide = new DefaultSliderView(view.getContext());
-                slide.image(photos.get(name));
+            CardView cardview_photos = (CardView) view.findViewById(R.id.cardview_fotos_pm);
+            cardview_photos.setVisibility(View.VISIBLE);
 
-                slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
-                photo_slider.addSlider(slide);
+            if(imagenes.size() > 1){
+                imagenSeleccionada = (ImageView) view.findViewById(R.id.image_seleccionada);
+                gallery = (Gallery) view.findViewById(R.id.gallery_photos);
+
+                gallery.setAdapter(new GalleryAdapter(view.getContext(), imagenes));
+                gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    public void onItemClick(AdapterView parent, View v, int position, long id) {
+                        imagenSeleccionada.setImageBitmap(imagenes.get(position).getBitmap());
+                    }
+
+                });
+            } else {
+                imagenSeleccionada = (ImageView) view.findViewById(R.id.image_seleccionada);
+                imagenSeleccionada.setImageBitmap(imagenes.get(0).getBitmap());
             }
-            photo_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
-            photo_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator));
         }
+
     }
 
     private void cargarVideos(int i, View view) {
