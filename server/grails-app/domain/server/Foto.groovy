@@ -5,9 +5,9 @@ class Foto {
     String base64
 
     static belongsTo = [publicacion : Publicacion]
-
-    static constraints = {
-        base64 maxSize: 100000
+	
+    static mapping = {
+        base64 type: 'text'
     }
 
     String toString(){

@@ -12,6 +12,7 @@ import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
+import com.tdp2grupo9.modelo.publicacion.Postulante;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
@@ -65,10 +66,13 @@ public class Publicacion {
     private Double longitud;
     private Double distancia;
 
+    private List<Integer> postulantesIds;
+    private List<Integer> mensajesIds;
+
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
-    private List<Integer> postulantes;
-    private List<Integer> mensajes;
+    private List<Mensaje> mensajes;
+    private List<Postulante> postulantes;
 
     public Publicacion() {
         this.id = 0;
@@ -99,8 +103,9 @@ public class Publicacion {
         this.distancia = 0.0;
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
-        this.postulantes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
+        this.postulantesIds = new ArrayList<>();
+        this.mensajesIds = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -263,7 +268,7 @@ public class Publicacion {
                                 String namepreg = reader.nextName();
                                 switch (namepreg) {
                                     case "id":
-                                        this.mensajes.add(reader.nextInt());
+                                        this.mensajesIds.add(reader.nextInt());
                                         break;
                                     default:
                                         reader.skipValue();
@@ -286,7 +291,7 @@ public class Publicacion {
                                 String namepost = reader.nextName();
                                 switch (namepost) {
                                     case "id":
-                                        this.postulantes.add(reader.nextInt());
+                                        this.postulantesIds.add(reader.nextInt());
                                         break;
                                     default:
                                         reader.skipValue();
@@ -400,6 +405,16 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        if (publicacion.getId() > 0) {
+            publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+            for (Integer postulanteId: publicacion.getPostulantesIds()) {
+                publicacion.addPostulante(Postulante.obtenerPostulante(token, postulanteId));
+            }
+
+        }
+
         return publicacion;
     }
 
@@ -410,10 +425,11 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud()+
-                    "&distancia="+publicacion.getDistancia();
+                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getDistancia() != null)
+                atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)
                 atributos += "&raza="+publicacion.getRaza();
             if (publicacion.getColor().getId() > 0)
@@ -593,7 +609,6 @@ public class Publicacion {
         return castrado;
     }
 
-
     public String getCondiciones() {
         return condiciones;
     }
@@ -646,12 +661,12 @@ public class Publicacion {
         return imagenes;
     }
 
-    public List<Integer> getMensajes() {
-        return mensajes;
+    public List<Integer> getMensajesIds() {
+        return mensajesIds;
     }
 
-    public List<Integer> getPostulantes() {
-        return postulantes;
+    public List<Integer> getPostulantesIds() {
+        return postulantesIds;
     }
 
     public Double getLongitud() {
@@ -668,10 +683,23 @@ public class Publicacion {
         return this.necesitaTransito;
     }
 
+
+    private void addMensaje(Mensaje mensaje) {
+        this.mensajes.add(mensaje);
+    }
+
+    private void addPostulante(Postulante postulante) {
+        this.postulantes.add(postulante);
+    }
+
     public void addImagen(Bitmap imagen) {
     	Imagen img = new Imagen();
     	img.setBitmap(imagen);
         this.imagenes.add(img);
+    }
+
+    public void addImagen(Imagen imagen) {
+        this.imagenes.add(imagen);
     }
 
     public void setVideoLink(String videoLink) {
@@ -797,5 +825,13 @@ public class Publicacion {
 
     public void setDistancia(Double distancia) {
         this.distancia = distancia;
+    }
+
+    public List<Mensaje> getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 }

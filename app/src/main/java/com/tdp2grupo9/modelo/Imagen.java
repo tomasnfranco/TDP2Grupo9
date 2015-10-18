@@ -54,7 +54,7 @@ public class Imagen {
     }
     
     public static byte[] bytesFromBase64URL_SAFE(String base64){
-        return Base64.decode(base64.replaceAll("(\\r|\\n)", ""),Base64.URL_SAFE);
+        return Base64.decode(base64.replaceAll("(\\r|\\n)", ""), Base64.URL_SAFE);
     }
     
     public static byte[] bytesFromBitmap(Bitmap bmp) {
@@ -64,7 +64,7 @@ public class Imagen {
     }
 
     public static Bitmap resizeDefault(Bitmap bmp) {
-    	return Bitmap.createScaledBitmap(bmp, 200, 200, true);
+    	return Bitmap.createScaledBitmap(bmp, 250, 200, true);
     }
         
 	public static List<Imagen> getImagenesfromJson(JsonReader reader) throws IOException, JSONException {
@@ -88,10 +88,7 @@ public class Imagen {
                     this.setId(reader.nextInt());
                     break;
                 case "base64":
-                	//URL SAFE
-                	String base64 = reader.nextString();
-                    this.setImg(Imagen.bytesFromBase64DEFAULT(base64));
-                    //this.setImg(Imagen.bytesFromBase64URL_SAFE(base64));
+                    this.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
                     break;
                 default:
                     reader.skipValue();
