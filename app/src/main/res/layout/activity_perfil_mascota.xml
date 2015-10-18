@@ -26,10 +26,10 @@
                 layout="@layout/cardview_localizacion" />
             <include
                 android:id="@+id/cardview_fotos_pm"
-                layout="@layout/cardview_perfil_mascota_fotos" />
+                layout="@layout/cardview_perfil_mascota_fotos" />-->
             <include
                 android:id="@+id/cardview_videos_pm"
-                layout="@layout/cardview_perfil_mascota_video" />-->
+                layout="@layout/cardview_perfil_mascota_video" />
             <include
                 android:id="@+id/cardview_adicional_pm"
                 layout="@layout/cardview_perfil_mascota_adicional" />

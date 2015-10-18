@@ -819,6 +819,10 @@ public class Publicacion {
         this.fechaPublicacion = fechaPublicacion;
     }
 
+    public String getVideoLink() {
+        return videoLink;
+    }
+
     public Double getDistancia() {
         return distancia;
     }

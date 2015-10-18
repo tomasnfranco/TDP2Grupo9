@@ -1,9 +1,14 @@
 package com.tdp2grupo9.listview;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +19,14 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.parse.ParseException;
@@ -44,6 +52,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ObtenerAtributosTask obtenerAtributosTask;
     protected PublicacionAtributos publicacionAtributos;
     private SliderLayout photo_slider;
+    private SliderLayout video_slider;
     private GoogleMap mMap;
     private Gallery photo_gallery;
     private ListView listView;
@@ -52,6 +61,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones) {
         this.publicaciones = publicaciones;
         this.context = context;
+        this.mensajes = new ArrayList<>();
         obtenerAtributos();
     }
 
@@ -188,35 +198,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
         cargarInformacionBasica(i, itemView);
         cargarInformacionAdicional(i, itemView);
-        ArrayList<String> urlFotos = new ArrayList<>();
-        try{
-            for (Imagen imagen : publicaciones.get(i).getImagenes()){
-                ParseFile file = new ParseFile("imagen.png",imagen.getImg());
-                //file.save();
-                urlFotos.add(file.getUrl());
-            }
-            cargarFotos(urlFotos, itemView);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        //mensajes = publicaciones.get(i).getMensajes();
-        mensajes = new ArrayList<Mensaje>();
-        Mensaje m1 = new Mensaje();
-        m1.setPregunta("Hola como estas");
-        m1.setRespuesta("Bien y vos");
-        Mensaje m2 = new Mensaje();
-        m2.setPregunta("Che cuando va a terminar esto");
-        m2.setRespuesta("No se, espero que pronto");
-        Mensaje m3 = new Mensaje();
-        m3.setPregunta("Che cuando va a terminar esto");
-        m3.setRespuesta("No se, espero que pronto");
-        mensajes.add(m2);
-        mensajes.add(m2);
-        mensajes.add(m3);
-
-        if(!mensajes.isEmpty())
-            cargarListViewMensajes(itemView);
+        cargarFotos(i, itemView);
+        cargarListViewMensajes(i, itemView);
+        cargarVideos(i, itemView);
 
         return itemView;
     }
@@ -270,7 +254,19 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         ((TextView) v.findViewById(R.id.infAdicional)).setText(mensaje);
     }
 
-    private void cargarFotos(ArrayList<String> urlPhotos, View view) {
+    private void cargarFotos(int i, View view) {
+
+        ArrayList<String> urlPhotos = new ArrayList<>();
+
+        try{
+            for (Imagen imagen : publicaciones.get(i).getImagenes()){
+                ParseFile file = new ParseFile("imagenByte.png",imagen.getImg());
+                file.saveInBackground();
+                urlPhotos.add(file.getUrl());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         photo_slider = (SliderLayout) view.findViewById(R.id.photo_slider);
         final HashMap<String, String> photos = new HashMap<>();
@@ -279,33 +275,102 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             photos.put("Photo " + aux, url);
             aux++;
         }
+        if (photos.isEmpty()) {
+            CardView cardview_photos = (CardView) view.findViewById(R.id.cardview_fotos_pm);
+            cardview_photos.setVisibility(View.GONE);
+        } else {
+            for (String name : photos.keySet()) {
+                DefaultSliderView slide = new DefaultSliderView(view.getContext());
+                slide.image(photos.get(name));
 
-        for (String name : photos.keySet()) {
-            DefaultSliderView slide = new DefaultSliderView(view.getContext());
-            slide.image(photos.get(name));
-
-            slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
-            photo_slider.addSlider(slide);
+                slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
+                photo_slider.addSlider(slide);
+            }
+            photo_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
+            photo_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator));
         }
-        photo_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
-        photo_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator));
     }
 
-    private void cargarListViewMensajes(View v){
-        listView = (ListView) v.findViewById(R.id.listView_consultas);
-        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view,
-                                    int position, long arg) {
+    private void cargarVideos(int i, View view) {
+
+        String video = publicaciones.get(i).getVideoLink();
+        video_slider = (SliderLayout) view.findViewById(R.id.video_slider);
+        final HashMap<String, String> videos = new HashMap<>();
+
+        if (!video.isEmpty()) {
+            video = video.substring(32);
+            int aux = 0;
+            videos.put("Video " + aux, video);
+        }
+
+        if (videos.isEmpty()) {
+            CardView cardview_video = (CardView) view.findViewById(R.id.cardview_videos_pm);
+            cardview_video.setVisibility(View.GONE);
+        } else {
+            CardView cardview_video = (CardView) view.findViewById(R.id.cardview_videos_pm);
+            cardview_video.setVisibility(View.VISIBLE);
+            for (final String name : videos.keySet()) {
+                TextSliderView slide = new TextSliderView(view.getContext());
+                slide.image("http://img.youtube.com/vi/" + videos.get(name) + "/mqdefault.jpg");
+                slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
+                slide.description("Reproducir");
+                slide.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                    @Override
+                    public void onSliderClick(BaseSliderView baseSliderView) {
+                        Toast.makeText(baseSliderView.getContext(), "Click", Toast.LENGTH_SHORT).show();
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videos.get(name)));
+                            intent.putExtra("force_fullscreen", true);
+                            context.startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videos.get(name)));
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+                video_slider.addSlider(slide);
             }
-        });
+            video_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
+            video_slider.setCustomAnimation(new DescriptionAnimation());
+            video_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator_video));
+        }
+    }
+
+    private void cargarListViewMensajes(int i, View v){
+
+        //mensajes = publicaciones.get(i).getMensajes();
+        mensajes = loadMensajesMock();
+        listView = (ListView) v.findViewById(R.id.listView_consultas);
+
+        if (!mensajes.isEmpty()) {
+            listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View view,
+                                        int position, long arg) {
+                }
+            });
+        }
+    }
+
+    private List<Mensaje> loadMensajesMock(){
+        List<Mensaje> mensajes = new ArrayList<>();
+        Mensaje m1 = new Mensaje();
+        m1.setPregunta("hola");
+        m1.setRespuesta("chau");
+        Mensaje m2 = new Mensaje();
+        m2.setPregunta("hello");
+        m2.setRespuesta("bye");
+        mensajes.add(m1);
+        mensajes.add(m2);
+        return mensajes;
     }
 
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
     }
+
 
 
     public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
