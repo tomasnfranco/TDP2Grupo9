@@ -19,6 +19,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
     }
 
     def show(Publicacion publicacionInstance) {
+        publicacionInstance.setDistancia(params.usuario.latitud,params.usuario.longitud)
         respond publicacionInstance
     }
 
