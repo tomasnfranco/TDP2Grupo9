@@ -1,5 +1,6 @@
 package com.tdp2grupo9.fragment.adopcion;
 
+import android.content.ComponentCallbacks;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,15 +23,21 @@ import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
+import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
+import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
 import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
 import com.tdp2grupo9.modelo.publicacion.Especie;
+import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
+import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
+import java.util.Date;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -157,17 +164,6 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     }
 
 
-    private void createCrearAlerta() {
-        View crearAlertaClickable = mFragmentView.findViewById(R.id.crear_alerta_clickable);
-        crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                crearAlertaTask = new CrearAlertaTask(Usuario.getInstancia().getToken());
-                crearAlertaTask.execute((Void)null);
-            }
-        });
-    }
-
     private void hideInnecessaryFields() {
         mFragmentView.findViewById(R.id.nombre_mascota_edit_text).setVisibility(View.GONE);
         mFragmentView.findViewById(R.id.requiere_hogar_transito).setVisibility(View.GONE);
@@ -194,34 +190,61 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         cleanSpinner(spCompatibleCon);
         cleanSpinner(spVacunas);
         cleanSpinner(spPapeles);
+        cleanSpinner(mMaximasDistanciasSpinner);
         mLatitud = Usuario.getInstancia().getLatitud();
         mLongitud = Usuario.getInstancia().getLongitud();
     }
 
-    private boolean isValidEspecie(){
-        if (((AtributoPublicacion) spEspecie.getSelectedItem()).getId() == 0){
-            ((TextView) spEspecie.getSelectedView()).setError("Campo Requerido");
+    private boolean validateCampoRequeridoSpinner(Spinner spinner, String campoRequeridoString) {
+        if (((AtributoPublicacion) spinner.getSelectedItem()).getId() == 0){
+            ((TextView) spinner.getSelectedView()).setError(campoRequeridoString);
             return false;
         }
         return true;
     }
 
+    private boolean isValidAttribute(){
+        boolean valido = true;
+        String campoRequeridoString = getString(R.string.campo_requerido);
+
+        if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
+        if (!validateCampoRequeridoSpinner(spRaza, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spSexo, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spTamanio, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spEdad, campoRequeridoString)) { valido = false;}
+        if (!validateCampoRequeridoSpinner(spColor, campoRequeridoString)) { valido = false;}
+
+        if (!valido) {
+            Toast.makeText(mFragmentView.getContext(), "Error: Debe completar todos los campos requeridos.",
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return valido;
+    }
+
+
+
     private class BuscarMascotaOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            if (!isValidEspecie()){
+            if (!isValidAttribute()){
                 return;
             }
             Intent intent = new Intent(getActivity().getBaseContext(), ResultadosBusquedaActivity.class);
             intent.putExtra("especie",((Especie) spEspecie.getSelectedItem()).getId());
             intent.putExtra("raza",((Raza) spRaza.getSelectedItem()).getId());
-            intent.putExtra("color", ((Color) spColor.getSelectedItem()).getId());
             intent.putExtra("sexo",((Sexo) spSexo.getSelectedItem()).getId());
             intent.putExtra("tamanio",((Tamanio) spTamanio.getSelectedItem()).getId());
             intent.putExtra("edad",((Edad) spEdad.getSelectedItem()).getId());
+            intent.putExtra("color", ((Color) spColor.getSelectedItem()).getId());
             intent.putExtra("proteccion",((Proteccion) spProteccion.getSelectedItem()).getId());
             intent.putExtra("energia",((Energia) spEnergia.getSelectedItem()).getId());
+            intent.putExtra("castrado",((Castrado) spCastrado.getSelectedItem()).getId());
+            intent.putExtra("compatiblecon",((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
+            intent.putExtra("vacunas",((VacunasAlDia) spVacunas.getSelectedItem()).getId());
+            intent.putExtra("papeles",((PapelesAlDia) spPapeles.getSelectedItem()).getId());
+            intent.putExtra("distancia",getDistanciaElegida());
             intent.putExtra("latitud", mLatitud);
             intent.putExtra("longitud",mLongitud);
             startActivity(intent);
@@ -229,24 +252,68 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     }
 
 
+    private void createCrearAlerta() {
+        View crearAlertaClickable = mFragmentView.findViewById(R.id.crear_alerta_clickable);
+        crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if (!isValidAttribute()){
+                return;
+            }
+            Alerta alerta = new Alerta();
+            alerta.setNombre("Alerta");
+            alerta.setEspecie((Especie) spEspecie.getSelectedItem());
+            alerta.setRaza((Raza) spRaza.getSelectedItem());
+            alerta.setSexo((Sexo) spSexo.getSelectedItem());
+            alerta.setTamanio((Tamanio) spTamanio.getSelectedItem());
+            alerta.setEdad((Edad) spEdad.getSelectedItem());
+            alerta.setColor((Color) spColor.getSelectedItem());
+            alerta.setProteccion((Proteccion) spProteccion.getSelectedItem());
+            alerta.setEnergia((Energia) spEnergia.getSelectedItem());
+            alerta.setCastrado((Castrado) spCastrado.getSelectedItem());
+            alerta.setCompatibleCon((CompatibleCon) spCompatibleCon.getSelectedItem());
+            alerta.setVacunasAlDia((VacunasAlDia) spVacunas.getSelectedItem());
+            alerta.setPapelesAlDia((PapelesAlDia) spPapeles.getSelectedItem());
+            alerta.setDistancia(getDistanciaElegida());
+            alerta.setLatitud(mLatitud);
+            alerta.setLongitud(mLongitud);
+            crearAlertaTask = new CrearAlertaTask(alerta);
+            crearAlertaTask.execute((Void)null);
+            }
+        });
+    }
+
+
     public class CrearAlertaTask extends AsyncTask<Void, Void, Boolean> {
 
-        String token;
+        private Alerta alerta;
 
-        CrearAlertaTask(String token) {
-            this.token = token;
+        CrearAlertaTask(Alerta alerta) {
+            this.alerta = alerta;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Alerta alerta = new Alerta();
-            alerta.guardarAlerta(token);
-            return true;
+            try {
+                this.alerta.guardarAlerta(Usuario.getInstancia().getToken());
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return this.alerta.getId() > 0;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
+            crearAlertaTask = null;
+            if (success) {
+                Toast.makeText(mFragmentView.getContext(), "Alerta creada",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(mFragmentView.getContext(), "Error: No se pudo crear.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
