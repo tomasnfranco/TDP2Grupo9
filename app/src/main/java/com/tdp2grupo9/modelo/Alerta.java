@@ -32,6 +32,7 @@ public class Alerta {
     private static final String LOG_TAG = "BSH.Alerta";
 
     private Integer id;
+    private String nombre;
     private Color color;
     private Especie especie;
     private Edad edad;
@@ -74,6 +75,7 @@ public class Alerta {
         this.longitud = null;
         this.distancia = null;
         this.fechaCreacion = null;
+        this.nombre = "";
     }
 
     private static List<Alerta> jsonToAlertas(JsonReader reader) throws IOException, JSONException {
@@ -95,6 +97,9 @@ public class Alerta {
             switch (name) {
                 case "id":
                     this.id = reader.nextInt();
+                    break;
+                case "nombre":
+                    this.nombre = reader.nextString();
                     break;
                 case "color":
                     if(reader.peek()== JsonToken.NULL)
@@ -226,7 +231,7 @@ public class Alerta {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            String parametros = "token="+token;
+            String parametros = "token="+token+"&nombre="+this.nombre;
             if (this.color.getId() > 0)
                 parametros += "&color=" + this.color.getId();
             if (this.especie.getId() > 0)
@@ -489,6 +494,13 @@ public class Alerta {
         this.distancia = distancia;
     }
 
+    public void setDistancia(Integer distancia) {
+        if (distancia != null)
+            this.distancia = distancia.doubleValue();
+        else
+            this.distancia = null;
+    }
+
     public Date getFechaCreacion() {
         return fechaCreacion;
     }
@@ -497,4 +509,11 @@ public class Alerta {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }
