@@ -48,6 +48,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private List<Publicacion> publicaciones;
     private Context context;
     private ObtenerAtributosTask obtenerAtributosTask;
+    private GuardarPostulacionTask guardarPostulacionTask;
     protected PublicacionAtributos publicacionAtributos;
     private SliderLayout photo_slider;
     private SliderLayout video_slider;
@@ -205,6 +206,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        final int id = publicaciones.get(i).getId();
+        final int position = i;
         btnPostularme = (Button) itemView.findViewById(R.id.buttonPublicacion);
         if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES)
             btnPostularme.setVisibility(View.GONE);
@@ -212,6 +215,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         btnPostularme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                guardarPostulacionTask = new GuardarPostulacionTask(position, id);
+                guardarPostulacionTask.execute((Void)null);
 
             }
         });
@@ -447,6 +452,38 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onCancelled() {
             obtenerAtributosTask = null;
+        }
+    }
+
+    public class GuardarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
+
+        int id_publicacion;
+        int position;
+
+        GuardarPostulacionTask(int position, int id_publicacion) {
+            this.id_publicacion = id_publicacion;
+            this.position = position;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                publicaciones.get(position).quieroAdoptar(Usuario.getInstancia().getToken(), id_publicacion);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            guardarPostulacionTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            guardarPostulacionTask = null;
         }
     }
 
