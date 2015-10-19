@@ -26,6 +26,7 @@ public class TabbedFragment extends Fragment {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private Context context;
+    private TabbedFragment tabbedFragment;
 
     public static TabbedFragment newInstance() {
         return new TabbedFragment();
@@ -41,6 +42,7 @@ public class TabbedFragment extends Fragment {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
         this.context = v.getContext();
+        tabbedFragment = this;
         return v;
     }
 
@@ -62,7 +64,7 @@ public class TabbedFragment extends Fragment {
                 case 1: return  UltimasPublicacionesFragment.newInstance();
                 case 2: return new Fragment();
                 case 3: return ResultadosBusquedaFragment.newInstance();
-                case 4: return BuscarMascotaFragment.newInstance();
+                case 4: return BuscarMascotaFragment.newInstance(tabbedFragment);
                 default: return null;
             }
         }
@@ -114,6 +116,20 @@ public class TabbedFragment extends Fragment {
             for (Fragment fragment : childFragments) {
                 if (fragment != null)
                     fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    public void showBuscarMascotaResults(Bundle bundle) {
+        List<Fragment> childFragments = getChildFragmentManager().getFragments();
+        if (childFragments != null) {
+            for (int i = 0; i < childFragments.size(); i++) {
+                Fragment fragment = childFragments.get(i);
+                if (fragment instanceof ResultadosBusquedaFragment) {
+                    ((ResultadosBusquedaFragment) fragment).startSearch(bundle);
+                    mViewPager.setCurrentItem(i);
+                    break;
+                }
             }
         }
     }

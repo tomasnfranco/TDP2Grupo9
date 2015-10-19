@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesFragment;
@@ -37,29 +36,6 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
 
     public static ResultadosBusquedaFragment newInstance() {
         ResultadosBusquedaFragment fragment = new ResultadosBusquedaFragment();
-        Bundle arguments = new Bundle();
-        arguments.putInt("especie", 0);
-        arguments.putInt("raza", 0);
-        arguments.putInt("sexo", 0);
-        arguments.putInt("tamanio", 0);
-        arguments.putInt("edad", 0);
-        arguments.putInt("proteccion", 0);
-        arguments.putInt("color", 0);
-        arguments.putInt("energia", 0);
-        arguments.putInt("castrado", 0);
-        arguments.putInt("compatiblecon", 0);
-        arguments.putInt("vacunas", 0);
-        arguments.putInt("papeles", 0);
-        arguments.putDouble("longitud", -1.0);
-        arguments.putDouble("latitud", -1.0);
-        arguments.putDouble("distancia", -1.0);
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
-    public static ResultadosBusquedaFragment newInstance(Bundle arguments) {
-        ResultadosBusquedaFragment fragment = new ResultadosBusquedaFragment();
-        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -68,7 +44,6 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         mFragmentView = inflater.inflate(R.layout.fragment_resultados_busqueda, container, false);
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_resultados_busqueda);
         configureReturnSearchButton();
-        startSearch(getArguments());
         return mFragmentView;
     }
 
@@ -82,7 +57,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         });
     }
 
-    private void startSearch(Bundle arguments) {
+    public void startSearch(Bundle arguments) {
         Publicacion publicacion = new Publicacion();
         publicacion.setEspecie(getEspeciePublicacion(arguments.getInt("especie", 0)));
         publicacion.setRaza(getRazaPublicacion(arguments.getInt("raza", 0)));

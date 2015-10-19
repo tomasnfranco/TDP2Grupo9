@@ -1,9 +1,8 @@
 package com.tdp2grupo9.fragment.adopcion;
 
-import android.content.ComponentCallbacks;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
-import com.tdp2grupo9.listview.ResultadosBusquedaActivity;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -32,9 +30,8 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
+import com.tdp2grupo9.tabbed.TabbedFragment;
 
-import java.util.Date;
-import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -44,6 +41,7 @@ import java.util.Set;
  */
 public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
 
+    private static final int TABBED_FRAGMENT_REQUEST_CODE = 1;
     private Double mLatitud = Usuario.getInstancia().getLatitud();
     private Double mLongitud = Usuario.getInstancia().getLongitud();
     private Button mBuscarMascotaButton;
@@ -51,8 +49,10 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
     private CrearAlertaTask crearAlertaTask;
 
-    public static BuscarMascotaFragment newInstance() {
-        return new BuscarMascotaFragment();
+    public static BuscarMascotaFragment newInstance(Fragment targetFragment) {
+        BuscarMascotaFragment fragment = new BuscarMascotaFragment();
+        fragment.setTargetFragment(targetFragment, TABBED_FRAGMENT_REQUEST_CODE);
+        return fragment;
     }
 
     @Override
@@ -220,8 +220,6 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         return valido;
     }
 
-
-
     private class BuscarMascotaOnClickListener implements View.OnClickListener {
 
         @Override
@@ -229,23 +227,23 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             if (!isValidAttribute()){
                 return;
             }
-            Intent intent = new Intent(getActivity().getBaseContext(), ResultadosBusquedaActivity.class);
-            intent.putExtra("especie",((Especie) spEspecie.getSelectedItem()).getId());
-            intent.putExtra("raza",((Raza) spRaza.getSelectedItem()).getId());
-            intent.putExtra("sexo",((Sexo) spSexo.getSelectedItem()).getId());
-            intent.putExtra("tamanio",((Tamanio) spTamanio.getSelectedItem()).getId());
-            intent.putExtra("edad",((Edad) spEdad.getSelectedItem()).getId());
-            intent.putExtra("color", ((Color) spColor.getSelectedItem()).getId());
-            intent.putExtra("proteccion",((Proteccion) spProteccion.getSelectedItem()).getId());
-            intent.putExtra("energia",((Energia) spEnergia.getSelectedItem()).getId());
-            intent.putExtra("castrado",((Castrado) spCastrado.getSelectedItem()).getId());
-            intent.putExtra("compatiblecon",((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
-            intent.putExtra("vacunas",((VacunasAlDia) spVacunas.getSelectedItem()).getId());
-            intent.putExtra("papeles",((PapelesAlDia) spPapeles.getSelectedItem()).getId());
-            intent.putExtra("distancia",getDistanciaElegida());
-            intent.putExtra("latitud", mLatitud);
-            intent.putExtra("longitud",mLongitud);
-            startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putInt("especie", ((Especie) spEspecie.getSelectedItem()).getId());
+            bundle.putInt("raza", ((Raza) spRaza.getSelectedItem()).getId());
+            bundle.putInt("sexo", ((Sexo) spSexo.getSelectedItem()).getId());
+            bundle.putInt("tamanio", ((Tamanio) spTamanio.getSelectedItem()).getId());
+            bundle.putInt("edad", ((Edad) spEdad.getSelectedItem()).getId());
+            bundle.putInt("color", ((Color) spColor.getSelectedItem()).getId());
+            bundle.putInt("proteccion", ((Proteccion) spProteccion.getSelectedItem()).getId());
+            bundle.putInt("energia", ((Energia) spEnergia.getSelectedItem()).getId());
+            bundle.putInt("castrado", ((Castrado) spCastrado.getSelectedItem()).getId());
+            bundle.putInt("compatiblecon", ((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
+            bundle.putInt("vacunas", ((VacunasAlDia) spVacunas.getSelectedItem()).getId());
+            bundle.putInt("papeles", ((PapelesAlDia) spPapeles.getSelectedItem()).getId());
+            bundle.putInt("distancia", getDistanciaElegida());
+            bundle.putDouble("latitud", mLatitud);
+            bundle.putDouble("longitud", mLongitud);
+            ((TabbedFragment) getTargetFragment()).showBuscarMascotaResults(bundle);
       }
     }
 
