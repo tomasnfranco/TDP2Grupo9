@@ -9,17 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.MapFragment;
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
+import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.listview.ResultadosBusquedaActivity;
 import com.tdp2grupo9.modelo.Alerta;
-import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -38,7 +34,7 @@ import java.util.Set;
 /**
  * Created by Tomas on 11/10/2015.
  */
-public class BuscarMascotaFragment extends SeleccionAtributosFragment {
+public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
 
     private Double mLatitud = Usuario.getInstancia().getLatitud();
     private Double mLongitud = Usuario.getInstancia().getLongitud();
@@ -76,14 +72,11 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         createLimpiarFiltrosButton();
         createMaximaDistanciaSpinner();
         createCrearAlerta();
+        createLocalizacionTextView();
         hideInnecessaryFields();
+        initializeGoogleApi();
         obtenerAtributos();
         return mFragmentView;
-    }
-
-    private void createMap() {
-        mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
-        map = mMapFragment.getMap();
     }
 
     private void createBuscarMascotaButton() {
@@ -166,6 +159,10 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
                 crearAlertaTask.execute((Void)null);
             }
         });
+    }
+
+    private void createLocalizacionTextView() {
+        tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
     }
 
     private void hideInnecessaryFields() {
