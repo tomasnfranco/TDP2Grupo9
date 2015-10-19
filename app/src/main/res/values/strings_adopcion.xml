@@ -44,13 +44,25 @@
     <string name="campo_anonimo">Anónimo</string>
     <string name="imagen_seleccionada">Imagen Seleccionada</string>
 
-
     <string name="tiene_vacunas">Tiene vacunas al día</string>
     <string name="tiene_papeles">Tiene papeles al día</string>
     <string name="es_compatible">Es compatible con</string>
     <string name="esta_castrado">Está castrado</string>
     <string name="visualizar_posicion">Visualizar Localización</string>
     <string name="esta_aca">esta acá.</string>
+
+    <string name="mensajes_no_hay_alertas">No se encontraron alertas.</string>
+    <string name="error_busqueda_alertas">Error al intentar buscar alertas.</string>
+    <string name="informacion_adicional">Información Adicional</string>
+    <string name="informacion_basica">Información Básica</string>
+    <string name="alerta">Alerta</string>
+
+    <string name="tenga_vacunas">tenga vacunas al día</string>
+    <string name="tenga_papeles">tenga papeles al día</string>
+    <string name="este_castrado">esté castrado</string>
+    <string name="sea_compatible">sea compatible con</string>
+    <string name="a_distancia">Que esté a una distancia de</string>
+    <string name="color">Color</string>
 
 
 </resources>
