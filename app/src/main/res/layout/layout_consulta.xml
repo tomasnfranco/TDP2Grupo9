@@ -37,7 +37,7 @@
         android:id="@+id/infRespuesta"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="sexo"
+        android:text="respuesta"
         android:paddingStart="16dp"
         android:paddingBottom="8dp"
         android:textColor="#ffa9a9a9" />
