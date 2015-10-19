@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
@@ -154,18 +155,6 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
 
     private String getHastaDistanciaString(int distancia) {
         return mFragmentView.getResources().getString(R.string.distancia_hasta_km).replace("%", Integer.toString(distancia));
-    }
-
-
-    private void createCrearAlerta() {
-        View crearAlertaClickable = mFragmentView.findViewById(R.id.crear_alerta_clickable);
-        crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                crearAlertaTask = new CrearAlertaTask(Usuario.getInstancia().getToken());
-                crearAlertaTask.execute((Void)null);
-            }
-        });
     }
 
     private void createLocalizacionTextView() {
