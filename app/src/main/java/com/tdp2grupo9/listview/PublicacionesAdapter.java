@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ObtenerAtributosTask obtenerAtributosTask;
     private GuardarPostulacionTask guardarPostulacionTask;
+    private EnviarConsultaTask enviarConsultaTask;
+
     protected PublicacionAtributos publicacionAtributos;
     private SliderLayout photo_slider;
     private SliderLayout video_slider;
@@ -64,6 +67,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String nombreMascota;
     private TiposEnum tipos;
     private Button btnPostularme;
+    private TextView consultaParaEnviar;
+    private ImageButton btnEnviarConsulta;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -206,6 +211,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        final int id = publicaciones.get(i).getId();
+        final int position = i;
         btnPostularme = (Button) itemView.findViewById(R.id.buttonPublicacion);
         if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES)
             btnPostularme.setVisibility(View.GONE);
@@ -213,7 +220,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         btnPostularme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId());
+                guardarPostulacionTask = new GuardarPostulacionTask(position, id);
                 guardarPostulacionTask.execute((Void)null);
 
             }
@@ -380,28 +387,56 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         
     }
 
-    private void cargarListViewMensajes(int i, View v){
+    private void cargarListViewMensajes(int i, View v) {
 
         //mensajes = publicaciones.get(i).getMensajes();
         mensajes = loadMensajesMock();
-        listView = (ListView) v.findViewById(R.id.listView_consultas);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
 
-        if (!mensajes.isEmpty()) {
-            listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if (tipos == TiposEnum.MIS_PUBLICACIONES) {
+            CardView cardview_mensaje = (CardView) v.findViewById(R.id.cardview_mensajes_pm);
+            cardview_mensaje.setVisibility(View.GONE);
+
+        }else {
+            CardView cardview_mensaje = (CardView) v.findViewById(R.id.cardview_mensajes_pm);
+            cardview_mensaje.setVisibility(View.VISIBLE);
+
+            consultaParaEnviar = (TextView) v.findViewById(R.id.consulta_para_enviar);
+            btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
+
+            final Mensaje mensaje = new Mensaje();
+            mensaje.setPregunta(consultaParaEnviar.getText().toString());
+
+            btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapter, View view,
-                                        int position, long arg) {
+                public void onClick(View view) {
+                    enviarConsultaTask = new EnviarConsultaTask();
+                    enviarConsultaTask.execute((Void) null);
                 }
             });
+
+            listView = (ListView) v.findViewById(R.id.listView_consultas);
+            listView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            mensajes = publicaciones.get(i).getMensajes();
+            
+            if (!mensajes.isEmpty()) {
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View view,
+                                            int position, long arg) {
+                    }
+                });
+            }
         }
+
+
     }
 
     private List<Mensaje> loadMensajesMock(){
@@ -482,6 +517,35 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onCancelled() {
             guardarPostulacionTask = null;
+        }
+    }
+
+    public class EnviarConsultaTask extends AsyncTask<Void, Void, Boolean> {
+
+        int id_publicacion;
+        int position;
+
+        EnviarConsultaTask() {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+           /* try {
+                //TODO enviar mensaje
+            } catch (InterruptedException e) {
+                return false;
+            }*/
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            enviarConsultaTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            enviarConsultaTask = null;
         }
     }
 

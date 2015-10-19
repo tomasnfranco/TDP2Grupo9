@@ -24,7 +24,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -824,7 +826,9 @@ public class Publicacion {
     }
 
     public Double getDistancia() {
-        return distancia;
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return Double.parseDouble(df.format(this.distancia));
     }
 
     public void setDistancia(Double distancia) {

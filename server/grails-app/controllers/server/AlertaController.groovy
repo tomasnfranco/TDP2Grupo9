@@ -30,10 +30,12 @@ class AlertaController {
         }
 
         if (alertaInstance.hasErrors()) {
+            println "AlertaInstance tiene errores: "
+			println alertaInstance.errors
             respond alertaInstance.errors, view:'create'
             return
         }
-
+		
         alertaInstance.save flush:true
 
         if(params.nombre == null || params.nombre.empty){

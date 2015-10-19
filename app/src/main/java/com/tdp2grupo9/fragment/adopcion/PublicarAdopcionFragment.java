@@ -275,7 +275,8 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
                 toast3.setView(layout);
                 toast3.show();
             } else {
-                //TODO: mensaje indicando por que no se pudo publicar
+                Toast.makeText(mFragmentView.getContext(), "Error: No se pudo guardar.",
+                        Toast.LENGTH_LONG).show();
             }
         }
 
