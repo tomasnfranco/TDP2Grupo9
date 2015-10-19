@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Mensaje;
+import com.tdp2grupo9.utils.TiposEnum;
 
 import java.util.List;
 
@@ -17,10 +20,17 @@ public class MensajeAdapter extends BaseAdapter {
 
     private List<Mensaje> mensajes;
     private Context context;
+    private TiposEnum tipo;
+    private String pregunta = "";
+    private String respuesta = "";
+    private TextView infConsulta;
+    private TextView infRespuesta;
+    private View viewContainer;
 
-    public MensajeAdapter(Context context, List<Mensaje> mensajes) {
+    public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type) {
         this.mensajes = mensajes;
         this.context = context;
+        this.tipo = type;
     }
 
     @Override
@@ -40,8 +50,30 @@ public class MensajeAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup parent) {
         View consultasView = getInflatedViewIfNecessary(view, parent);
-        ((TextView) consultasView.findViewById(R.id.infConsulta)).setText(mensajes.get(i).getPregunta());
-        ((TextView) consultasView.findViewById(R.id.infRespuesta)).setText(mensajes.get(i).getRespuesta());
+        infConsulta = (TextView) consultasView.findViewById(R.id.infConsulta);
+        infRespuesta = (TextView) consultasView.findViewById(R.id.infRespuesta);
+        viewContainer = consultasView.findViewById(R.id.viewsContainer);
+
+        pregunta = mensajes.get(i).getPregunta();
+        respuesta = mensajes.get(i).getRespuesta();
+
+        if (tipo == TiposEnum.MIS_PUBLICACIONES){
+            if (respuesta.isEmpty()){
+                infConsulta.setText(pregunta);
+                infRespuesta.setVisibility(View.GONE);
+            }else {
+                infConsulta.setText(pregunta);
+                viewContainer.setVisibility(View.GONE);
+                infRespuesta.setText(respuesta);
+                respuesta = "";
+            }
+        }else {
+            infConsulta.setText(pregunta);
+            viewContainer.setVisibility(View.GONE);
+            infRespuesta.setText(respuesta);
+            respuesta = "";
+        }
+
         return consultasView;
     }
 

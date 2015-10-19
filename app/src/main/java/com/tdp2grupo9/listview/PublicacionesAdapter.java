@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -69,6 +70,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private Button btnPostularme;
     private TextView consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
+
+    private ImageButton btnRespuesta;
+    private EditText editTextRespuesta;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -392,16 +396,48 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         //mensajes = publicaciones.get(i).getMensajes();
         mensajes = loadMensajesMock();
 
+        consultaParaEnviar = (TextView) v.findViewById(R.id.consulta_para_enviar);
+        btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
+
         if (tipos == TiposEnum.MIS_PUBLICACIONES) {
-            CardView cardview_mensaje = (CardView) v.findViewById(R.id.cardview_mensajes_pm);
-            cardview_mensaje.setVisibility(View.GONE);
+            consultaParaEnviar.setVisibility(View.GONE);
+            btnEnviarConsulta.setVisibility(View.GONE);
+
+            listView = (ListView) v.findViewById(R.id.listView_consultas);
+            listView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            //mensajes = publicaciones.get(i).getMensajes();
+
+            if (!mensajes.isEmpty()) {
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View view,
+                                            final int position, long arg) {
+                        btnRespuesta = (ImageButton) view.findViewById(R.id.btn_responder);
+                        editTextRespuesta = (EditText) view.findViewById(R.id.editText_respuesta);
+
+
+                        btnRespuesta.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO guardar respuesta
+                            }
+                        });
+
+                    }
+                });
+            }
 
         }else {
-            CardView cardview_mensaje = (CardView) v.findViewById(R.id.cardview_mensajes_pm);
-            cardview_mensaje.setVisibility(View.VISIBLE);
-
-            consultaParaEnviar = (TextView) v.findViewById(R.id.consulta_para_enviar);
-            btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
+            consultaParaEnviar.setVisibility(View.VISIBLE);
+            btnEnviarConsulta.setVisibility(View.VISIBLE);
 
             final Mensaje mensaje = new Mensaje();
             mensaje.setPregunta(consultaParaEnviar.getText().toString());
@@ -424,9 +460,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             });
 
             mensajes = publicaciones.get(i).getMensajes();
-            
+
             if (!mensajes.isEmpty()) {
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes));
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
@@ -445,10 +481,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         m1.setPregunta("hola");
         m1.setRespuesta("chau");
         Mensaje m2 = new Mensaje();
-        m2.setPregunta("hello");
-        m2.setRespuesta("bye");
+        m2.setPregunta("Tiene pulgas");
+        Mensaje m3 = new Mensaje();
+        m3.setPregunta("hello");
+        m3.setRespuesta("bye");
         mensajes.add(m1);
         mensajes.add(m2);
+        mensajes.add(m3);
         return mensajes;
     }
 
