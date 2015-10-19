@@ -206,6 +206,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        final int id = publicaciones.get(i).getId();
+        final int position = i;
         btnPostularme = (Button) itemView.findViewById(R.id.buttonPublicacion);
         if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES)
             btnPostularme.setVisibility(View.GONE);
@@ -213,7 +215,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         btnPostularme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId());
+                guardarPostulacionTask = new GuardarPostulacionTask(position, id);
                 guardarPostulacionTask.execute((Void)null);
 
             }
