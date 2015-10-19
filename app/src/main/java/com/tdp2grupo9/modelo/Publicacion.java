@@ -102,7 +102,7 @@ public class Publicacion {
         this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
-        this.distancia = 0.0;
+        this.distancia = null;
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
@@ -433,7 +433,7 @@ public class Publicacion {
             if (publicacion.getDistancia() != null)
                 atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)
-                atributos += "&raza="+publicacion.getRaza();
+                atributos += "&raza="+publicacion.getRaza().getId();
             if (publicacion.getColor().getId() > 0)
                 atributos += "&color="+publicacion.getColor().getId();
             if (publicacion.getCastrado().getId() > 0)
@@ -826,9 +826,12 @@ public class Publicacion {
     }
 
     public Double getDistancia() {
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.CEILING);
-        return Double.parseDouble(df.format(this.distancia));
+        if (this.distancia != null) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            return Double.parseDouble(df.format(this.distancia));
+        }
+        return 10.0; //TODO:deberia ir null pero algo no anda en el server
     }
 
     public void setDistancia(Double distancia) {

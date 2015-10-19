@@ -69,6 +69,51 @@ public class PublicacionTest {
 		usuario = Usuario.getInstancia();
 	}
 
+    @Test
+    public void guardarPublicacionBienArmadaConImagenes() {
+
+        Imagen imagen1 = new Imagen();
+        imagen1.setImg(Imagen.bytesFromBase64DEFAULT(ImagenTest.IMAGEN_GRANDE1));
+        Imagen imagen2 = new Imagen();
+        imagen2.setImg(Imagen.bytesFromBase64DEFAULT(ImagenTest.IMAGEN_GRANDE2));
+        Imagen imagen3 = new Imagen();
+        imagen3.setImg(Imagen.bytesFromBase64DEFAULT(ImagenTest.IMAGEN_GRANDE2));
+
+        Publicacion publicacion = new Publicacion();
+        publicacion.setNombreMascota("TRESIMAGENES");
+        publicacion.setEspecie(new Especie(1));
+        publicacion.setRaza(new Raza(1));
+        publicacion.setColor(new Color(1));
+        publicacion.setSexo(new Sexo(1));
+        publicacion.setTamanio(new Tamanio(1));
+        publicacion.setEdad(new Edad(2));
+        publicacion.setCompatibleCon(new CompatibleCon(1));
+        publicacion.setVacunasAlDia(new VacunasAlDia(1));
+        publicacion.setPapelesAlDia(new PapelesAlDia(1));
+        publicacion.setCastrado(new Castrado(1));
+        publicacion.setProteccion(new Proteccion(1));
+        publicacion.setEnergia(new Energia(1));
+        publicacion.setVideoLink("");
+        publicacion.setLatitud(-34.59767);
+        publicacion.setLongitud(-58.4430195);
+        publicacion.setNecesitaTransito(false);
+        publicacion.setRequiereCuidadosEspeciales(false);
+        publicacion.setContacto("ROMI");
+        publicacion.setCondiciones("");
+        publicacion.addImagen(imagen1);
+        publicacion.addImagen(imagen2);
+        publicacion.addImagen(imagen3);
+
+        int id = publicacion.getId();
+        publicacion.guardarPublicacion(usuario.getToken());
+        assertTrue("No cambio el id de la publicacion guardada", id != publicacion.getId());
+
+        for (Imagen img : publicacion.getImagenes()) {
+            assertTrue("El id de la imagen obtenida no es mayor a cero", img.getId() > 0);
+        }
+
+    }
+
 	@Test
 	public void guardarPublicacionBienArmadaConTresImagenes() {
         String base64 = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw==";
@@ -95,8 +140,8 @@ public class PublicacionTest {
 		publicacion.setProteccion(new Proteccion(1));
 		publicacion.setEnergia(new Energia(1));
 		publicacion.setVideoLink("");
-		publicacion.setLatitud(10.0);
-		publicacion.setLongitud(10.0);
+		publicacion.setLatitud(-34.59767);
+		publicacion.setLongitud(-58.4430195);
 		publicacion.setNecesitaTransito(false);
 		publicacion.setRequiereCuidadosEspeciales(false);
 		publicacion.setContacto("ROMI");
