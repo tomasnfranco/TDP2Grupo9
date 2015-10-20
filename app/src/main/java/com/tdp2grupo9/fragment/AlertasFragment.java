@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Alerta;
+import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,10 +31,8 @@ public abstract class AlertasFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                List<Alerta> alertaReducidas = new ArrayList<Alerta>();
-                Thread.sleep(500);
-
-            } catch (InterruptedException e) {
+                mAlertas = Usuario.getInstancia().obtenerMisAlertas(0,0);
+            } catch (Exception e) {
                 return false;
             }
             return true;

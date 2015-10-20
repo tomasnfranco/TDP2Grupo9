@@ -64,7 +64,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
     protected float speed;
     protected float acc = 1.2f;
     protected Circle localCircle;
-    protected int zoomOffset = 5;
+    protected int zoomOffset = 10;
     protected SharedPreferences prefs;
     protected SharedPreferences.Editor prefsEditor;
 

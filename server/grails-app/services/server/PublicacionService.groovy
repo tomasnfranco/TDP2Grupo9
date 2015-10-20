@@ -10,6 +10,8 @@ class PublicacionService {
 
     //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
+		println params
+		println params.raza
         def busqueda = Publicacion.findAll(params){
             if(params.castrado)
                 castrado.id == params.castrado
@@ -33,8 +35,7 @@ class PublicacionService {
                 tamanio.id == params.tamanio
             if(params.vacunasAlDia)
                 vacunasAlDia.id == params.vacunasAlDia
-            if(params.raza)
-                raza.id == params.raza
+			
             publicador.id != usuario.id
             activa == true
             if(params.tipoPublicacion)

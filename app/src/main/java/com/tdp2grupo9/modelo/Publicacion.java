@@ -106,6 +106,7 @@ public class Publicacion {
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
+        this.postulantes = new ArrayList<>();
         this.postulantesIds = new ArrayList<>();
         this.mensajesIds = new ArrayList<>();
     }

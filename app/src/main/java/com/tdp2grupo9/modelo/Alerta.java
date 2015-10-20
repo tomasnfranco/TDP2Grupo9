@@ -157,7 +157,7 @@ public class Alerta {
                         this.compatibleCon.jsonToCompatibleCon(reader);
                     }
                     break;
-                case "eneria":
+                case "energia":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else {

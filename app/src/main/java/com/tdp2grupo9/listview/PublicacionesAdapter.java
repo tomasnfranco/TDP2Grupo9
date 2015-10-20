@@ -325,7 +325,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         video_slider = (SliderLayout) view.findViewById(R.id.video_slider);
         final HashMap<String, String> videos = new HashMap<>();
 
-        if (!video.isEmpty()) {
+        if (video != null && !video.isEmpty() && video.length() > 32) {
             video = video.substring(32);
             int aux = 0;
             videos.put("Video " + aux, video);

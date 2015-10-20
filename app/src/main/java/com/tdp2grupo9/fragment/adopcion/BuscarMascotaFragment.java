@@ -201,7 +201,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         return true;
     }
 
-    private boolean isValidAttribute(){
+    private boolean isValidAlerta(){
         boolean valido = true;
         String campoRequeridoString = getString(R.string.campo_requerido);
 
@@ -220,11 +220,26 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         return valido;
     }
 
+
+    private boolean isValidBusqueda(){
+        boolean valido = true;
+        String campoRequeridoString = getString(R.string.campo_requerido);
+
+        if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
+
+        if (!valido) {
+            Toast.makeText(mFragmentView.getContext(), "Error: Debe completar todos los campos requeridos.",
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return valido;
+    }
+
     private class BuscarMascotaOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            if (!isValidAttribute()){
+            if (!isValidBusqueda()){
                 return;
             }
             Bundle bundle = new Bundle();
@@ -240,7 +255,11 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             bundle.putInt("compatiblecon", ((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
             bundle.putInt("vacunas", ((VacunasAlDia) spVacunas.getSelectedItem()).getId());
             bundle.putInt("papeles", ((PapelesAlDia) spPapeles.getSelectedItem()).getId());
-            bundle.putInt("distancia", getDistanciaElegida());
+            Integer distancia = getDistanciaElegida();
+            if (distancia == null)
+                bundle.putInt("distancia", -1);
+            else
+                bundle.putInt("distancia", distancia);
             bundle.putDouble("latitud", mLatitud);
             bundle.putDouble("longitud", mLongitud);
             ((TabbedFragment) getTargetFragment()).showBuscarMascotaResults(bundle);
@@ -253,7 +272,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         crearAlertaClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (!isValidAttribute()){
+            if (!isValidAlerta()){
                 return;
             }
             Alerta alerta = new Alerta();

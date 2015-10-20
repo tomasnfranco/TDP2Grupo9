@@ -2,6 +2,7 @@ package com.tdp2grupo9.adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,12 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.publicacion.Castrado;
+import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
+import com.tdp2grupo9.modelo.publicacion.Energia;
+import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
+import com.tdp2grupo9.modelo.publicacion.Proteccion;
+import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +33,7 @@ public class AlertaAdapter extends BaseAdapter {
     TextView infFechaAlerta;
     private ObtenerAtributosTask obtenerAtributosTask;
     protected PublicacionAtributos publicacionAtributos;
+    private TextView titleAdicional;
 
     public AlertaAdapter(Context context, List<Alerta> alertas){
         this.alertasList = alertas;
@@ -56,9 +64,16 @@ public class AlertaAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         View alertaView = getInflatedViewIfNecessary(view,viewGroup);
 
         infAdicional = (TextView) alertaView.findViewById(R.id.infAdicional);
+        titleAdicional = (TextView) alertaView.findViewById(R.id.titleInfoAdicional);
+
         infBasica = (TextView) alertaView.findViewById(R.id.infBasica);
         infFechaAlerta = (TextView) alertaView.findViewById(R.id.fecha_alerta);
 
@@ -69,13 +84,18 @@ public class AlertaAdapter extends BaseAdapter {
 
         infFechaAlerta.setText(parserDateText(fechaCreacion));
         infBasica.setText(infoBasica);
-        infAdicional.setText(infoAdicional);
+        if (infoAdicional.isEmpty()){
+            titleAdicional.setVisibility(View.GONE);
+            infAdicional.setVisibility(View.GONE);
+        }else {
+            infAdicional.setText(infoAdicional);
+        }
 
         return alertaView;
     }
 
     private String getInformacionBasica(int i, View alertaView){
-        String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getSexos().indexOf(alertasList.get(i).getSexo())).toString();
+        String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(alertasList.get(i).getEspecie())).toString();
         String sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(alertasList.get(i).getSexo())).toString();
         String edad = publicacionAtributos.getEdades().get(publicacionAtributos.getEdades().indexOf(alertasList.get(i).getEdad())).toString();
         String color = publicacionAtributos.getColores().get(publicacionAtributos.getColores().indexOf(alertasList.get(i).getColor())).toString();
@@ -95,12 +115,33 @@ public class AlertaAdapter extends BaseAdapter {
 
     private String getInformacionAdicional(int i, View alertaView){
 
-        String vacunas = publicacionAtributos.getVacunasAlDia().get(publicacionAtributos.getVacunasAlDia().indexOf(alertasList.get(i).getVacunasAlDia())).toString();
-        String castrado = publicacionAtributos.getCastrados().get(publicacionAtributos.getCastrados().indexOf(alertasList.get(i).getCastrado())).toString();
-        String proteccion = publicacionAtributos.getProtecciones().get(publicacionAtributos.getProtecciones().indexOf(alertasList.get(i).getProteccion())).toString();
-        String energia = publicacionAtributos.getEnergias().get(publicacionAtributos.getEnergias().indexOf(alertasList.get(i).getEnergia())).toString();
-        String papeles = publicacionAtributos.getPapelesAlDia().get(publicacionAtributos.getPapelesAlDia().indexOf(alertasList.get(i).getPapelesAlDia())).toString();
-        String compatibleCon = publicacionAtributos.getCompatibilidades().get(publicacionAtributos.getCompatibilidades().indexOf(alertasList.get(i).getCompatibleCon())).toString();
+        VacunasAlDia vacunasEntity = alertasList.get(i).getVacunasAlDia();
+        Castrado castradoEntity = alertasList.get(i).getCastrado();
+        Proteccion proteccionEntity = alertasList.get(i).getProteccion();
+        Energia energiaEntity = alertasList.get(i).getEnergia();
+        PapelesAlDia papelesEntity = alertasList.get(i).getPapelesAlDia();
+        CompatibleCon compatibleEntity = alertasList.get(i).getCompatibleCon();
+
+        String vacunas = "";
+        String castrado = "";
+        String energia = "";
+        String papeles = "";
+        String proteccion = "";
+        String compatibleCon = "";
+
+        if (publicacionAtributos.getVacunasAlDia().indexOf(vacunasEntity) > -1){
+            vacunas= publicacionAtributos.getVacunasAlDia().get(publicacionAtributos.getVacunasAlDia().indexOf(vacunasEntity)).toString();
+        }
+        if (publicacionAtributos.getCastrados().indexOf(castradoEntity) > -1)
+            castrado = publicacionAtributos.getCastrados().get(publicacionAtributos.getCastrados().indexOf(castradoEntity)).toString();
+        if (publicacionAtributos.getProtecciones().indexOf(proteccionEntity) > -1)
+            proteccion = publicacionAtributos.getProtecciones().get(publicacionAtributos.getProtecciones().indexOf(proteccionEntity)).toString();
+        if (publicacionAtributos.getEnergias().indexOf(energiaEntity) > -1)
+            energia = publicacionAtributos.getEnergias().get(publicacionAtributos.getEnergias().indexOf(energiaEntity)).toString();
+        if (publicacionAtributos.getPapelesAlDia().indexOf(papelesEntity) > -1)
+            papeles = publicacionAtributos.getPapelesAlDia().get(publicacionAtributos.getPapelesAlDia().indexOf(papelesEntity)).toString();
+        if (publicacionAtributos.getCompatibilidades().indexOf(compatibleEntity) > -1)
+            compatibleCon = publicacionAtributos.getCompatibilidades().get(publicacionAtributos.getCompatibilidades().indexOf(compatibleEntity)).toString();
 
         String infoAdicional="";
 
@@ -116,11 +157,11 @@ public class AlertaAdapter extends BaseAdapter {
             infoAdicional+= "Que " + alertaView.getContext().getString(R.string.este_castrado)+". ";
         else if (castrado.equals("No"))
             infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.este_castrado).toLowerCase() + ". ";
-        if(!compatibleCon.equals("No aplica"))
+        if(!compatibleCon.equals("No aplica") &&!compatibleCon.isEmpty() )
             infoAdicional+= "Que " + alertaView.getContext().getString(R.string.sea_compatible) +" " + compatibleCon.toLowerCase() + ". ";
-        if(!energia.equals("No aplica"))
+        if(!energia.equals("No aplica") && !energia.isEmpty() )
             infoAdicional+= "Sea " + energia.toLowerCase() + ". ";
-        if(!proteccion.equals("No aplica"))
+        if(!proteccion.equals("No aplica") && !proteccion.isEmpty())
             infoAdicional+= "Sea " + proteccion.toLowerCase() + ". ";
 
         infoAdicional+= alertaView.getContext().getString(R.string.a_distancia) + " " + alertasList.get(i).getDistancia() + "km.";
