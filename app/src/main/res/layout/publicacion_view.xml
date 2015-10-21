@@ -23,6 +23,14 @@
         android:paddingBottom="10dp"
         android:layout_gravity="bottom" >
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/publicacion_icon_sexo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
         <TextView
             android:id="@+id/publicacion_name"
             android:layout_width="wrap_content"
@@ -30,18 +38,24 @@
             android:textColor="#fff"
             android:textSize="18sp"
             android:singleLine="true"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:text="Pepito"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/publicacion_icon_sexo"
+            android:layout_toEndOf="@+id/publicacion_icon_sexo"
+            android:layout_marginLeft="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="06/10/2015"
             android:id="@+id/tv_fecha_publicacion"
-            android:layout_below="@+id/tvLocalizacion"
-            android:layout_alignParentStart="true"
             android:textSize="10dp"
-            android:layout_marginTop="2dp"
-            android:textColor="#ffffffff" />
+            android:textColor="#ffffffff"
+            android:layout_below="@+id/ivLocalizacion"
+            android:layout_toRightOf="@+id/publicacion_icon_sexo"
+            android:layout_toEndOf="@+id/publicacion_icon_sexo"
+            android:layout_marginLeft="5dp" />
 
         <ImageView
             android:layout_width="20dp"
@@ -89,20 +103,6 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="40dp"
-        android:layout_height="96dp"
-        android:layout_gravity="left|top">
-
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:id="@+id/publicacion_icon_sexo"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp" />
     </LinearLayout>
 
 </FrameLayout>

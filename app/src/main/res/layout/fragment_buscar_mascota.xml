@@ -14,6 +14,10 @@
             android:orientation="vertical">
 
             <include
+                android:id="@+id/cardview_tipo_publicacion"
+                layout="@layout/cardiview_seleccion_publicacion" />
+
+            <include
                 android:id="@+id/cardview_basica"
                 layout="@layout/cardview_informacion_basica" />
 
