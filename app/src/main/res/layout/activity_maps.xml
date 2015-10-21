@@ -4,14 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
+    <ImageButton
+        android:layout_width="29dp"
+        android:layout_height="29dp"
         android:id="@+id/guardar_ubicacion_button"
-        android:layout_width="71dp"
-        android:layout_height="27dp"
-        android:layout_margin="10dp"
-        android:text="Volver"
-        android:textColor="@color/white"
-        android:background="@drawable/button_drawable" />
+        android:focusableInTouchMode="true"
+        android:background="@drawable/ic_volver" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"

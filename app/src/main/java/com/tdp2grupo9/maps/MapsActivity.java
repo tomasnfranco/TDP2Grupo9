@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,7 +65,7 @@ public class MapsActivity extends FragmentActivity {
     }
 
     private void createGuardarUbicacionButton() {
-        Button guardarUbicacionButton = (Button) findViewById(R.id.guardar_ubicacion_button);
+        ImageButton guardarUbicacionButton = (ImageButton) findViewById(R.id.guardar_ubicacion_button);
         guardarUbicacionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

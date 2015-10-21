@@ -48,6 +48,7 @@
                 android:scaleType="centerCrop"
                 android:background="@drawable/ic_icono" />
         </RelativeLayout>
+        <View style="@style/HorizontalDivider"/>
 
         <com.tdp2grupo9.view.foto.FotoPicker
             android:id="@+id/foto_picker"

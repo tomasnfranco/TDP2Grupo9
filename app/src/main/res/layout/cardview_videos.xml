@@ -49,6 +49,7 @@
                 android:background="@drawable/ic_icono" />
 
         </RelativeLayout>
+        <View style="@style/HorizontalDivider"/>
 
         <LinearLayout
             android:layout_width="match_parent"

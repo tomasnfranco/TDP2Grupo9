@@ -78,7 +78,7 @@ public class TabbedFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0: return context.getResources().getString(R.string.publicar_adopcion);
+                case 0: return context.getResources().getString(R.string.publicaciones);
                 case 1: return context.getResources().getString(R.string.ultimas_publicaciones);
                 case 2: return context.getResources().getString(R.string.publicar_busqueda);
                 case 3: return context.getResources().getString(R.string.resultados_busqueda);

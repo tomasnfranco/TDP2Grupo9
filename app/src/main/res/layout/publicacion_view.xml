@@ -91,4 +91,18 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="40dp"
+        android:layout_height="96dp"
+        android:layout_gravity="left|top">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/publicacion_icon_sexo"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
 </FrameLayout>

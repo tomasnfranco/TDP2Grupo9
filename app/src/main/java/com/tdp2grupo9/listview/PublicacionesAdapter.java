@@ -197,7 +197,30 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+
+
         View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
+        String sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
+        ImageView publicacionSexoMascota = (ImageView) publicacionView.findViewById(R.id.publicacion_icon_sexo);
+
+        if (sexo.equals("Hembra")){
+            if (especie.equals("Gato"))
+                publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_hembra));
+            else publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_hembra));
+        }else {
+            if (especie.equals("Gato"))
+                publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho));
+            else publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho));
+        }
+
         ((TextView) publicacionView.findViewById(R.id.publicacion_name)).setText(publicaciones.get(i).getNombreMascota());
         ((ImageView) publicacionView.findViewById(R.id.ivLocalizacion)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_localizacion));
         if (publicaciones.get(i).getImagenes().size() > 0)
@@ -241,6 +264,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void cargarInformacionBasica(int i, View v){
+        ((TextView) v.findViewById(R.id.infEspecie)).setText(publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString());
         ((TextView) v.findViewById(R.id.infSexo)).setText(publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString());
         ((TextView) v.findViewById(R.id.infEdad)).setText(publicacionAtributos.getEdades().get(publicacionAtributos.getEdades().indexOf(publicaciones.get(i).getEdad())).toString());
         ((TextView) v.findViewById(R.id.infColor)).setText(publicacionAtributos.getColores().get(publicacionAtributos.getColores().indexOf(publicaciones.get(i).getColor())).toString());

@@ -46,6 +46,25 @@
             android:textStyle="bold"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="Especie"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:textColor="#ffa9a9a9" />
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:id="@+id/infEspecie"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="especie"
+            android:paddingStart="16dp"
+            android:paddingBottom="8dp"
+            android:textColor="#ffa9a9a9" />
+
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:textStyle="bold"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="Sexo"
             android:paddingStart="16dp"
             android:paddingTop="8dp"
