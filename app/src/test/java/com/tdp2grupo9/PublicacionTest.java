@@ -211,7 +211,7 @@ public class PublicacionTest {
         publicacionFiltros.setEnergia(new Energia(1));
         publicacionFiltros.setLatitud(10.0);
         publicacionFiltros.setLongitud(10.0);
-        publicacionFiltros.setDistancia(10.0);
+        publicacionFiltros.setDistancia(10);
         publicacionFiltros.setNecesitaTransito(false);
         publicacionFiltros.setRequiereCuidadosEspeciales(false);
 
@@ -227,7 +227,7 @@ public class PublicacionTest {
         publicacionFiltros.setEspecie(new Especie(1));
         publicacionFiltros.setLongitud(10.0);
         publicacionFiltros.setLatitud(15.0);
-        publicacionFiltros.setDistancia(10.5);
+        publicacionFiltros.setDistancia(10);
 
         List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
@@ -255,7 +255,7 @@ public class PublicacionTest {
         publicacionFiltros.setEspecie(new Especie(1));
         publicacionFiltros.setLongitud(10.0);
         publicacionFiltros.setLatitud(15.0);
-        publicacionFiltros.setDistancia(250.61);
+        publicacionFiltros.setDistancia(250);
 
         List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
