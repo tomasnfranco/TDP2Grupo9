@@ -36,14 +36,14 @@ public class Publicacion {
     private static final String LOG_TAG = "BSH.Publicacion";
 
     private static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
-    private static Integer TPUBLICACION_PEDIDO_ADOPCION = 2;
-    private static Integer TPUBLICACION_MASCOTA_PERDIDA = 3;
-    private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 4;
+    private static Integer TPUBLICACION_MASCOTA_PERDIDA = 2;
+    private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 3;
 
     private Integer id;
     private Integer tipoPublicacion;
     private Integer postulanteConcretadoId;
     private Integer publicadorId;
+    private String direccion;
     private String publicadorNombre;
     private String nombreMascota;
     private String condiciones;
@@ -80,6 +80,7 @@ public class Publicacion {
         this.id = 0;
         this.publicadorId = 0;
         this.tipoPublicacion = TPUBLICACION_MASCOTA_ADOPCION;
+        this.direccion = "";
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
@@ -106,9 +107,9 @@ public class Publicacion {
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
+        this.mensajesIds = new ArrayList<>();
         this.postulantes = new ArrayList<>();
         this.postulantesIds = new ArrayList<>();
-        this.mensajesIds = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -169,6 +170,9 @@ public class Publicacion {
                     break;
                 case "publicadorId":
                     this.publicadorId = reader.nextInt();
+                    break;
+                case "direccion":
+                    this.direccion = reader.nextString();
                     break;
                 case "publicadorNombre":
                     this.publicadorNombre = reader.nextString();
@@ -327,6 +331,8 @@ public class Publicacion {
                     "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
                     "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
 
+            if (!this.getDireccion().isEmpty())
+                atributos += "&direccion="+this.getDireccion();
             if (this.getRaza().getId() > 0)
                 atributos += "&raza="+this.getRaza().getId();
             if (this.getColor().getId() > 0)
@@ -428,11 +434,12 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud()+"&latitud="+publicacion.getLatitud();
+                    "&longitud="+publicacion.getLongitud().toString().replace('.', ',')+
+                    "&latitud="+publicacion.getLatitud().toString().replace('.', ',');
 
             //"&offset="+offset+"max="+max
             if (publicacion.getDistancia() != null)
-                atributos += "&distancia="+publicacion.getDistancia();
+                atributos += "&distancia="+publicacion.getDistancia().toString().replace('.', ',');
             if (publicacion.getRaza().getId() > 0)
                 atributos += "&raza="+publicacion.getRaza().getId();
             if (publicacion.getColor().getId() > 0)
@@ -828,11 +835,17 @@ public class Publicacion {
 
     public Double getDistancia() {
         if (this.distancia != null) {
-            DecimalFormat df = new DecimalFormat("#.##");
-            df.setRoundingMode(RoundingMode.CEILING);
-            return Double.parseDouble(df.format(this.distancia));
+            try {
+                DecimalFormat df = new DecimalFormat("#,##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            } catch (NumberFormatException e) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            }
         }
-        return 10.0; //TODO:deberia ir null pero algo no anda en el server
+        return null;
     }
 
     public void setDistancia(Double distancia) {
@@ -845,5 +858,13 @@ public class Publicacion {
 
     public void setMensajes(List<Mensaje> mensajes) {
         this.mensajes = mensajes;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }
