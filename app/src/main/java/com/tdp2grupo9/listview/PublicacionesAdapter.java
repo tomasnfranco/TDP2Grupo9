@@ -73,6 +73,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private ImageButton btnRespuesta;
     private EditText editTextRespuesta;
+    private String sexo;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -200,6 +201,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
 
         View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
+        TextView tipo_publicacion = (TextView) publicacionView.findViewById(R.id.tv_tipo_publicacion);
+
+        //TODO completar textview con el tipo de la publicacion. Obtener desde publicacion obtenida
+        if (i == 0) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
+        if (i == 1) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
+        if (i == 2)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
+
 
         try {
             Thread.sleep(1000);
@@ -207,8 +215,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             e.printStackTrace();
         }
 
+
         String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
-        String sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
+        sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
         ImageView publicacionSexoMascota = (ImageView) publicacionView.findViewById(R.id.publicacion_icon_sexo);
 
         if (sexo.equals("Hembra")){
@@ -310,6 +319,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         if(!proteccion.equals("No aplica"))
             mensaje+= "Es " + proteccion.toLowerCase() + ". ";
 
+        if (mensaje.isEmpty()) mensaje =  "No tiene.";
+
         ((TextView) v.findViewById(R.id.infAdicional)).setText(mensaje);
     }
 
@@ -409,6 +420,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 intent.putExtra("longitud", longitud);
                 intent.putExtra("nombre", nombreMascota);
                 intent.putExtra("especie", especieView);
+                intent.putExtra("sexo", sexo);
                 context.startActivity(intent);
             }
         });

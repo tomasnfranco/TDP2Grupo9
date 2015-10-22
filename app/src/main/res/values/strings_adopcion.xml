@@ -70,4 +70,9 @@
     <string name="color">Color</string>
 
 
+    <string name="perdida">PERDIDA</string>
+    <string name="encontrada">ENCONTRADA</string>
+    <string name="en_adopcion">EN ADOPCIÓN</string>
+
+
 </resources>
