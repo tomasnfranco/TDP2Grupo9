@@ -35,9 +35,9 @@ public class Publicacion {
 
     private static final String LOG_TAG = "BSH.Publicacion";
 
-    private static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
-    private static Integer TPUBLICACION_MASCOTA_PERDIDA = 2;
-    private static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 3;
+    public static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
+    public static Integer TPUBLICACION_MASCOTA_PERDIDA = 2;
+    public static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 3;
 
     private Integer id;
     private Integer tipoPublicacion;
@@ -66,7 +66,7 @@ public class Publicacion {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
-    private Double distancia;
+    private Integer distancia;
 
     private List<Integer> postulantesIds;
     private List<Integer> mensajesIds;
@@ -229,7 +229,7 @@ public class Publicacion {
                     this.longitud = reader.nextDouble();
                     break;
                 case "distancia":
-                    this.distancia = reader.nextDouble();
+                    this.distancia = reader.nextInt();
                     break;
                 case "requiereCuidadosEspeciales":
                     this.requiereCuidadosEspeciales = reader.nextBoolean();
@@ -439,7 +439,7 @@ public class Publicacion {
 
             //"&offset="+offset+"max="+max
             if (publicacion.getDistancia() != null)
-                atributos += "&distancia="+publicacion.getDistancia().toString().replace('.', ',');
+                atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)
                 atributos += "&raza="+publicacion.getRaza().getId();
             if (publicacion.getColor().getId() > 0)
@@ -611,12 +611,16 @@ public class Publicacion {
         return id;
     }
 
+    public Integer getTipoPublicacion() {
+        return this.tipoPublicacion;
+    }
+
     public String getNombreMascota() {
-        return nombreMascota;
+        return this.nombreMascota;
     }
 
     public Castrado getCastrado() {
-        return castrado;
+        return this.castrado;
     }
 
     public String getCondiciones() {
@@ -693,6 +697,41 @@ public class Publicacion {
         return this.necesitaTransito;
     }
 
+    public Boolean getConcreatada() {
+        return this.concreatada;
+    }
+
+    public Integer getPostulanteConcretadoId() {
+        return this.postulanteConcretadoId;
+    }
+
+    public Integer getPublicadorId() {
+        return publicadorId;
+    }
+
+    public String getPublicadorNombre() {
+        return publicadorNombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public List<Mensaje> getMensajes() {
+        return mensajes;
+    }
+
+    public String getVideoLink() {
+        return videoLink;
+    }
+
+    public Integer getDistancia() {
+        return this.distancia;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
 
     private void addMensaje(Mensaje mensaje) {
         this.mensajes.add(mensaje);
@@ -710,6 +749,10 @@ public class Publicacion {
 
     public void addImagen(Imagen imagen) {
         this.imagenes.add(imagen);
+    }
+
+    public void setTipoPublicacion(Integer tipoPublicacion) {
+        this.tipoPublicacion = tipoPublicacion;
     }
 
     public void setVideoLink(String videoLink) {
@@ -792,33 +835,12 @@ public class Publicacion {
         this.condiciones = condiciones;
     }
 
-
-    public Boolean getConcreatada() {
-        return this.concreatada;
-    }
-
-    public Integer getPostulanteConcretadoId() {
-        return this.postulanteConcretadoId;
-    }
-
-    public Integer getPublicadorId() {
-        return publicadorId;
-    }
-
     public void setPublicadorId(Integer publicadorId) {
         this.publicadorId = publicadorId;
     }
 
-    public String getPublicadorNombre() {
-        return publicadorNombre;
-    }
-
     public void setPublicadorNombre(String publicadorNombre) {
         this.publicadorNombre = publicadorNombre;
-    }
-
-    public String getContacto() {
-        return contacto;
     }
 
     public Date getFechaPublicacion() {
@@ -829,39 +851,12 @@ public class Publicacion {
         this.fechaPublicacion = fechaPublicacion;
     }
 
-    public String getVideoLink() {
-        return videoLink;
-    }
-
-    public Double getDistancia() {
-        if (this.distancia != null) {
-            try {
-                DecimalFormat df = new DecimalFormat("#,##");
-                df.setRoundingMode(RoundingMode.CEILING);
-                return Double.parseDouble(df.format(this.distancia));
-            } catch (NumberFormatException e) {
-                DecimalFormat df = new DecimalFormat("#.##");
-                df.setRoundingMode(RoundingMode.CEILING);
-                return Double.parseDouble(df.format(this.distancia));
-            }
-        }
-        return null;
-    }
-
-    public void setDistancia(Double distancia) {
+    public void setDistancia(Integer distancia) {
         this.distancia = distancia;
-    }
-
-    public List<Mensaje> getMensajes() {
-        return mensajes;
     }
 
     public void setMensajes(List<Mensaje> mensajes) {
         this.mensajes = mensajes;
-    }
-
-    public String getDireccion() {
-        return direccion;
     }
 
     public void setDireccion(String direccion) {
