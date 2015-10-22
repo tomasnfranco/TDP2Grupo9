@@ -50,8 +50,8 @@ public class PublicacionTest {
         publicacion.setProteccion(new Proteccion(1));
         publicacion.setEnergia(new Energia(1));
         publicacion.setVideoLink("");
-        publicacion.setLatitud(10.0);
-        publicacion.setLongitud(15.0);
+        publicacion.setLongitud(10.0);
+        publicacion.setLatitud(15.0);
         publicacion.setNecesitaTransito(false);
         publicacion.setRequiereCuidadosEspeciales(false);
         publicacion.setContacto("ROMI");
@@ -178,8 +178,8 @@ public class PublicacionTest {
         publicacion.setProteccion(new Proteccion(1));
         publicacion.setEnergia(new Energia(1));
         publicacion.setVideoLink("");
-        publicacion.setLatitud(10.0);
-        publicacion.setLongitud(15.0);
+        publicacion.setLatitud(15.0);
+        publicacion.setLongitud(10.0);
         publicacion.setNecesitaTransito(false);
         publicacion.setRequiereCuidadosEspeciales(false);
         publicacion.setContacto("ROMI");
@@ -188,8 +188,8 @@ public class PublicacionTest {
         int id = publicacion.getId();
         publicacion.guardarPublicacion(usuario.getToken());
         assertTrue("No cambio el id de la publicacion guardada", id != publicacion.getId());
-        assertTrue("La latitud no coincide", 10.0 == publicacion.getLatitud().doubleValue());
-        assertTrue("La longitud no coincide", 15.0 == publicacion.getLongitud().doubleValue());
+        assertTrue("La latitud no coincide", 15.0 == publicacion.getLatitud().doubleValue());
+        assertTrue("La longitud no coincide", 10.0 == publicacion.getLongitud().doubleValue());
 
     }
 	
@@ -211,6 +211,7 @@ public class PublicacionTest {
         publicacionFiltros.setEnergia(new Energia(1));
         publicacionFiltros.setLatitud(10.0);
         publicacionFiltros.setLongitud(10.0);
+        publicacionFiltros.setDistancia(10.0);
         publicacionFiltros.setNecesitaTransito(false);
         publicacionFiltros.setRequiereCuidadosEspeciales(false);
 
@@ -220,10 +221,41 @@ public class PublicacionTest {
 
     @Test
     public void buscarPublicacionesConTokenDistintoSiDevuelve() {
+        crearPublicacion(Usuario.getInstancia().getToken());
+
         Publicacion publicacionFiltros = new Publicacion();
         publicacionFiltros.setEspecie(new Especie(1));
         publicacionFiltros.setLongitud(10.0);
-        publicacionFiltros.setLatitud(10.0);
+        publicacionFiltros.setLatitud(15.0);
+        publicacionFiltros.setDistancia(10.5);
+
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
+        assertTrue(publicaciones.size() > 0);
+    }
+
+    @Test
+    public void buscarPublicacionesConDistanciaNula() {
+        crearPublicacion(Usuario.getInstancia().getToken());
+
+        Publicacion publicacionFiltros = new Publicacion();
+        publicacionFiltros.setEspecie(new Especie(1));
+        publicacionFiltros.setLongitud(10.0);
+        publicacionFiltros.setLatitud(15.0);
+        publicacionFiltros.setDistancia(null);
+
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
+        assertTrue(publicaciones.size() > 0);
+    }
+
+    @Test
+    public void buscarPublicacionesConDistanciaNoNulaConDecimales() {
+        crearPublicacion(Usuario.getInstancia().getToken());
+
+        Publicacion publicacionFiltros = new Publicacion();
+        publicacionFiltros.setEspecie(new Especie(1));
+        publicacionFiltros.setLongitud(10.0);
+        publicacionFiltros.setLatitud(15.0);
+        publicacionFiltros.setDistancia(250.61);
 
         List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
