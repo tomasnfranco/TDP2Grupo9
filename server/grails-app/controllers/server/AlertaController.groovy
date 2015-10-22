@@ -7,7 +7,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class AlertaController {
     static scaffold = true
-    static allowedMethods = [save: "POST", update: "PUT", delete: ["DELETE","POST"]]
+    static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"]]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -67,6 +67,11 @@ class AlertaController {
             return
         }
 
+        if(alertaInstance.id == null) {
+            alertaInstance = Alerta.get(params.alerta)
+            alertaInstance.properties = params
+        }
+
         if (alertaInstance.hasErrors()) {
             respond alertaInstance.errors, view:'edit'
             return
@@ -75,7 +80,7 @@ class AlertaController {
         alertaInstance.save flush:true
 
         request.withFormat {
-            form multipartForm {
+            html {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Alerta.label', default: 'Alerta'), alertaInstance.id])
                 redirect alertaInstance
             }
