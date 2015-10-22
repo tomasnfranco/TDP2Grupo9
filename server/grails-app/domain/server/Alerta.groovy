@@ -20,6 +20,8 @@ class Alerta {
     double latitud = 0
     double longitud = 0
     double distancia = 0
+    boolean requiereCuidadosEspeciales = false
+    boolean necesitaTransito = false
     int tipoPublicacion = 1
 
     static constraints = {
