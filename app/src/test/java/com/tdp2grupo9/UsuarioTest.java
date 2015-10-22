@@ -70,7 +70,7 @@ public class UsuarioTest {
     }
 
     @Test
-    public void registrarUsuario() {
+    public void registrarUsuarioConFacebook() {
         Usuario.getInstancia().resetearAtributos();
         Usuario.getInstancia().setFacebookId(1156897111L);
         Usuario.getInstancia().setNombre("PEPE");
@@ -82,13 +82,61 @@ public class UsuarioTest {
         Usuario.getInstancia().setTelefono("1124546787");
         usuario = Usuario.getInstancia();
 
-        usuario.registrarConFacebook();
+        usuario.registrarse();
 
         assertTrue("Debe tener id no cero", usuario.getId() > 0);
         assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
         assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
 
     }
+
+
+    @Test
+    public void registrarUsuarioConEmail() {
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("PEPE");
+        Usuario.getInstancia().setApellido("PEPITO");
+        Usuario.getInstancia().setEmail("casal.romina@gmail.com");
+        Usuario.getInstancia().setPassword("121545787");
+        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+
+        usuario.registrarse();
+
+        assertTrue("Debe tener id no cero", usuario.getId() > 0);
+        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
+        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
+
+    }
+
+    @Test
+    public void loguearUsuarioConEmail() {
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("PEPE");
+        Usuario.getInstancia().setApellido("PEPITO");
+        Usuario.getInstancia().setEmail("casal.romina@gmail.com.ar");
+        Usuario.getInstancia().setPassword("121545787");
+        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+
+        usuario.registrarse();
+        usuario.logout();
+        usuario.setEmail("casal.romina@gmail.com.ar");
+        usuario.setPassword("121545787");
+        usuario.login();
+
+        assertTrue("Debe tener id no cero", usuario.getId() > 0);
+        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
+        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
+
+    }
+
 
     @Test
     public void postularmeEnPublicacionDeOtroUsuario() {

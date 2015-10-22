@@ -53,7 +53,7 @@ public class Usuario {
 
     public void resetearAtributos() {
         this.id = 0;
-        this.facebookId = 0L;
+        this.facebookId = null;
         this.facebookToken = "";
         this.latitud = 0.0;
         this.longitud = 0.0;
@@ -127,8 +127,8 @@ public class Usuario {
         reader.endObject();
     }
 
-    public void registrarConFacebook(){
-        String METHOD = "registrarConFacebook";
+    public void registrarse(){
+        String METHOD = "registrarse";
 
         Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
 
@@ -140,19 +140,27 @@ public class Usuario {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             String parametros = "";
-            parametros += "facebookId="+this.facebookId;
-            parametros += "&direccion="+this.direccion;
-            parametros += "&telefono="+this.telefono;
-            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
-            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
+            if (this.getFacebookId() != null)
+                parametros += "facebookId="+this.getFacebookId();
+            if (!this.getEmail().isEmpty()) {
+                if (this.getFacebookId() != null)
+                    parametros += "&email="+this.getEmail();
+                else
+                    parametros += "email="+this.getEmail();
+            }
+            if (!this.getPassword().isEmpty())
+                parametros += "&password="+this.getPassword();
             if (this.getAutoPublicar() != null)
                 parametros += "&autoPublicar="+this.autopublicar;
             if (this.getOfreceTransito() != null)
                 parametros += "&ofreceTransito="+this.ofreceTransito;
-            if (!this.getEmail().isEmpty())
-                parametros += "&email="+this.getEmail();
             if (!this.getUsername().isEmpty())
                 parametros += "&username="+this.getUsername();
+
+            parametros += "&direccion="+this.direccion;
+            parametros += "&telefono="+this.telefono;
+            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
+            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
@@ -177,10 +185,11 @@ public class Usuario {
         }
     }
 
-    public void loginConFacebook(){
-        String METHOD = "loginConFacebook";
+    public void login(){
+        String METHOD = "login";
 
         Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
+        Log.d(LOG_TAG, METHOD + " email " + this.email + " password " + this.password);
 
         HttpURLConnection urlConnection = null;
         try {
@@ -189,10 +198,20 @@ public class Usuario {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            String parametros = "";
+            if (this.getFacebookId() != null)
+                parametros += "facebookId="+this.getFacebookId();
+            if (!this.getEmail().isEmpty()) {
+                if (this.getFacebookId() != null)
+                    parametros += "&email="+this.getEmail();
+                else
+                    parametros += "email="+this.getEmail();
+            }
+            if (!this.getPassword().isEmpty())
+                parametros += "&password="+this.getPassword();
 
-            Log.i(LOG_TAG, METHOD + "FACEBOOK ID " + this.facebookId );
-            out.write("facebookId="+this.facebookId);
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
@@ -236,82 +255,6 @@ public class Usuario {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no deslogueado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        }  finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-    }
-
-    public void registrarConEmail(){
-        String METHOD = "registrarConEmail";
-
-        HttpURLConnection urlConnection = null;
-        try {
-            urlConnection = Connection.getHttpUrlConnection("usuario");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            String parametros = "";
-            parametros += "&email="+this.email;
-            parametros += "&password="+this.password;
-            parametros += "&direccion="+this.direccion;
-            parametros += "&telefono="+this.telefono;
-            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
-            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
-            if (this.getAutoPublicar() != null)
-                parametros += "&autoPublicar="+this.autopublicar;
-            if (this.getOfreceTransito() != null)
-                parametros += "&ofreceTransito="+this.ofreceTransito;
-
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
-            out.close();
-
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
-
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
-                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                this.logueado = true;
-                Log.d(LOG_TAG, METHOD + " usuario registrado y logueado correctamente.");
-            } else {
-                this.logueado = false;
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no registrado. " + urlConnection.getResponseMessage());
-            }
-        } catch (IOException | JSONException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        }  finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-    }
-
-    public void login(){
-        String METHOD = "loginConEmail";
-
-        HttpURLConnection urlConnection = null;
-        try {
-            urlConnection = Connection.getHttpUrlConnection("usuario/login");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("username="+this.username+"&password="+this.password);
-            out.close();
-
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                this.logueado = true;
-                Log.d(LOG_TAG, METHOD + " usuario logueado correctamente.");
-            } else {
-                this.logueado = false;
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
-            }
-        } catch (IOException | JSONException e) {
             Log.e(LOG_TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)

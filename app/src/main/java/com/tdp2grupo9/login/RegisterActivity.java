@@ -52,7 +52,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         com.google.android.gms.location.LocationListener,
         GoogleMap.OnInfoWindowClickListener {
 
-    private UserRegisterFacebookTask userRegisterFacebookTask = null;
+    private UserRegisterTask userRegisterTask = null;
     private Button btnRegistrarse;
     private EditText etTelefono;
     private TextView tvDireccion;
@@ -452,8 +452,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 Usuario.getInstancia().setTelefono(etTelefono.getText().toString());
                 Usuario.getInstancia().setLatitud(currentLat);
                 Usuario.getInstancia().setLongitud(currentLon);
-                userRegisterFacebookTask = new UserRegisterFacebookTask();
-                userRegisterFacebookTask.execute((Void) null);
+                userRegisterTask = new UserRegisterTask();
+                userRegisterTask.execute((Void) null);
             }
         }
     }
@@ -486,16 +486,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         }else return true;
     }*/
 
-    public class UserRegisterFacebookTask  extends AsyncTask<Void, Void, Boolean> {
+    public class UserRegisterTask  extends AsyncTask<Void, Void, Boolean> {
 
-        UserRegisterFacebookTask () {
+        UserRegisterTask () {
 
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                Usuario.getInstancia().registrarConFacebook();
+                Usuario.getInstancia().registrarse();
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
@@ -505,7 +505,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            userRegisterFacebookTask = null;
+            userRegisterTask = null;
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
                     Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
@@ -518,7 +518,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
         @Override
         protected void onCancelled() {
-            userRegisterFacebookTask = null;
+            userRegisterTask = null;
         }
     }
+
 }

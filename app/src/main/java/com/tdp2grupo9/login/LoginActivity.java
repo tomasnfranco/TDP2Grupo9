@@ -398,7 +398,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                Usuario.getInstancia().loginConFacebook();
+                Usuario.getInstancia().login();
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
