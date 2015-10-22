@@ -20,6 +20,7 @@ class Alerta {
     double latitud = 0
     double longitud = 0
     double distancia = 0
+    int tipoPublicacion = 1
 
     static constraints = {
         usuario nullable: false
@@ -31,5 +32,8 @@ class Alerta {
         sexo nullable: true
         tamanio nullable: true
         vacunasAlDia nullable: true
+        raza nullable:true
+        color nullable: true
+        edad nullable: true
     }
 }
