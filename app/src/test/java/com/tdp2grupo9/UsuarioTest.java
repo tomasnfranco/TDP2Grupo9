@@ -70,6 +70,27 @@ public class UsuarioTest {
     }
 
     @Test
+    public void registrarUsuario() {
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setFacebookId(1156897111L);
+        Usuario.getInstancia().setNombre("PEPE");
+        Usuario.getInstancia().setApellido("PEPITO");
+        Usuario.getInstancia().setEmail("casal.romina@gmail.com");
+        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+
+        usuario.registrarConFacebook();
+
+        assertTrue("Debe tener id no cero", usuario.getId() > 0);
+        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
+        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
+
+    }
+
+    @Test
     public void postularmeEnPublicacionDeOtroUsuario() {
         Integer idPublicacion = crearPublicacion("234567");
         usuario.quieroAdoptar(idPublicacion);

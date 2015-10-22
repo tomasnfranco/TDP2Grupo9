@@ -2,6 +2,7 @@ package com.tdp2grupo9.modelo;
 
 import android.graphics.Bitmap;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -110,6 +111,14 @@ public class Usuario {
                 case "direccion":
                     this.direccion = reader.nextString();
                     break;
+                case "foto":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        this.foto = new Imagen();
+                        this.foto.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
+                    }
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -182,13 +191,12 @@ public class Usuario {
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
 
-            Log.i("BuscaSusHuellas", "FACEBOOK ID " + this.facebookId );
+            Log.i(LOG_TAG, METHOD + "FACEBOOK ID " + this.facebookId );
             out.write("facebookId="+this.facebookId);
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                String response = urlConnection.getResponseMessage();
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
                 Log.d(LOG_TAG, METHOD + " usuario logueado correctamente.");
@@ -235,16 +243,80 @@ public class Usuario {
         }
     }
 
-    public void registrar(){
-        //TODO: registrar con email y password
-        String METHOD = "logout";
-        Log.w(LOG_TAG, METHOD + " metodo no implementado.");
+    public void registrarConEmail(){
+        String METHOD = "registrarConEmail";
+
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("usuario");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            String parametros = "";
+            parametros += "&email="+this.email;
+            parametros += "&password="+this.password;
+            parametros += "&direccion="+this.direccion;
+            parametros += "&telefono="+this.telefono;
+            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
+            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
+            if (this.getAutoPublicar() != null)
+                parametros += "&autoPublicar="+this.autopublicar;
+            if (this.getOfreceTransito() != null)
+                parametros += "&ofreceTransito="+this.ofreceTransito;
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
+                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                this.logueado = true;
+                Log.d(LOG_TAG, METHOD + " usuario registrado y logueado correctamente.");
+            } else {
+                this.logueado = false;
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no registrado. " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
     }
 
     public void login(){
-        //TODO: login con email y password
-        String METHOD = "logout";
-        Log.w(LOG_TAG, METHOD + " metodo no implementado.");
+        String METHOD = "loginConEmail";
+
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("usuario/login");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write("username="+this.username+"&password="+this.password);
+            out.close();
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                this.logueado = true;
+                Log.d(LOG_TAG, METHOD + " usuario logueado correctamente.");
+            } else {
+                this.logueado = false;
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
     }
 
     public void quieroAdoptar(int publicacionId) {
