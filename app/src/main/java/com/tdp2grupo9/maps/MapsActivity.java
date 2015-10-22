@@ -24,6 +24,7 @@ public class MapsActivity extends FragmentActivity {
     private double currentLon;
     private String nombreMascota = "";
     private String especieMascota = "";
+    private String sexo ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class MapsActivity extends FragmentActivity {
         currentLon = getIntent().getDoubleExtra("longitud", 0.0);
         nombreMascota = getIntent().getStringExtra("nombre");
         especieMascota = getIntent().getStringExtra("especie");
+        sexo = getIntent().getStringExtra("sexo");
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         createGuardarUbicacionButton();
@@ -55,10 +57,30 @@ public class MapsActivity extends FragmentActivity {
 
     private void setUpMap() {
         String msg = nombreMascota + " " +getBaseContext().getString(R.string.esta_aca);
-        if (especieMascota.equals("Perro"))
-            mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_perro)));
-        else{
-            mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_gato)));
+        if (especieMascota.equals("Perro")){
+            switch (sexo) {
+                case "Hembra":
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_perro_hembra)));
+                    break;
+                case "Macho":
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_perro_macho)));
+                    break;
+                default:
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_perro_desconocido)));
+                    break;
+            }
+        } else{
+            switch (sexo) {
+                case "Hembra":
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_gato_hembra)));
+                    break;
+                case "Macho":
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_gato_macho)));
+                    break;
+                default:
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(currentLat, currentLon)).title(msg).icon(BitmapDescriptorFactory.fromResource(R.drawable.market_gato_desconocido)));
+                    break;
+            }
         }
 
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(currentLat, currentLon), 16)));
