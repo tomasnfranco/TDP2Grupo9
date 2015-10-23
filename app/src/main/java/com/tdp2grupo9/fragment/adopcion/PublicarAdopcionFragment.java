@@ -142,6 +142,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
 
                 publicacion.setLatitud(currentLat);
                 publicacion.setLongitud(currentLon);
+                publicacion.setDireccion(tvZona.getText().toString());
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
