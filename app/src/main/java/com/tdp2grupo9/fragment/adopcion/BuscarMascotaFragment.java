@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.modelo.Alerta;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
@@ -48,6 +51,8 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
     private Spinner mMaximasDistanciasSpinner;
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
     private CrearAlertaTask crearAlertaTask;
+    private RadioGroup radioGroupPublicaciones;
+    private String tipoPublicacion = "";
 
     public static BuscarMascotaFragment newInstance(Fragment targetFragment) {
         BuscarMascotaFragment fragment = new BuscarMascotaFragment();
@@ -84,9 +89,26 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         hideInnecessaryFields();
         initializeGoogleApi();
         initializeSpinners();
+        initializeTipoPublicaciones();
         return mFragmentView;
     }
 
+    private void initializeTipoPublicaciones(){
+
+        radioGroupPublicaciones = (RadioGroup) mFragmentView.findViewById(R.id.radio_group_tipo_publicacion);
+        radioGroupPublicaciones.clearCheck();
+
+        radioGroupPublicaciones.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if(null!=rb && checkedId > -1){
+                    tipoPublicacion = rb.getText().toString();
+                }
+            }
+        });
+    }
+    
     private void createBuscarMascotaButton() {
         mBuscarMascotaButton = (Button) mFragmentView.findViewById(R.id.buscar_mascota_button);
         mBuscarMascotaButton.setOnClickListener(new BuscarMascotaOnClickListener());
@@ -176,6 +198,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
 
 
     private void cleanFilters() {
+        radioGroupPublicaciones.clearCheck();
         cleanSpinner(spEspecie);
         cleanSpinner(spRaza);
         cleanSpinner(spSexo);
@@ -191,6 +214,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         cleanSpinner(mMaximasDistanciasSpinner);
         mLatitud = Usuario.getInstancia().getLatitud();
         mLongitud = Usuario.getInstancia().getLongitud();
+
     }
 
     private boolean validateCampoRequeridoSpinner(Spinner spinner, String campoRequeridoString) {
@@ -225,6 +249,11 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         boolean valido = true;
         String campoRequeridoString = getString(R.string.campo_requerido);
 
+        if (tipoPublicacion.isEmpty()) {
+            Toast.makeText(mFragmentView.getContext(), mFragmentView.getContext().getString(R.string.error_tipo_publicacion),
+                    Toast.LENGTH_LONG).show();
+            valido = false; }
+
         if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
 
         if (!valido) {
@@ -243,6 +272,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
                 return;
             }
             Bundle bundle = new Bundle();
+            bundle.putString("tipopublicacion",tipoPublicacion);
             bundle.putInt("especie", ((Especie) spEspecie.getSelectedItem()).getId());
             bundle.putInt("raza", ((Raza) spRaza.getSelectedItem()).getId());
             bundle.putInt("sexo", ((Sexo) spSexo.getSelectedItem()).getId());

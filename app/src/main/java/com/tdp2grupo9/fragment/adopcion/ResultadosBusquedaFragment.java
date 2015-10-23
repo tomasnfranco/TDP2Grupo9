@@ -11,6 +11,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -59,6 +60,17 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
 
     public void startSearch(Bundle arguments) {
         Publicacion publicacion = new Publicacion();
+        String tipoPublicacion = arguments.getString("tipopublicacion");
+
+        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.adopciones)))
+            publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
+
+        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.encontrados)))
+            publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADA);
+
+        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.perdidos)))
+            publicacion.setTipoPublicacion(TipoPublicacion.PERDIDA);
+
         publicacion.setEspecie(getEspeciePublicacion(arguments.getInt("especie", 0)));
         publicacion.setRaza(getRazaPublicacion(arguments.getInt("raza", 0)));
         publicacion.setSexo(getSexoPublicacion(arguments.getInt("sexo", 0)));

@@ -7,6 +7,7 @@
     <string name="buscar_mascota"><font color='white'>Buscar Mascota</font></string>
     <string name="resultados_busqueda"><font color='white'>Resultados Búsqueda</font></string>
     <string name="title_activity_adopcion_tab"><font color='white'>Adopción</font></string>
+    <string name="error_tipo_publicacion">Debe seleccionar el tipo de la publicación.</string>
 
     <string name="nombre_mascota_hint">Nombre/Descripción</string>
     <string name="especie_hint">Especie</string>
