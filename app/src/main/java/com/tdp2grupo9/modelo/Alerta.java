@@ -32,6 +32,7 @@ public class Alerta {
     private static final String LOG_TAG = "BSH.Alerta";
 
     private Integer id;
+    private TipoPublicacion tipoPublicacion;
     private String nombre;
     private Color color;
     private Especie especie;
@@ -59,6 +60,7 @@ public class Alerta {
 
     public void resetearAtributos() {
         this.id = 0;
+        this.tipoPublicacion = TipoPublicacion.ADOPCION;
         this.color = new Color();
         this.especie = new Especie();
         this.edad = new Edad();
@@ -97,6 +99,9 @@ public class Alerta {
             switch (name) {
                 case "id":
                     this.id = reader.nextInt();
+                    break;
+                case "tipoPublicacion":
+                    this.tipoPublicacion = TipoPublicacion.getTipoPublicacion(reader.nextInt());
                     break;
                 case "nombre":
                     this.nombre = reader.nextString();
@@ -232,6 +237,8 @@ public class Alerta {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             String parametros = "token="+token+"&nombre="+this.nombre;
+            if (this.tipoPublicacion.getValue() > 0)
+                parametros += "&tipoPublicacion=" + this.tipoPublicacion.getValue();
             if (this.color.getId() > 0)
                 parametros += "&color=" + this.color.getId();
             if (this.especie.getId() > 0)
@@ -257,11 +264,11 @@ public class Alerta {
             if (this.vacunasAlDia.getId() > 0)
                 parametros += "&vacunasAlDia=" + this.vacunasAlDia.getId();
             if (this.latitud != null)
-                parametros += "&latitud=" + this.latitud.toString().replace('.', ',');
+                parametros += "&latitud=" + this.latitud;
             if (this.longitud != null)
-                parametros += "&longitud=" + this.longitud.toString().replace('.', ',');
+                parametros += "&longitud=" + this.longitud;
             if (this.distancia != null)
-                parametros += "&distancia=" + this.distancia.toString().replace('.', ',');
+                parametros += "&distancia=" + this.distancia;
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
@@ -515,5 +522,13 @@ public class Alerta {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public TipoPublicacion getTipoPublicacion() {
+        return tipoPublicacion;
+    }
+
+    public void setTipoPublicacion(TipoPublicacion tipoPublicacion) {
+        this.tipoPublicacion = tipoPublicacion;
     }
 }

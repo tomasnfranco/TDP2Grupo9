@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         com.google.android.gms.location.LocationListener,
         GoogleMap.OnInfoWindowClickListener {
 
+    private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserRegisterTask userRegisterTask = null;
     private Button btnRegistrarse;
     private EditText etTelefono;
@@ -508,8 +510,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
             userRegisterTask = null;
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
-                    startActivity(intent);
+                    obtenerAtributosTask = new ObtenerAtributosTask();
+                    obtenerAtributosTask.execute((Void) null);
                 }
                 finish();
             } else {
@@ -522,4 +524,41 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         }
     }
 
+    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if (!PublicacionAtributos.getInstancia().isLoaded()) {
+                    PublicacionAtributos.getInstancia().cargarAtributos(Usuario.getInstancia().getToken());
+                    Thread.sleep(200);
+                }
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            obtenerAtributosTask = null;
+            if (success) {
+                if (PublicacionAtributos.getInstancia().isLoaded()){
+                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    //TODO: NO SE PUDIERON CARGAR LOS ATRIBUTOS!!!
+                }
+                finish();
+            } else {
+                //TODO: ERROR
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            obtenerAtributosTask = null;
+        }
+    }
 }

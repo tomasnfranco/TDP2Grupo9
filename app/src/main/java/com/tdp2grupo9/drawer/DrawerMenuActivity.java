@@ -23,7 +23,10 @@ import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.fragment.MisPublicacionesFragment;
 import com.tdp2grupo9.login.LoginActivity;
+import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.drawer_navigation_menu);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,10 +181,6 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
 
     public class UserLogoutTask extends AsyncTask<Void, Void, Boolean> {
 
-        UserLogoutTask() {
-
-        }
-
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -199,10 +199,12 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
                 if (!Usuario.getInstancia().isLogueado()) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
+                } else {
+                    //TODO: Toast no pudo cerrar sesion
                 }
-
                 finish();
             } else {
+                //TODO: Toast no pudo cerrar sesion
             }
         }
 

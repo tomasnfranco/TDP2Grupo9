@@ -40,6 +40,8 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
+import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
 
 import org.json.JSONException;
@@ -57,6 +59,9 @@ import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = "BSH.LoginAct";
+
+    private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
     private UserFacebookLoginTask authenticationFacebookTask = null;
     private UserFacebookGetPhoto authenticationFacebookGetPhoto = null;
@@ -66,7 +71,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private LoginButton facebookSignInButton;
     private View progressView;
     CallbackManager callbackManager;
-    ProfileTracker profileTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +85,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         createFacebookSignInButton();
 
         progressView = findViewById(R.id.login_progress);
-
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(
-                    Profile oldProfile,
-                    Profile currentProfile) {
-                if (currentProfile != null) {
-                    //Usuario.getInstancia().setNombre(currentProfile.getName());
-                    //Usuario.getInstancia().setApellido(currentProfile.getLastName());
-                }
-            }
-        };
     }
 
     @Override
@@ -159,6 +151,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 Usuario.getInstancia().setFacebookId(Long.parseLong(loginResult.getAccessToken().getUserId()));
                 Usuario.getInstancia().setFacebookToken(loginResult.getAccessToken().getToken());
+                Usuario.getInstancia().setEmail("");
+                Usuario.getInstancia().setPassword("");
 
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
 
@@ -218,7 +212,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: VER SI ES PARAMETRIZABLE LA LONGITUD O SI SE AGREGAN OTRAS CONDICIONES
         return password.length() == 6;
     }
 
@@ -236,21 +229,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void attemptLogin() {
+
+        String METHOD = "attemptLogin";
+
         if (authenticationEmailPasswordTask != null)
             return;
-        Log.i("BuscaSusHuellas", "Login con email y password solicitado");
+
+        Log.i(LOG_TAG, METHOD + " Login con email y password solicitado ");
+
         resetErrors();
         if (!isLoginFormValid()){
-            Log.w("BuscaSusHuellas", "El formulario de logueo no es valido");
+            Log.w(LOG_TAG, METHOD + " El formulario de logueo no es valido");
             if (emailTextView.getError() != null && !emailTextView.getError().toString().isEmpty())
                 emailTextView.requestFocus();
             else if (passwordEditText.getError() != null && !passwordEditText.getError().toString().isEmpty())
                 passwordEditText.requestFocus();
         } else {
-            Log.i("BuscaSusHuellas", "El formulario de logueo es valido");
+            Log.i(LOG_TAG, METHOD + " El formulario de logueo es valido");
             showProgress(true);
             Usuario.getInstancia().setEmail(emailTextView.getText().toString());
             Usuario.getInstancia().setPassword(passwordEditText.getText().toString());
+            Usuario.getInstancia().setFacebookId(null);
+            Usuario.getInstancia().setFacebookToken("");
             authenticationEmailPasswordTask = new UserEmailPasswordLoginTask();
             authenticationEmailPasswordTask.execute((Void) null);
         }
@@ -298,29 +298,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public class UserEmailPasswordLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String email;
-        private final String password;
-
-        UserEmailPasswordLoginTask() {
-            password = passwordEditText.getText().toString();
-            email = emailTextView.getText().toString();
-        }
+        UserEmailPasswordLoginTask() {}
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().login();
-                Thread.sleep(2000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }
-
-            // TODO: validar si el mail corresponde a una cuenta existente y si la password es la correcta
-            //if (email.equals("a@b")) {
-            //    return password.equals("c");
-            //}
-
-            // TODO: aca va el codigo para registrar una nueva cuenta.
             return true;
         }
 
@@ -328,17 +315,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             authenticationEmailPasswordTask = null;
             showProgress(false);
-
-            /*if (success) {
-                finish();
-            } else {
-                passwordEditText.setError(getString(R.string.error_incorrect_password));
-                passwordEditText.requestFocus();
-            }*/
-
-            Usuario.getInstancia().setFacebookId(Long.valueOf(1457655589));
-            Usuario.getInstancia().setFacebookToken("PPPPPPP");
-
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
                     Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
@@ -347,9 +323,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
                 }
-
                 finish();
             } else {
+                //TODO: ERROR
             }
         }
 
@@ -391,15 +367,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public class UserFacebookLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        UserFacebookLoginTask() {
-
-        }
+        UserFacebookLoginTask() {}
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().login();
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -412,15 +386,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
-                    startActivity(intent);
+                    obtenerAtributosTask = new ObtenerAtributosTask();
+                    obtenerAtributosTask.execute((Void) null);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
                 }
-
                 finish();
             } else {
+                //TODO: ERROR
             }
         }
 
@@ -434,7 +408,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onDestroy() {
         super.onDestroy();
-        profileTracker.stopTracking();
     }
+
+
+    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if (!PublicacionAtributos.getInstancia().isLoaded()) {
+                    PublicacionAtributos.getInstancia().cargarAtributos(Usuario.getInstancia().getToken());
+                    Thread.sleep(200);
+                }
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            obtenerAtributosTask = null;
+            if (success) {
+                if (PublicacionAtributos.getInstancia().isLoaded()){
+                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    //TODO: NO SE PUDIERON CARGAR LOS ATRIBUTOS!!!
+                }
+                finish();
+            } else {
+                //TODO: ERROR
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            obtenerAtributosTask = null;
+        }
+    }
+
 }
 

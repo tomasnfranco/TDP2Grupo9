@@ -31,8 +31,6 @@ import java.util.List;
 
 public abstract class SeleccionAtributosFragment extends Fragment {
 
-    private ObtenerAtributosTask obtenerAtributosTask;
-    protected PublicacionAtributos publicacionAtributos;
     protected Spinner spEspecie;
     protected Spinner spRaza;
     protected Spinner spSexo;
@@ -48,12 +46,6 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     protected GoogleMap map;
     protected MapFragment mMapFragment;
     protected View mFragmentView;
-
-    protected void obtenerAtributos() {
-        publicacionAtributos = new PublicacionAtributos();
-        obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
-        obtenerAtributosTask.execute((Void) null);
-    }
 
     private Spinner createSpinner(List<AtributoPublicacion> atributos, AtributoPublicacion atributoPublicacion, int id) {
         try {
@@ -77,87 +69,54 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     }
 
     protected void createEspecieSpinner() {
-        spEspecie = createSpinner(publicacionAtributos.getEspecies(), new Especie(), R.id.especie_spinner);
+        spEspecie = createSpinner(PublicacionAtributos.getInstancia().getEspecies(), new Especie(), R.id.especie_spinner);
     }
 
     protected void createRazaSpinner() {
-        spRaza = createSpinner(publicacionAtributos.getRazas(), new Raza(), R.id.raza_spinner);
+        spRaza = createSpinner(PublicacionAtributos.getInstancia().getRazas(), new Raza(), R.id.raza_spinner);
     }
 
     protected void createSexoSpinner() {
-        spSexo = createSpinner(publicacionAtributos.getSexos(), new Sexo(), R.id.sexo_spinner);
+        spSexo = createSpinner(PublicacionAtributos.getInstancia().getSexos(), new Sexo(), R.id.sexo_spinner);
     }
 
     protected void createTamanioSpinner() {
-        spTamanio = createSpinner(publicacionAtributos.getTamanios(), new Tamanio(), R.id.tamanio_spinner);
+        spTamanio = createSpinner(PublicacionAtributos.getInstancia().getTamanios(), new Tamanio(), R.id.tamanio_spinner);
     }
 
     protected void createEdadSpinner() {
-        spEdad = createSpinner(publicacionAtributos.getEdades(), new Edad(), R.id.edad_spinner);
+        spEdad = createSpinner(PublicacionAtributos.getInstancia().getEdades(), new Edad(), R.id.edad_spinner);
     }
 
     protected void createColorSpinner() {
-        spColor = createSpinner(publicacionAtributos.getColores(), new Color(), R.id.color_spinner);
+        spColor = createSpinner(PublicacionAtributos.getInstancia().getColores(), new Color(), R.id.color_spinner);
     }
 
     protected void createCompatibleConSpinner() {
-        spCompatibleCon = createSpinner(publicacionAtributos.getCompatibilidades(), new CompatibleCon(), R.id.compatible_con_spinner);
+        spCompatibleCon = createSpinner(PublicacionAtributos.getInstancia().getCompatibilidades(), new CompatibleCon(), R.id.compatible_con_spinner);
     }
 
     protected void createPapelesDiaSpinner() {
-        spPapeles = createSpinner(publicacionAtributos.getPapelesAlDia(), new PapelesAlDia(), R.id.papeles_dia_spinner);
+        spPapeles = createSpinner(PublicacionAtributos.getInstancia().getPapelesAlDia(), new PapelesAlDia(), R.id.papeles_dia_spinner);
     }
 
     protected void createVacunasDiaSpinner() {
-        spVacunas = createSpinner(publicacionAtributos.getVacunasAlDia(), new VacunasAlDia(), R.id.vacunas_dia_spinner);
+        spVacunas = createSpinner(PublicacionAtributos.getInstancia().getVacunasAlDia(), new VacunasAlDia(), R.id.vacunas_dia_spinner);
     }
 
     protected void createCastradorSpinner() {
-        spCastrado = createSpinner(publicacionAtributos.getCastrados(), new Castrado(), R.id.castrado_spinner);
+        spCastrado = createSpinner(PublicacionAtributos.getInstancia().getCastrados(), new Castrado(), R.id.castrado_spinner);
     }
 
     protected void createProteccionSpinner() {
-        spProteccion = createSpinner(publicacionAtributos.getProtecciones(), new Proteccion(), R.id.proteccion_spinner);
+        spProteccion = createSpinner(PublicacionAtributos.getInstancia().getProtecciones(), new Proteccion(), R.id.proteccion_spinner);
     }
 
     protected void createEnergiaSpinner() {
-        spEnergia = createSpinner(publicacionAtributos.getEnergias(), new Energia(), R.id.energia_spinner);
+        spEnergia = createSpinner(PublicacionAtributos.getInstancia().getEnergias(), new Energia(), R.id.energia_spinner);
     }
 
     protected abstract void initializeSpinners();
-
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        PublicacionAtributos publicacionAtributos;
-        ObtenerAtributosTask(PublicacionAtributos publicacionAtributos) {
-            this.publicacionAtributos = publicacionAtributos;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                this.publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-            if (success) {
-                initializeSpinners();
-            } else {
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
-    }
 
     @Override
     public void onDestroyView() {

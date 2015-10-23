@@ -29,9 +29,7 @@ import java.util.List;
 
 public class SeleccionAtributosActivity extends Activity {
 
-    private ObtenerAtributosTask obtenerAtributosTask;
     protected AtributosJSONInterpeter atributosInterpeter;
-    protected PublicacionAtributos publicacionAtributos;
     protected Spinner spEspecie;
     protected Spinner spRaza;
     protected Spinner spSexo;
@@ -49,14 +47,10 @@ public class SeleccionAtributosActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         atributosInterpeter = new AtributosJSONInterpeter(this);
-        publicacionAtributos = new PublicacionAtributos();
-        obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
-        obtenerAtributosTask.execute((Void) null);
-
     }
 
     protected void createEspecieSpinner() {
-        List<AtributoPublicacion> especies = this.publicacionAtributos.getEspecies();
+        List<AtributoPublicacion> especies = PublicacionAtributos.getInstancia().getEspecies();
         Especie especie = new Especie();
         especie.setValor(especie.getName());
         especies.add(0, especie);
@@ -67,7 +61,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createRazaSpinner() {
-        List<AtributoPublicacion> razas = this.publicacionAtributos.getRazas();
+        List<AtributoPublicacion> razas = PublicacionAtributos.getInstancia().getRazas();
         Raza raza = new Raza();
         raza.setValor(raza.getName());
         razas.add(0, raza);
@@ -78,7 +72,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createSexoSpinner() {
-        List<AtributoPublicacion> sexos = this.publicacionAtributos.getSexos();
+        List<AtributoPublicacion> sexos = PublicacionAtributos.getInstancia().getSexos();
         Sexo sexo = new Sexo();
         sexo.setValor(sexo.getName());
         sexos.add(0, sexo);
@@ -89,7 +83,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createTamanioSpinner() {
-        List<AtributoPublicacion> tamanios = this.publicacionAtributos.getTamanios();
+        List<AtributoPublicacion> tamanios = PublicacionAtributos.getInstancia().getTamanios();
         Tamanio tamanio = new Tamanio();
         tamanio.setValor(tamanio.getName());
         tamanios.add(0, tamanio);
@@ -100,7 +94,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createEdadSpinner() {
-        List<AtributoPublicacion> edades = this.publicacionAtributos.getEdades();
+        List<AtributoPublicacion> edades = PublicacionAtributos.getInstancia().getEdades();
         Edad edad = new Edad();
         edad.setValor(edad.getName());
         edades.add(0, edad);
@@ -111,7 +105,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createColorSpinner() {
-        List<AtributoPublicacion> colores = this.publicacionAtributos.getColores();
+        List<AtributoPublicacion> colores = PublicacionAtributos.getInstancia().getColores();
         Color color = new Color();
         color.setValor(color.getName());
         colores.add(0, color);
@@ -124,7 +118,7 @@ public class SeleccionAtributosActivity extends Activity {
     protected void createCompatibleConSpinner() {
         spCompatibleCon = (Spinner) findViewById(R.id.compatible_con_spinner);
         if (spCompatibleCon == null) return;
-        List<AtributoPublicacion> compatibilidades = this.publicacionAtributos.getCompatibilidades();
+        List<AtributoPublicacion> compatibilidades = PublicacionAtributos.getInstancia().getCompatibilidades();
         CompatibleCon compatibleCon = new CompatibleCon();
         compatibleCon.setValor(compatibleCon.getName());
         compatibilidades.add(0, compatibleCon);
@@ -136,7 +130,7 @@ public class SeleccionAtributosActivity extends Activity {
     protected void createPapelesDiaSpinner() {
         spPapeles = (Spinner) findViewById(R.id.papeles_dia_spinner);
         if (spPapeles == null ) return;
-        List<AtributoPublicacion> papelesAlDias = this.publicacionAtributos.getPapelesAlDia();
+        List<AtributoPublicacion> papelesAlDias = PublicacionAtributos.getInstancia().getPapelesAlDia();
         PapelesAlDia papelesAlDia = new PapelesAlDia();
         papelesAlDia.setValor(papelesAlDia.getName());
         papelesAlDias.add(0, papelesAlDia);
@@ -148,7 +142,7 @@ public class SeleccionAtributosActivity extends Activity {
     protected void createVacunasDiaSpinner() {
         spVacunas = (Spinner) findViewById(R.id.vacunas_dia_spinner);
         if (spVacunas == null) return;
-        List<AtributoPublicacion> vacunasAldias = this.publicacionAtributos.getVacunasAlDia();
+        List<AtributoPublicacion> vacunasAldias = PublicacionAtributos.getInstancia().getVacunasAlDia();
         VacunasAlDia vacunasAldia = new VacunasAlDia();
         vacunasAldia.setValor(vacunasAldia.getName());
         vacunasAldias.add(0, vacunasAldia);
@@ -160,7 +154,7 @@ public class SeleccionAtributosActivity extends Activity {
     protected void createCastradorSpinner() {
         spCastrado = (Spinner) findViewById(R.id.castrado_spinner);
         if (spCastrado == null) return;
-        List<AtributoPublicacion> castrados = this.publicacionAtributos.getCastrados();
+        List<AtributoPublicacion> castrados = PublicacionAtributos.getInstancia().getCastrados();
         Castrado castrado = new Castrado();
         castrado.setValor(castrado.getName());
         castrados.add(0, castrado);
@@ -170,7 +164,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createProteccionSpinner() {
-        List<AtributoPublicacion> protecciones = this.publicacionAtributos.getProtecciones();
+        List<AtributoPublicacion> protecciones = PublicacionAtributos.getInstancia().getProtecciones();
         Proteccion proteccion = new Proteccion();
         proteccion.setValor(proteccion.getName());
         protecciones.add(0, proteccion);
@@ -181,7 +175,7 @@ public class SeleccionAtributosActivity extends Activity {
     }
 
     protected void createEnergiaSpinner() {
-        List<AtributoPublicacion> energias = this.publicacionAtributos.getEnergias();
+        List<AtributoPublicacion> energias = PublicacionAtributos.getInstancia().getEnergias();
         Energia energia = new Energia();
         energia.setValor(energia.getName());
         energias.add(0, energia);
@@ -204,39 +198,6 @@ public class SeleccionAtributosActivity extends Activity {
         createCastradorSpinner();
         createProteccionSpinner();
         createEnergiaSpinner();
-    }
-
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        PublicacionAtributos publicacionAtributos;
-        ObtenerAtributosTask(PublicacionAtributos publicacionAtributos) {
-            this.publicacionAtributos = publicacionAtributos;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                this.publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-            if (success) {
-                initializeWidgets();
-            } else {
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
     }
 
 }

@@ -31,7 +31,6 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
     private ListView listView;
     private BuscarAdopcionTask buscarAdopcionTask;
     private List<Publicacion> publicaciones;
-    private PublicacionAtributos publicacionAtributos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +77,6 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
         publicacion.setLongitud(longitud);
         publicacion.setLatitud(latitud);
 
-        publicacionAtributos = new PublicacionAtributos();
-
         buscarAdopcionTask = new BuscarAdopcionTask(publicacion);
         buscarAdopcionTask.execute((Void)null);
     }
@@ -105,7 +102,7 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
         this.listView = (ListView) findViewById(R.id.listView);
         List<Item> items = new ArrayList<Item>();
         for (Publicacion p : publicaciones){
-            Item item = new Item(p, this, publicacionAtributos);
+            Item item = new Item(p, this, PublicacionAtributos.getInstancia());
             items.add(item);
         }
 

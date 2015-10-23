@@ -75,7 +75,8 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         hideInnecessaryFields();
-        obtenerAtributos();
+
+        initializeSpinners();
 
         return mFragmentView;
     }

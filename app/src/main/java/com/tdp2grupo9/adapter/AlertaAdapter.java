@@ -31,20 +31,11 @@ public class AlertaAdapter extends BaseAdapter {
     TextView infAdicional;
     TextView infBasica;
     TextView infFechaAlerta;
-    private ObtenerAtributosTask obtenerAtributosTask;
-    protected PublicacionAtributos publicacionAtributos;
     private TextView titleAdicional;
 
     public AlertaAdapter(Context context, List<Alerta> alertas){
         this.alertasList = alertas;
         this.context = context;
-        obtenerAtributos();
-    }
-
-    protected void obtenerAtributos() {
-        publicacionAtributos = new PublicacionAtributos();
-        obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
-        obtenerAtributosTask.execute((Void) null);
     }
 
     @Override
@@ -95,12 +86,12 @@ public class AlertaAdapter extends BaseAdapter {
     }
 
     private String getInformacionBasica(int i, View alertaView){
-        String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(alertasList.get(i).getEspecie())).toString();
-        String sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(alertasList.get(i).getSexo())).toString();
-        String edad = publicacionAtributos.getEdades().get(publicacionAtributos.getEdades().indexOf(alertasList.get(i).getEdad())).toString();
-        String color = publicacionAtributos.getColores().get(publicacionAtributos.getColores().indexOf(alertasList.get(i).getColor())).toString();
-        String raza = publicacionAtributos.getRazas().get(publicacionAtributos.getRazas().indexOf(alertasList.get(i).getRaza())).toString();
-        String tamanio = publicacionAtributos.getTamanios().get(publicacionAtributos.getTamanios().indexOf(alertasList.get(i).getTamanio())).toString();
+        String especie = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(alertasList.get(i).getEspecie())).toString();
+        String sexo = PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(alertasList.get(i).getSexo())).toString();
+        String edad = PublicacionAtributos.getInstancia().getEdades().get(PublicacionAtributos.getInstancia().getEdades().indexOf(alertasList.get(i).getEdad())).toString();
+        String color = PublicacionAtributos.getInstancia().getColores().get(PublicacionAtributos.getInstancia().getColores().indexOf(alertasList.get(i).getColor())).toString();
+        String raza = PublicacionAtributos.getInstancia().getRazas().get(PublicacionAtributos.getInstancia().getRazas().indexOf(alertasList.get(i).getRaza())).toString();
+        String tamanio = PublicacionAtributos.getInstancia().getTamanios().get(PublicacionAtributos.getInstancia().getTamanios().indexOf(alertasList.get(i).getTamanio())).toString();
 
         String infoBasica ="";
         infoBasica+= especie + " ";
@@ -129,19 +120,19 @@ public class AlertaAdapter extends BaseAdapter {
         String proteccion = "";
         String compatibleCon = "";
 
-        if (publicacionAtributos.getVacunasAlDia().indexOf(vacunasEntity) > -1){
-            vacunas= publicacionAtributos.getVacunasAlDia().get(publicacionAtributos.getVacunasAlDia().indexOf(vacunasEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(vacunasEntity) > -1){
+            vacunas= PublicacionAtributos.getInstancia().getVacunasAlDia().get(PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(vacunasEntity)).toString();
         }
-        if (publicacionAtributos.getCastrados().indexOf(castradoEntity) > -1)
-            castrado = publicacionAtributos.getCastrados().get(publicacionAtributos.getCastrados().indexOf(castradoEntity)).toString();
-        if (publicacionAtributos.getProtecciones().indexOf(proteccionEntity) > -1)
-            proteccion = publicacionAtributos.getProtecciones().get(publicacionAtributos.getProtecciones().indexOf(proteccionEntity)).toString();
-        if (publicacionAtributos.getEnergias().indexOf(energiaEntity) > -1)
-            energia = publicacionAtributos.getEnergias().get(publicacionAtributos.getEnergias().indexOf(energiaEntity)).toString();
-        if (publicacionAtributos.getPapelesAlDia().indexOf(papelesEntity) > -1)
-            papeles = publicacionAtributos.getPapelesAlDia().get(publicacionAtributos.getPapelesAlDia().indexOf(papelesEntity)).toString();
-        if (publicacionAtributos.getCompatibilidades().indexOf(compatibleEntity) > -1)
-            compatibleCon = publicacionAtributos.getCompatibilidades().get(publicacionAtributos.getCompatibilidades().indexOf(compatibleEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getCastrados().indexOf(castradoEntity) > -1)
+            castrado = PublicacionAtributos.getInstancia().getCastrados().get(PublicacionAtributos.getInstancia().getCastrados().indexOf(castradoEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getProtecciones().indexOf(proteccionEntity) > -1)
+            proteccion = PublicacionAtributos.getInstancia().getProtecciones().get(PublicacionAtributos.getInstancia().getProtecciones().indexOf(proteccionEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getEnergias().indexOf(energiaEntity) > -1)
+            energia = PublicacionAtributos.getInstancia().getEnergias().get(PublicacionAtributos.getInstancia().getEnergias().indexOf(energiaEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(papelesEntity) > -1)
+            papeles = PublicacionAtributos.getInstancia().getPapelesAlDia().get(PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(papelesEntity)).toString();
+        if (PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(compatibleEntity) > -1)
+            compatibleCon = PublicacionAtributos.getInstancia().getCompatibilidades().get(PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(compatibleEntity)).toString();
 
         String infoAdicional="";
 
@@ -188,36 +179,6 @@ public class AlertaAdapter extends BaseAdapter {
             alertaView = view;
         }
         return alertaView;
-    }
-
-
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        PublicacionAtributos publicacionAtributos;
-        ObtenerAtributosTask(PublicacionAtributos publicacionAtributos) {
-            this.publicacionAtributos = publicacionAtributos;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                this.publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
     }
 
 }

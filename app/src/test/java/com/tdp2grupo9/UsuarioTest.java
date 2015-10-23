@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -55,6 +56,7 @@ public class UsuarioTest {
         publicacion.setRequiereCuidadosEspeciales(false);
         publicacion.setContacto("ROMI");
         publicacion.setCondiciones("");
+        publicacion.setDireccion("UNLUGAR");
 
         publicacion.guardarPublicacion(token);
         return publicacion.getId();
@@ -73,70 +75,139 @@ public class UsuarioTest {
     public void registrarUsuarioConFacebook() {
         Usuario.getInstancia().resetearAtributos();
         Usuario.getInstancia().setFacebookId(1156897111L);
-        Usuario.getInstancia().setNombre("PEPE");
-        Usuario.getInstancia().setApellido("PEPITO");
-        Usuario.getInstancia().setEmail("casal.romina@gmail.com");
-        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setNombre("USUARIOFACE");
+        Usuario.getInstancia().setApellido("USUARIOFACE");
+        Usuario.getInstancia().setEmail("usuario.facebook@gmail.com");
+        Usuario.getInstancia().setLongitud(100.1);
         Usuario.getInstancia().setLatitud(50.54);
-        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setDireccion("USUARIOFACEBOOK");
         Usuario.getInstancia().setTelefono("1124546787");
         usuario = Usuario.getInstancia();
 
         usuario.registrarse();
 
         assertTrue("Debe tener id no cero", usuario.getId() > 0);
-        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
-        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
-
+        assertTrue("Debe estar logueado", usuario.isLogueado());
+        assertTrue("Debe mantener nombre", usuario.getNombre().equals("USUARIOFACE"));
     }
-
 
     @Test
     public void registrarUsuarioConEmail() {
         Usuario.getInstancia().resetearAtributos();
-        Usuario.getInstancia().setNombre("PEPE");
-        Usuario.getInstancia().setApellido("PEPITO");
-        Usuario.getInstancia().setEmail("casal.romina@gmail.com");
+        Usuario.getInstancia().setNombre("USUARIOMAIL");
+        Usuario.getInstancia().setApellido("USUARIOMAIL");
+        Usuario.getInstancia().setEmail("usuari.mail@gmail.com");
         Usuario.getInstancia().setPassword("121545787");
-        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setLongitud(100.1);
         Usuario.getInstancia().setLatitud(50.54);
-        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setDireccion("USUARIOMAIL");
         Usuario.getInstancia().setTelefono("1124546787");
         usuario = Usuario.getInstancia();
 
         usuario.registrarse();
 
         assertTrue("Debe tener id no cero", usuario.getId() > 0);
-        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
-        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
+        assertTrue("Debe estar logueado", usuario.isLogueado());
+        assertTrue("Debe mantener nombre", usuario.getNombre().equals("USUARIOMAIL"));
+    }
 
+    @Test
+    public void registrarUsuarioLogout() {
+        String mailRepetido = "usuario.logout@gmail.com";
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("USUARIOLOGOUT");
+        Usuario.getInstancia().setApellido("USUARIOLOGOUT");
+        Usuario.getInstancia().setEmail(mailRepetido);
+        Usuario.getInstancia().setPassword("121545787");
+        Usuario.getInstancia().setLongitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("USUARIOLOGOUT");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+        usuario.registrarse();
+        assertTrue("Debe estar logueado", usuario.isLogueado());
+        usuario.logout();
+        assertFalse("No debe estar logueado", usuario.isLogueado());
+    }
+
+    @Test
+    public void registrarUsuarioDosVecesElMismoMail() {
+
+        String mailRepetido = "usuario.mailrepetido@gmail.com";
+
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setApellido("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setEmail(mailRepetido);
+        Usuario.getInstancia().setPassword("121545787");
+        Usuario.getInstancia().setLongitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+        usuario.registrarse();
+        usuario.logout();
+
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setApellido("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setEmail(mailRepetido);
+        Usuario.getInstancia().setPassword("1215454444");
+        Usuario.getInstancia().setLongitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("USUARIOMAILREPETIDO");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+        usuario.registrarse();
+
+        assertTrue("Debe tener id cero", usuario.getId().equals(0));
+        assertFalse("No debe estar logueado", usuario.isLogueado());
     }
 
     @Test
     public void loguearUsuarioConEmail() {
         Usuario.getInstancia().resetearAtributos();
-        Usuario.getInstancia().setNombre("PEPE");
-        Usuario.getInstancia().setApellido("PEPITO");
-        Usuario.getInstancia().setEmail("casal.romina@gmail.com.ar");
+        Usuario.getInstancia().setNombre("USUARIOLOGINMAIL");
+        Usuario.getInstancia().setApellido("USUARIOLOGINMAIL");
+        Usuario.getInstancia().setEmail("usuario.loginmail@prueba.com");
         Usuario.getInstancia().setPassword("121545787");
-        Usuario.getInstancia().setLatitud(100.1);
+        Usuario.getInstancia().setLongitud(100.1);
         Usuario.getInstancia().setLatitud(50.54);
-        Usuario.getInstancia().setDireccion("UNLUGAR");
+        Usuario.getInstancia().setDireccion("USUARIOLOGINMAIL");
         Usuario.getInstancia().setTelefono("1124546787");
         usuario = Usuario.getInstancia();
 
         usuario.registrarse();
         usuario.logout();
-        usuario.setEmail("casal.romina@gmail.com.ar");
+        usuario.setEmail("usuario.loginmail@prueba.com");
         usuario.setPassword("121545787");
         usuario.login();
 
-        assertTrue("Debe tener id no cero", usuario.getId() > 0);
-        assertTrue("Debe mantener nombre", usuario.getNombre() == "PEPE");
-        assertTrue("Debe mantener direccion", usuario.getNombre() == "PEPE");
+        assertTrue("Debe estar logueado", usuario.isLogueado());
 
     }
 
+    @Test
+    public void loguearUsuarioConEmailPasswordIncorrecta() {
+        Usuario.getInstancia().resetearAtributos();
+        Usuario.getInstancia().setNombre("USUARIOWRONGPASS");
+        Usuario.getInstancia().setApellido("USUARIOWRONGPASS");
+        Usuario.getInstancia().setEmail("usuario.wrongpassword@prueba.com");
+        Usuario.getInstancia().setPassword("123456");
+        Usuario.getInstancia().setLongitud(100.1);
+        Usuario.getInstancia().setLatitud(50.54);
+        Usuario.getInstancia().setDireccion("USUARIOWRONGPASS");
+        Usuario.getInstancia().setTelefono("1124546787");
+        usuario = Usuario.getInstancia();
+        usuario.registrarse();
+        usuario.logout();
+
+        usuario.setEmail("usuario.wrongpassword@prueba.com");
+        usuario.setPassword("654321");
+        usuario.login();
+
+        assertFalse("No debe estar logueado", usuario.isLogueado());
+    }
 
     @Test
     public void postularmeEnPublicacionDeOtroUsuario() {
@@ -207,7 +278,7 @@ public class UsuarioTest {
         usuario.concretarAdopcion(publicacionId, postulanteId);
 
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), publicacionId);
-        assertTrue("La publicacion no esta concreatada", publicacion.getConcreatada());
+        assertTrue("La publicacion no esta concretada", publicacion.getConcreatada());
         assertTrue("El postulante no es el elegido", publicacion.getPostulanteConcretadoId().equals(postulanteId));
     }
 

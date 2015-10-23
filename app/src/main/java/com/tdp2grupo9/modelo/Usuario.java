@@ -159,8 +159,8 @@ public class Usuario {
 
             parametros += "&direccion="+this.direccion;
             parametros += "&telefono="+this.telefono;
-            parametros += "&latitud="+this.latitud.toString().replace('.', ',');
-            parametros += "&longitud="+this.longitud.toString().replace('.', ',');
+            parametros += "&latitud="+this.latitud;
+            parametros += "&longitud="+this.longitud;
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);

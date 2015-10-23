@@ -36,6 +36,7 @@ import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.utils.TiposEnum;
 
@@ -49,11 +50,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private List<Publicacion> publicaciones;
     private Context context;
-    private ObtenerAtributosTask obtenerAtributosTask;
     private GuardarPostulacionTask guardarPostulacionTask;
     private EnviarConsultaTask enviarConsultaTask;
 
-    protected PublicacionAtributos publicacionAtributos;
     private SliderLayout photo_slider;
     private SliderLayout video_slider;
     private ListView listView;
@@ -82,15 +81,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         this.mensajes = new ArrayList<>();
         this.imagenes = new ArrayList<>();
         this.tipos = tipos;
-        obtenerAtributos();
     }
-
-    protected void obtenerAtributos() {
-        publicacionAtributos = new PublicacionAtributos();
-        obtenerAtributosTask = new ObtenerAtributosTask(this.publicacionAtributos);
-        obtenerAtributosTask.execute((Void) null);
-    }
-
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
         View publicacionView;
@@ -204,9 +195,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         TextView tipo_publicacion = (TextView) publicacionView.findViewById(R.id.tv_tipo_publicacion);
 
         //TODO completar textview con el tipo de la publicacion. Obtener desde publicacion obtenida
-        if (publicaciones.get(i).getTipoPublicacion() == 1) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
-        if (publicaciones.get(i).getTipoPublicacion() == 2) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
-        if (publicaciones.get(i).getTipoPublicacion() == 3)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
+        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.ADOPCION) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
+        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.PERDIDA) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
+        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.ENCONTRADA)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
 
         try {
             Thread.sleep(1000);
@@ -215,8 +206,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
 
 
-        String especie = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
-        sexo = publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
+        String especie = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
+        sexo = PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
         ImageView publicacionSexoMascota = (ImageView) publicacionView.findViewById(R.id.publicacion_icon_sexo);
 
         if (sexo.equals("Hembra")){
@@ -272,22 +263,22 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void cargarInformacionBasica(int i, View v){
-        ((TextView) v.findViewById(R.id.infEspecie)).setText(publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString());
-        ((TextView) v.findViewById(R.id.infSexo)).setText(publicacionAtributos.getSexos().get(publicacionAtributos.getSexos().indexOf(publicaciones.get(i).getSexo())).toString());
-        ((TextView) v.findViewById(R.id.infEdad)).setText(publicacionAtributos.getEdades().get(publicacionAtributos.getEdades().indexOf(publicaciones.get(i).getEdad())).toString());
-        ((TextView) v.findViewById(R.id.infColor)).setText(publicacionAtributos.getColores().get(publicacionAtributos.getColores().indexOf(publicaciones.get(i).getColor())).toString());
-        ((TextView) v.findViewById(R.id.infRaza)).setText(publicacionAtributos.getRazas().get(publicacionAtributos.getRazas().indexOf(publicaciones.get(i).getRaza())).toString());
-        ((TextView) v.findViewById(R.id.infTamanio)).setText(publicacionAtributos.getTamanios().get(publicacionAtributos.getTamanios().indexOf(publicaciones.get(i).getTamanio())).toString());
+        ((TextView) v.findViewById(R.id.infEspecie)).setText(PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString());
+        ((TextView) v.findViewById(R.id.infSexo)).setText(PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(publicaciones.get(i).getSexo())).toString());
+        ((TextView) v.findViewById(R.id.infEdad)).setText(PublicacionAtributos.getInstancia().getEdades().get(PublicacionAtributos.getInstancia().getEdades().indexOf(publicaciones.get(i).getEdad())).toString());
+        ((TextView) v.findViewById(R.id.infColor)).setText(PublicacionAtributos.getInstancia().getColores().get(PublicacionAtributos.getInstancia().getColores().indexOf(publicaciones.get(i).getColor())).toString());
+        ((TextView) v.findViewById(R.id.infRaza)).setText(PublicacionAtributos.getInstancia().getRazas().get(PublicacionAtributos.getInstancia().getRazas().indexOf(publicaciones.get(i).getRaza())).toString());
+        ((TextView) v.findViewById(R.id.infTamanio)).setText(PublicacionAtributos.getInstancia().getTamanios().get(PublicacionAtributos.getInstancia().getTamanios().indexOf(publicaciones.get(i).getTamanio())).toString());
     }
 
     private void cargarInformacionAdicional(int i, View v){
         String condiciones = publicaciones.get(i).getCondiciones();
-        String vacunas = publicacionAtributos.getVacunasAlDia().get(publicacionAtributos.getVacunasAlDia().indexOf(publicaciones.get(i).getVacunasAlDia())).toString();
-        String castrado = publicacionAtributos.getCastrados().get(publicacionAtributos.getCastrados().indexOf(publicaciones.get(i).getCastrado())).toString();
-        String proteccion = publicacionAtributos.getProtecciones().get(publicacionAtributos.getProtecciones().indexOf(publicaciones.get(i).getProteccion())).toString();
-        String energia = publicacionAtributos.getEnergias().get(publicacionAtributos.getEnergias().indexOf(publicaciones.get(i).getEnergia())).toString();
-        String papeles = publicacionAtributos.getPapelesAlDia().get(publicacionAtributos.getPapelesAlDia().indexOf(publicaciones.get(i).getPapelesAlDia())).toString();
-        String compatibleCon = publicacionAtributos.getCompatibilidades().get(publicacionAtributos.getCompatibilidades().indexOf(publicaciones.get(i).getCompatibleCon())).toString();
+        String vacunas = PublicacionAtributos.getInstancia().getVacunasAlDia().get(PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(publicaciones.get(i).getVacunasAlDia())).toString();
+        String castrado = PublicacionAtributos.getInstancia().getCastrados().get(PublicacionAtributos.getInstancia().getCastrados().indexOf(publicaciones.get(i).getCastrado())).toString();
+        String proteccion = PublicacionAtributos.getInstancia().getProtecciones().get(PublicacionAtributos.getInstancia().getProtecciones().indexOf(publicaciones.get(i).getProteccion())).toString();
+        String energia = PublicacionAtributos.getInstancia().getEnergias().get(PublicacionAtributos.getInstancia().getEnergias().indexOf(publicaciones.get(i).getEnergia())).toString();
+        String papeles = PublicacionAtributos.getInstancia().getPapelesAlDia().get(PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(publicaciones.get(i).getPapelesAlDia())).toString();
+        String compatibleCon = PublicacionAtributos.getInstancia().getCompatibilidades().get(PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(publicaciones.get(i).getCompatibleCon())).toString();
 
         if (!condiciones.isEmpty())
             ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
@@ -403,7 +394,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         TextView localizacion_mascota = (TextView) v.findViewById(R.id.tv_direccion_mascota);
         localizacion_mascota.setText(publicaciones.get(i).getDireccion());
 
-        especieView = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
+        especieView = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
         imagenPosicion = (ImageView) v.findViewById(R.id.iv_localizacion_mascota);
         imagenPosicion.setImageBitmap(BitmapFactory.decodeResource(v.getResources(),R.drawable.localizacion_perro));
 
@@ -532,37 +523,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
-    }
-
-
-
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        PublicacionAtributos publicacionAtributos;
-        ObtenerAtributosTask(PublicacionAtributos publicacionAtributos) {
-            this.publicacionAtributos = publicacionAtributos;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                this.publicacionAtributos.cargarAtributos(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
     }
 
     public class GuardarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
