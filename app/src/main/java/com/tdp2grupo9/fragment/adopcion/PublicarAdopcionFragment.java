@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
@@ -58,6 +61,8 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
     private FotoPicker mFotoPicker;
 
     private PublicarAdopcionTask publicarAdopcionTask;
+    private RadioGroup radioGroupPublicaciones;
+    private String tipoPublicacion = "";
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -73,7 +78,6 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         initializeGoogleApi();
 
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         hideInnecessaryFields();
 
         initializeSpinners();
@@ -113,6 +117,19 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
         mFotoPicker = (FotoPicker) mFragmentView.findViewById(R.id.foto_picker);
         mFotoPicker.setFragment(this);
+        radioGroupPublicaciones = (RadioGroup) mFragmentView.findViewById(R.id.radio_group_tipo_publicacion);
+        radioGroupPublicaciones.clearCheck();
+
+        radioGroupPublicaciones.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if(null!=rb && checkedId > -1){
+                    tipoPublicacion = rb.getText().toString();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -121,6 +138,15 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         if (v.getId() == R.id.btn_publicar_adopcion){
             if (isValidAttribute()){
                 Publicacion publicacion = new Publicacion();
+
+                if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.adopciones)))
+                    publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
+
+                if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.encontrados)))
+                    publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADA);
+
+                if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.perdidos)))
+                    publicacion.setTipoPublicacion(TipoPublicacion.PERDIDA);
 
                 publicacion.setNombreMascota(nombreDescripcion.getText().toString());
                 publicacion.setEspecie(((Especie) spEspecie.getSelectedItem()));
@@ -143,6 +169,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
 
                 publicacion.setLatitud(currentLat);
                 publicacion.setLongitud(currentLon);
+                publicacion.setDireccion(tvZona.getText().toString());
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
@@ -186,7 +213,10 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
     private boolean isValidAttribute(){
         boolean valido = true;
         String campoRequeridoString = getString(R.string.campo_requerido);
-
+        if (tipoPublicacion.isEmpty()) {
+            Toast.makeText(mFragmentView.getContext(), mFragmentView.getContext().getString(R.string.error_tipo_publicacion),
+                    Toast.LENGTH_LONG).show();
+            valido = false; }
         if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
         if (!validateCampoRequeridoSpinner(spRaza, campoRequeridoString)) { valido = false;}
         if (!validateCampoRequeridoSpinner(spSexo, campoRequeridoString)) { valido = false;}
@@ -242,6 +272,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         protected void onPostExecute(final Boolean success) {
             publicarAdopcionTask = null;
             if (success) {
+                radioGroupPublicaciones.clearCheck();
                 nombreDescripcion.setText("");
                 spEspecie.setSelection(0);
                 spRaza.setSelection(0);
