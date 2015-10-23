@@ -35,12 +35,8 @@ public class Publicacion {
 
     private static final String LOG_TAG = "BSH.Publicacion";
 
-    public static Integer TPUBLICACION_MASCOTA_ADOPCION = 1;
-    public static Integer TPUBLICACION_MASCOTA_PERDIDA = 2;
-    public static Integer TPUBLICACION_MASCOTA_ENCONTRADA = 3;
-
     private Integer id;
-    private Integer tipoPublicacion;
+    private TipoPublicacion tipoPublicacion;
     private Integer postulanteConcretadoId;
     private Integer publicadorId;
     private String direccion;
@@ -66,7 +62,7 @@ public class Publicacion {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
-    private Integer distancia;
+    private Double distancia;
 
     private List<Integer> postulantesIds;
     private List<Integer> mensajesIds;
@@ -79,7 +75,7 @@ public class Publicacion {
     public Publicacion() {
         this.id = 0;
         this.publicadorId = 0;
-        this.tipoPublicacion = TPUBLICACION_MASCOTA_ADOPCION;
+        this.tipoPublicacion = TipoPublicacion.ADOPCION;
         this.direccion = "";
         this.nombreMascota = "";
         this.condiciones = "";
@@ -199,7 +195,7 @@ public class Publicacion {
                     }
                     break;
                 case "tipoPublicacion":
-                    this.tipoPublicacion = reader.nextInt();
+                    this.tipoPublicacion = TipoPublicacion.getTipoPublicacion(reader.nextInt());
                     break;
                 case "nombreMascota":
                     this.nombreMascota = "";
@@ -229,7 +225,7 @@ public class Publicacion {
                     this.longitud = reader.nextDouble();
                     break;
                 case "distancia":
-                    this.distancia = reader.nextInt();
+                    this.distancia = reader.nextDouble();
                     break;
                 case "requiereCuidadosEspeciales":
                     this.requiereCuidadosEspeciales = reader.nextBoolean();
@@ -327,7 +323,7 @@ public class Publicacion {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion+
+            String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion.getValue()+
                     "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
                     "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
 
@@ -434,8 +430,8 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
-                    "&longitud="+publicacion.getLongitud().toString().replace('.', ',')+
-                    "&latitud="+publicacion.getLatitud().toString().replace('.', ',');
+                    "&longitud="+publicacion.getLongitud()+
+                    "&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
             if (publicacion.getDistancia() != null)
@@ -611,7 +607,7 @@ public class Publicacion {
         return id;
     }
 
-    public Integer getTipoPublicacion() {
+    public TipoPublicacion getTipoPublicacion() {
         return this.tipoPublicacion;
     }
 
@@ -725,7 +721,7 @@ public class Publicacion {
         return videoLink;
     }
 
-    public Integer getDistancia() {
+    public Double getDistancia() {
         return this.distancia;
     }
 
@@ -751,7 +747,7 @@ public class Publicacion {
         this.imagenes.add(imagen);
     }
 
-    public void setTipoPublicacion(Integer tipoPublicacion) {
+    public void setTipoPublicacion(TipoPublicacion tipoPublicacion) {
         this.tipoPublicacion = tipoPublicacion;
     }
 
@@ -851,7 +847,7 @@ public class Publicacion {
         this.fechaPublicacion = fechaPublicacion;
     }
 
-    public void setDistancia(Integer distancia) {
+    public void setDistancia(Double distancia) {
         this.distancia = distancia;
     }
 

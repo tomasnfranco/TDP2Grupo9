@@ -29,6 +29,9 @@ public class PublicacionAtributos {
 
     private static final String LOG_TAG = "BSH.PubliAtributos";
 
+    private static PublicacionAtributos INSTANCIA = null;
+
+    private boolean loaded;
     private List<AtributoPublicacion> colores;
     private List<AtributoPublicacion> castrados;
     private List<AtributoPublicacion> especies;
@@ -42,7 +45,19 @@ public class PublicacionAtributos {
     private List<AtributoPublicacion> vacunasAlDia;
     private List<AtributoPublicacion> razas;
 
-    public PublicacionAtributos() {
+    private PublicacionAtributos() {
+        this.resetearAtributos();
+    }
+
+    public static PublicacionAtributos getInstancia() {
+        if(INSTANCIA == null) {
+            INSTANCIA = new PublicacionAtributos();
+        }
+        return INSTANCIA;
+    }
+
+    private void resetearAtributos() {
+        this.loaded = false;
         this.colores = new ArrayList<>();
         this.castrados = new ArrayList<>();
         this.especies = new ArrayList<>();
@@ -56,22 +71,6 @@ public class PublicacionAtributos {
         this.vacunasAlDia = new ArrayList<>();
         this.razas = new ArrayList<>();
     }
-
-    private void resetearAtributos() {
-        this.colores.clear();
-        this.castrados.clear();
-        this.especies.clear();
-        this.compatibilidades.clear();
-        this.edades.clear();
-        this.energias.clear();
-        this.papelesAlDia.clear();
-        this.protecciones.clear();
-        this.sexos.clear();
-        this.tamanios.clear();
-        this.vacunasAlDia.clear();
-        this.razas.clear();
-    }
-
 
     private void jsonToAtributos(JsonReader reader) throws JSONException, IOException {
         reader.setLenient(true);
@@ -128,6 +127,8 @@ public class PublicacionAtributos {
 
         Log.d(LOG_TAG, METHOD + " token " + token);
 
+        this.loaded = false;
+
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = Connection.getHttpUrlConnection("publicacion/atributos?token="+token);
@@ -135,6 +136,7 @@ public class PublicacionAtributos {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 this.jsonToAtributos(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                this.loaded = true;
                 Log.d(LOG_TAG, METHOD + " atributos cargados correctamente.");
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada. " + urlConnection.getResponseMessage());
@@ -193,5 +195,9 @@ public class PublicacionAtributos {
 
     public List<AtributoPublicacion> getRazas() {
         return razas;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
     }
 }

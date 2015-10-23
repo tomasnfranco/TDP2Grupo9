@@ -33,7 +33,7 @@ public class UltimasPublicacionesFragment extends PublicacionesFragment {
         Publicacion publicacion = new Publicacion();
         publicacion.setLongitud(Usuario.getInstancia().getLongitud());
         publicacion.setLatitud(Usuario.getInstancia().getLatitud());
-        publicacion.setDistancia(200);
+        publicacion.setDistancia(200.0);
 
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_ultimas_publicaciones);
 
