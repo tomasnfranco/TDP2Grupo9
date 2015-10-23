@@ -83,7 +83,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         createLocalizacionTextView();
         hideInnecessaryFields();
         initializeGoogleApi();
-        obtenerAtributos();
+        initializeSpinners();
         return mFragmentView;
     }
 
