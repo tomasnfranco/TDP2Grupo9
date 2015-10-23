@@ -204,10 +204,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         TextView tipo_publicacion = (TextView) publicacionView.findViewById(R.id.tv_tipo_publicacion);
 
         //TODO completar textview con el tipo de la publicacion. Obtener desde publicacion obtenida
-        if (i == 0) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
-        if (i == 1) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
-        if (i == 2)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
-
+        if (publicaciones.get(i).getTipoPublicacion() == 1) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
+        if (publicaciones.get(i).getTipoPublicacion() == 2) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
+        if (publicaciones.get(i).getTipoPublicacion() == 3)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
 
         try {
             Thread.sleep(1000);
@@ -400,6 +399,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
     
     private void cargarLocalizacionMascota(int i, View v){
+
+        TextView localizacion_mascota = (TextView) v.findViewById(R.id.tv_direccion_mascota);
+        localizacion_mascota.setText(publicaciones.get(i).getDireccion());
 
         especieView = publicacionAtributos.getEspecies().get(publicacionAtributos.getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
         imagenPosicion = (ImageView) v.findViewById(R.id.iv_localizacion_mascota);

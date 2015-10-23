@@ -32,6 +32,7 @@ class Publicacion {
 	double longitud = 0
 	String nombreMascota = ' '
 	String condiciones = ' '
+	String direccion = ' '
 	boolean requiereCuidadosEspeciales = false
 	boolean necesitaTransito = false
 	String videoLink = ' '
@@ -46,6 +47,7 @@ class Publicacion {
 		videoLink(blank:true,nullable: true)
 		fotos(maxSize: 6)
 		concretado nullable: true
+		direccion nullable:true, blank:true
     }
 
 	static marshalling = {

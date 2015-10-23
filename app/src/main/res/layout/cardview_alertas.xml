@@ -110,8 +110,9 @@
                 android:id="@+id/btn_Delete"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="right"
-                android:background="@drawable/ic_delete"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/button_drawable_icon"
+                android:src="@drawable/ic_delete" />
 
             <ImageButton
                 android:layout_width="40dp"
@@ -121,7 +122,8 @@
                 android:layout_toLeftOf="@+id/btn_Delete"
                 android:layout_toStartOf="@+id/btn_Delete"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/ic_editar" />
+                android:background="@drawable/button_drawable_icon"
+                android:src="@drawable/ic_editar" />
 
             <ImageButton
                 android:layout_width="40dp"
@@ -131,9 +133,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/btn_Editar"
-                android:background="@drawable/ic_buscar"
+                android:background="@drawable/button_drawable_icon"
                 android:focusable="false"
-                android:longClickable="false" />
+                android:longClickable="false"
+                android:src="@drawable/ic_buscar" />
 
         </RelativeLayout>
 
