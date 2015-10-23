@@ -121,6 +121,25 @@ class PublicacionService {
         return NOT_FOUND
     }
 
+    def cancelarPostulacion(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        Usuario user = params.usuario
+        if(publicacion){
+            if(publicacion.publicador.equals(user)){
+                return FORBIDDEN
+            }
+
+            if(!publicacion.quierenAdoptar.contains(user)){
+                return METHOD_NOT_ALLOWED
+            }
+
+            publicacion.removeFromQuierenAdoptar(user)
+            publicacion.save(flush:true)
+            return OK
+        }
+        return NOT_FOUND
+    }
+
     def concretarAdopcion(params){
         Publicacion publicacion = Publicacion.get(params.publicacion)
         println "Publicacion: ${params.publicacion}"

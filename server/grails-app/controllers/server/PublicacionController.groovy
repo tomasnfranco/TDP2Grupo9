@@ -171,6 +171,11 @@ class PublicacionController extends RestfulController<Publicacion>  {
         render status: publicacionService.quieroAdoptar(params)
     }
 
+
+    def cancelarPostulacion(){
+        render status: publicacionService.cancelarPostulacion(params)
+    }
+
     def concretarAdopcion(){
         println params
         render status: publicacionService.concretarAdopcion(params)
