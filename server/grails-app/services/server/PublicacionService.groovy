@@ -35,7 +35,8 @@ class PublicacionService {
                 tamanio.id == params.tamanio
             if(params.vacunasAlDia)
                 vacunasAlDia.id == params.vacunasAlDia
-			
+			if(params.raza)
+                raza.id == params.raza
             publicador.id != usuario.id
             activa == true
             if(params.tipoPublicacion)
