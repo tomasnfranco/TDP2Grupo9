@@ -11,7 +11,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
     def alertaService
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
+    static allowedMethods = [save: "POST", update: "PUT", delete: ["DELETE","POST"], atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -104,16 +104,18 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     @Transactional
     def delete(Publicacion publicacionInstance) {
-
         if (publicacionInstance == null) {
             notFound()
             return
         }
 
+        if(publicacionInstance.id == null)
+            publicacionInstance = Publicacion.get(params.publicacion)
+
         publicacionInstance.delete flush:true
 
         request.withFormat {
-            form multipartForm {
+            html {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Publicacion.label', default: 'Publicacion'), publicacionInstance.id])
                 redirect action:"index", method:"GET"
             }
