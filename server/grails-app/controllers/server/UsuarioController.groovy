@@ -96,22 +96,39 @@ class UsuarioController {
 	
 	def login() {
 		println "Login $params"
+        def user = null
 		if(params.facebookId != null){
-			def user = Usuario.findByFacebookId(params.facebookId)
-			if(user != null ){
-				if(user.activo){
-					user.generarToken()
-					user.save(flush:true)
-					respond user
-				} else {
-					render status: UNAUTHORIZED
-				}
-			} else {
-				notFound()
-			}
-		} else {
+			user = Usuario.findByFacebookId(params.facebookId)
+		} else if(params.email != null) {
+            user = Usuario.findByEmail(params.email)
+            if(params.password == null ||params.password.trim() == ''){
+                render status: FORBIDDEN
+                return
+            } else {
+                if(user != null) {
+                    if (!user.password.equals(params.password)) {
+                        notFound()
+                        user = null
+                    }
+                }
+            }
+        } else {
 			notFound()
+            return
 		}
+        if(user != null ){
+            if(user.activo){
+                user.generarToken()
+                user.save(flush:true)
+                respond user
+                return
+            } else {
+                render status: UNAUTHORIZED
+                return
+            }
+        } else {
+            notFound()
+        }
 	}
 
     def logout = {
