@@ -722,7 +722,18 @@ public class Publicacion {
     }
 
     public Double getDistancia() {
-        return this.distancia;
+        if (this.distancia != null) {
+            try {
+                DecimalFormat df = new DecimalFormat("#,##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            } catch (NumberFormatException e) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            }
+        }
+        return null;
     }
 
     public String getContacto() {
