@@ -65,7 +65,11 @@ class PublicacionService {
                                  nombreMascota : it.nombreMascota,
                                  requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
                                  condiciones: it.condiciones ? it.condiciones.trim() : '',
-                                 fecha : it.fechaPublicacion]}
+                                 fecha : it.fechaPublicacion,
+                                 direccionTransito: it.transito ? it.transito.direccion : '',
+                                 longitudTransito: it.transito ? it.transito.longitud : 0,
+                                 latitudTransito: it.transito ? it.transito.latitud : 0
+                                ]}
     }
 
     def misPublicaciones(params) {
@@ -80,7 +84,11 @@ class PublicacionService {
                                       nombreMascota : it.nombreMascota,
                                       requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
                                       condiciones: it.condiciones ? it.condiciones.trim() : '',
-                                      fecha : it.fechaPublicacion]}
+                                      fecha : it.fechaPublicacion,
+                                      direccionTransito: it.transito ? it.transito.direccion : '',
+                                      longitudTransito: it.transito ? it.transito.longitud : 0,
+                                      latitudTransito: it.transito ? it.transito.latitud : 0
+                                    ]}
     }
 
     def misPostulaciones(params) {
@@ -100,7 +108,11 @@ class PublicacionService {
                                       nombreMascota : it.nombreMascota,
                                       requiereCuidadosEspeciales : it.requiereCuidadosEspeciales,
                                       condiciones: it.condiciones ? it.condiciones.trim() : '',
-                                      fecha : it.fechaPublicacion]}
+                                      fecha : it.fechaPublicacion,
+                                      direccionTransito: it.transito ? it.transito.direccion : '',
+                                      longitudTransito: it.transito ? it.transito.longitud : 0,
+                                      latitudTransito: it.transito ? it.transito.latitud : 0
+                                    ]}
     }
 
     def quieroAdoptar(params){
