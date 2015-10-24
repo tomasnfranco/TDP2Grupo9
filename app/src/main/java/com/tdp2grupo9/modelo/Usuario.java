@@ -117,6 +117,7 @@ public class Usuario {
                         reader.nextNull();
                     else {
                         this.foto = null;
+                        reader.nextString();
                         //TODO: Completar cuando el post del usuario admita json
                         //this.foto.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
                     }
