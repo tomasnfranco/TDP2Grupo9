@@ -1,9 +1,12 @@
 package com.tdp2grupo9.modelo.publicacion;
 
+import android.graphics.Bitmap;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import com.tdp2grupo9.modelo.Connection;
+import com.tdp2grupo9.modelo.Imagen;
 
 import org.json.JSONException;
 
@@ -19,11 +22,13 @@ public class Postulante {
     private Integer id;
     private String username;
     private String email;
+    private Imagen foto;
 
     public Postulante() {
         this.id = 0;
         this.username = "";
         this.email = "";
+        this.foto = null;
     }
 
     private void jsonToPostulante(JsonReader reader) throws JSONException, IOException {
@@ -39,6 +44,14 @@ public class Postulante {
                     break;
                 case "username":
                     this.username = reader.nextString();
+                    break;
+                case "foto":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        this.foto = new Imagen();
+                        this.foto.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
+                    }
                     break;
                 default:
                     reader.skipValue();
@@ -103,4 +116,14 @@ public class Postulante {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Imagen getFoto() {
+        return foto;
+    }
+
+    public void setFoto(Bitmap imagen) {
+        this.foto = new Imagen();
+        foto.setBitmap(imagen);
+    }
+
 }

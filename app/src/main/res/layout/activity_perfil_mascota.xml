@@ -33,6 +33,13 @@
             <include
                 android:id="@+id/cardview_mensajes_pm"
                 layout="@layout/cardview_mensajes" />
+            <include
+                android:id="@+id/cardview_postulaciones"
+                layout="@layout/cardview_postulaciones" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -45,17 +52,27 @@
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="false"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false" />
 
                 <com.tdp2grupo9.view.clickable.PostularmeHogarTransitoClickable
                     android:id="@+id/postular_a_hogar"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentLeft="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/postularme_a_adoptar"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp" />
 
             </RelativeLayout>
+            <View style="@style/HorizontalDivider"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></RelativeLayout>¿
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
