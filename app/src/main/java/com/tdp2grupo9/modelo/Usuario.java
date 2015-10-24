@@ -266,8 +266,16 @@ public class Usuario {
         Publicacion.quieroAdoptar(this.token, publicacionId);
     }
 
+    public void ofrezcoTransito(int publicacionId) {
+        Publicacion.ofrezcoTransito(this.token, publicacionId);
+    }
+
     public void concretarAdopcion(Integer publicacionId, Integer postulanteId) {
         Publicacion.concretarAdopcion(this.token, publicacionId, postulanteId);
+    }
+
+    public void concretarTransito(Integer publicacionId, Integer ofreceTransitoId) {
+        Publicacion.concretarTransito(this.token, publicacionId, ofreceTransitoId);
     }
 
     public List<Publicacion> obtenerMisPublicaciones(Integer offset, Integer max) {
