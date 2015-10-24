@@ -43,7 +43,7 @@ public abstract class PublicacionesFragment extends Fragment {
                 List<Publicacion> publicacionesReducidas = new ArrayList<Publicacion>();
 
                 if (tipo == TiposEnum.BUSQUEDA || tipo == TiposEnum.RECIENTES)
-                    publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1, 0, 0, mPublicacion);
+                    publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
                 else if (tipo == TiposEnum.MIS_PUBLICACIONES)
                     publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
                 else if (tipo == TiposEnum.MIS_POSTULACIONES)

@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -36,6 +37,7 @@ public class PublicacionTest {
 
     private Integer crearPublicacion(String token) {
         Publicacion publicacion = new Publicacion();
+        publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
         publicacion.setNombreMascota("PRUEBAPUBLICACION");
         publicacion.setEspecie(new Especie(1));
         publicacion.setRaza(new Raza(1));
@@ -126,6 +128,7 @@ public class PublicacionTest {
         imagen3.setImg(Imagen.bytesFromBase64DEFAULT(base64));
 
 		Publicacion publicacion = new Publicacion();
+        publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
 		publicacion.setNombreMascota("TRESIMAGENES");
 		publicacion.setEspecie(new Especie(1));
 		publicacion.setRaza(new Raza(1));
@@ -164,6 +167,7 @@ public class PublicacionTest {
     public void guardarPublicacionProbarLatitudLongitud() {
 
         Publicacion publicacion = new Publicacion();
+        publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
         publicacion.setNombreMascota("LATLONG");
         publicacion.setEspecie(new Especie(1));
         publicacion.setRaza(new Raza(1));
@@ -215,7 +219,7 @@ public class PublicacionTest {
         publicacionFiltros.setNecesitaTransito(false);
         publicacionFiltros.setRequiereCuidadosEspeciales(false);
 
-        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones(usuario.getToken(), 1, 0, 0, publicacionFiltros);
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones(usuario.getToken(), 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() == 0);
 	}
 
@@ -229,7 +233,7 @@ public class PublicacionTest {
         publicacionFiltros.setLatitud(15.0);
         publicacionFiltros.setDistancia(10.0);
 
-        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
     }
 
@@ -243,7 +247,7 @@ public class PublicacionTest {
         publicacionFiltros.setLatitud(15.0);
         publicacionFiltros.setDistancia(null);
 
-        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
     }
 
@@ -257,7 +261,7 @@ public class PublicacionTest {
         publicacionFiltros.setLatitud(15.0);
         publicacionFiltros.setDistancia(250.0);
 
-        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 1, 0, 0, publicacionFiltros);
+        List<Publicacion> publicaciones = Publicacion.buscarPublicaciones("234567", 0, 0, publicacionFiltros);
         assertTrue(publicaciones.size() > 0);
     }
 

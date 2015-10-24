@@ -40,12 +40,14 @@ public class Publicacion {
     private Integer postulanteConcretadoId;
     private Integer publicadorId;
     private String direccion;
+    private String direccionTransito;
     private String publicadorNombre;
     private String nombreMascota;
     private String condiciones;
     private String videoLink;
     private String contacto;
     private Boolean concreatada;
+    private Boolean enTransito;
     private Boolean requiereCuidadosEspeciales;
     private Boolean necesitaTransito;
     private Raza raza;
@@ -63,6 +65,8 @@ public class Publicacion {
     private Double latitud;
     private Double longitud;
     private Double distancia;
+    private Double latitudTransito;
+    private Double longitudTransito;
 
     private List<Integer> mensajesIds;
     private List<Integer> quierenAdoptarIds;
@@ -77,7 +81,7 @@ public class Publicacion {
     public Publicacion() {
         this.id = 0;
         this.publicadorId = 0;
-        this.tipoPublicacion = TipoPublicacion.ADOPCION;
+        this.tipoPublicacion = null;
         this.direccion = "";
         this.nombreMascota = "";
         this.condiciones = "";
@@ -98,6 +102,7 @@ public class Publicacion {
         this.requiereCuidadosEspeciales = null;
         this.necesitaTransito = null;
         this.concreatada = false;
+        this.enTransito = false;
         this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
@@ -546,17 +551,19 @@ public class Publicacion {
         return publicacion;
     }
 
-    public static List<Publicacion> buscarPublicaciones(String token, Integer tipoPublicacion, Integer offset,
+    public static List<Publicacion> buscarPublicaciones(String token, Integer offset,
                                                         Integer max, Publicacion publicacion) {
         String METHOD = "buscarPublicaciones";
         List<Publicacion> publicaciones = new ArrayList<>();
         HttpURLConnection urlConnection = null;
         try {
-            String atributos = "?token="+token+"&tipoPublicacion="+tipoPublicacion+
+            String atributos = "?token="+token+
                     "&longitud="+publicacion.getLongitud()+
                     "&latitud="+publicacion.getLatitud();
 
             //"&offset="+offset+"max="+max
+            if (publicacion.getTipoPublicacion() != null)
+                atributos += "&tipoPublicacion="+publicacion.getTipoPublicacion().getValue();
             if (publicacion.getDistancia() != null)
                 atributos += "&distancia="+publicacion.getDistancia();
             if (publicacion.getRaza().getId() > 0)

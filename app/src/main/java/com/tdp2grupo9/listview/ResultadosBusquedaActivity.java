@@ -147,7 +147,7 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 1, 0, 0, publicacion);
+                publicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, publicacion);
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 return false;
