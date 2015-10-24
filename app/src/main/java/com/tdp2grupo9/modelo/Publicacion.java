@@ -663,6 +663,110 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public static void ofrezcoTransito(String token, Integer publicacionId) {
+        String METHOD = "ofrezcoTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/ofrezcoTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para adoptar ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " ya ha ofrecido transito en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static void cancelarTransito(String token, Integer publicacionId) {
+        String METHOD = "cancelarTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/cancelarTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " cancelacion de transito aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para cancelar el transito ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " no ha ofrecido transito en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static void concretarTransito(String token, Integer publicacionId, Integer ofrecioTransitoId) {
+        String METHOD = "concretarTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/concretarTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId+"&ofrecioTransito="+ofrecioTransitoId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " transito concretado ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra el usuario que ofrecio transito ");
+            } else if (HttpResult == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado a concretar transito. El token no es valido. ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " el usuario que ofrece transito no se encuentra entre los que ofrecieron ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
     public static void quieroAdoptar(String token, Integer publicacionId) {
         String METHOD = "quieroAdoptar";
         HttpURLConnection urlConnection = null;
@@ -712,7 +816,7 @@ public class Publicacion {
             Log.d(LOG_TAG, METHOD + " url= " + parametros);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+                Log.d(LOG_TAG, METHOD + " adopcion concretada ");
             } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
                 Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
             } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
