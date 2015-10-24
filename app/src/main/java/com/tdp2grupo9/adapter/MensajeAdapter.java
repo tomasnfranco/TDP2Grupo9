@@ -42,7 +42,6 @@ public class MensajeAdapter extends BaseAdapter {
     private TextView fechaSinResponder;
     private ImageButton botonRespuesta;
     private EnviarRespuestaTask enviarRespuestaTask;
-    private int position;
 
     public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type) {
         this.mensajes = mensajes;
@@ -65,9 +64,9 @@ public class MensajeAdapter extends BaseAdapter {
         return i;
     }
     @Override
-    public View getView(int i, View view, ViewGroup parent) {
+    public View getView(final int i, View view, ViewGroup parent) {
         final View consultasView = getInflatedViewIfNecessary(view, parent);
-        position = i;
+
         infConsulta = (TextView) consultasView.findViewById(R.id.infConsulta);
         infRespuesta = (TextView) consultasView.findViewById(R.id.infRespuesta);
         fechaConsulta = (TextView) consultasView.findViewById(R.id.consulta_fecha);
@@ -93,7 +92,7 @@ public class MensajeAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         respuesta = respuesta_edit.getText().toString();
-                        clickEnviarRespuesta(position, respuesta);
+                        clickEnviarRespuesta(i, respuesta);
                     }
                 });
 

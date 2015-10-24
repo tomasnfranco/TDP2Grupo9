@@ -3,6 +3,10 @@ package com.tdp2grupo9.adapter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
@@ -31,6 +36,8 @@ import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +53,8 @@ public class AlertaAdapter extends BaseAdapter{
     private ImageButton btnBuscar;
     private ImageButton btnEliminar;
     private ImageButton btnEditar;
-    private int position;
     private EliminarAlertaTask eliminarAlertaTask;
+    private View alertaView;
 
     public AlertaAdapter(Context context, List<Alerta> alertas){
         this.alertasList = alertas;
@@ -57,6 +64,10 @@ public class AlertaAdapter extends BaseAdapter{
     @Override
     public int getCount() {
         return alertasList.size();
+    }
+
+    public void removeItem(int i) {
+        alertasList.remove(i);
     }
 
     @Override
@@ -70,14 +81,13 @@ public class AlertaAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        final View alertaView = getInflatedViewIfNecessary(view, viewGroup);
-        position = i;
+        alertaView = getInflatedViewIfNecessary(view, viewGroup);
         infAdicional = (TextView) alertaView.findViewById(R.id.infAdicional);
         titleAdicional = (TextView) alertaView.findViewById(R.id.titleInfoAdicional);
 
@@ -102,31 +112,33 @@ public class AlertaAdapter extends BaseAdapter{
             infAdicional.setText(infoAdicional);
         }
 
-        btnEditar.setOnClickListener(new View.OnClickListener() {
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                System.out.println("Se presiona boton buscar en posición " + i);
                 Bundle bundle = new Bundle();
-                bundle.putString("tipopublicacion", TipoPublicacion.getTipoPublicacionToString(alertasList.get(position).getTipoPublicacion().getValue()));
-                bundle.putInt("especie", alertasList.get(position).getEspecie().getId());
-                bundle.putInt("raza", alertasList.get(position).getRaza().getId());
-                bundle.putInt("sexo", alertasList.get(position).getSexo().getId());
-                bundle.putInt("tamanio", alertasList.get(position).getTamanio().getId());
-                bundle.putInt("edad", alertasList.get(position).getEdad().getId());
-                bundle.putInt("color", alertasList.get(position).getColor().getId());
-                bundle.putInt("proteccion", alertasList.get(position).getProteccion().getId());
-                bundle.putInt("energia", alertasList.get(position).getEnergia().getId());
-                bundle.putInt("castrado", alertasList.get(position).getCastrado().getId());
-                bundle.putInt("compatiblecon", alertasList.get(position).getCompatibleCon().getId());
-                bundle.putInt("vacunas", alertasList.get(position).getVacunasAlDia().getId());
-                bundle.putInt("papeles", alertasList.get(position).getPapelesAlDia().getId());
-                Integer distancia = null;
+                bundle.putString("tipopublicacion", TipoPublicacion.getTipoPublicacionToString(alertasList.get(i).getTipoPublicacion().getValue()));
+                bundle.putInt("especie", alertasList.get(i).getEspecie().getId());
+                bundle.putInt("raza", alertasList.get(i).getRaza().getId());
+                bundle.putInt("sexo", alertasList.get(i).getSexo().getId());
+                bundle.putInt("tamanio", alertasList.get(i).getTamanio().getId());
+                bundle.putInt("edad", alertasList.get(i).getEdad().getId());
+                bundle.putInt("color", alertasList.get(i).getColor().getId());
+                bundle.putInt("proteccion", alertasList.get(i).getProteccion().getId());
+                bundle.putInt("energia", alertasList.get(i).getEnergia().getId());
+                bundle.putInt("castrado", alertasList.get(i).getCastrado().getId());
+                bundle.putInt("compatiblecon", alertasList.get(i).getCompatibleCon().getId());
+                bundle.putInt("vacunas", alertasList.get(i).getVacunasAlDia().getId());
+                bundle.putInt("papeles", alertasList.get(i).getPapelesAlDia().getId());
+                Integer distancia = alertasList.get(i).getDistancia();
                 if (distancia == null)
                     bundle.putInt("distancia", -1);
                 else
                     bundle.putInt("distancia", distancia);
-                bundle.putDouble("latitud", alertasList.get(position).getLatitud());
-                bundle.putDouble("longitud", alertasList.get(position).getLongitud());
+                bundle.putDouble("latitud", alertasList.get(i).getLatitud());
+                bundle.putDouble("longitud", alertasList.get(i).getLongitud());
+
                 TabbedFragment.newInstance().showBuscarMascotaResults(bundle);
 
             }
@@ -135,19 +147,17 @@ public class AlertaAdapter extends BaseAdapter{
         btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO implementar
             }
         });
 
-        btnEditar.setOnClickListener(new View.OnClickListener() {
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eliminarAlertaTask = new EliminarAlertaTask(alertasList.get(position));
+                eliminarAlertaTask = new EliminarAlertaTask(alertasList.get(i), i);
                 eliminarAlertaTask.execute((Void) null);
             }
         });
-
-
 
         return alertaView;
     }
@@ -251,9 +261,11 @@ public class AlertaAdapter extends BaseAdapter{
     public class EliminarAlertaTask extends AsyncTask<Void, Void, Boolean> {
 
         private Alerta alerta;
+        private int position;
 
-        EliminarAlertaTask(Alerta alerta) {
+        EliminarAlertaTask(Alerta alerta, int i) {
             this.alerta = alerta;
+            position = i;
         }
 
         @Override
@@ -273,6 +285,8 @@ public class AlertaAdapter extends BaseAdapter{
             if (success) {
                 Toast.makeText(context, "Alerta Eliminada",
                         Toast.LENGTH_LONG).show();
+                removeItem(position);
+                notifyDataSetChanged();
             }
             else {
                 Toast.makeText(context, "Error: No se pudo eliminar.",

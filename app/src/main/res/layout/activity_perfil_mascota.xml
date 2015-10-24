@@ -33,13 +33,29 @@
             <include
                 android:id="@+id/cardview_mensajes_pm"
                 layout="@layout/cardview_mensajes" />
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
-                android:id="@+id/buttonPublicacion"
-                android:background="@drawable/btn_postularme"
-                android:layout_margin="18dp"
-                android:textSize="16dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_marginLeft="16dp">
+
+                <com.tdp2grupo9.view.clickable.PostularmeAdopcionClickable
+                    android:id="@+id/postularme_a_adoptar"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.tdp2grupo9.view.clickable.PostularmeHogarTransitoClickable
+                    android:id="@+id/postular_a_hogar"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/postularme_a_adoptar"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
