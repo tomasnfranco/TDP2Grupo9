@@ -2,29 +2,40 @@ package com.tdp2grupo9.adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
+import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
+import com.tdp2grupo9.modelo.publicacion.Color;
 import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
+import com.tdp2grupo9.modelo.publicacion.Edad;
 import com.tdp2grupo9.modelo.publicacion.Energia;
+import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
 import com.tdp2grupo9.modelo.publicacion.Proteccion;
+import com.tdp2grupo9.modelo.publicacion.Raza;
+import com.tdp2grupo9.modelo.publicacion.Sexo;
+import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
+import com.tdp2grupo9.tabbed.TabbedFragment;
 
 import java.util.Date;
 import java.util.List;
 
 
-public class AlertaAdapter extends BaseAdapter {
+public class AlertaAdapter extends BaseAdapter{
 
     Context context;
     List<Alerta> alertasList;
@@ -32,6 +43,11 @@ public class AlertaAdapter extends BaseAdapter {
     TextView infBasica;
     TextView infFechaAlerta;
     private TextView titleAdicional;
+    private ImageButton btnBuscar;
+    private ImageButton btnEliminar;
+    private ImageButton btnEditar;
+    private int position;
+    private EliminarAlertaTask eliminarAlertaTask;
 
     public AlertaAdapter(Context context, List<Alerta> alertas){
         this.alertasList = alertas;
@@ -60,13 +76,17 @@ public class AlertaAdapter extends BaseAdapter {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        View alertaView = getInflatedViewIfNecessary(view,viewGroup);
-
+        final View alertaView = getInflatedViewIfNecessary(view, viewGroup);
+        position = i;
         infAdicional = (TextView) alertaView.findViewById(R.id.infAdicional);
         titleAdicional = (TextView) alertaView.findViewById(R.id.titleInfoAdicional);
 
         infBasica = (TextView) alertaView.findViewById(R.id.infBasica);
         infFechaAlerta = (TextView) alertaView.findViewById(R.id.fecha_alerta);
+        btnBuscar = (ImageButton) alertaView.findViewById(R.id.btn_Buscar);
+        btnEliminar= (ImageButton) alertaView.findViewById(R.id.btn_Delete);
+        btnEditar = (ImageButton) alertaView.findViewById(R.id.btn_Editar);
+
 
         String infoBasica = getInformacionBasica(i, alertaView);
         String infoAdicional= getInformacionAdicional(i,alertaView);
@@ -81,6 +101,53 @@ public class AlertaAdapter extends BaseAdapter {
         }else {
             infAdicional.setText(infoAdicional);
         }
+
+        btnEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("tipopublicacion", TipoPublicacion.getTipoPublicacionToString(alertasList.get(position).getTipoPublicacion().getValue()));
+                bundle.putInt("especie", alertasList.get(position).getEspecie().getId());
+                bundle.putInt("raza", alertasList.get(position).getRaza().getId());
+                bundle.putInt("sexo", alertasList.get(position).getSexo().getId());
+                bundle.putInt("tamanio", alertasList.get(position).getTamanio().getId());
+                bundle.putInt("edad", alertasList.get(position).getEdad().getId());
+                bundle.putInt("color", alertasList.get(position).getColor().getId());
+                bundle.putInt("proteccion", alertasList.get(position).getProteccion().getId());
+                bundle.putInt("energia", alertasList.get(position).getEnergia().getId());
+                bundle.putInt("castrado", alertasList.get(position).getCastrado().getId());
+                bundle.putInt("compatiblecon", alertasList.get(position).getCompatibleCon().getId());
+                bundle.putInt("vacunas", alertasList.get(position).getVacunasAlDia().getId());
+                bundle.putInt("papeles", alertasList.get(position).getPapelesAlDia().getId());
+                Integer distancia = null;
+                if (distancia == null)
+                    bundle.putInt("distancia", -1);
+                else
+                    bundle.putInt("distancia", distancia);
+                bundle.putDouble("latitud", alertasList.get(position).getLatitud());
+                bundle.putDouble("longitud", alertasList.get(position).getLongitud());
+                TabbedFragment.newInstance().showBuscarMascotaResults(bundle);
+
+            }
+        });
+
+        btnEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        btnEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eliminarAlertaTask = new EliminarAlertaTask(alertasList.get(position));
+                eliminarAlertaTask.execute((Void) null);
+            }
+        });
+
+
 
         return alertaView;
     }
@@ -180,5 +247,44 @@ public class AlertaAdapter extends BaseAdapter {
         }
         return alertaView;
     }
+
+    public class EliminarAlertaTask extends AsyncTask<Void, Void, Boolean> {
+
+        private Alerta alerta;
+
+        EliminarAlertaTask(Alerta alerta) {
+            this.alerta = alerta;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                this.alerta.borrarAlerta(Usuario.getInstancia().getToken());
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return this.alerta.getId() > 0;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            eliminarAlertaTask = null;
+            if (success) {
+                Toast.makeText(context, "Alerta Eliminada",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(context, "Error: No se pudo eliminar.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            eliminarAlertaTask = null;
+        }
+    }
+
 
 }

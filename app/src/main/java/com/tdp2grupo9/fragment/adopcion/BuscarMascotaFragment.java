@@ -307,6 +307,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             }
             Alerta alerta = new Alerta();
             alerta.setNombre("Alerta");
+            alerta.setTipoPublicacion(TipoPublicacion.getTipoPublicacion(tipoPublicacion));
             alerta.setEspecie((Especie) spEspecie.getSelectedItem());
             alerta.setRaza((Raza) spRaza.getSelectedItem());
             alerta.setSexo((Sexo) spSexo.getSelectedItem());

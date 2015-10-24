@@ -26,4 +26,30 @@ public enum TipoPublicacion {
                 return TipoPublicacion.ADOPCION;
         }
     }
+
+    public static TipoPublicacion getTipoPublicacion(String tipo) {
+        switch (tipo) {
+            case "Adopciones":
+                return TipoPublicacion.ADOPCION;
+            case "Perdidos":
+                return TipoPublicacion.PERDIDA;
+            case "Encontrados":
+                return TipoPublicacion.ENCONTRADA;
+            default:
+                return TipoPublicacion.ADOPCION;
+        }
+    }
+
+    public static String getTipoPublicacionToString(int tipo) {
+        switch (tipo) {
+            case 1:
+                return "Adopciones";
+            case 2:
+                return "Perdidos";
+            case 3:
+                return "Encontrados";
+            default:
+                return "Adopciones";
+        }
+    }
 }

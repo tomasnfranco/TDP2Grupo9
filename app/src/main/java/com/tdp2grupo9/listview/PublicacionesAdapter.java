@@ -3,6 +3,7 @@ package com.tdp2grupo9.listview;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -67,12 +68,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String nombreMascota;
     private TiposEnum tipos;
     private Button btnPostularme;
-    private TextView consultaParaEnviar;
+    private EditText consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
 
-    private ImageButton btnRespuesta;
-    private EditText editTextRespuesta;
     private String sexo;
+    private int position;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -247,7 +247,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 guardarPostulacionTask = new GuardarPostulacionTask(position, id);
-                guardarPostulacionTask.execute((Void)null);
+                guardarPostulacionTask.execute((Void) null);
 
             }
         });
@@ -422,10 +422,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarListViewMensajes(int i, View v) {
 
-        //mensajes = publicaciones.get(i).getMensajes();
-        mensajes = loadMensajesMock();
+        mensajes = publicaciones.get(i).getMensajes();
+        position = i;
 
-        consultaParaEnviar = (TextView) v.findViewById(R.id.consulta_para_enviar);
+        consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES) {
@@ -441,24 +441,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 }
             });
 
-            //mensajes = publicaciones.get(i).getMensajes();
-
             if (!mensajes.isEmpty()) {
                 listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
                                             final int position, long arg) {
-                        btnRespuesta = (ImageButton) view.findViewById(R.id.btn_responder);
-                        editTextRespuesta = (EditText) view.findViewById(R.id.editText_respuesta);
-
-
-                        btnRespuesta.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //TODO guardar respuesta
-                            }
-                        });
 
                     }
                 });
@@ -466,16 +454,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         }else {
             consultaParaEnviar.setVisibility(View.VISIBLE);
+            btnEnviarConsulta.setFocusable(false);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
-
-            final Mensaje mensaje = new Mensaje();
-            mensaje.setPregunta(consultaParaEnviar.getText().toString());
 
             btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    enviarConsultaTask = new EnviarConsultaTask();
-                    enviarConsultaTask.execute((Void) null);
+                    onClickButton(position);
                 }
             });
 
@@ -501,7 +486,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }
         }
 
+    }
 
+    private void onClickButton(int i){
+        String pregunta =consultaParaEnviar.getText().toString();
+        if (pregunta.isEmpty()){
+            consultaParaEnviar.setError("Error: Debe escribir una consulta.");
+        }else{
+            Mensaje mensaje = new Mensaje();
+            mensaje.setPregunta(pregunta);
+            mensaje.setPublicacionId(publicaciones.get(i).getId());
+            mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
+
+            enviarConsultaTask = new EnviarConsultaTask(mensaje);
+            enviarConsultaTask.execute((Void) null);
+        }
     }
 
     private List<Mensaje> loadMensajesMock(){
@@ -509,11 +508,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         Mensaje m1 = new Mensaje();
         m1.setPregunta("hola");
         m1.setRespuesta("chau");
+        m1.setFechaPregunta(new Date(2015, 5, 10));
+        m1.setFechaRespuesta(new Date(2015, 6, 10));
         Mensaje m2 = new Mensaje();
         m2.setPregunta("Tiene pulgas");
+        m2.setFechaPregunta(new Date(2015, 5, 10));
         Mensaje m3 = new Mensaje();
         m3.setPregunta("hello");
         m3.setRespuesta("bye");
+        m3.setFechaPregunta(new Date(2015, 8, 10));
+        m3.setFechaRespuesta(new Date(2015, 8, 20));
         mensajes.add(m1);
         mensajes.add(m2);
         mensajes.add(m3);
@@ -559,24 +563,30 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     public class EnviarConsultaTask extends AsyncTask<Void, Void, Boolean> {
 
-        int id_publicacion;
-        int position;
+        Mensaje consulta;
 
-        EnviarConsultaTask() {
+        EnviarConsultaTask(Mensaje mensaje) {
+            consulta = mensaje;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-           /* try {
-                //TODO enviar mensaje
+            try {
+                consulta.guardarPregunta(Usuario.getInstancia().getToken());
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
-            }*/
+            }
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            if (success){
+                if (consulta.getId() > 0){
+                    System.out.println("VIEJA YA LO GUARDE");
+                }else System.out.println("VIEJA HUBO UN ERROR");
+            }
             enviarConsultaTask = null;
         }
 

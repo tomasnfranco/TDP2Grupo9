@@ -62,15 +62,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         Publicacion publicacion = new Publicacion();
         String tipoPublicacion = arguments.getString("tipopublicacion");
 
-        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.adopciones)))
-            publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
-
-        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.encontrados)))
-            publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADA);
-
-        if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.perdidos)))
-            publicacion.setTipoPublicacion(TipoPublicacion.PERDIDA);
-
+        publicacion.setTipoPublicacion(TipoPublicacion.getTipoPublicacion(tipoPublicacion));
         publicacion.setEspecie(getEspeciePublicacion(arguments.getInt("especie", 0)));
         publicacion.setRaza(getRazaPublicacion(arguments.getInt("raza", 0)));
         publicacion.setSexo(getSexoPublicacion(arguments.getInt("sexo", 0)));
