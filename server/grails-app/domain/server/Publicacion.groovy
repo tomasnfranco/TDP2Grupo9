@@ -8,6 +8,7 @@ class Publicacion {
 	boolean activa = true
 	Usuario publicador
 	Usuario concretado = null
+	Usuario transito = null
 
 	//Atributos de Busqueda
 	Castrado castrado
@@ -38,7 +39,7 @@ class Publicacion {
 	String videoLink = ' '
 	double distancia = 0
 	static transients = ['distancia']
-	static hasMany = [fotos : Foto, quierenAdoptar : Usuario, preguntas : Mensaje]
+	static hasMany = [fotos : Foto, quierenAdoptar : Usuario, preguntas : Mensaje, ofrecenTransito: Usuario]
 	
     static constraints = {
 		publicador()
@@ -47,6 +48,7 @@ class Publicacion {
 		videoLink(blank:true,nullable: true)
 		fotos(maxSize: 6)
 		concretado nullable: true
+		transito nullable: true
 		direccion nullable:true, blank:true
     }
 
