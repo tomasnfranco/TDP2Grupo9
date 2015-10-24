@@ -28,6 +28,8 @@ class Publicacion {
 	/**
 	 * Tipos Publicacion
 	 * 1 = Publicación de mascota en adopción
+	 * 2 = Publicación de mascota perdida
+	 * 3 = Publicación de mascota encontrada
 	 */
 	double latitud = 0
 	double longitud = 0
