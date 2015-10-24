@@ -25,12 +25,18 @@ class UsuarioController {
             notFound()
             return
         }
+        println params
 
         if (usuarioInstance.hasErrors()) {
             respond usuarioInstance.errors, view:'create'
             return
         }
-		usuarioInstance.activo = true;
+
+        if(params.longitud)
+        usuarioInstance.longitud = Double.parseDouble(params.longitud)
+        if(params.latitud)
+        usuarioInstance.latitud = Double.parseDouble(params.latitud)
+        usuarioInstance.activo = true;
 		usuarioInstance.generarToken()
         usuarioInstance.save flush:true
         if(usuarioInstance.username?.isEmpty()){

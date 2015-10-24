@@ -11,7 +11,9 @@ class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
     def alertaService
-    static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"], atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
+    static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"],
+                             atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET',
+                             ofrezcoTransito: "POST", cancelarTransito: "POST",concretarTransito:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -179,6 +181,19 @@ class PublicacionController extends RestfulController<Publicacion>  {
     def concretarAdopcion(){
         println params
         render status: publicacionService.concretarAdopcion(params)
+    }
+
+    def ofrezcoTransito(){
+        render status: publicacionService.ofrezcoTransito(params)
+    }
+
+    def cancelarTransito(){
+        render status: publicacionService.cancelarTransito(params)
+    }
+
+    def concretarTransito(){
+        println params
+        render status: publicacionService.concretarTransito(params)
     }
 
     def mensajes(){
