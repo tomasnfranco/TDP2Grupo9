@@ -183,8 +183,8 @@ public class Usuario {
                 parametros += "&ofreceTransito="+this.ofreceTransito;
             if (!this.getUsername().isEmpty())
                 parametros += "&username="+this.getUsername();
-            if (this.foto != null)
-                parametros += "&foto="+Imagen.base64URL_SAFEFromBytes(this.foto.getImg());
+            //if (this.foto != null)
+            //    parametros += "&foto="+Imagen.base64URL_SAFEFromBytes(this.foto.getImg());
 
             parametros += "&direccion="+this.direccion;
             parametros += "&telefono="+this.telefono;
