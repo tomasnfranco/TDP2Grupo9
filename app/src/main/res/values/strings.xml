@@ -16,6 +16,9 @@
     <string name="campo_telefonico_fuera_rango">El telefóno debe contener entre 8-15 números</string>
     <string name="campo_telefonico_formato_incorrecto">El telefóno debe contener sólo números</string>
 
+    <string name="campo_zona_invalida">La zona seleccionada no es válida</string>
+    <string name="campo_zona_argentina">La zona debe estar en Argentina</string>
+
     <!-- Drawer Menu items -->
     <string-array name="nav_drawer_items">
         <item>Inicio</item>
