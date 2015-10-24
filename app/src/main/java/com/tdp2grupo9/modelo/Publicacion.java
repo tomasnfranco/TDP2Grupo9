@@ -476,7 +476,35 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+    }
 
+    public void cancelarPublicacion(String token) {
+        String METHOD = "cancelar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/delete");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+this.getId();
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                this.concreatada = true;
+                Log.d(LOG_TAG, METHOD + " postulacion cancelada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public static Publicacion obtenerPublicacion(String token, Integer id) {
@@ -626,35 +654,6 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
         return publicaciones;
-    }
-
-    public void cancelar(String token) {
-        String METHOD = "cancelar";
-        HttpURLConnection urlConnection = null;
-        try {
-            urlConnection = Connection.getHttpUrlConnection("publicacion/delete");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            String parametros = "token="+token+"&publicacion="+this.getId();
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
-            out.close();
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
-                this.concreatada = true;
-                Log.d(LOG_TAG, METHOD + " postulacion cancelada ");
-            } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        } finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public static void quieroAdoptar(String token, Integer publicacionId) {
