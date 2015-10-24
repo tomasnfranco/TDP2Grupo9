@@ -185,7 +185,7 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().logout();
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }

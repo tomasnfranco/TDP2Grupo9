@@ -40,20 +40,14 @@ public abstract class PublicacionesFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                List<Publicacion> publicacionesReducidas = new ArrayList<Publicacion>();
-
                 if (tipo == TiposEnum.BUSQUEDA || tipo == TiposEnum.RECIENTES)
-                    publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
+                    mPublicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
                 else if (tipo == TiposEnum.MIS_PUBLICACIONES)
-                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
+                    mPublicaciones = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
                 else if (tipo == TiposEnum.MIS_POSTULACIONES)
-                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPostulaciones(0,0);
+                    mPublicaciones = Usuario.getInstancia().obtenerMisPostulaciones(0, 0);
 
-                for (Publicacion publicacionReducida : publicacionesReducidas){
-                    mPublicaciones.add(Publicacion.obtenerPublicacion(Usuario.getInstancia().getToken(), publicacionReducida.getId()));
-                }
-
-                Thread.sleep(500);
+                Thread.sleep(200);
 
             } catch (InterruptedException e) {
                 return false;
@@ -82,65 +76,6 @@ public abstract class PublicacionesFragment extends Fragment {
         protected void onCancelled() {
             mBuscarAdopcionesTask = null;
         }
-    }
-
-    //TODO: hecho solo para ver los resultados de la busqueda, eliminar en produccion
-    protected List<Publicacion> getPublicacionesMock() {
-        List<Publicacion> publicaciones = new ArrayList<Publicacion>();
-
-        Publicacion p1 = new Publicacion();
-        p1.setNombreMascota("Firulais");
-        p1.setRequiereCuidadosEspeciales(true);
-        p1.setNecesitaTransito(true);
-        p1.setCondiciones("Tengo que ir a visitarlo una vez al mes");
-        p1.setFechaPublicacion(new Date(2015, 10, 15));
-        p1.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero1));
-
-        Publicacion p2 = new Publicacion();
-        p2.setNombreMascota("Chuletas");
-        p2.setRequiereCuidadosEspeciales(true);
-        p2.setNecesitaTransito(true);
-        p2.setCondiciones("Tengo que ir a visitarlo una vez al mes");
-        p2.setFechaPublicacion(new Date(2015, 9, 15));
-        p2.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero2));
-
-        Publicacion p3 = new Publicacion();
-        p3.setNombreMascota("Ayudante de Santa");
-        p3.setRequiereCuidadosEspeciales(true);
-        p3.setNecesitaTransito(false);
-        p3.setFechaPublicacion(new Date(2015, 7, 1));
-        p3.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero3));
-
-        Publicacion p4 = new Publicacion();
-        p4.setNombreMascota("Huesos");
-        p4.setRequiereCuidadosEspeciales(false);
-        p4.setNecesitaTransito(true);
-        p4.setFechaPublicacion(new Date(2015, 7, 5));
-        p4.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero4));
-
-        Publicacion p5 = new Publicacion();
-        p5.setNombreMascota("Bobby");
-        p5.setRequiereCuidadosEspeciales(false);
-        p5.setNecesitaTransito(false);
-        p5.setFechaPublicacion(new Date(2015, 9, 15));
-        p5.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero5));
-
-        Publicacion p6 = new Publicacion();
-        p6.setNombreMascota("Max");
-        p6.setRequiereCuidadosEspeciales(true);
-        p6.setNecesitaTransito(false);
-        p6.setFechaPublicacion(new Date(2015, 1, 15));
-        p6.setCondiciones("Tiene que ser adoptado por una familia con hijos");
-        p6.addImagen(BitmapFactory.decodeResource(getResources(), R.drawable.ovejero6));
-
-        publicaciones.add(p1);
-        publicaciones.add(p2);
-        publicaciones.add(p3);
-        publicaciones.add(p4);
-        publicaciones.add(p5);
-        publicaciones.add(p6);
-
-        return publicaciones;
     }
 
 }

@@ -52,7 +52,7 @@ public class Imagen {
     public static byte[] bytesFromBase64DEFAULT(String base64){
         return Base64.decode(base64, Base64.DEFAULT);
     }
-    
+
     public static byte[] bytesFromBase64URL_SAFE(String base64){
         return Base64.decode(base64.replaceAll("(\\r|\\n)", ""), Base64.URL_SAFE);
     }

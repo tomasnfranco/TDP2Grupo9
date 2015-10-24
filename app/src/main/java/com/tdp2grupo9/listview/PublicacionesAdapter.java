@@ -207,13 +207,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.PERDIDA) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
         if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.ENCONTRADA)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
         String especie = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
         sexo = PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
         ImageView publicacionSexoMascota = (ImageView) publicacionView.findViewById(R.id.publicacion_icon_sexo);
@@ -653,7 +646,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected Boolean doInBackground(Void... params) {
             try {
                 publicaciones.get(position).quieroAdoptar(Usuario.getInstancia().getToken(), id_publicacion);
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }

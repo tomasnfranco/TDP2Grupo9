@@ -552,54 +552,67 @@ public class Publicacion {
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer offset,
-                                                        Integer max, Publicacion publicacion) {
+                                                        Integer max, Publicacion publicacionBusqueda) {
         String METHOD = "buscarPublicaciones";
         List<Publicacion> publicaciones = new ArrayList<>();
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+
-                    "&longitud="+publicacion.getLongitud()+
-                    "&latitud="+publicacion.getLatitud();
+                    "&longitud="+publicacionBusqueda.getLongitud()+
+                    "&latitud="+publicacionBusqueda.getLatitud();
 
             //"&offset="+offset+"max="+max
-            if (publicacion.getTipoPublicacion() != null)
-                atributos += "&tipoPublicacion="+publicacion.getTipoPublicacion().getValue();
-            if (publicacion.getDistancia() != null)
-                atributos += "&distancia="+publicacion.getDistancia();
-            if (publicacion.getRaza().getId() > 0)
-                atributos += "&raza="+publicacion.getRaza().getId();
-            if (publicacion.getColor().getId() > 0)
-                atributos += "&color="+publicacion.getColor().getId();
-            if (publicacion.getCastrado().getId() > 0)
-                atributos += "&castrado="+publicacion.getCastrado().getId();
-            if (publicacion.getEspecie().getId() > 0)
-                atributos += "&especie="+publicacion.getEspecie().getId();
-            if (publicacion.getCompatibleCon().getId() > 0)
-                atributos += "&compatibleCon="+publicacion.getCompatibleCon().getId();
-            if (publicacion.getEdad().getId() > 0)
-                atributos += "&edad="+publicacion.getEdad().getId();
-            if (publicacion.getEnergia().getId() > 0)
-                atributos += "&energia="+publicacion.getEnergia().getId();
-            if (publicacion.getPapelesAlDia().getId() > 0)
-                atributos += "&papelesAlDia="+publicacion.getPapelesAlDia().getId();
-            if (publicacion.getProteccion().getId() > 0)
-                atributos += "&proteccion="+publicacion.getProteccion().getId();
-            if (publicacion.getSexo().getId() > 0)
-                atributos += "&sexo="+publicacion.getSexo().getId();
-            if (publicacion.getTamanio().getId() > 0)
-                atributos += "&tamanio="+publicacion.getTamanio().getId();
-            if (publicacion.getVacunasAlDia().getId() > 0)
-                atributos += "&vacunasAlDia="+publicacion.getVacunasAlDia().getId();
-            if (publicacion.getRequiereCuidadosEspeciales() != null)
-                atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
-            if (publicacion.getNecesitaTransito() != null)
-                atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
+            if (publicacionBusqueda.getTipoPublicacion() != null)
+                atributos += "&tipoPublicacion="+publicacionBusqueda.getTipoPublicacion().getValue();
+            if (publicacionBusqueda.getDistancia() != null)
+                atributos += "&distancia="+publicacionBusqueda.getDistancia();
+            if (publicacionBusqueda.getRaza().getId() > 0)
+                atributos += "&raza="+publicacionBusqueda.getRaza().getId();
+            if (publicacionBusqueda.getColor().getId() > 0)
+                atributos += "&color="+publicacionBusqueda.getColor().getId();
+            if (publicacionBusqueda.getCastrado().getId() > 0)
+                atributos += "&castrado="+publicacionBusqueda.getCastrado().getId();
+            if (publicacionBusqueda.getEspecie().getId() > 0)
+                atributos += "&especie="+publicacionBusqueda.getEspecie().getId();
+            if (publicacionBusqueda.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+publicacionBusqueda.getCompatibleCon().getId();
+            if (publicacionBusqueda.getEdad().getId() > 0)
+                atributos += "&edad="+publicacionBusqueda.getEdad().getId();
+            if (publicacionBusqueda.getEnergia().getId() > 0)
+                atributos += "&energia="+publicacionBusqueda.getEnergia().getId();
+            if (publicacionBusqueda.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+publicacionBusqueda.getPapelesAlDia().getId();
+            if (publicacionBusqueda.getProteccion().getId() > 0)
+                atributos += "&proteccion="+publicacionBusqueda.getProteccion().getId();
+            if (publicacionBusqueda.getSexo().getId() > 0)
+                atributos += "&sexo="+publicacionBusqueda.getSexo().getId();
+            if (publicacionBusqueda.getTamanio().getId() > 0)
+                atributos += "&tamanio="+publicacionBusqueda.getTamanio().getId();
+            if (publicacionBusqueda.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+publicacionBusqueda.getVacunasAlDia().getId();
+            if (publicacionBusqueda.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+publicacionBusqueda.getRequiereCuidadosEspeciales();
+            if (publicacionBusqueda.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+publicacionBusqueda.getNecesitaTransito();
 
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
+
                 Log.d(LOG_TAG, METHOD + " publicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -625,6 +638,18 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
                 Log.d(LOG_TAG, METHOD + " misPublicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -650,6 +675,18 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
                 Log.d(LOG_TAG, METHOD + " misPostulaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -661,6 +698,110 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
         return publicaciones;
+    }
+
+    public static void ofrezcoTransito(String token, Integer publicacionId) {
+        String METHOD = "ofrezcoTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/ofrezcoTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para adoptar ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " ya ha ofrecido transito en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static void cancelarTransito(String token, Integer publicacionId) {
+        String METHOD = "cancelarTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/cancelarTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " cancelacion de transito aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para cancelar el transito ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " no ha ofrecido transito en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static void concretarTransito(String token, Integer publicacionId, Integer ofrecioTransitoId) {
+        String METHOD = "concretarTransito";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/concretarTransito");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId+"&ofrecioTransito="+ofrecioTransitoId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " transito concretado ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra el usuario que ofrecio transito ");
+            } else if (HttpResult == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado a concretar transito. El token no es valido. ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " el usuario que ofrece transito no se encuentra entre los que ofrecieron ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public static void quieroAdoptar(String token, Integer publicacionId) {
@@ -712,7 +853,7 @@ public class Publicacion {
             Log.d(LOG_TAG, METHOD + " url= " + parametros);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
-                Log.d(LOG_TAG, METHOD + " postulacion aceptada ");
+                Log.d(LOG_TAG, METHOD + " adopcion concretada ");
             } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
                 Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
             } else if (HttpResult == HttpURLConnection.HTTP_BAD_REQUEST) {

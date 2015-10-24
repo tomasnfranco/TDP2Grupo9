@@ -337,7 +337,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         protected Boolean doInBackground(Void... params) {
             try {
                 this.alerta.guardarAlerta(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }
