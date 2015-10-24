@@ -324,7 +324,7 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion.getValue()+
-                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
+                    "&longitud="+this.getLongitud() + "&latitud="+this.getLatitud() +
                     "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
 
             if (!this.getDireccion().isEmpty())
@@ -384,6 +384,70 @@ public class Publicacion {
                 bmp.guardarImagen(token);
             }
             Log.d(LOG_TAG, METHOD + " finalizado.");
+        }
+
+    }
+
+    public void modificarPublicacion(String token) {
+        String METHOD = "modificarPublicacion";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/update");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            String atributos = "token="+token+"&publicacion="+id+"&tipoPublicacion="+tipoPublicacion.getValue()+
+                    "&longitud="+this.getLongitud() + "&latitud="+this.getLatitud() +
+                    "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
+
+            if (!this.getDireccion().isEmpty())
+                atributos += "&direccion="+this.getDireccion();
+            if (this.getRaza().getId() > 0)
+                atributos += "&raza="+this.getRaza().getId();
+            if (this.getColor().getId() > 0)
+                atributos += "&color="+this.getColor().getId();
+            if (this.getCastrado().getId() > 0)
+                atributos += "&castrado="+this.getCastrado().getId();
+            if (this.getEspecie().getId() > 0)
+                atributos += "&especie="+this.getEspecie().getId();
+            if (this.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+this.getCompatibleCon().getId();
+            if (this.getEdad().getId() > 0)
+                atributos += "&edad="+this.getEdad().getId();
+            if (this.getEnergia().getId() > 0)
+                atributos += "&energia="+this.getEnergia().getId();
+            if (this.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+this.getPapelesAlDia().getId();
+            if (this.getProteccion().getId() > 0)
+                atributos += "&proteccion="+this.getProteccion().getId();
+            if (this.getSexo().getId() > 0)
+                atributos += "&sexo="+this.getSexo().getId();
+            if (this.getTamanio().getId() > 0)
+                atributos += "&tamanio="+this.getTamanio().getId();
+            if (this.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+this.getVacunasAlDia().getId();
+            if (this.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+this.getRequiereCuidadosEspeciales();
+            if (this.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+this.getNecesitaTransito();
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(atributos);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " publicacion modificada id " + this.id);
+
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
         }
 
     }
