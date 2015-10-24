@@ -214,7 +214,7 @@ public class UsuarioTest {
         Integer idPublicacion = crearPublicacion("234567");
         usuario.quieroAdoptar(idPublicacion);
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        assertTrue("No se encuentra el usuario entre los postulantes", Collections.frequency(publicacion.getPostulantesIds(), usuario.getId()) == 1);
+        assertTrue("No se encuentra el usuario entre los postulantes", Collections.frequency(publicacion.getQuierenAdoptarIds(), usuario.getId()) == 1);
     }
 
     @Test
@@ -223,7 +223,7 @@ public class UsuarioTest {
         usuario.quieroAdoptar(idPublicacion);
         usuario.quieroAdoptar(idPublicacion);
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getPostulantesIds(), usuario.getId()) == 1);
+        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getQuierenAdoptarIds(), usuario.getId()) == 1);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class UsuarioTest {
         Integer idPublicacion = crearPublicacion(usuario.getToken());
         usuario.quieroAdoptar(idPublicacion);
         Publicacion publicacion = Publicacion.obtenerPublicacion(usuario.getToken(), idPublicacion);
-        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getPostulantesIds(), usuario.getId()) == 0);
+        assertTrue("El postulante tiene que estar una vez", Collections.frequency(publicacion.getQuierenAdoptarIds(), usuario.getId()) == 0);
     }
 
 
