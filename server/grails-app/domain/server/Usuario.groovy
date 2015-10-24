@@ -13,7 +13,11 @@ class Usuario {
 	boolean ofreceTransito = false
 	boolean activo = true
 	String token = ""
-	// Validador para email unico
+	String foto = ""
+
+	static mapping = {
+		foto type: 'text'
+	}
 
     static constraints = {
 		username(nullable: true, blank:true)
@@ -47,6 +51,7 @@ class Usuario {
 		token (blank:true, nullable:true)
 		telefono (blank:false)
 		direccion (blank:false)
+		foto blank:true, nullable: true
     }
 	
 	def generator = { String alphabet, int n ->
