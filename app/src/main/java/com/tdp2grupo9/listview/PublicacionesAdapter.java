@@ -3,11 +3,13 @@ package com.tdp2grupo9.listview;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +40,7 @@ import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.publicacion.Postulante;
 import com.tdp2grupo9.utils.TiposEnum;
 
 import java.util.ArrayList;
@@ -67,12 +70,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String nombreMascota;
     private TiposEnum tipos;
     private Button btnPostularme;
-    private TextView consultaParaEnviar;
+    private EditText consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
 
-    private ImageButton btnRespuesta;
-    private EditText editTextRespuesta;
     private String sexo;
+    private int position;
+    private View postularmeAdopcionClickable;
+    private View postularmeTransitoClickable;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -235,22 +239,56 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+    public View getChildView(final int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
-        final int id = publicaciones.get(i).getId();
-        final int position = i;
-        btnPostularme = (Button) itemView.findViewById(R.id.buttonPublicacion);
-        if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES)
-            btnPostularme.setVisibility(View.GONE);
+        postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
+        postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
+        postularmeAdopcionClickable.setFocusable(false);
+        postularmeTransitoClickable.setFocusable(false);
 
-        btnPostularme.setOnClickListener(new View.OnClickListener() {
+        /*List<Publicacion> postulaciones = Usuario.getInstancia().obtenerMisPostulaciones(0, 0);
+        Boolean postulado = false;
+
+        for (Publicacion p: postulaciones){
+            if (p.getId() == publicaciones.get(i).getId()){
+                postulado = true;
+            }
+        }
+        List<Postulante> postulantesAdopcion = publicaciones.get(i).getQuierenAdoptar();
+
+        if (!postulado)
+            postularmeAdopcionClickable.setVisibility(View.VISIBLE);
+        else postularmeAdopcionClickable.setVisibility(View.GONE);*/
+
+        if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES){
+            postularmeAdopcionClickable.setVisibility(View.GONE);
+            postularmeTransitoClickable.setVisibility(View.GONE);
+        }
+
+
+        if (!publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION)){
+            postularmeAdopcionClickable.setVisibility(View.GONE);
+        }
+
+        if (!publicaciones.get(i).getNecesitaTransito()){
+            postularmeTransitoClickable.setVisibility(View.GONE);
+        }
+
+        postularmeAdopcionClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guardarPostulacionTask = new GuardarPostulacionTask(position, id);
-                guardarPostulacionTask.execute((Void)null);
-
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId());
+                guardarPostulacionTask.execute((Void) null);
             }
         });
+
+        postularmeTransitoClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Hogar transito: ", "Presione el boton");
+            }
+        });
+
 
         cargarInformacionBasica(i, itemView);
         cargarLocalizacionMascota(i, itemView);
@@ -422,10 +460,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarListViewMensajes(int i, View v) {
 
-        //mensajes = publicaciones.get(i).getMensajes();
-        mensajes = loadMensajesMock();
+        mensajes = publicaciones.get(i).getMensajes();
+        position = i;
 
-        consultaParaEnviar = (TextView) v.findViewById(R.id.consulta_para_enviar);
+        consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES) {
@@ -441,24 +479,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 }
             });
 
-            //mensajes = publicaciones.get(i).getMensajes();
-
             if (!mensajes.isEmpty()) {
                 listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
                                             final int position, long arg) {
-                        btnRespuesta = (ImageButton) view.findViewById(R.id.btn_responder);
-                        editTextRespuesta = (EditText) view.findViewById(R.id.editText_respuesta);
-
-
-                        btnRespuesta.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //TODO guardar respuesta
-                            }
-                        });
 
                     }
                 });
@@ -466,16 +492,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         }else {
             consultaParaEnviar.setVisibility(View.VISIBLE);
+            btnEnviarConsulta.setFocusable(false);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
-
-            final Mensaje mensaje = new Mensaje();
-            mensaje.setPregunta(consultaParaEnviar.getText().toString());
 
             btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    enviarConsultaTask = new EnviarConsultaTask();
-                    enviarConsultaTask.execute((Void) null);
+                    onClickButton(position);
                 }
             });
 
@@ -501,7 +524,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }
         }
 
+    }
 
+    private void onClickButton(int i){
+        String pregunta =consultaParaEnviar.getText().toString();
+        if (pregunta.isEmpty()){
+            consultaParaEnviar.setError("Error: Debe escribir una consulta.");
+        }else{
+            Mensaje mensaje = new Mensaje();
+            mensaje.setPregunta(pregunta);
+            mensaje.setPublicacionId(publicaciones.get(i).getId());
+            mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
+
+            enviarConsultaTask = new EnviarConsultaTask(mensaje);
+            enviarConsultaTask.execute((Void) null);
+        }
     }
 
     private List<Mensaje> loadMensajesMock(){
@@ -509,11 +546,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         Mensaje m1 = new Mensaje();
         m1.setPregunta("hola");
         m1.setRespuesta("chau");
+        m1.setFechaPregunta(new Date(2015, 5, 10));
+        m1.setFechaRespuesta(new Date(2015, 6, 10));
         Mensaje m2 = new Mensaje();
         m2.setPregunta("Tiene pulgas");
+        m2.setFechaPregunta(new Date(2015, 5, 10));
         Mensaje m3 = new Mensaje();
         m3.setPregunta("hello");
         m3.setRespuesta("bye");
+        m3.setFechaPregunta(new Date(2015, 8, 10));
+        m3.setFechaRespuesta(new Date(2015, 8, 20));
         mensajes.add(m1);
         mensajes.add(m2);
         mensajes.add(m3);
@@ -548,6 +590,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            if (success){
+                postularmeAdopcionClickable.setVisibility(View.GONE);
+                notifyDataSetChanged();
+            }
             guardarPostulacionTask = null;
         }
 
@@ -559,24 +605,30 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     public class EnviarConsultaTask extends AsyncTask<Void, Void, Boolean> {
 
-        int id_publicacion;
-        int position;
+        Mensaje consulta;
 
-        EnviarConsultaTask() {
+        EnviarConsultaTask(Mensaje mensaje) {
+            consulta = mensaje;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-           /* try {
-                //TODO enviar mensaje
+            try {
+                consulta.guardarPregunta(Usuario.getInstancia().getToken());
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
-            }*/
+            }
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            if (success){
+                if (consulta.getId() > 0){
+                    System.out.println("VIEJA YA LO GUARDE");
+                }else System.out.println("VIEJA HUBO UN ERROR");
+            }
             enviarConsultaTask = null;
         }
 

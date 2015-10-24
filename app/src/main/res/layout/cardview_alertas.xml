@@ -11,7 +11,8 @@
     android:layout_marginTop="16dp"
     android:layout_marginBottom="16dp"
     android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp">
+    android:layout_marginStart="16dp"
+    android:id="@+id/cardview_alertas">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -102,11 +103,12 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:descendantFocusability="afterDescendants">
 
             <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/btn_Delete"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="right"
@@ -115,8 +117,8 @@
                 android:src="@drawable/ic_delete" />
 
             <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/btn_Editar"
                 android:layout_alignTop="@+id/btn_Delete"
                 android:layout_toLeftOf="@+id/btn_Delete"
@@ -126,8 +128,8 @@
                 android:src="@drawable/ic_editar" />
 
             <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/btn_Buscar"
                 android:layout_alignTop="@+id/btn_Editar"
                 android:layout_centerHorizontal="true"

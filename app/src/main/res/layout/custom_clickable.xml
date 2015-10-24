@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textIsSelectable="false"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:layout_marginLeft="-10dp" />
 
 </LinearLayout>

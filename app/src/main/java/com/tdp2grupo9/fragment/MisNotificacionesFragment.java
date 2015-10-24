@@ -11,7 +11,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.AlertaAdapter;
 
 
-public class MisNotificacionesFragment extends AlertasFragment {
+public class MisNotificacionesFragment extends AlertasFragment{
     private View mFragmentView;
 
     public static MisNotificacionesFragment newInstance() {
@@ -28,11 +28,16 @@ public class MisNotificacionesFragment extends AlertasFragment {
         buscarAlertasTask = new BuscarAlertasTask();
         buscarAlertasTask.execute((Void) null);
 
+
         return mFragmentView;
     }
 
     @Override
     protected void cargarListView() {
-        mListView.setAdapter(new AlertaAdapter(mFragmentView.getContext(), mAlertas));
+        AlertaAdapter adapter = new AlertaAdapter(mFragmentView.getContext(), mAlertas);
+        mListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
+
+
 }

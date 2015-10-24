@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:descendantFocusability="afterDescendants"
+        android:id="@+id/viewsContainerConsulta">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/icono_consulta"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/ic_consulta"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10/12/1988"
+            android:id="@+id/consulta_fecha"
+            android:textSize="13dp"
+            android:layout_alignTop="@+id/icono_consulta"
+            android:layout_toRightOf="@+id/icono_consulta"
+            android:layout_toEndOf="@+id/icono_consulta"
+            android:layout_alignBottom="@+id/icono_consulta"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Nueva Consulta"
+            android:id="@+id/infConsulta"
+            android:layout_below="@+id/consulta_fecha"
+            android:layout_alignLeft="@+id/icono_consulta"
+            android:layout_alignStart="@+id/icono_consulta"
+            android:textSize="13dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:descendantFocusability="afterDescendants"
+        android:id="@+id/viewsContainerRespuesta">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/icono_respuesta"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_respuesta" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10/12/1988"
+            android:id="@+id/respuesta_fecha"
+            android:textSize="13dp"
+            android:layout_alignTop="@+id/icono_respuesta"
+            android:layout_toRightOf="@+id/icono_respuesta"
+            android:layout_toEndOf="@+id/icono_respuesta"
+            android:layout_alignBottom="@+id/icono_respuesta"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Nueva Respuesta"
+            android:id="@+id/infRespuesta"
+            android:layout_below="@+id/respuesta_fecha"
+            android:layout_alignLeft="@+id/icono_respuesta"
+            android:layout_alignStart="@+id/icono_respuesta"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:descendantFocusability="afterDescendants"
+        android:id="@+id/viewsContainer">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/icono_sin_responder"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_responder" />
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/btn_responder"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/ic_responder_consulta"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/icono_sin_responder" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:focusable="true"
+            android:id="@+id/respuesta_edit_text"
+            android:layout_alignTop="@+id/icono_sin_responder"
+            android:layout_toRightOf="@+id/icono_sin_responder"
+            android:layout_toLeftOf="@+id/btn_responder"
+            android:layout_toStartOf="@+id/btn_responder"
+            android:textSize="13dp" />
+    </RelativeLayout>
+
+</LinearLayout>
