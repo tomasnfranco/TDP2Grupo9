@@ -48,7 +48,7 @@ public class Alerta {
     private VacunasAlDia vacunasAlDia;
     private Double latitud;
     private Double longitud;
-    private Double distancia;
+    private Integer distancia;
     private Date fechaCreacion;
     //private Integer tipoPublicacion;
     //private Boolean requiereCuidadosEspeciales;
@@ -208,7 +208,7 @@ public class Alerta {
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else {
-                        this.distancia = reader.nextDouble();
+                        this.distancia = reader.nextInt();
                     }
                     break;
                 case "fechaCreacion":
@@ -493,19 +493,12 @@ public class Alerta {
         this.longitud = longitud;
     }
 
-    public Double getDistancia() {
+    public Integer getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(Double distancia) {
-        this.distancia = distancia;
-    }
-
     public void setDistancia(Integer distancia) {
-        if (distancia != null)
-            this.distancia = distancia.doubleValue();
-        else
-            this.distancia = null;
+        this.distancia = distancia;
     }
 
     public Date getFechaCreacion() {

@@ -64,13 +64,15 @@ public class Publicacion {
     private Double longitud;
     private Double distancia;
 
-    private List<Integer> postulantesIds;
     private List<Integer> mensajesIds;
+    private List<Integer> quierenAdoptarIds;
+    private List<Integer> ofrecenTransitoIds;
 
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
     private List<Mensaje> mensajes;
-    private List<Postulante> postulantes;
+    private List<Postulante> quierenAdoptar;
+    private List<Postulante> ofrecenTransito;
 
     public Publicacion() {
         this.id = 0;
@@ -104,8 +106,10 @@ public class Publicacion {
         this.imagenes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
         this.mensajesIds = new ArrayList<>();
-        this.postulantes = new ArrayList<>();
-        this.postulantesIds = new ArrayList<>();
+        this.quierenAdoptarIds = new ArrayList<>();
+        this.ofrecenTransitoIds = new ArrayList<>();
+        this.quierenAdoptar = new ArrayList<>();
+        this.ofrecenTransito = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -294,7 +298,30 @@ public class Publicacion {
                                 String namepost = reader.nextName();
                                 switch (namepost) {
                                     case "id":
-                                        this.postulantesIds.add(reader.nextInt());
+                                        this.quierenAdoptarIds.add(reader.nextInt());
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        }
+                        reader.endArray();
+                    }
+                    break;
+                case "ofrecenTransito":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String namepost = reader.nextName();
+                                switch (namepost) {
+                                    case "id":
+                                        this.ofrecenTransitoIds.add(reader.nextInt());
                                         break;
                                     default:
                                         reader.skipValue();
@@ -324,7 +351,7 @@ public class Publicacion {
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             String atributos = "token="+token+"&tipoPublicacion="+tipoPublicacion.getValue()+
-                    "&longitud="+this.getLongitud().toString().replace('.', ',') + "&latitud="+this.getLatitud().toString().replace('.', ',')+
+                    "&longitud="+this.getLongitud() + "&latitud="+this.getLatitud() +
                     "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
 
             if (!this.getDireccion().isEmpty())
@@ -388,6 +415,70 @@ public class Publicacion {
 
     }
 
+    public void modificarPublicacion(String token) {
+        String METHOD = "modificarPublicacion";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/update");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            String atributos = "token="+token+"&publicacion="+id+"&tipoPublicacion="+tipoPublicacion.getValue()+
+                    "&longitud="+this.getLongitud() + "&latitud="+this.getLatitud() +
+                    "&nombreMascota="+this.nombreMascota+"&condiciones="+this.condiciones+"&videoLink="+this.videoLink;
+
+            if (!this.getDireccion().isEmpty())
+                atributos += "&direccion="+this.getDireccion();
+            if (this.getRaza().getId() > 0)
+                atributos += "&raza="+this.getRaza().getId();
+            if (this.getColor().getId() > 0)
+                atributos += "&color="+this.getColor().getId();
+            if (this.getCastrado().getId() > 0)
+                atributos += "&castrado="+this.getCastrado().getId();
+            if (this.getEspecie().getId() > 0)
+                atributos += "&especie="+this.getEspecie().getId();
+            if (this.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+this.getCompatibleCon().getId();
+            if (this.getEdad().getId() > 0)
+                atributos += "&edad="+this.getEdad().getId();
+            if (this.getEnergia().getId() > 0)
+                atributos += "&energia="+this.getEnergia().getId();
+            if (this.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+this.getPapelesAlDia().getId();
+            if (this.getProteccion().getId() > 0)
+                atributos += "&proteccion="+this.getProteccion().getId();
+            if (this.getSexo().getId() > 0)
+                atributos += "&sexo="+this.getSexo().getId();
+            if (this.getTamanio().getId() > 0)
+                atributos += "&tamanio="+this.getTamanio().getId();
+            if (this.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+this.getVacunasAlDia().getId();
+            if (this.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+this.getRequiereCuidadosEspeciales();
+            if (this.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+this.getNecesitaTransito();
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(atributos);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " publicacion modificada id " + this.id);
+
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+
+    }
+
     public static Publicacion obtenerPublicacion(String token, Integer id) {
         String METHOD = "obtenerPublicacion";
         Publicacion publicacion = new Publicacion();
@@ -414,8 +505,12 @@ public class Publicacion {
         if (publicacion.getId() > 0) {
             publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
 
-            for (Integer postulanteId: publicacion.getPostulantesIds()) {
-                publicacion.addPostulante(Postulante.obtenerPostulante(token, postulanteId));
+            for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+            }
+
+            for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
             }
 
         }
@@ -531,6 +626,35 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
         return publicaciones;
+    }
+
+    public void cancelar(String token) {
+        String METHOD = "cancelar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/delete");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+this.getId();
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                this.concreatada = true;
+                Log.d(LOG_TAG, METHOD + " postulacion cancelada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public static void quieroAdoptar(String token, Integer publicacionId) {
@@ -675,8 +799,20 @@ public class Publicacion {
         return mensajesIds;
     }
 
-    public List<Integer> getPostulantesIds() {
-        return postulantesIds;
+    public List<Integer> getQuierenAdoptarIds() {
+        return quierenAdoptarIds;
+    }
+
+    public List<Postulante> getQuierenAdoptar() {
+        return quierenAdoptar;
+    }
+
+    public List<Integer> getOfrecenTransitoIds() {
+        return ofrecenTransitoIds;
+    }
+
+    public List<Postulante> getOfrecenTransito() {
+        return ofrecenTransito;
     }
 
     public Double getLongitud() {
@@ -722,7 +858,18 @@ public class Publicacion {
     }
 
     public Double getDistancia() {
-        return this.distancia;
+        if (this.distancia != null) {
+            try {
+                DecimalFormat df = new DecimalFormat("#,##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            } catch (NumberFormatException e) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                df.setRoundingMode(RoundingMode.CEILING);
+                return Double.parseDouble(df.format(this.distancia));
+            }
+        }
+        return null;
     }
 
     public String getContacto() {
@@ -733,8 +880,12 @@ public class Publicacion {
         this.mensajes.add(mensaje);
     }
 
-    private void addPostulante(Postulante postulante) {
-        this.postulantes.add(postulante);
+    private void addPostulanteAdopcion(Postulante postulante) {
+        this.quierenAdoptar.add(postulante);
+    }
+
+    private void addPostulanteTransito(Postulante postulante) {
+        this.ofrecenTransito.add(postulante);
     }
 
     public void addImagen(Bitmap imagen) {

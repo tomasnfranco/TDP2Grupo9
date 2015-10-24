@@ -56,7 +56,9 @@ public abstract class SeleccionAtributosFragment extends Fragment {
             atributoPublicacion.setValor(atributoPublicacion.getName());
         }
 
-        atributos.add(0, atributoPublicacion);
+        if (atributos.size() > 0 && atributos.get(0).getId() > 0)
+            atributos.add(0, atributoPublicacion);
+
         AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(mFragmentView.getContext(), android.R.layout.simple_spinner_item, atributos);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinner = (Spinner) mFragmentView.findViewById(id);
@@ -117,6 +119,13 @@ public abstract class SeleccionAtributosFragment extends Fragment {
     }
 
     protected abstract void initializeSpinners();
+
+    protected void cleanSpinner(Spinner spinner) {
+        spinner.setSelection(0);
+    }
+
+    protected abstract void cleanFilters();
+
 
     @Override
     public void onDestroyView() {

@@ -77,6 +77,26 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
     }
 
     @Override
+    protected void cleanFilters() {
+        radioGroupPublicaciones.clearCheck();
+        cleanSpinner(spEspecie);
+        cleanSpinner(spRaza);
+        cleanSpinner(spSexo);
+        cleanSpinner(spTamanio);
+        cleanSpinner(spEdad);
+        cleanSpinner(spColor);
+        cleanSpinner(spProteccion);
+        cleanSpinner(spEnergia);
+        cleanSpinner(spCastrado);
+        cleanSpinner(spCompatibleCon);
+        cleanSpinner(spVacunas);
+        cleanSpinner(spPapeles);
+        cleanSpinner(mMaximasDistanciasSpinner);
+        mLatitud = Usuario.getInstancia().getLatitud();
+        mLongitud = Usuario.getInstancia().getLongitud();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFragmentView = inflater.inflate(R.layout.fragment_buscar_mascota, container, false);
@@ -102,7 +122,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if(null!=rb && checkedId > -1){
+                if (null != rb && checkedId > -1) {
                     tipoPublicacion = rb.getText().toString();
                 }
             }
@@ -190,31 +210,6 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         mFragmentView.findViewById(R.id.requiere_cuidados_especiales).setVisibility(View.GONE);
         mFragmentView.findViewById(R.id.contacto_edit_text).setVisibility(View.GONE);
         mFragmentView.findViewById(R.id.condiciones_edit_text).setVisibility(View.GONE);
-    }
-
-    private void cleanSpinner(Spinner spinner) {
-        spinner.setSelection(0);
-    }
-
-
-    private void cleanFilters() {
-        radioGroupPublicaciones.clearCheck();
-        cleanSpinner(spEspecie);
-        cleanSpinner(spRaza);
-        cleanSpinner(spSexo);
-        cleanSpinner(spTamanio);
-        cleanSpinner(spEdad);
-        cleanSpinner(spColor);
-        cleanSpinner(spProteccion);
-        cleanSpinner(spEnergia);
-        cleanSpinner(spCastrado);
-        cleanSpinner(spCompatibleCon);
-        cleanSpinner(spVacunas);
-        cleanSpinner(spPapeles);
-        cleanSpinner(mMaximasDistanciasSpinner);
-        mLatitud = Usuario.getInstancia().getLatitud();
-        mLongitud = Usuario.getInstancia().getLongitud();
-
     }
 
     private boolean validateCampoRequeridoSpinner(Spinner spinner, String campoRequeridoString) {

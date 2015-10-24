@@ -11,7 +11,9 @@ class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
     def alertaService
-    static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"], atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET']
+    static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"],
+                             atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET',
+                             ofrezcoTransito: "POST", cancelarTransito: "POST",concretarTransito:"POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -51,8 +53,12 @@ class PublicacionController extends RestfulController<Publicacion>  {
             publicacionInstance.vacunasAlDia = VacunasAlDia.findByPorDefecto(true)
         if(params.latitud == null)
             publicacionInstance.latitud = params.usuario.latitud
+        else
+            publicacionInstance.latitud = Double.parseDouble(params.latitud)
         if(params.longitud == null)
             publicacionInstance.longitud = params.usuario.longitud
+        else
+            publicacionInstance.longitud = Double.parseDouble(params.longitud)
 
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
@@ -89,6 +95,10 @@ class PublicacionController extends RestfulController<Publicacion>  {
         if(publicacionInstance.id == null) {
             publicacionInstance = Publicacion.get(params.publicacion)
             publicacionInstance.properties = params
+            if(params.latitud)
+                publicacionInstance.latitud = Double.parseDouble(params.latitud)
+            if(params.longitud)
+                publicacionInstance.longitud = Double.parseDouble(params.longitud)
         }
 
         if (publicacionInstance.hasErrors()) {
@@ -179,6 +189,19 @@ class PublicacionController extends RestfulController<Publicacion>  {
     def concretarAdopcion(){
         println params
         render status: publicacionService.concretarAdopcion(params)
+    }
+
+    def ofrezcoTransito(){
+        render status: publicacionService.ofrezcoTransito(params)
+    }
+
+    def cancelarTransito(){
+        render status: publicacionService.cancelarTransito(params)
+    }
+
+    def concretarTransito(){
+        println params
+        render status: publicacionService.concretarTransito(params)
     }
 
     def mensajes(){

@@ -5,7 +5,7 @@ import static org.springframework.http.HttpStatus.*
 
 @Transactional
 class PublicacionService {
-    final static def DISTANCIA_MAXIMA = 10
+    final static def DISTANCIA_MAXIMA = 50
     def notificacionesService
 
     //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
@@ -171,6 +171,73 @@ class PublicacionService {
                     notificacionesService.concretarAdopcionNoElegido(it,publicacion.nombreMascota,publicacion.publicador)
                 }
             }
+            println "salio todo OK"
+            return OK
+        }
+        println "salio porque no existe la publicacion"
+        return NOT_FOUND
+    }
+
+    def ofrezcoTransito(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        Usuario user = params.usuario
+        if(publicacion) {
+            if(publicacion.ofrecenTransito.contains(user)){
+                return METHOD_NOT_ALLOWED
+            }
+            if(publicacion.publicador.equals(user)){
+                return FORBIDDEN
+            }
+            publicacion.addToOfrecenTransito(user)
+            publicacion.save(flush:true)
+            //TODO: Notificacion de Transito
+            return OK
+        }
+        return NOT_FOUND
+    }
+
+    def cancelarTransito(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        Usuario user = params.usuario
+        if(publicacion){
+            if(publicacion.publicador.equals(user)){
+                return FORBIDDEN
+            }
+
+            if(!publicacion.ofrecenTransito.contains(user)){
+                return METHOD_NOT_ALLOWED
+            }
+
+            publicacion.removeFromOfrecenTransito(user)
+            publicacion.save(flush:true)
+            return OK
+        }
+        return NOT_FOUND
+    }
+
+    def concretarTransito(params){
+        Publicacion publicacion = Publicacion.get(params.publicacion)
+        println "Publicacion: ${params.publicacion}"
+        Usuario supuestoPublicador = params.usuario
+        println "Publicador: ${params.usuario}"
+        Usuario ofrecioTransito = Usuario.get(params.ofrecioTransito)
+        println "Ofrecio transito: ${ofrecioTransito}"
+        if(!ofrecioTransito){
+            println "salio porque no existe ofrecioTransito"
+            return BAD_REQUEST
+        }
+        if(publicacion) {
+            if(!publicacion.ofrecenTransito.contains(ofrecioTransito)){
+                println "salio porque no existe ofrecioTransito en la lista de los que ofrecen"
+                return FORBIDDEN
+            }
+            if(!publicacion.publicador.equals(supuestoPublicador)){
+                println "salio porque no es su publicacion"
+                return UNAUTHORIZED
+            }
+            publicacion.transito = ofrecioTransito
+            publicacion.save(flush:true)
+            //TODO: Ver Notificaciones
             println "salio todo OK"
             return OK
         }

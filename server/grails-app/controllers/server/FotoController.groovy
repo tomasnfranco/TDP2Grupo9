@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class FotoController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: ["DELETE","POST"]]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -90,10 +90,14 @@ class FotoController {
             return
         }
 
+        if(fotoInstance.id == null){
+            fotoInstance = Foto.get(params.foto)
+        }
+
         fotoInstance.delete flush:true
 
         request.withFormat {
-            form multipartForm {
+            html {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Foto.label', default: 'Foto'), fotoInstance.id])
                 redirect action:"index", method:"GET"
             }
