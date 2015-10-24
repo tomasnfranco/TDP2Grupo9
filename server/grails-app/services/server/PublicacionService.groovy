@@ -5,7 +5,7 @@ import static org.springframework.http.HttpStatus.*
 
 @Transactional
 class PublicacionService {
-    final static def DISTANCIA_MAXIMA = 10
+    final static def DISTANCIA_MAXIMA = 50
     def notificacionesService
 
     //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
