@@ -56,7 +56,8 @@ class PublicacionService {
             busqueda = busqueda.sort { it.fechaPublicacion }
             busqueda.reverse(true)
         }
-        return busqueda.collect{[id: it.id,
+        return busqueda
+                /*.collect{[id: it.id,
                                  publicadorNombre: it.publicador.username,
                                  publicadorId: it.publicador.id,
                                  distancia: it.distancia,
@@ -70,12 +71,14 @@ class PublicacionService {
                                  longitudTransito: it.transito ? it.transito.longitud : 0,
                                  latitudTransito: it.transito ? it.transito.latitud : 0
                                 ]}
+                                */
     }
 
     def misPublicaciones(params) {
         def publicaciones = Publicacion.findAllByPublicador(params.usuario,params)
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
-        return publicaciones.collect{[id: it.id,
+        return publicaciones
+        /*.collect{[id: it.id,
                                       publicadorNombre: it.publicador.username,
                                       publicadorId: it.publicador.id,
                                       distancia: it.distancia,
@@ -88,7 +91,7 @@ class PublicacionService {
                                       direccionTransito: it.transito ? it.transito.direccion : '',
                                       longitudTransito: it.transito ? it.transito.longitud : 0,
                                       latitudTransito: it.transito ? it.transito.latitud : 0
-                                    ]}
+                                    ]}*/
     }
 
     def misPostulaciones(params) {
@@ -99,7 +102,8 @@ class PublicacionService {
             eq('activa',true)
         }
         publicaciones*.setDistancia(params.usuario.latitud,params.usuario.longitud)
-        return publicaciones.collect{[id: it.id,
+        return publicaciones
+        /*.collect{[id: it.id,
                                       publicadorNombre: it.publicador.username,
                                       publicadorId: it.publicador.id,
                                       distancia: it.distancia,
@@ -112,7 +116,7 @@ class PublicacionService {
                                       direccionTransito: it.transito ? it.transito.direccion : '',
                                       longitudTransito: it.transito ? it.transito.longitud : 0,
                                       latitudTransito: it.transito ? it.transito.latitud : 0
-                                    ]}
+                                    ]}*/
     }
 
     def quieroAdoptar(params){
