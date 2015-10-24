@@ -105,6 +105,23 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         createEnergiaSpinner();
     }
 
+    @Override
+    protected void cleanFilters() {
+        radioGroupPublicaciones.clearCheck();
+        cleanSpinner(spEspecie);
+        cleanSpinner(spRaza);
+        cleanSpinner(spSexo);
+        cleanSpinner(spTamanio);
+        cleanSpinner(spEdad);
+        cleanSpinner(spColor);
+        cleanSpinner(spCompatibleCon);
+        cleanSpinner(spPapeles);
+        cleanSpinner(spVacunas);
+        cleanSpinner(spCastrado);
+        cleanSpinner(spProteccion);
+        cleanSpinner(spEnergia);
+    }
+
     private void inicializarWidgets(){
         nombreDescripcion = (EditText) mFragmentView.findViewById(R.id.nombre_mascota_edit_text);
         videoLink = (EditText) mFragmentView.findViewById(R.id.cargar_video);
@@ -124,7 +141,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if(null!=rb && checkedId > -1){
+                if (null != rb && checkedId > -1) {
                     tipoPublicacion = rb.getText().toString();
                 }
             }

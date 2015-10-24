@@ -62,8 +62,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     private static final long FASTEST_INTERVAL = 1000;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final double SPEED_THRESH = 1;
+    private static final String validCountry = "Argentina";
 
     private static final String TAG = "Mapper";
+    private String currentCountry = "";
     private Location currentLocation;
     private double currentLat = -34.5976786;
     private double currentLon = -58.4430195;
@@ -316,7 +318,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     }
 
     private String reverseGeocodeLocation(double latitude, double longitude){
-        boolean omitCountry = true;
+        boolean omitCountry = false;
         String returnString = "";
 
         Geocoder gcoder = new Geocoder(this);
@@ -343,6 +345,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 if(country == null) {
                     country = "";
                 } else {
+                    this.currentCountry = country;
                     country =  ", "+country;
                 }
                 raw += location+"\n";
@@ -369,7 +372,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         } catch (IOException e){
             Log.e(TAG, "I/O Failure",e);
         }
-
 
         return returnString;
 
@@ -449,7 +451,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     public void onClick(View v) {
         if (v.getId() == R.id.btnRegistrarse){
 
-            if (isValidPhoneNumber(etTelefono.getText())) {
+            if (isValidPhoneNumber() && isValidZona()) {
                 Usuario.getInstancia().setDireccion(tvDireccion.getText().toString());
                 Usuario.getInstancia().setTelefono(etTelefono.getText().toString());
                 Usuario.getInstancia().setLatitud(currentLat);
@@ -460,10 +462,23 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         }
     }
 
+    private boolean isValidZona() {
+        boolean valido = true;
+        if (tvDireccion.getText().toString().isEmpty()) {
+            tvDireccion.setError(getText(R.string.campo_zona_invalida));
+            valido = false;
+        }
 
-    private boolean isValidPhoneNumber(CharSequence target) {
+        if (!this.currentCountry.equals(validCountry)) {
+            tvDireccion.setError(getText(R.string.campo_zona_argentina));
+            valido = false;
+        }
+        return valido;
+    }
+
+    private boolean isValidPhoneNumber() {
+        CharSequence target = etTelefono.getText();
         String regexStr = "[0-9]+";
-
         if (target.toString().isEmpty()) {
             etTelefono.setError(getText(R.string.campo_telefonico_vacio));
             return false;
