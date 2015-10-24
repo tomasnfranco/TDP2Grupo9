@@ -64,13 +64,15 @@ public class Publicacion {
     private Double longitud;
     private Double distancia;
 
-    private List<Integer> postulantesIds;
     private List<Integer> mensajesIds;
+    private List<Integer> quierenAdoptarIds;
+    private List<Integer> ofrecenTransitoIds;
 
     private Date fechaPublicacion;
     private List<Imagen> imagenes;
     private List<Mensaje> mensajes;
-    private List<Postulante> postulantes;
+    private List<Postulante> quierenAdoptar;
+    private List<Postulante> ofrecenTransito;
 
     public Publicacion() {
         this.id = 0;
@@ -104,8 +106,10 @@ public class Publicacion {
         this.imagenes = new ArrayList<>();
         this.mensajes = new ArrayList<>();
         this.mensajesIds = new ArrayList<>();
-        this.postulantes = new ArrayList<>();
-        this.postulantesIds = new ArrayList<>();
+        this.quierenAdoptarIds = new ArrayList<>();
+        this.ofrecenTransitoIds = new ArrayList<>();
+        this.quierenAdoptar = new ArrayList<>();
+        this.ofrecenTransito = new ArrayList<>();
     }
 
     private static List<Publicacion> jsonToPublicaciones(JsonReader reader) throws IOException, JSONException {
@@ -294,7 +298,30 @@ public class Publicacion {
                                 String namepost = reader.nextName();
                                 switch (namepost) {
                                     case "id":
-                                        this.postulantesIds.add(reader.nextInt());
+                                        this.quierenAdoptarIds.add(reader.nextInt());
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        }
+                        reader.endArray();
+                    }
+                    break;
+                case "ofrecenTransito":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String namepost = reader.nextName();
+                                switch (namepost) {
+                                    case "id":
+                                        this.ofrecenTransitoIds.add(reader.nextInt());
                                         break;
                                     default:
                                         reader.skipValue();
@@ -478,8 +505,12 @@ public class Publicacion {
         if (publicacion.getId() > 0) {
             publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
 
-            for (Integer postulanteId: publicacion.getPostulantesIds()) {
-                publicacion.addPostulante(Postulante.obtenerPostulante(token, postulanteId));
+            for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+            }
+
+            for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
             }
 
         }
@@ -595,6 +626,35 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
         return publicaciones;
+    }
+
+    public void cancelar(String token) {
+        String METHOD = "cancelar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/delete");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+this.getId();
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                this.concreatada = true;
+                Log.d(LOG_TAG, METHOD + " postulacion cancelada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public static void quieroAdoptar(String token, Integer publicacionId) {
@@ -739,8 +799,20 @@ public class Publicacion {
         return mensajesIds;
     }
 
-    public List<Integer> getPostulantesIds() {
-        return postulantesIds;
+    public List<Integer> getQuierenAdoptarIds() {
+        return quierenAdoptarIds;
+    }
+
+    public List<Postulante> getQuierenAdoptar() {
+        return quierenAdoptar;
+    }
+
+    public List<Integer> getOfrecenTransitoIds() {
+        return ofrecenTransitoIds;
+    }
+
+    public List<Postulante> getOfrecenTransito() {
+        return ofrecenTransito;
     }
 
     public Double getLongitud() {
@@ -808,8 +880,12 @@ public class Publicacion {
         this.mensajes.add(mensaje);
     }
 
-    private void addPostulante(Postulante postulante) {
-        this.postulantes.add(postulante);
+    private void addPostulanteAdopcion(Postulante postulante) {
+        this.quierenAdoptar.add(postulante);
+    }
+
+    private void addPostulanteTransito(Postulante postulante) {
+        this.ofrecenTransito.add(postulante);
     }
 
     public void addImagen(Bitmap imagen) {
