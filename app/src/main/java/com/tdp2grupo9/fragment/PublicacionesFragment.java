@@ -43,17 +43,20 @@ public abstract class PublicacionesFragment extends Fragment {
                 List<Publicacion> publicacionesReducidas = new ArrayList<Publicacion>();
 
                 if (tipo == TiposEnum.BUSQUEDA || tipo == TiposEnum.RECIENTES)
-                    publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
+                    mPublicaciones = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
+                    //publicacionesReducidas = Publicacion.buscarPublicaciones(Usuario.getInstancia().getToken(), 0, 0, mPublicacion);
                 else if (tipo == TiposEnum.MIS_PUBLICACIONES)
-                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
+                    mPublicaciones = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
+                    //publicacionesReducidas = Usuario.getInstancia().obtenerMisPublicaciones(0, 0);
                 else if (tipo == TiposEnum.MIS_POSTULACIONES)
-                    publicacionesReducidas = Usuario.getInstancia().obtenerMisPostulaciones(0,0);
+                    mPublicaciones = Usuario.getInstancia().obtenerMisPostulaciones(0, 0);
+                    //publicacionesReducidas = Usuario.getInstancia().obtenerMisPostulaciones(0,0);
 
-                for (Publicacion publicacionReducida : publicacionesReducidas){
+                /*for (Publicacion publicacionReducida : publicacionesReducidas){
                     mPublicaciones.add(Publicacion.obtenerPublicacion(Usuario.getInstancia().getToken(), publicacionReducida.getId()));
-                }
+                }*/
 
-                Thread.sleep(500);
+                Thread.sleep(200);
 
             } catch (InterruptedException e) {
                 return false;

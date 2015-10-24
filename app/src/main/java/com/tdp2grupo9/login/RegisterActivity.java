@@ -513,7 +513,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().registrarse();
-                Thread.sleep(2000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }

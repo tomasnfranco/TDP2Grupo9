@@ -83,7 +83,7 @@ public class AlertaAdapter extends BaseAdapter{
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -272,7 +272,7 @@ public class AlertaAdapter extends BaseAdapter{
         protected Boolean doInBackground(Void... params) {
             try {
                 this.alerta.borrarAlerta(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }

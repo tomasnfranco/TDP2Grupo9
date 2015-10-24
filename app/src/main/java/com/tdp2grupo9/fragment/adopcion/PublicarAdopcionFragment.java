@@ -278,7 +278,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         protected Boolean doInBackground(Void... params) {
             try {
                 this.publicacion.guardarPublicacion(Usuario.getInstancia().getToken());
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
             }

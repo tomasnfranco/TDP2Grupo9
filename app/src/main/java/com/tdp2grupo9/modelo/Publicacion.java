@@ -552,54 +552,67 @@ public class Publicacion {
     }
 
     public static List<Publicacion> buscarPublicaciones(String token, Integer offset,
-                                                        Integer max, Publicacion publicacion) {
+                                                        Integer max, Publicacion publicacionBusqueda) {
         String METHOD = "buscarPublicaciones";
         List<Publicacion> publicaciones = new ArrayList<>();
         HttpURLConnection urlConnection = null;
         try {
             String atributos = "?token="+token+
-                    "&longitud="+publicacion.getLongitud()+
-                    "&latitud="+publicacion.getLatitud();
+                    "&longitud="+publicacionBusqueda.getLongitud()+
+                    "&latitud="+publicacionBusqueda.getLatitud();
 
             //"&offset="+offset+"max="+max
-            if (publicacion.getTipoPublicacion() != null)
-                atributos += "&tipoPublicacion="+publicacion.getTipoPublicacion().getValue();
-            if (publicacion.getDistancia() != null)
-                atributos += "&distancia="+publicacion.getDistancia();
-            if (publicacion.getRaza().getId() > 0)
-                atributos += "&raza="+publicacion.getRaza().getId();
-            if (publicacion.getColor().getId() > 0)
-                atributos += "&color="+publicacion.getColor().getId();
-            if (publicacion.getCastrado().getId() > 0)
-                atributos += "&castrado="+publicacion.getCastrado().getId();
-            if (publicacion.getEspecie().getId() > 0)
-                atributos += "&especie="+publicacion.getEspecie().getId();
-            if (publicacion.getCompatibleCon().getId() > 0)
-                atributos += "&compatibleCon="+publicacion.getCompatibleCon().getId();
-            if (publicacion.getEdad().getId() > 0)
-                atributos += "&edad="+publicacion.getEdad().getId();
-            if (publicacion.getEnergia().getId() > 0)
-                atributos += "&energia="+publicacion.getEnergia().getId();
-            if (publicacion.getPapelesAlDia().getId() > 0)
-                atributos += "&papelesAlDia="+publicacion.getPapelesAlDia().getId();
-            if (publicacion.getProteccion().getId() > 0)
-                atributos += "&proteccion="+publicacion.getProteccion().getId();
-            if (publicacion.getSexo().getId() > 0)
-                atributos += "&sexo="+publicacion.getSexo().getId();
-            if (publicacion.getTamanio().getId() > 0)
-                atributos += "&tamanio="+publicacion.getTamanio().getId();
-            if (publicacion.getVacunasAlDia().getId() > 0)
-                atributos += "&vacunasAlDia="+publicacion.getVacunasAlDia().getId();
-            if (publicacion.getRequiereCuidadosEspeciales() != null)
-                atributos += "&requiereCuidadosEspeciales="+publicacion.getRequiereCuidadosEspeciales();
-            if (publicacion.getNecesitaTransito() != null)
-                atributos += "&necesitaTransito="+publicacion.getNecesitaTransito();
+            if (publicacionBusqueda.getTipoPublicacion() != null)
+                atributos += "&tipoPublicacion="+publicacionBusqueda.getTipoPublicacion().getValue();
+            if (publicacionBusqueda.getDistancia() != null)
+                atributos += "&distancia="+publicacionBusqueda.getDistancia();
+            if (publicacionBusqueda.getRaza().getId() > 0)
+                atributos += "&raza="+publicacionBusqueda.getRaza().getId();
+            if (publicacionBusqueda.getColor().getId() > 0)
+                atributos += "&color="+publicacionBusqueda.getColor().getId();
+            if (publicacionBusqueda.getCastrado().getId() > 0)
+                atributos += "&castrado="+publicacionBusqueda.getCastrado().getId();
+            if (publicacionBusqueda.getEspecie().getId() > 0)
+                atributos += "&especie="+publicacionBusqueda.getEspecie().getId();
+            if (publicacionBusqueda.getCompatibleCon().getId() > 0)
+                atributos += "&compatibleCon="+publicacionBusqueda.getCompatibleCon().getId();
+            if (publicacionBusqueda.getEdad().getId() > 0)
+                atributos += "&edad="+publicacionBusqueda.getEdad().getId();
+            if (publicacionBusqueda.getEnergia().getId() > 0)
+                atributos += "&energia="+publicacionBusqueda.getEnergia().getId();
+            if (publicacionBusqueda.getPapelesAlDia().getId() > 0)
+                atributos += "&papelesAlDia="+publicacionBusqueda.getPapelesAlDia().getId();
+            if (publicacionBusqueda.getProteccion().getId() > 0)
+                atributos += "&proteccion="+publicacionBusqueda.getProteccion().getId();
+            if (publicacionBusqueda.getSexo().getId() > 0)
+                atributos += "&sexo="+publicacionBusqueda.getSexo().getId();
+            if (publicacionBusqueda.getTamanio().getId() > 0)
+                atributos += "&tamanio="+publicacionBusqueda.getTamanio().getId();
+            if (publicacionBusqueda.getVacunasAlDia().getId() > 0)
+                atributos += "&vacunasAlDia="+publicacionBusqueda.getVacunasAlDia().getId();
+            if (publicacionBusqueda.getRequiereCuidadosEspeciales() != null)
+                atributos += "&requiereCuidadosEspeciales="+publicacionBusqueda.getRequiereCuidadosEspeciales();
+            if (publicacionBusqueda.getNecesitaTransito() != null)
+                atributos += "&necesitaTransito="+publicacionBusqueda.getNecesitaTransito();
 
             Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
+
                 Log.d(LOG_TAG, METHOD + " publicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -625,6 +638,18 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
                 Log.d(LOG_TAG, METHOD + " misPublicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -650,6 +675,18 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
                 Log.d(LOG_TAG, METHOD + " misPostulaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());

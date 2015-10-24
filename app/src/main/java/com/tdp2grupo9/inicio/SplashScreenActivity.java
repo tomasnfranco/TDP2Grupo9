@@ -10,7 +10,7 @@ import com.tdp2grupo9.R;
 
 public class SplashScreenActivity extends Activity {
 
-    private final static int SLEEP = 50;
+    private final static int SLEEP = 30;
 
     private int progreso = 0;
 
