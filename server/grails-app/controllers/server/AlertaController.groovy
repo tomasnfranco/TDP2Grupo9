@@ -35,6 +35,7 @@ class AlertaController {
             respond alertaInstance.errors, view:'create'
             return
         }
+
 		
         alertaInstance.save flush:true
 
@@ -44,8 +45,16 @@ class AlertaController {
 
         if(params.latitud == null)
             alertaInstance.latitud = params.usuario.latitud
+        else
+            alertaInstance.latitud = Double.parseDouble(params.latitud)
+
         if(params.longitud == null)
             alertaInstance.longitud = params.usuario.longitud
+        else
+            alertaInstance.longitud = Double.parseDouble(params.longitud)
+
+        if(params.distancia)
+            alertaInstance.distancia = Double.parseDouble(params.distancia)
 
         request.withFormat {
             html {
@@ -71,6 +80,15 @@ class AlertaController {
             alertaInstance = Alerta.get(params.alerta)
             alertaInstance.properties = params
         }
+
+        if(params.latitud)
+            alertaInstance.latitud = Double.parseDouble(params.latitud)
+
+        if(params.longitud)
+            alertaInstance.longitud = Double.parseDouble(params.longitud)
+
+        if(params.distancia)
+            alertaInstance.distancia = Double.parseDouble(params.distancia)
 
         if (alertaInstance.hasErrors()) {
             respond alertaInstance.errors, view:'edit'

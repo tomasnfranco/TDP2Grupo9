@@ -53,8 +53,12 @@ class PublicacionController extends RestfulController<Publicacion>  {
             publicacionInstance.vacunasAlDia = VacunasAlDia.findByPorDefecto(true)
         if(params.latitud == null)
             publicacionInstance.latitud = params.usuario.latitud
+        else
+            publicacionInstance.latitud = Double.parseDouble(params.latitud)
         if(params.longitud == null)
             publicacionInstance.longitud = params.usuario.longitud
+        else
+            publicacionInstance.longitud = Double.parseDouble(params.longitud)
 
         publicacionInstance.activa = true;
         publicacionInstance.fechaPublicacion = new Date()
@@ -91,6 +95,10 @@ class PublicacionController extends RestfulController<Publicacion>  {
         if(publicacionInstance.id == null) {
             publicacionInstance = Publicacion.get(params.publicacion)
             publicacionInstance.properties = params
+            if(params.latitud)
+                publicacionInstance.latitud = Double.parseDouble(params.latitud)
+            if(params.longitud)
+                publicacionInstance.longitud = Double.parseDouble(params.longitud)
         }
 
         if (publicacionInstance.hasErrors()) {
