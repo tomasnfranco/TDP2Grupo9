@@ -33,6 +33,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
+import com.tdp2grupo9.adapter.PostulacionesAdapter;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
@@ -74,9 +75,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ImageButton btnEnviarConsulta;
 
     private String sexo;
-    private int position;
     private View postularmeAdopcionClickable;
     private View postularmeTransitoClickable;
+    private List<Postulante> postulantesAdopcion;
+    private List<Postulante> postulantesOfrecenTransito;
+    private ListView listViewAdopciones;
+    private ListView listViewOfrecenTransito;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -246,25 +250,23 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         postularmeAdopcionClickable.setFocusable(false);
         postularmeTransitoClickable.setFocusable(false);
 
-        /*List<Publicacion> postulaciones = Usuario.getInstancia().obtenerMisPostulaciones(0, 0);
+        List<Integer> postulantes = publicaciones.get(i).getQuierenAdoptarIds();
         Boolean postulado = false;
 
-        for (Publicacion p: postulaciones){
-            if (p.getId() == publicaciones.get(i).getId()){
+        for (Integer p: postulantes){
+            if (p == Usuario.getInstancia().getId()){
                 postulado = true;
             }
         }
-        List<Postulante> postulantesAdopcion = publicaciones.get(i).getQuierenAdoptar();
 
         if (!postulado)
             postularmeAdopcionClickable.setVisibility(View.VISIBLE);
-        else postularmeAdopcionClickable.setVisibility(View.GONE);*/
+        else postularmeAdopcionClickable.setVisibility(View.GONE);
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES){
             postularmeAdopcionClickable.setVisibility(View.GONE);
             postularmeTransitoClickable.setVisibility(View.GONE);
         }
-
 
         if (!publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION)){
             postularmeAdopcionClickable.setVisibility(View.GONE);
@@ -289,13 +291,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }
         });
 
-
         cargarInformacionBasica(i, itemView);
         cargarLocalizacionMascota(i, itemView);
         cargarFotos(i, itemView);
         cargarVideos(i, itemView);
         cargarInformacionAdicional(i, itemView);
         cargarListViewMensajes(i, itemView);
+        cargarPostulaciones(i, itemView);
 
         return itemView;
     }
@@ -458,10 +460,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         
     }
 
-    private void cargarListViewMensajes(int i, View v) {
+    private void cargarListViewMensajes(final int i, View v) {
 
         mensajes = publicaciones.get(i).getMensajes();
-        position = i;
 
         consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
@@ -498,7 +499,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClickButton(position);
+                    onClickButton(i);
                 }
             });
 
@@ -540,6 +541,77 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             enviarConsultaTask.execute((Void) null);
         }
     }
+
+    private void cargarPostulaciones(final int i, final View v) {
+
+        mensajes = publicaciones.get(i).getMensajes();
+
+        postulantesAdopcion = publicaciones.get(i).getQuierenAdoptar();
+        postulantesOfrecenTransito = publicaciones.get(i).getOfrecenTransito();
+        View panelPostulantesEnAdopcion = (View) v.findViewById(R.id.view_adoptantes);
+        View panelPostulantesOfrecenTransito = (View) v.findViewById(R.id.view_ofrecen_transito);
+
+        if (tipos == TiposEnum.MIS_PUBLICACIONES){
+
+            listViewAdopciones = (ListView) v.findViewById(R.id.listView_quieren_adoptar);
+            listViewOfrecenTransito = (ListView) v.findViewById(R.id.listView_ofrecen_transito);
+
+            listViewAdopciones.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            listViewAdopciones.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            if (postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
+                CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
+                cardview_postulaciones.setVisibility(View.GONE);
+            }else if (!postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
+                panelPostulantesOfrecenTransito.setVisibility(View.GONE);
+                setAdapterAdopciones(v,"Adopcion", postulantesAdopcion, publicaciones.get(i).getId());
+            }else if (postulantesAdopcion.isEmpty() && !postulantesOfrecenTransito.isEmpty()){
+                panelPostulantesEnAdopcion.setVisibility(View.GONE);
+                setAdapterTransito(v,"Transito", postulantesOfrecenTransito,publicaciones.get(i).getId());
+            }else {
+                setAdapterAdopciones(v, "Adopcion", postulantesAdopcion,publicaciones.get(i).getId());
+                setAdapterTransito(v,"Transito", postulantesOfrecenTransito,publicaciones.get(i).getId());
+            }
+        }else{
+            CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
+            cardview_postulaciones.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void setAdapterAdopciones(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
+        listViewAdopciones.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion));
+        listViewAdopciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view,
+                                    int position, long arg) {
+            }
+        });
+    }
+
+    private void setAdapterTransito(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
+        listViewOfrecenTransito.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion));
+        listViewOfrecenTransito.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view,
+                                    int position, long arg) {
+            }
+        });
+    }
+
 
     private List<Mensaje> loadMensajesMock(){
         List<Mensaje> mensajes = new ArrayList<>();
