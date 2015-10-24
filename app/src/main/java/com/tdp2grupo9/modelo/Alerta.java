@@ -50,9 +50,8 @@ public class Alerta {
     private Double longitud;
     private Integer distancia;
     private Date fechaCreacion;
-    //private Integer tipoPublicacion;
-    //private Boolean requiereCuidadosEspeciales;
-    //private Boolean necesitaTransito;
+    private Boolean requiereCuidadosEspeciales;
+    private Boolean necesitaTransito;
 
     public Alerta() {
         this.resetearAtributos();
@@ -77,6 +76,8 @@ public class Alerta {
         this.longitud = null;
         this.distancia = null;
         this.fechaCreacion = null;
+        //this.requiereCuidadosEspeciales = false;
+        //this.necesitaTransito = false;
         this.nombre = "";
     }
 
@@ -290,29 +291,67 @@ public class Alerta {
         Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
-    public static Alerta obtenerAlerta(String token, Integer id) {
-        String METHOD = "obtenerAlerta";
-        Alerta alerta = new Alerta();
+    public void modificarAlerta(String token) {
+        String METHOD = "modificarAlerta";
+
         HttpURLConnection urlConnection = null;
         try {
-            String atributos = +id+ "?token=" + token;
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
-            urlConnection = Connection.getHttpUrlConnection("alerta/"+atributos);
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                alerta.jsonToAlerta(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                Log.d(LOG_TAG, METHOD + " alerta obtenida id: " + alerta.getId());
+            urlConnection = Connection.getHttpUrlConnection("alerta/update");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            String parametros = "token="+token+"&nombre="+this.nombre;
+            if (this.tipoPublicacion.getValue() > 0)
+                parametros += "&tipoPublicacion=" + this.tipoPublicacion.getValue();
+            if (this.color.getId() > 0)
+                parametros += "&color=" + this.color.getId();
+            if (this.especie.getId() > 0)
+                parametros += "&especie=" + this.especie.getId();
+            if (this.edad.getId() > 0)
+                parametros += "&edad=" + this.edad.getId();
+            if (this.sexo.getId() > 0)
+                parametros += "&sexo=" + this.sexo.getId();
+            if (this.tamanio.getId() > 0)
+                parametros += "&tamanio=" + this.tamanio.getId();
+            if (this.castrado.getId() > 0)
+                parametros += "&castrado=" + this.castrado.getId();
+            if (this.raza.getId() > 0)
+                parametros += "&raza=" + this.raza.getId();
+            if (this.compatibleCon.getId() > 0)
+                parametros += "&compatibleCon=" + this.compatibleCon.getId();
+            if (this.energia.getId() > 0)
+                parametros += "&energia=" + this.energia.getId();
+            if (this.papelesAlDia.getId() > 0)
+                parametros += "&papelesAlDia=" + this.papelesAlDia.getId();
+            if (this.proteccion.getId() > 0)
+                parametros += "&proteccion=" + this.proteccion.getId();
+            if (this.vacunasAlDia.getId() > 0)
+                parametros += "&vacunasAlDia=" + this.vacunasAlDia.getId();
+            if (this.latitud != null)
+                parametros += "&latitud=" + this.latitud;
+            if (this.longitud != null)
+                parametros += "&longitud=" + this.longitud;
+            if (this.distancia != null)
+                parametros += "&distancia=" + this.distancia;
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
+                Log.d(LOG_TAG, METHOD + " alerta modificada id " + this.id);
             } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        }  finally {
+        } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        return alerta;
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
     public void borrarAlerta(String token) {
@@ -345,6 +384,31 @@ public class Alerta {
                 urlConnection.disconnect();
         }
         Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
+    public static Alerta obtenerAlerta(String token, Integer id) {
+        String METHOD = "obtenerAlerta";
+        Alerta alerta = new Alerta();
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = +id+ "?token=" + token;
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            urlConnection = Connection.getHttpUrlConnection("alerta/"+atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                alerta.jsonToAlerta(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                Log.d(LOG_TAG, METHOD + " alerta obtenida id: " + alerta.getId());
+
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return alerta;
     }
 
     public static List<Alerta> obtenerAlertasDeUsuario(String token, Integer offset, Integer max) {

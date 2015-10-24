@@ -80,6 +80,23 @@ class NotificacionesService {
         }
     }
 
+    def publicacionCancelada(Publicacion publicacion, Usuario postulante){
+        if(postulante.email && !postulante.email.empty) {
+            mailService.sendMail {
+                async true
+                to "${postulante.email}"
+                subject "[BUSCA SUS HUELLAS]: Se cancelo la publicacion de $publicacion.nombreMascota"
+                html "<html><body><b>${publicacion.publicador.username}</b> ha decidido cancelar la publicación de <b><em>$publicacion.nombreMascota</em></b>," +
+                        " seguí buscando y dentro de poco vas a encontrar esa mascota que queres." +
+                        "<br/><br/>Atentamente,<br/>" +
+                        "El Equipo de BUSCA SUS HUELLAS ${logoApp}</body></html>"
+            }
+            println "E-mail enviado al usuario ${postulante.username} al mail ${postulante.email} porque ${publicacion.publicador.username} cancelo la publicacion $publicacion"
+        } else {
+            println "No se envio mail por cancelación de adopcion al usuario que se habia postulado ${postulante.username} debido que no tiene el mail registrado en el sistema."
+        }
+    }
+
     def nuevaPregunta(Mensaje mensaje, def mascota, Usuario publicador){
         if(publicador.email && !publicador.email.empty) {
             mailService.sendMail {

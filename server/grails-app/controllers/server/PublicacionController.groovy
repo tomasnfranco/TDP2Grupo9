@@ -11,6 +11,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
     static scaffold = true
     def publicacionService
     def alertaService
+    def notificacionesService
     static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"],
                              atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET',
                              ofrezcoTransito: "POST", cancelarTransito: "POST",concretarTransito:"POST"]
@@ -126,6 +127,11 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
         if(publicacionInstance.id == null)
             publicacionInstance = Publicacion.get(params.publicacion)
+
+        //Notifico a los usuarios que querian adoptar que la publicacion fue cancelada
+        publicacionInstance.quierenAdoptar.each{
+            notificacionesService.publicacionCancelada(publicacionInstance, it)
+        }
 
         publicacionInstance.delete flush:true
 
