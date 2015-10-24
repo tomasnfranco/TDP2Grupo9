@@ -28,6 +28,8 @@ class Publicacion {
 	/**
 	 * Tipos Publicacion
 	 * 1 = Publicación de mascota en adopción
+	 * 2 = Publicación de mascota perdida
+	 * 3 = Publicación de mascota encontrada
 	 */
 	double latitud = 0
 	double longitud = 0
@@ -57,6 +59,13 @@ class Publicacion {
 			distancia { value, json -> json.value(value.distancia) }
 			publicadorNombre {value,json -> json.value(value.publicador?.username ?: '')}
 			publicadorId {value,json -> json.value(value.publicador?.id ?: '')}
+			direccionTransito {value,json -> json.value(value.transito?.direccion ?: '')}
+			longitudTransito {value,json -> json.value(value.transito?.longitud?: '')}
+			latitudTransito {value,json -> json.value(value.transito?.latitud ?: '')}
+			transitoNombre {value,json -> json.value(value.transito?.username ?: '')}
+			transitoId {value,json -> json.value(value.transito?.id ?: '')}
+			concretadoNombre {value,json -> json.value(value.concretado?.username ?: '')}
+			concretadoId {value,json -> json.value(value.concretado?.id ?: '')}
 		}
 		deep 'fotos'
 	}

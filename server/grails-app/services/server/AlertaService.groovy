@@ -21,6 +21,7 @@ class AlertaService {
             papelesAlDia == publicacion.papelesAlDia || papelesAlDia == null
             proteccion == publicacion.proteccion || proteccion == null
             vacunasAlDia == publicacion.vacunasAlDia || vacunasAlDia == null
+            tipoPublicacion == publicacion.tipoPublicacion
         }
 
         alertas = alertas.list().findAll {
