@@ -75,12 +75,11 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
         createMap();
         inicializarWidgets();
+        hideInnecessaryFields();
         initializeGoogleApi();
+        initializeSpinners();
 
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        hideInnecessaryFields();
-
-        initializeSpinners();
 
         return mFragmentView;
     }

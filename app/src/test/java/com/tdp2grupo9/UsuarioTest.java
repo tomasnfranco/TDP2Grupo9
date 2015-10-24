@@ -1,5 +1,6 @@
 package com.tdp2grupo9;
 
+import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
@@ -73,15 +74,21 @@ public class UsuarioTest {
 
     @Test
     public void registrarUsuarioConFacebook() {
+
+        String base64 = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw==";
+        Imagen imagen = new Imagen();
+        imagen.setImg(Imagen.bytesFromBase64DEFAULT(base64));
+
         Usuario.getInstancia().resetearAtributos();
-        Usuario.getInstancia().setFacebookId(1156897111L);
+        Usuario.getInstancia().setFacebookId(115689755877L);
         Usuario.getInstancia().setNombre("USUARIOFACE");
         Usuario.getInstancia().setApellido("USUARIOFACE");
-        Usuario.getInstancia().setEmail("usuario.facebook@gmail.com");
+        Usuario.getInstancia().setEmail("usuario.facebook88@gmail.com");
         Usuario.getInstancia().setLongitud(100.1);
         Usuario.getInstancia().setLatitud(50.54);
         Usuario.getInstancia().setDireccion("USUARIOFACEBOOK");
         Usuario.getInstancia().setTelefono("1124546787");
+        Usuario.getInstancia().setFoto(imagen);
         usuario = Usuario.getInstancia();
 
         usuario.registrarse();

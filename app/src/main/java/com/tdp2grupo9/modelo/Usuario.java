@@ -6,6 +6,7 @@ import android.util.JsonToken;
 import android.util.Log;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -115,8 +116,9 @@ public class Usuario {
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else {
-                        this.foto = new Imagen();
-                        this.foto.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
+                        this.foto = null;
+                        //TODO: Completar cuando el post del usuario admita json
+                        //this.foto.setImg(Imagen.bytesFromBase64DEFAULT(reader.nextString()));
                     }
                     break;
                 default:
@@ -134,10 +136,35 @@ public class Usuario {
 
         HttpURLConnection urlConnection = null;
         try {
+
             urlConnection = Connection.getHttpUrlConnection("usuario");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            /*
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            JSONObject params = new JSONObject();
+            if (this.getFacebookId() != null)
+                params.put("facebookId", this.getFacebookId());
+            if (!this.getEmail().isEmpty())
+                params.put("email", this.getEmail());
+            if (!this.getPassword().isEmpty())
+                params.put("password", this.getPassword());
+            if (this.getAutoPublicar() != null)
+                params.put("autoPublicar", this.autopublicar);
+            if (this.getOfreceTransito() != null)
+                params.put("ofreceTransito", this.ofreceTransito);
+            if (!this.getUsername().isEmpty())
+                params.put("username", this.getUsername());
+            if (this.foto != null)
+                params.put("foto", Imagen.base64DEFAULTFromBytes(this.foto.getImg()));
+
+            params.put("direccion", this.direccion);
+            params.put("telefono", this.telefono);
+            params.put("latitud", this.latitud);
+            params.put("longitud", this.longitud);
+            */
 
             String parametros = "";
             if (this.getFacebookId() != null)
@@ -156,6 +183,8 @@ public class Usuario {
                 parametros += "&ofreceTransito="+this.ofreceTransito;
             if (!this.getUsername().isEmpty())
                 parametros += "&username="+this.getUsername();
+            if (this.foto != null)
+                parametros += "&foto="+Imagen.base64URL_SAFEFromBytes(this.foto.getImg());
 
             parametros += "&direccion="+this.direccion;
             parametros += "&telefono="+this.telefono;
@@ -164,6 +193,7 @@ public class Usuario {
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
+            //out.write(params.toString());
             out.close();
 
             Log.d(LOG_TAG, METHOD + " url= " + parametros);
@@ -420,6 +450,11 @@ public class Usuario {
         return this.apellido;
     }
 
+
+    public void setFoto(Imagen foto) {
+        this.foto = foto;
+    }
+
     public void setFoto(Bitmap imagen) {
         this.foto = new Imagen();
         foto.setBitmap(imagen);
@@ -436,4 +471,5 @@ public class Usuario {
     public Object getAutoPublicar() {
         return this.autopublicar;
     }
+
 }
