@@ -28,6 +28,8 @@ import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -1155,5 +1157,13 @@ public class Publicacion {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public Boolean isPostuladoAdopcion(Integer usuarioId) {
+        return Collections.frequency(this.quierenAdoptarIds, usuarioId) > 0;
+    }
+
+    public Boolean isPostuladoTransito(Integer usuarioId) {
+        return Collections.frequency(this.ofrecenTransitoIds, usuarioId) > 0;
     }
 }
