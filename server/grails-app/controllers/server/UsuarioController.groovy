@@ -25,20 +25,35 @@ class UsuarioController {
             notFound()
             return
         }
-        println params
+        println "Parametros normales: $params"
+        println "Parametros Json: $params"
 
         if (usuarioInstance.hasErrors()) {
-            respond usuarioInstance.errors, view:'create'
-            return
+            if (usuarioInstance.hasErrors()) {
+                println "usuarioInstance tiene errores"
+                usuarioInstance = new Usuario(request.getJSON())
+                println "usuarioInstance tiene el json ahora"
+                usuarioInstance.validate()
+                if(usuarioInstance.hasErrors()) {
+                    println "usuarioInstance con el Json sigue teniendo errores"
+                    println usuarioInstance.errors
+                    respond usuarioInstance.errors, view:'create'
+                    return
+                }
+            }
+
         }
+        println "Usuario no tiene errores"
 
         if(params.longitud)
-        usuarioInstance.longitud = Double.parseDouble(params.longitud)
+            usuarioInstance.longitud = Double.parseDouble(params.longitud)
         if(params.latitud)
-        usuarioInstance.latitud = Double.parseDouble(params.latitud)
+            usuarioInstance.latitud = Double.parseDouble(params.latitud)
         usuarioInstance.activo = true;
 		usuarioInstance.generarToken()
         usuarioInstance.save flush:true
+        println "Usuario guardado correctamente"
+
         if(usuarioInstance.username?.isEmpty()){
             usuarioInstance.username = 'NEWBIE' + usuarioInstance.id
             usuarioInstance.save flush:true
