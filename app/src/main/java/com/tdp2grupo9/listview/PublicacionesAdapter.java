@@ -2,6 +2,7 @@ package com.tdp2grupo9.listview;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
@@ -81,6 +82,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private List<Postulante> postulantesOfrecenTransito;
     private ListView listViewAdopciones;
     private ListView listViewOfrecenTransito;
+    private android.support.v7.app.AlertDialog dialogIcon;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -272,15 +274,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         postularmeAdopcionClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId());
-                guardarPostulacionTask.execute((Void) null);
+                dialogIcon = getDialogoConfirmacionAdopcion(i, publicaciones.get(i).getId()).create();
+                dialogIcon.show();
             }
         });
 
         postularmeTransitoClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Hogar transito: ", "Presione el boton");
+                dialogIcon = getDialogoConfirmacionTransito(i, publicaciones.get(i).getId()).create();
+                dialogIcon.show();
             }
         });
 
@@ -293,6 +296,55 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         cargarPostulaciones(i, itemView);
 
         return itemView;
+    }
+
+
+    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacionAdopcion(final int position, final int idPublicacion){
+        final android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(context);
+        String mensaje=context.getString(R.string.confirmacion_postulacion_adopcion);
+
+        builder.setMessage(mensaje)
+                .setTitle(context.getString(R.string.title_dialog_confirmacion))
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("Dialogos", "Confirmacion Aceptada.");
+                        guardarPostulacionTask = new GuardarPostulacionTask(position, idPublicacion);
+                        guardarPostulacionTask.execute((Void) null);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("Dialogos", "Confirmacion Cancelada.");
+                        dialog.cancel();
+                    }
+                });
+        return builder;
+
+    }
+
+    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacionTransito(final int position, final int idPublicacion){
+        final android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(context);
+        String mensaje=context.getString(R.string.confirmacion_postulacion_transito);
+
+        builder.setMessage(mensaje)
+                .setTitle(context.getString(R.string.title_dialog_confirmacion))
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("Dialogos", "Confirmacion Aceptada.");
+                        guardarPostulacionTask = new GuardarPostulacionTask(position, idPublicacion);
+                        guardarPostulacionTask.execute((Void) null);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("Dialogos", "Confirmacion Cancelada.");
+                        dialog.cancel();
+                    }
+                });
+        return builder;
+
     }
 
     private void cargarInformacionBasica(int i, View v){
@@ -455,8 +507,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarListViewMensajes(final int i, View v) {
 
-        mensajes = publicaciones.get(i).getMensajes();
-
+        //mensajes = publicaciones.get(i).getMensajes();
+        mensajes = loadMensajesMock();
         consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
 
@@ -537,8 +589,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarPostulaciones(final int i, final View v) {
 
-        mensajes = publicaciones.get(i).getMensajes();
-
         postulantesAdopcion = publicaciones.get(i).getQuierenAdoptar();
         postulantesOfrecenTransito = publicaciones.get(i).getOfrecenTransito();
         View panelPostulantesEnAdopcion = (View) v.findViewById(R.id.view_adoptantes);
@@ -609,16 +659,16 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private List<Mensaje> loadMensajesMock(){
         List<Mensaje> mensajes = new ArrayList<>();
         Mensaje m1 = new Mensaje();
-        m1.setPregunta("hola");
-        m1.setRespuesta("chau");
+        m1.setPregunta(context.getString(R.string.consulta2));
+        m1.setRespuesta("No, por ahora no, pero falta poco.");
         m1.setFechaPregunta(new Date(2015, 5, 10));
         m1.setFechaRespuesta(new Date(2015, 6, 10));
         Mensaje m2 = new Mensaje();
-        m2.setPregunta("Tiene pulgas");
+        m2.setPregunta(context.getString(R.string.consulta3));
         m2.setFechaPregunta(new Date(2015, 5, 10));
         Mensaje m3 = new Mensaje();
-        m3.setPregunta("hello");
-        m3.setRespuesta("bye");
+        m3.setPregunta(context.getString(R.string.consulta1));
+        m3.setRespuesta("Si, menos caviar.");
         m3.setFechaPregunta(new Date(2015, 8, 10));
         m3.setFechaRespuesta(new Date(2015, 8, 20));
         mensajes.add(m1);
