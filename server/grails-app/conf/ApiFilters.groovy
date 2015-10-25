@@ -8,8 +8,8 @@ class ApiFilters {
 				if(controllerName != 'usuario' || (actionName != 'save' && actionName != 'login')) {
 					//El usuario debe estar logueado, debe tener un token valido
 					//println "Entro en: $controllerName accion $actionName"
-					println params
-					println request.getJSON()
+					println "Parametros normales: $params"
+					println "parametros json: ${request.getJSON()}"
 					if(params.token == null){
 						params.token = request.getJSON()["token"]
 					}

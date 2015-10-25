@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.Postulante;
+import com.tdp2grupo9.modelo.Postulante;
 
 import java.util.List;
 

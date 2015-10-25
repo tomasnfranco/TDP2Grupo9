@@ -1,19 +1,15 @@
-package com.tdp2grupo9.modelo.publicacion;
+package com.tdp2grupo9.modelo;
 
 import android.graphics.Bitmap;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
-import com.tdp2grupo9.modelo.Connection;
-import com.tdp2grupo9.modelo.Imagen;
-
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.List;
 
 public class Postulante {
 

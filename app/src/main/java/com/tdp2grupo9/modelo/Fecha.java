@@ -24,4 +24,12 @@ public abstract class Fecha {
         }
     }
 
+    public static String parseDate(Date date) {
+        int dia = date.getDate();
+        int mes = date.getMonth() + 1;
+        int anio = date.getYear() + 1900;
+
+        return dia + "/" + mes + "/" + anio;
+    }
+
 }

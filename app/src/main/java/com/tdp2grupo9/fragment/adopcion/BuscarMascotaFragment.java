@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.TipoPublicacion;
@@ -224,12 +225,12 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         boolean valido = true;
         String campoRequeridoString = getString(R.string.campo_requerido);
 
+        if (tipoPublicacion.isEmpty()) {
+            Toast.makeText(mFragmentView.getContext(), mFragmentView.getContext().getString(R.string.error_tipo_publicacion),
+                    Toast.LENGTH_LONG).show();
+            valido = false; }
+
         if (!validateCampoRequeridoSpinner(spEspecie, campoRequeridoString)) {valido = false;}
-        if (!validateCampoRequeridoSpinner(spRaza, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spSexo, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spTamanio, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spEdad, campoRequeridoString)) { valido = false;}
-        if (!validateCampoRequeridoSpinner(spColor, campoRequeridoString)) { valido = false;}
 
         if (!valido) {
             Toast.makeText(mFragmentView.getContext(), "Error: Debe completar todos los campos requeridos.",
@@ -350,6 +351,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             if (success) {
                 Toast.makeText(mFragmentView.getContext(), "Alerta creada",
                         Toast.LENGTH_LONG).show();
+                ((DrawerMenuActivity) getActivity()).navigateToMisNotificaciones();
             }
             else {
                 Toast.makeText(mFragmentView.getContext(), "Error: No se pudo crear.",

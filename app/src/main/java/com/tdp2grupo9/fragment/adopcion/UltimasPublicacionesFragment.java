@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.utils.TiposEnum;
+import com.tdp2grupo9.modelo.TiposEnum;
 
 /**
  * Created by emmanuelfls371 on 06/10/2015.

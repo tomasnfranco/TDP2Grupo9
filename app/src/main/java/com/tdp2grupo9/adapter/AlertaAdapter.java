@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.modelo.Alerta;
+import com.tdp2grupo9.modelo.Fecha;
+import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
@@ -103,7 +105,7 @@ public class AlertaAdapter extends BaseAdapter{
 
         Date fechaCreacion = alertasList.get(i).getFechaCreacion();
 
-        infFechaAlerta.setText(parserDateText(fechaCreacion));
+        infFechaAlerta.setText(Fecha.parseDate(fechaCreacion));
         infBasica.setText(infoBasica);
         if (infoAdicional.isEmpty()){
             titleAdicional.setVisibility(View.GONE);
@@ -163,88 +165,91 @@ public class AlertaAdapter extends BaseAdapter{
     }
 
     private String getInformacionBasica(int i, View alertaView){
-        String especie = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(alertasList.get(i).getEspecie())).toString();
-        String sexo = PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(alertasList.get(i).getSexo())).toString();
-        String edad = PublicacionAtributos.getInstancia().getEdades().get(PublicacionAtributos.getInstancia().getEdades().indexOf(alertasList.get(i).getEdad())).toString();
-        String color = PublicacionAtributos.getInstancia().getColores().get(PublicacionAtributos.getInstancia().getColores().indexOf(alertasList.get(i).getColor())).toString();
-        String raza = PublicacionAtributos.getInstancia().getRazas().get(PublicacionAtributos.getInstancia().getRazas().indexOf(alertasList.get(i).getRaza())).toString();
-        String tamanio = PublicacionAtributos.getInstancia().getTamanios().get(PublicacionAtributos.getInstancia().getTamanios().indexOf(alertasList.get(i).getTamanio())).toString();
 
-        String infoBasica ="";
-        infoBasica+= especie + " ";
-        infoBasica+= raza + ". ";
-        infoBasica+= sexo + ". ";
-        infoBasica+= edad + ". ";
-        infoBasica+= alertaView.getContext().getString(R.string.tamanio)+ " " + tamanio + ". ";
-        infoBasica+= alertaView.getContext().getString(R.string.color)+ " " + color + ".";
+        String infoBasica = "";
+
+        String especie = PublicacionAtributos.getInstancia().getEspecie(alertasList.get(i).getEspecie()).getValor() + "s ";
+        infoBasica += especie + " ";
+        switch (alertasList.get(i).getTipoPublicacion()) {
+            case ADOPCION:
+                infoBasica += alertaView.getContext().getString(R.string.en_adopcion).toLowerCase() + ".\n";
+                break;
+            case ENCONTRADA:
+                infoBasica += "encontrados.\n";
+                break;
+            case PERDIDA:
+                infoBasica += "perdidos.\n";
+                break;
+        }
+        if (alertasList.get(i).getRaza().getId() > 0)
+            infoBasica += PublicacionAtributos.getInstancia().getRaza(alertasList.get(i).getRaza()).getValor() + ". ";
+        if (alertasList.get(i).getSexo().getId() > 0)
+            infoBasica += PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getSexo()).getValor() + ". ";
+        if (alertasList.get(i).getEdad().getId() > 0)
+            infoBasica += PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getEdad()).getValor() + ". ";
+        if (alertasList.get(i).getTamanio().getId() > 0)
+            infoBasica += alertaView.getContext().getString(R.string.tamanio) + " " +PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getTamanio()).getValor() + ". ";
+        if (alertasList.get(i).getColor().getId() > 0)
+            infoBasica += alertaView.getContext().getString(R.string.color)+ " " + PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getColor()).getValor() + ". ";
 
         return infoBasica;
     }
 
     private String getInformacionAdicional(int i, View alertaView){
 
-        VacunasAlDia vacunasEntity = alertasList.get(i).getVacunasAlDia();
-        Castrado castradoEntity = alertasList.get(i).getCastrado();
-        Proteccion proteccionEntity = alertasList.get(i).getProteccion();
-        Energia energiaEntity = alertasList.get(i).getEnergia();
-        PapelesAlDia papelesEntity = alertasList.get(i).getPapelesAlDia();
-        CompatibleCon compatibleEntity = alertasList.get(i).getCompatibleCon();
-
-        String vacunas = "";
-        String castrado = "";
-        String energia = "";
-        String papeles = "";
-        String proteccion = "";
-        String compatibleCon = "";
-
-        if (PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(vacunasEntity) > -1){
-            vacunas= PublicacionAtributos.getInstancia().getVacunasAlDia().get(PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(vacunasEntity)).toString();
-        }
-        if (PublicacionAtributos.getInstancia().getCastrados().indexOf(castradoEntity) > -1)
-            castrado = PublicacionAtributos.getInstancia().getCastrados().get(PublicacionAtributos.getInstancia().getCastrados().indexOf(castradoEntity)).toString();
-        if (PublicacionAtributos.getInstancia().getProtecciones().indexOf(proteccionEntity) > -1)
-            proteccion = PublicacionAtributos.getInstancia().getProtecciones().get(PublicacionAtributos.getInstancia().getProtecciones().indexOf(proteccionEntity)).toString();
-        if (PublicacionAtributos.getInstancia().getEnergias().indexOf(energiaEntity) > -1)
-            energia = PublicacionAtributos.getInstancia().getEnergias().get(PublicacionAtributos.getInstancia().getEnergias().indexOf(energiaEntity)).toString();
-        if (PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(papelesEntity) > -1)
-            papeles = PublicacionAtributos.getInstancia().getPapelesAlDia().get(PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(papelesEntity)).toString();
-        if (PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(compatibleEntity) > -1)
-            compatibleCon = PublicacionAtributos.getInstancia().getCompatibilidades().get(PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(compatibleEntity)).toString();
-
         String infoAdicional="";
 
-        if (vacunas.equals("Si"))
-            infoAdicional+= "Que " + alertaView.getContext().getString(R.string.tenga_vacunas)+". ";
-        else if (vacunas.equals("No"))
-            infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.tenga_vacunas).toLowerCase() + ". ";
-        if (papeles.equals("Si"))
-            infoAdicional+= "Que " +  alertaView.getContext().getString(R.string.tenga_papeles)+". ";
-        else if (papeles.equals("No"))
-            infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.tenga_papeles).toLowerCase() + ". ";
-        if (castrado.equals("Si"))
-            infoAdicional+= "Que " + alertaView.getContext().getString(R.string.este_castrado)+". ";
-        else if (castrado.equals("No"))
-            infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.este_castrado).toLowerCase() + ". ";
-        if(!compatibleCon.equals("No aplica") &&!compatibleCon.isEmpty() )
-            infoAdicional+= "Que " + alertaView.getContext().getString(R.string.sea_compatible) +" " + compatibleCon.toLowerCase() + ". ";
-        if(!energia.equals("No aplica") && !energia.isEmpty() )
-            infoAdicional+= "Sea " + energia.toLowerCase() + ". ";
-        if(!proteccion.equals("No aplica") && !proteccion.isEmpty())
-            infoAdicional+= "Sea " + proteccion.toLowerCase() + ". ";
+        VacunasAlDia vacunasEntity = alertasList.get(i).getVacunasAlDia();
+        if (vacunasEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getVacunasAlDia(vacunasEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional += "Que " + alertaView.getContext().getString(R.string.tenga_vacunas) + ". ";
+            else if (valor.equals("No"))
+                infoAdicional += "Que no " + alertaView.getContext().getString(R.string.tenga_vacunas).toLowerCase() + ". ";
+        }
+
+        PapelesAlDia papelesEntity = alertasList.get(i).getPapelesAlDia();
+        if (papelesEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getPapelesAlDia(papelesEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional += "Que " + alertaView.getContext().getString(R.string.tenga_papeles) + ". ";
+            else if (valor.equals("No"))
+                infoAdicional += "Que no " + alertaView.getContext().getString(R.string.tenga_papeles).toLowerCase() + ". ";
+        }
+
+        Castrado castradoEntity = alertasList.get(i).getCastrado();
+        if (castradoEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getCastrado(castradoEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional+= "Que " + alertaView.getContext().getString(R.string.este_castrado)+". ";
+            else if (valor.equals("No"))
+                infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.este_castrado).toLowerCase() + ". ";
+        }
+
+        CompatibleCon compatibleEntity = alertasList.get(i).getCompatibleCon();
+        if (compatibleEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getCompatibleCon(compatibleEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += "Que " + alertaView.getContext().getString(R.string.sea_compatible) + " " + valor.toLowerCase() + ". ";
+        }
+
+        Energia energiaEntity = alertasList.get(i).getEnergia();
+        if (energiaEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getEnergia(energiaEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += "Sea " + valor.toLowerCase() + ". ";
+        }
+
+        Proteccion proteccionEntity = alertasList.get(i).getProteccion();
+        if (proteccionEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getProteccion(proteccionEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += "Sea " + valor.toLowerCase() + ". ";
+        }
 
         infoAdicional+= alertaView.getContext().getString(R.string.a_distancia) + " " + alertasList.get(i).getDistancia() + "km.";
 
         return infoAdicional;
-    }
-
-    private String parserDateText(Date fecha){
-        int dia = fecha.getDate();
-        int mes = fecha.getMonth() + 1;
-        int anio = fecha.getYear() + 1900;
-
-        String date = dia + "/" + mes + "/" + anio;
-
-        return date;
     }
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {

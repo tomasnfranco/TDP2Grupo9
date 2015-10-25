@@ -9,12 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.utils.TiposEnum;
+import com.tdp2grupo9.modelo.TiposEnum;
 
 import java.util.Calendar;
 import java.util.Date;

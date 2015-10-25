@@ -1,4 +1,4 @@
-package com.tdp2grupo9.utils;
+package com.tdp2grupo9.modelo;
 
 /**
  * Created by emmanuelfls371 on 18/10/2015.

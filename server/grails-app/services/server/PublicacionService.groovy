@@ -41,8 +41,6 @@ class PublicacionService {
             activa == true
             if(params.tipoPublicacion)
                 tipoPublicacion == params.tipoPublicacion
-            else
-                tipoPublicacion == 1
         }
         double latitud = params.latitud ? Double.parseDouble(params.latitud) : usuario.latitud
         double longitud = params.longitud ? Double.parseDouble(params.longitud) : usuario.longitud
