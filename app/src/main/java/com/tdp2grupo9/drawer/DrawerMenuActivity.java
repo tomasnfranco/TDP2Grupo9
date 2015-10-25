@@ -227,4 +227,8 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         setFragment(3, MisPublicacionesFragment.class);
     }
 
+    public void navigateToMisNotificaciones() {
+        setFragment(5, MisNotificacionesFragment.class);
+    }
+
 }

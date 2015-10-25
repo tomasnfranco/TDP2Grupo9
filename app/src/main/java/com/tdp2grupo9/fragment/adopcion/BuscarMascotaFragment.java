@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.TipoPublicacion;
@@ -350,6 +351,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             if (success) {
                 Toast.makeText(mFragmentView.getContext(), "Alerta creada",
                         Toast.LENGTH_LONG).show();
+                ((DrawerMenuActivity) getActivity()).navigateToMisNotificaciones();
             }
             else {
                 Toast.makeText(mFragmentView.getContext(), "Error: No se pudo crear.",
