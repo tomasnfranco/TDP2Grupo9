@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 
@@ -43,6 +44,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentView = inflater.inflate(R.layout.fragment_resultados_busqueda, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_resultados_busqueda);
         configureReturnSearchButton();
         return mFragmentView;

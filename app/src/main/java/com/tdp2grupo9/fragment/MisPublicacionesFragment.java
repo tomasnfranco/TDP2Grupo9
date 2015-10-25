@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 
@@ -27,6 +28,7 @@ public class MisPublicacionesFragment  extends PublicacionesFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mFragmentView = inflater.inflate(R.layout.fragment_mis_publicaciones, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         Publicacion publicacion = null;
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_mis_publicaciones);

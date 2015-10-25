@@ -80,6 +80,7 @@ public class MensajeAdapter extends BaseAdapter {
 
         consulta = mensajes.get(i).getPregunta();
         fecha_consulta = parserDateText(mensajes.get(i).getFechaPregunta());
+        fecha_respuesta = parserDateText(mensajes.get(i).getFechaRespuesta());
         respuesta = mensajes.get(i).getRespuesta();
 
         if (tipo == TiposEnum.MIS_PUBLICACIONES){
@@ -108,9 +109,13 @@ public class MensajeAdapter extends BaseAdapter {
         }else {
             infConsulta.setText(consulta);
             fechaConsulta.setText(fecha_consulta);
-            infRespuesta.setText(respuesta);
-            fechaRespuesta.setText(fecha_respuesta);
             viewContainer.setVisibility(View.GONE);
+            if (!respuesta.isEmpty()){
+                infRespuesta.setText(respuesta);
+                fechaRespuesta.setText(fecha_respuesta);
+            }else{
+                viewContainerRespuesta.setVisibility(View.GONE);
+            }
             respuesta = "";
         }
 
@@ -119,13 +124,13 @@ public class MensajeAdapter extends BaseAdapter {
 
     public void clickEnviarRespuesta(int i, String resp){
         if (!resp.isEmpty()){
-            System.out.println("CLICK ENVIAR RESPUESTA");
+            System.out.println("CLICK ENVIAR RESPUESTA: " + resp.toString());
             mensajes.get(i).setRespuesta(resp);
             enviarRespuestaTask = new EnviarRespuestaTask(mensajes.get(i));
             enviarRespuestaTask.execute((Void) null);
         }else {
             System.out.println("CLICK DEBE COMPLETAR RESPUESTA");
-            respuesta_edit.setText("Error: debe escribir la respuesta.");
+            respuesta_edit.setError("Error: debe escribir la respuesta.");
         }
     }
 

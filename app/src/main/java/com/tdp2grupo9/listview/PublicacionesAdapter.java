@@ -10,11 +10,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -92,6 +97,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ListView listViewAdopciones;
     private ListView listViewOfrecenTransito;
     private android.support.v7.app.AlertDialog dialogIcon;
+    private TextView replicaConsulta;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -263,7 +269,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         cargarFotos(i, itemView);
         cargarVideos(i, itemView);
         cargarInformacionAdicional(i, itemView);
-        cargarListViewMensajes(i, itemView);
+        cargarMensajes(i, itemView);
         cargarPostulaciones(i, itemView);
 
         return itemView;
@@ -596,7 +602,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             video_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator_video));
         }
     }
-    
+
     private void cargarLocalizacionMascota(int i, View v){
 
         TextView localizacion_mascota = (TextView) v.findViewById(R.id.tv_direccion_mascota);
@@ -625,30 +631,32 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 context.startActivity(intent);
             }
         });
-        
+
     }
 
-    private void cargarListViewMensajes(final int i, View v) {
-
-        //mensajes = publicaciones.get(i).getMensajes();
-        mensajes = loadMensajesMock();
-        consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
-        btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
+    private void cargarMensajes(final int i, final View v) {
+        mensajes = publicaciones.get(i).getMensajes();
+        initialiceElementosMensajes(v);
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES) {
-            consultaParaEnviar.setVisibility(View.GONE);
-            btnEnviarConsulta.setVisibility(View.GONE);
 
-            listView = (ListView) v.findViewById(R.id.listView_consultas);
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    view.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
+            if (mensajes.isEmpty()) {
+                CardView cardViewMensajes = (CardView) v.findViewById(R.id.cardview_mensajes_pm);
+                cardViewMensajes.setVisibility(View.GONE);
+            } else {
+                listView.setVisibility(View.VISIBLE);
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View view,
+                                            final int position, long arg) {
 
+                    }
+                });
+            }
+        }else{
             if (!mensajes.isEmpty()) {
+                listView.setVisibility(View.VISIBLE);
                 listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -659,44 +667,58 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 });
             }
 
-        }else {
             consultaParaEnviar.setVisibility(View.VISIBLE);
-            btnEnviarConsulta.setFocusable(false);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
-
-            btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onClickButton(i);
-                }
-            });
-
-            listView = (ListView) v.findViewById(R.id.listView_consultas);
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    view.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
-
-            mensajes = publicaciones.get(i).getMensajes();
-
-            if (!mensajes.isEmpty()) {
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View view,
-                                            int position, long arg) {
-                    }
-                });
-            }
+            onClickButtonMensaje(i,v);
         }
+
 
     }
 
-    private void onClickButton(int i){
-        String pregunta =consultaParaEnviar.getText().toString();
+    private void initialiceElementosMensajes(View v){
+        consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
+        replicaConsulta = (TextView) v.findViewById(R.id.replica_consulta);
+        btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
+        listView = (ListView) v.findViewById(R.id.listView_consultas);
+
+        btnEnviarConsulta.setFocusable(false);
+        replicaConsulta.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
+        btnEnviarConsulta.setVisibility(View.GONE);
+        consultaParaEnviar.setVisibility(View.GONE);
+        consultaParaEnviar.setText("");
+
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+    }
+
+    private void onClickButtonMensaje(final int i, final View v){
+
+        btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                executeActionButtonMensaje(i, replicaConsulta.getText().toString(), v);
+            }
+        });
+
+        consultaParaEnviar.addTextChangedListener(new TextWatcher() {
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {}
+            public void afterTextChanged(Editable s) {
+                replicaConsulta.setText(s.toString());
+            }
+        });
+    }
+
+    private void executeActionButtonMensaje(int i, String pregunta, View v){
         if (pregunta.isEmpty()){
             consultaParaEnviar.setError("Error: Debe escribir una consulta.");
         }else{
@@ -704,8 +726,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             mensaje.setPregunta(pregunta);
             mensaje.setPublicacionId(publicaciones.get(i).getId());
             mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
-
-            enviarConsultaTask = new EnviarConsultaTask(mensaje);
+            enviarConsultaTask = new EnviarConsultaTask(mensaje, i, v);
             enviarConsultaTask.execute((Void) null);
         }
     }
@@ -778,7 +799,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         });
     }
 
-
     private List<Mensaje> loadMensajesMock(){
         List<Mensaje> mensajes = new ArrayList<>();
         Mensaje m1 = new Mensaje();
@@ -848,9 +868,14 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public class EnviarConsultaTask extends AsyncTask<Void, Void, Boolean> {
 
         Mensaje consulta;
+        View v;
+        int i;
 
-        EnviarConsultaTask(Mensaje mensaje) {
+
+        EnviarConsultaTask(Mensaje mensaje,final int position, View itemView) {
             consulta = mensaje;
+            this.v = itemView;
+            this.i = position;
         }
 
         @Override
@@ -868,8 +893,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 if (consulta.getId() > 0){
-                    System.out.println("VIEJA YA LO GUARDE");
-                }else System.out.println("VIEJA HUBO UN ERROR");
+                    consultaParaEnviar.setText("");
+                    replicaConsulta.setText("");
+                    notifyDataSetChanged();
+                }else {
+                }
             }
             enviarConsultaTask = null;
         }

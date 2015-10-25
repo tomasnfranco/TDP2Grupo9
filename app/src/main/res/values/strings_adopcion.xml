@@ -5,6 +5,8 @@
     <string name="publicar_adopcion"><font color='white'>Publicar Adopción</font></string>
     <string name="publicar_busqueda"><font color='white'>Publicar Búsqueda</font></string>
     <string name="buscar_mascota"><font color='white'>Buscar Mascota</font></string>
+    <string name="guardar_publicacion"><font color='white'>Guardar Publicación</font></string>
+
     <string name="resultados_busqueda"><font color='white'>Resultados Búsqueda</font></string>
     <string name="title_activity_adopcion_tab"><font color='white'>Adopción</font></string>
     <string name="error_tipo_publicacion">Debe seleccionar el tipo de la publicación.</string>
@@ -99,6 +101,7 @@
     <string name="consulta2">¿Tiene la cadera baja.?</string>
     <string name="consulta1">¿Come cualquier alimento?</string>
     <string name="consulta3">¿Le gustan los niños?</string>
+    <string name="escriba_su_consulta">Escriba su consulta</string>
 
 
 </resources>
