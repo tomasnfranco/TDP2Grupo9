@@ -309,6 +309,14 @@ public class Usuario {
         Publicacion.concretarTransito(this.token, publicacionId, ofreceTransitoId);
     }
 
+    public void cancelarTransito(Integer publicacionId) {
+        Publicacion.cancelarTransito(this.token, publicacionId);
+    }
+
+    public void cancelarAdopcion(Integer publicacionId) {
+    //    Publicacion.cancelarAdopcion(this.token, publicacionId);
+    }
+
     public List<Publicacion> obtenerMisPublicaciones(Integer offset, Integer max) {
         return Publicacion.obtenerPublicacionesDeUsuario(this.token, offset, max);
     }
