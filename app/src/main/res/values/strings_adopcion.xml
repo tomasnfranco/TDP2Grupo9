@@ -85,6 +85,13 @@
     <string name="title_dialog_confirmacion">Confirmación</string>
     <string name="confirmacion_adopcion">¿Confirma la adopción?</string>
     <string name="confirmacion_transito">¿Confirma el tránsito?</string>
+    <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar?</string>
+    <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
+
+
+    <string name="consulta2">¿Tiene la cadera baja.?</string>
+    <string name="consulta1">¿Come cualquier alimento?</string>
+    <string name="consulta3">¿Le gustan los niños?</string>
 
 
 </resources>

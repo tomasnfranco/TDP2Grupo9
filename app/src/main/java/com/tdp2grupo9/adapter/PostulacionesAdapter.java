@@ -89,7 +89,7 @@ public class PostulacionesAdapter  extends BaseAdapter{
                 new android.support.v7.app.AlertDialog.Builder(context);
         String mensaje=context.getString(R.string.confirmacion_adopcion);
 
-        if (tipo.equals("Adopcion"))
+        if (tipo.equals("Transito"))
             mensaje=context.getString(R.string.confirmacion_transito);
 
         builder.setMessage(mensaje)
