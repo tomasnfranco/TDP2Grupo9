@@ -80,6 +80,9 @@
     <string name="en_adopcion">EN ADOPCIÓN</string>
     <string name="quieren_adoptar">Quieren adoptar</string>
     <string name="ofrecen_hogar_transito">Ofrecen hogar de tránsito</string>
+    <string name="eliminar_publicacion">Eliminar publicación</string>
+    <string name="editar_publicacion">Editar publicación</string>
+    <string name="cancelar_postulacion">Cancelar postulación</string>
 
 
     <string name="title_dialog_confirmacion">Confirmación</string>
@@ -87,6 +90,10 @@
     <string name="confirmacion_transito">¿Confirma el tránsito?</string>
     <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar?</string>
     <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
+    <string name="confirmacion_eliminar">¿Confirma que desea eliminar la publicación?</string>
+    <string name="confirmacion_editar">¿Confirma que desea editar la publicación?</string>
+    <string name="confirmacion_eliminar_post_adopcion">¿Confirma que desea cancelar la postulación de adopción?</string>
+    <string name="confirmacion_eliminar_post_transito">¿Confirma que desea cancelar la postulación de hogar de tránsito?</string>
 
 
     <string name="consulta2">¿Tiene la cadera baja.?</string>

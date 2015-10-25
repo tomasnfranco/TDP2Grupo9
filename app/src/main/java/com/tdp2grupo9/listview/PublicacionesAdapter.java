@@ -23,6 +23,7 @@ import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Postulante;
+import com.tdp2grupo9.utils.TiposClickeableEnum;
 import com.tdp2grupo9.utils.TiposEnum;
 
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private Context context;
     private GuardarPostulacionTask guardarPostulacionTask;
     private EnviarConsultaTask enviarConsultaTask;
+    private EliminarPublicacionTask eliminarPublicacionTask;
+    private EliminarPostulacionTask eliminarPostulacionTask;
 
     private SliderLayout photo_slider;
     private SliderLayout video_slider;
@@ -78,6 +82,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String sexo;
     private View postularmeAdopcionClickable;
     private View postularmeTransitoClickable;
+    private View eliminarPublicacionClickable;
+    private View editarPublicacionClickable;
+    private View eliminarPostulacionAdopcionClickable;
+    private View eliminarPostulacionTransitoClickable;
+
     private List<Postulante> postulantesAdopcion;
     private List<Postulante> postulantesOfrecenTransito;
     private ListView listViewAdopciones;
@@ -187,6 +196,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return i;
     }
 
+    public void removeItem(int i) {
+        publicaciones.remove(i);
+    }
+
     @Override
     public long getChildId(int i, int i1) {
         return 0;
@@ -240,52 +253,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(final int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
-        postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
-        postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
-        postularmeAdopcionClickable.setFocusable(false);
-        postularmeTransitoClickable.setFocusable(false);
 
-        List<Integer> postulantes = publicaciones.get(i).getQuierenAdoptarIds();
-        Boolean postulado = false;
-
-        for (Integer p: postulantes){
-            if (p == Usuario.getInstancia().getId()){
-                postulado = true;
-            }
-        }
-
-        if (!postulado)
-            postularmeAdopcionClickable.setVisibility(View.VISIBLE);
-        else postularmeAdopcionClickable.setVisibility(View.GONE);
-
-        if (tipos == TiposEnum.MIS_PUBLICACIONES || tipos == TiposEnum.MIS_POSTULACIONES){
-            postularmeAdopcionClickable.setVisibility(View.GONE);
-            postularmeTransitoClickable.setVisibility(View.GONE);
-        }
-
-        if (!publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION)){
-            postularmeAdopcionClickable.setVisibility(View.GONE);
-        }
-
-        if (!publicaciones.get(i).getNecesitaTransito()){
-            postularmeTransitoClickable.setVisibility(View.GONE);
-        }
-
-        postularmeAdopcionClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogIcon = getDialogoConfirmacionAdopcion(i, publicaciones.get(i).getId()).create();
-                dialogIcon.show();
-            }
-        });
-
-        postularmeTransitoClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogIcon = getDialogoConfirmacionTransito(i, publicaciones.get(i).getId()).create();
-                dialogIcon.show();
-            }
-        });
+        initialiceClickable(itemView);
+        activateClickable(i);
+        onClickButtonPublicacion(i);
 
         cargarInformacionBasica(i, itemView);
         cargarLocalizacionMascota(i, itemView);
@@ -298,24 +269,144 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return itemView;
     }
 
+    private void initialiceClickable(View itemView){
+        postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
+        postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
+        eliminarPublicacionClickable = itemView.findViewById(R.id.eliminar_publicacion);
+        editarPublicacionClickable = itemView.findViewById(R.id.editar_publicacion);
+        eliminarPostulacionAdopcionClickable = itemView.findViewById(R.id.eliminar_postulacion_adoptar);
+        eliminarPostulacionTransitoClickable = itemView.findViewById(R.id.eliminar_postulacion_transito);
 
-    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacionAdopcion(final int position, final int idPublicacion){
+        postularmeAdopcionClickable.setFocusable(false);
+        postularmeTransitoClickable.setFocusable(false);
+        eliminarPublicacionClickable.setFocusable(false);
+        editarPublicacionClickable.setFocusable(false);
+        eliminarPostulacionAdopcionClickable.setFocusable(false);
+        eliminarPostulacionTransitoClickable.setFocusable(false);
+
+        postularmeAdopcionClickable.setVisibility(View.GONE);
+        postularmeTransitoClickable.setVisibility(View.GONE);
+        eliminarPublicacionClickable.setVisibility(View.GONE);
+        editarPublicacionClickable.setVisibility(View.GONE);
+        eliminarPostulacionAdopcionClickable.setVisibility(View.GONE);
+        eliminarPostulacionTransitoClickable.setVisibility(View.GONE);
+    }
+
+    private void activateClickable(final int i){
+        List<Integer> postulantesAdopciones = publicaciones.get(i).getQuierenAdoptarIds();
+        List<Integer> postulantesHogarTr = publicaciones.get(i).getOfrecenTransitoIds();
+
+        if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION) &&
+                !isPostulatePublicacion(postulantesAdopciones) &&
+                tipos != TiposEnum.MIS_PUBLICACIONES)
+            postularmeAdopcionClickable.setVisibility(View.VISIBLE);
+
+        if (publicaciones.get(i).getNecesitaTransito() && !isPostulatePublicacion(postulantesHogarTr) &&
+                tipos != TiposEnum.MIS_PUBLICACIONES){
+            postularmeTransitoClickable.setVisibility(View.VISIBLE);
+        }
+
+        if (tipos == TiposEnum.MIS_PUBLICACIONES){
+            eliminarPublicacionClickable.setVisibility(View.VISIBLE);
+            editarPublicacionClickable.setVisibility(View.VISIBLE);
+        }
+
+        if (tipos == TiposEnum.MIS_POSTULACIONES){
+            if (isPostulatePublicacion(postulantesAdopciones) && isPostulatePublicacion(postulantesHogarTr)){
+                eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
+                eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
+            }else if (!isPostulatePublicacion(postulantesAdopciones) && isPostulatePublicacion(postulantesHogarTr)){
+                eliminarPostulacionAdopcionClickable.setVisibility(View.GONE);
+                eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
+            }else if (isPostulatePublicacion(postulantesAdopciones) && !isPostulatePublicacion(postulantesHogarTr)){
+                eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
+                eliminarPostulacionTransitoClickable.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void onClickButtonPublicacion(final int i){
+
+        postularmeAdopcionClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.POST_ADOPCION, i).create();
+                dialogIcon.show();
+            }
+        });
+
+        postularmeTransitoClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.POST_TRANSITO, i).create();
+                dialogIcon.show();
+            }
+        });
+
+
+        editarPublicacionClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.EDITAR_PUBL, i).create();
+                dialogIcon.show();
+            }
+        });
+
+
+        eliminarPublicacionClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.ELIMINAR_PUBL, i).create();
+                dialogIcon.show();
+            }
+        });
+
+        eliminarPostulacionAdopcionClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.ELIMINAR_POST_ADOP, i).create();
+                dialogIcon.show();
+            }
+        });
+
+
+        eliminarPostulacionTransitoClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.ELIMINAR_POST_TRANS, i).create();
+                dialogIcon.show();
+            }
+        });
+    }
+
+    private Boolean isPostulatePublicacion(List<Integer> postulantes){
+        Boolean postulado = false;
+
+        for ( Integer p: postulantes){
+            if (p == Usuario.getInstancia().getId()){
+                postulado = true;
+            }
+        }
+        return postulado;
+    }
+
+    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacion(final TiposClickeableEnum tipo,
+                                                                                      final int position){
         final android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(context);
-        String mensaje=context.getString(R.string.confirmacion_postulacion_adopcion);
+        String mensaje = getMensajeDeConfirmacion(tipo);
 
         builder.setMessage(mensaje)
                 .setTitle(context.getString(R.string.title_dialog_confirmacion))
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.i("Dialogos", "Confirmacion Aceptada.");
-                        guardarPostulacionTask = new GuardarPostulacionTask(position, idPublicacion);
-                        guardarPostulacionTask.execute((Void) null);
+                        Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
+                        ejecutarAccionClickeable(tipo, position);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.i("Dialogos", "Confirmacion Cancelada.");
+                        Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
                         dialog.cancel();
                     }
                 });
@@ -323,28 +414,60 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     }
 
-    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacionTransito(final int position, final int idPublicacion){
-        final android.support.v7.app.AlertDialog.Builder builder =
-                new android.support.v7.app.AlertDialog.Builder(context);
-        String mensaje=context.getString(R.string.confirmacion_postulacion_transito);
+    private String getMensajeDeConfirmacion(TiposClickeableEnum tipo){
+        String mensaje="";
+        switch(tipo) {
+            case POST_ADOPCION:
+                mensaje = context.getString(R.string.confirmacion_postulacion_adopcion);
+                break;
+            case POST_TRANSITO:
+                mensaje = context.getString(R.string.confirmacion_postulacion_transito);
+                break;
+            case EDITAR_PUBL:
+                mensaje = context.getString(R.string.confirmacion_editar);
+                break;
+            case ELIMINAR_PUBL:
+                mensaje = context.getString(R.string.confirmacion_eliminar);
+                break;
+            case ELIMINAR_POST_ADOP:
+                mensaje = context.getString(R.string.confirmacion_eliminar_post_adopcion);
+                break;
+            case ELIMINAR_POST_TRANS:
+                mensaje = context.getString(R.string.confirmacion_eliminar_post_transito);
+                break;
+            default:
+                break;
+        }
+        return mensaje;
+    }
 
-        builder.setMessage(mensaje)
-                .setTitle(context.getString(R.string.title_dialog_confirmacion))
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i("Dialogos", "Confirmacion Aceptada.");
-                        guardarPostulacionTask = new GuardarPostulacionTask(position, idPublicacion);
-                        guardarPostulacionTask.execute((Void) null);
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i("Dialogos", "Confirmacion Cancelada.");
-                        dialog.cancel();
-                    }
-                });
-        return builder;
-
+    private void ejecutarAccionClickeable(TiposClickeableEnum tipo, final int i){
+        switch(tipo) {
+            case POST_ADOPCION:
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_ADOPCION);
+                guardarPostulacionTask.execute((Void) null);
+                break;
+            case POST_TRANSITO:
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_TRANSITO);
+                guardarPostulacionTask.execute((Void) null);
+                break;
+            case EDITAR_PUBL:
+                break;
+            case ELIMINAR_PUBL:
+                eliminarPublicacionTask = new EliminarPublicacionTask(i);
+                eliminarPublicacionTask.execute((Void) null);
+                break;
+            case ELIMINAR_POST_ADOP:
+                eliminarPostulacionTask = new EliminarPostulacionTask(i,TiposClickeableEnum.ELIMINAR_POST_ADOP );
+                eliminarPostulacionTask.execute((Void) null);
+                break;
+            case ELIMINAR_POST_TRANS:
+                eliminarPostulacionTask = new EliminarPostulacionTask(i,TiposClickeableEnum.ELIMINAR_POST_TRANS );
+                eliminarPostulacionTask.execute((Void) null);
+                break;
+            default:
+                break;
+        }
     }
 
     private void cargarInformacionBasica(int i, View v){
@@ -686,16 +809,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         int id_publicacion;
         int position;
+        TiposClickeableEnum tipo;
 
-        GuardarPostulacionTask(int position, int id_publicacion) {
+        GuardarPostulacionTask(int position, int id_publicacion, TiposClickeableEnum tipo) {
             this.id_publicacion = id_publicacion;
             this.position = position;
+            this.tipo = tipo;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                publicaciones.get(position).quieroAdoptar(Usuario.getInstancia().getToken(), id_publicacion);
+                if (tipo == TiposClickeableEnum.POST_ADOPCION)
+                    publicaciones.get(position).quieroAdoptar(Usuario.getInstancia().getToken(), id_publicacion);
+                else
+                    Usuario.getInstancia().ofrezcoTransito(id_publicacion);
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
@@ -706,8 +834,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                postularmeAdopcionClickable.setVisibility(View.GONE);
-                notifyDataSetChanged();
+                //TODO ir a la pantalla correspondiente
             }
             guardarPostulacionTask = null;
         }
@@ -752,6 +879,81 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             enviarConsultaTask = null;
         }
     }
+
+    public class EliminarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
+
+        int position;
+        EliminarPublicacionTask(int i) {
+            this.position = i;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                publicaciones.get(position).cancelarPublicacion(Usuario.getInstancia().getToken());
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success){
+                removeItem(position);
+                notifyDataSetChanged();
+            }
+            eliminarPublicacionTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            eliminarPublicacionTask = null;
+        }
+    }
+
+
+    public class EliminarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
+
+        int position;
+        TiposClickeableEnum tipo;
+        EliminarPostulacionTask(int i, TiposClickeableEnum tipo) {
+            this.position = i;
+            this.tipo = tipo;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if (tipo == TiposClickeableEnum.ELIMINAR_POST_ADOP){
+                    //TODO eliminar postulacion adopcion
+                }
+                else {
+                    //TODO eliminar postulacion transito
+                }
+
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success){
+            }
+            eliminarPostulacionTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            eliminarPostulacionTask = null;
+        }
+    }
+
+
 
 
 }
