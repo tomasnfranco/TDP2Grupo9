@@ -200,4 +200,53 @@ public class PublicacionAtributos {
     public boolean isLoaded() {
         return loaded;
     }
+
+    public AtributoPublicacion getEspecie(AtributoPublicacion id) {
+        return especies.get(especies.indexOf(id));
+    }
+
+    public AtributoPublicacion getRaza(AtributoPublicacion id) {
+        return razas.get(razas.indexOf(id));
+    }
+
+    public AtributoPublicacion getSexo(AtributoPublicacion id) {
+        return sexos.get(sexos.indexOf(id));
+    }
+
+    public AtributoPublicacion getEdad(AtributoPublicacion id) {
+        return edades.get(edades.indexOf(id));
+    }
+
+    public AtributoPublicacion getTamanio(AtributoPublicacion id) {
+        return tamanios.get(tamanios.indexOf(id));
+    }
+
+    public AtributoPublicacion getColor(AtributoPublicacion id) {
+        return colores.get(colores.indexOf(id));
+    }
+
+    public AtributoPublicacion getVacunasAlDia(AtributoPublicacion id) {
+        return vacunasAlDia.get(vacunasAlDia.indexOf(id));
+    }
+
+    public AtributoPublicacion getCastrado(AtributoPublicacion id) {
+        return castrados.get(castrados.indexOf(id));
+    }
+
+    public AtributoPublicacion getProteccion(AtributoPublicacion id) {
+        return protecciones.get(protecciones.indexOf(id));
+    }
+
+    public AtributoPublicacion getEnergia(AtributoPublicacion id) {
+        return energias.get(energias.indexOf(id));
+    }
+
+    public AtributoPublicacion getPapelesAlDia(AtributoPublicacion id) {
+        return papelesAlDia.get(papelesAlDia.indexOf(id));
+    }
+
+    public AtributoPublicacion getCompatibleCon(AtributoPublicacion id) {
+        return compatibilidades.get(compatibilidades.indexOf(id));
+    }
+
 }

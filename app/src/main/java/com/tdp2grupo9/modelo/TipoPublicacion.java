@@ -14,6 +14,11 @@ public enum TipoPublicacion {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return TipoPublicacion.getTipoPublicacionToString(this.getValue());
+    }
+
     public static TipoPublicacion getTipoPublicacion(int tipo) {
         switch (tipo) {
             case 1:
@@ -52,4 +57,5 @@ public enum TipoPublicacion {
                 return "Adopciones";
         }
     }
+
 }

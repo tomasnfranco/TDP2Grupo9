@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
-import com.tdp2grupo9.utils.TiposEnum;
+import com.tdp2grupo9.modelo.TiposEnum;
 
 
 public class MisPostulacionesFragment extends PublicacionesFragment {

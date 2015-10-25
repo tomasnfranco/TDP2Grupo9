@@ -1,6 +1,5 @@
 package com.tdp2grupo9.fragment;
 
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.ExpandableListView;
@@ -9,10 +8,9 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.utils.TiposEnum;
+import com.tdp2grupo9.modelo.TiposEnum;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
