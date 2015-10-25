@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
@@ -322,6 +323,8 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
                 toast3.setDuration(Toast.LENGTH_SHORT);
                 toast3.setView(layout);
                 toast3.show();
+
+                navigateToMisPublicaciones();
             } else {
                 Toast.makeText(mFragmentView.getContext(), "Error: No se pudo guardar.",
                         Toast.LENGTH_LONG).show();
@@ -332,6 +335,10 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         protected void onCancelled() {
             publicarAdopcionTask = null;
         }
+    }
+
+    private void navigateToMisPublicaciones() {
+        ((DrawerMenuActivity )getActivity()).navigateToMisPublicaciones();
     }
 
     public String formatDecimal(double number, String formatPattern){

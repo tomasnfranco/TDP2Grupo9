@@ -23,10 +23,7 @@ import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.fragment.MisPublicacionesFragment;
 import com.tdp2grupo9.login.LoginActivity;
-import com.tdp2grupo9.modelo.Publicacion;
-import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
 import java.util.ArrayList;
@@ -224,6 +221,10 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
                     fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
+    }
+
+    public void navigateToMisPublicaciones() {
+        setFragment(3, MisPublicacionesFragment.class);
     }
 
 }
