@@ -212,12 +212,13 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def mensajes(){
         Publicacion publicacion = Publicacion.get(params.publicacion)
-        render publicacion.preguntas.collect{[id:it.id,
+        render publicacion.preguntas as JSON
+        /*.collect{[id:it.id,
                                             fechaPregunta:it.fechaPregunta,
                                             pregunta:it.texto,
                                             fechaRespuesta: it.respuesta ? it.fechaRespuesta : '',
                                             respuesta : it.respuesta ? it.respuesta : null,
                                             usuarioPregunta : it.usuarioPregunta.username
-        ]} as JSON
+        ]} as JSON*/
     }
 }
