@@ -20,6 +20,7 @@ public class Mensaje {
 
     private int id;
     private int publicacionId;
+    private int usuarioPreguntaId;
     private String usuarioPreguntaNombre;
     private String pregunta;
     private String respuesta;
@@ -29,6 +30,7 @@ public class Mensaje {
     public Mensaje() {
         this.id = 0;
         this.publicacionId = 0;
+        this.usuarioPreguntaId = 0;
         this.usuarioPreguntaNombre = "";
         this.pregunta = "";
         this.respuesta = "";
@@ -101,7 +103,22 @@ public class Mensaje {
                     else
                         this.pregunta = reader.nextString();
                     break;
-                case "usuarioPregunta":
+                /*case "usuarioPregunta":
+                    reader.beginObject();
+                    while (reader.hasNext()) {
+                        String nameusuario = reader.nextName();
+                        switch (nameusuario) {
+                            case "id":
+                                this.usuarioPreguntaId = reader.nextInt();
+                                break;
+                            default:
+                                reader.skipValue();
+                                break;
+                        }
+                    }
+                    reader.endObject();
+                    break;*/
+                case "usuarioPreguntaNombre":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else
@@ -276,6 +293,10 @@ public class Mensaje {
         return fechaRespuesta;
     }
 
+    public int getUsuarioPreguntaId() {
+        return usuarioPreguntaId;
+    }
+
     public String getUsuarioPreguntaNombre() {
         return usuarioPreguntaNombre;
     }
@@ -302,6 +323,10 @@ public class Mensaje {
 
     public void setFechaRespuesta(Date fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
+    }
+
+    public void setUsuarioPreguntaId(int usuarioPreguntaId) {
+        this.usuarioPreguntaId = usuarioPreguntaId;
     }
 
     public void setUsuarioPreguntaNombre(String usuarioPreguntaNombre) {

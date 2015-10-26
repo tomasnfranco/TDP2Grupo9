@@ -838,6 +838,40 @@ public class Publicacion {
         Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
+    public static void cancelarQuieroAdoptar(String token, Integer publicacionId) {
+        String METHOD = "cancelarQuieroAdoptar";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/cancelarPostulacion");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+publicacionId;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " cancelacion de postulacion aceptada ");
+            } else if (HttpResult == HttpURLConnection.HTTP_FORBIDDEN) {
+                Log.d(LOG_TAG, METHOD + " no esta autorizado para cancelar la postulacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_NOT_FOUND) {
+                Log.d(LOG_TAG, METHOD + " no se encuentra la publicacion ");
+            } else if (HttpResult == HttpURLConnection.HTTP_BAD_METHOD) {
+                Log.d(LOG_TAG, METHOD + " no ha querido adoptar en esta publicacion ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
     public static void concretarAdopcion(String token, Integer publicacionId, Integer postulanteId) {
         String METHOD = "concretarAdopcion";
         HttpURLConnection urlConnection = null;
@@ -1164,4 +1198,5 @@ public class Publicacion {
     public Boolean isPostuladoTransito(Integer usuarioId) {
         return Collections.frequency(this.ofrecenTransitoIds, usuarioId) > 0;
     }
+
 }

@@ -490,11 +490,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 eliminarPublicacionTask.execute((Void) null);
                 break;
             case ELIMINAR_POST_ADOP:
-                eliminarPostulacionTask = new EliminarPostulacionTask(i,TiposClickeableEnum.ELIMINAR_POST_ADOP );
+                eliminarPostulacionTask = new EliminarPostulacionTask(i, publicaciones.get(i).getId(),TiposClickeableEnum.ELIMINAR_POST_ADOP );
                 eliminarPostulacionTask.execute((Void) null);
                 break;
             case ELIMINAR_POST_TRANS:
-                eliminarPostulacionTask = new EliminarPostulacionTask(i,TiposClickeableEnum.ELIMINAR_POST_TRANS );
+                eliminarPostulacionTask = new EliminarPostulacionTask(i, publicaciones.get(i).getId(),TiposClickeableEnum.ELIMINAR_POST_TRANS );
                 eliminarPostulacionTask.execute((Void) null);
                 break;
             default:
@@ -515,19 +515,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         String condiciones = publicaciones.get(i).getCondiciones();
         if (condiciones.isEmpty())
             condiciones = "No tiene.";
-
-
-        String castrado = PublicacionAtributos.getInstancia().getCastrados().get(PublicacionAtributos.getInstancia().getCastrados().indexOf(publicaciones.get(i).getCastrado())).toString();
-        String proteccion = PublicacionAtributos.getInstancia().getProtecciones().get(PublicacionAtributos.getInstancia().getProtecciones().indexOf(publicaciones.get(i).getProteccion())).toString();
-        String energia = PublicacionAtributos.getInstancia().getEnergias().get(PublicacionAtributos.getInstancia().getEnergias().indexOf(publicaciones.get(i).getEnergia())).toString();
-        String papeles = PublicacionAtributos.getInstancia().getPapelesAlDia().get(PublicacionAtributos.getInstancia().getPapelesAlDia().indexOf(publicaciones.get(i).getPapelesAlDia())).toString();
-        String compatibleCon = PublicacionAtributos.getInstancia().getCompatibilidades().get(PublicacionAtributos.getInstancia().getCompatibilidades().indexOf(publicaciones.get(i).getCompatibleCon())).toString();
-
-        if (!condiciones.isEmpty())
+        else
             ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
 
         String infoAdicional="";
-
 
         AtributoPublicacion vacunasEntity = publicaciones.get(i).getVacunasAlDia();
         if (vacunasEntity.getId() > 0) {
@@ -853,27 +844,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         });
     }
 
-    private List<Mensaje> loadMensajesMock(){
-        List<Mensaje> mensajes = new ArrayList<>();
-        Mensaje m1 = new Mensaje();
-        m1.setPregunta(context.getString(R.string.consulta2));
-        m1.setRespuesta("No, por ahora no, pero falta poco.");
-        m1.setFechaPregunta(new Date(2015, 5, 10));
-        m1.setFechaRespuesta(new Date(2015, 6, 10));
-        Mensaje m2 = new Mensaje();
-        m2.setPregunta(context.getString(R.string.consulta3));
-        m2.setFechaPregunta(new Date(2015, 5, 10));
-        Mensaje m3 = new Mensaje();
-        m3.setPregunta(context.getString(R.string.consulta1));
-        m3.setRespuesta("Si, menos caviar.");
-        m3.setFechaPregunta(new Date(2015, 8, 10));
-        m3.setFechaRespuesta(new Date(2015, 8, 20));
-        mensajes.add(m1);
-        mensajes.add(m2);
-        mensajes.add(m3);
-        return mensajes;
-    }
-
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
@@ -895,7 +865,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected Boolean doInBackground(Void... params) {
             try {
                 if (tipo == TiposClickeableEnum.POST_ADOPCION)
-                    publicaciones.get(position).quieroAdoptar(Usuario.getInstancia().getToken(), id_publicacion);
+                    Usuario.getInstancia().quieroAdoptar(id_publicacion);
                 else
                     Usuario.getInstancia().ofrezcoTransito(id_publicacion);
                 Thread.sleep(200);
@@ -964,7 +934,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     public class EliminarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
 
-        int position;
+        private int position;
+
         EliminarPublicacionTask(int i) {
             this.position = i;
         }
@@ -998,23 +969,25 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     public class EliminarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
 
+        int id_publicacion;
         int position;
-        TiposClickeableEnum tipo;
-        EliminarPostulacionTask(int i, TiposClickeableEnum tipo) {
+        private TiposClickeableEnum tipo;
+
+        EliminarPostulacionTask(int i, int id_publicacion, TiposClickeableEnum tipo) {
             this.position = i;
             this.tipo = tipo;
+            this.id_publicacion = id_publicacion;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 if (tipo == TiposClickeableEnum.ELIMINAR_POST_ADOP){
-                    //TODO eliminar postulacion adopcion
+                    Usuario.getInstancia().cancelarQuieroAdoptar(id_publicacion);
                 }
                 else {
-                    //TODO eliminar postulacion transito
+                    Usuario.getInstancia().cancelarTransito(id_publicacion);
                 }
-
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
@@ -1025,6 +998,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
+                //TODO ir a la pantalla correspondiente
             }
             eliminarPostulacionTask = null;
         }

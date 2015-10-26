@@ -284,8 +284,8 @@ public class Usuario {
         Publicacion.cancelarTransito(this.token, publicacionId);
     }
 
-    public void cancelarAdopcion(Integer publicacionId) {
-    //    Publicacion.cancelarAdopcion(this.token, publicacionId);
+    public void cancelarQuieroAdoptar(Integer publicacionId) {
+        Publicacion.cancelarQuieroAdoptar(this.token, publicacionId);
     }
 
     public List<Publicacion> obtenerMisPublicaciones(Integer offset, Integer max) {

@@ -77,7 +77,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         publicacion.setCompatibleCon(getCompatibleConPublicacion(arguments.getInt("compatiblecon", 0)));
         publicacion.setVacunasAlDia(getVacuntasAlDiaPublicacion(arguments.getInt("vacunas", 0)));
         publicacion.setPapelesAlDia(getPapelesAlDiaPublicacion(arguments.getInt("papeles", 0)));
-        publicacion.setDistancia(getDistanciaPublicacion(arguments.getDouble("distancia", -1.0)));
+        publicacion.setDistancia(getDistanciaPublicacion(arguments.getInt("distancia", -1)));
         publicacion.setLongitud(getLongitudPublicacion(arguments.getDouble("longitud", -1.0)));
         publicacion.setLatitud(getLatitudPublicacion(arguments.getDouble("latitud", -1.0)));
 
