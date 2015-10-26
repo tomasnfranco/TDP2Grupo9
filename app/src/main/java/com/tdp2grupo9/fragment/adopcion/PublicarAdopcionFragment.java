@@ -305,7 +305,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
                 spEnergia.setSelection(0);
                 currentLat = Usuario.getInstancia().getLatitud();
                 currentLon = Usuario.getInstancia().getLongitud();
-                //TODO borrar imagenes cargadas
+                mFotoPicker.empty();
                 videoLink.setText("");
                 requiereHogarTransito.setChecked(false);
                 cuidadosEspeciales.setChecked(false);
