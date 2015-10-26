@@ -101,4 +101,11 @@ public class FotoPicker extends LinearLayout {
             Toast.makeText(mContext, mContext.getString(R.string.no_hay_fotos), Toast.LENGTH_LONG).show();
         }
     }
+
+    public void empty() {
+        while (!mFotosAdded.isEmpty()) {
+            removeFotoAdded(mFotosAdded.get(0));
+        }
+    }
+
 }
