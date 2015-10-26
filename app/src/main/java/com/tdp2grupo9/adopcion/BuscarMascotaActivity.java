@@ -22,6 +22,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.view.SeleccionAtributosActivity;
 
+@Deprecated
 public class BuscarMascotaActivity extends SeleccionAtributosActivity implements View.OnClickListener{
 
     private static final int DATA_MAPA_REQUEST = 10;

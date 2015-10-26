@@ -26,7 +26,7 @@ import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
 import java.util.List;
 
-
+@Deprecated
 public class SeleccionAtributosActivity extends Activity {
 
     protected AtributosJSONInterpeter atributosInterpeter;

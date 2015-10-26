@@ -41,6 +41,7 @@ import com.tdp2grupo9.view.foto.FotoPicker;
 /**
  * Created by tfranco on 9/24/2015.
  */
+@Deprecated
 public class PublicarAdopcionActivity extends SeleccionAtributosActivity implements View.OnClickListener {
 
     private static final String PHOTO_INTENT_TYPE = "image/*";

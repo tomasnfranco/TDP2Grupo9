@@ -83,21 +83,6 @@ public class ResultadosBusquedaActivity extends AppCompatActivity {
 
 
     private void cargarListView(){
-       /* Publicacion p1 = new Publicacion();
-        p1.setNombreMascota("Pepe");
-        Edad edad = new Edad();
-        edad.setId(2);
-        p1.setRequiereCuidadosEspeciales(true);
-        p1.setNecesitaTransito(true);
-        p1.setEdad(edad);
-
-        Publicacion p2 = new Publicacion();
-        p2.setNombreMascota("El es Bono un perro muy Especial");
-        p2.setRequiereCuidadosEspeciales(false);
-        p2.setNecesitaTransito(true);
-        publicaciones = new ArrayList<Publicacion>();
-        publicaciones.add(p1);
-        publicaciones.add(p2);*/
 
         this.listView = (ListView) findViewById(R.id.listView);
         List<Item> items = new ArrayList<Item>();
