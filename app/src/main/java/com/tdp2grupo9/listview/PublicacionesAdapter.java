@@ -48,6 +48,8 @@ import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.Postulante;
+import com.tdp2grupo9.modelo.publicacion.Especie;
+import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.utils.TiposClickeableEnum;
 import com.tdp2grupo9.modelo.TiposEnum;
 
@@ -218,27 +220,55 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
 
-
         View publicacionView = getInflatedViewIfNecessary(view, viewGroup);
         TextView tipo_publicacion = (TextView) publicacionView.findViewById(R.id.tv_tipo_publicacion);
 
-        //TODO completar textview con el tipo de la publicacion. Obtener desde publicacion obtenida
-        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.ADOPCION) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
-        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.PERDIDA) tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
-        if (publicaciones.get(i).getTipoPublicacion() == TipoPublicacion.ENCONTRADA)tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
+        switch (publicaciones.get(i).getTipoPublicacion()){
+            case ADOPCION:
+                tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
+                break;
+            case PERDIDA:
+                tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
+                break;
+            case ENCONTRADA:
+                tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
+                break;
+        }
 
-        String especie = PublicacionAtributos.getInstancia().getEspecies().get(PublicacionAtributos.getInstancia().getEspecies().indexOf(publicaciones.get(i).getEspecie())).toString();
-        sexo = PublicacionAtributos.getInstancia().getSexos().get(PublicacionAtributos.getInstancia().getSexos().indexOf(publicaciones.get(i).getSexo())).toString();
         ImageView publicacionSexoMascota = (ImageView) publicacionView.findViewById(R.id.publicacion_icon_sexo);
 
-        if (sexo.equals("Hembra")){
-            if (especie.equals("Gato"))
-                publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_hembra));
-            else publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_hembra));
-        }else {
-            if (especie.equals("Gato"))
-                publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho));
-            else publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho));
+        Especie especieEntity = publicaciones.get(i).getEspecie();
+        String valorEspecie = PublicacionAtributos.getInstancia().getEspecie(especieEntity).getValor();
+
+        Sexo sexoEntity = publicaciones.get(i).getSexo();
+        if (sexoEntity.getId() > 0) {
+            String valorSexo = PublicacionAtributos.getInstancia().getSexo(sexoEntity).getValor();
+            if (valorEspecie.equals("Perro")) {
+                switch (valorSexo) {
+                    case "Hembra":
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_hembra));
+                        break;
+                    case "Macho":
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho));
+                        break;
+                    default:
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho)); //TODO: icono perro gris
+                        break;
+                }
+            } else { //es Gato
+                switch (valorSexo) {
+                    case "Hembra":
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_hembra));
+                        break;
+                    case "Macho":
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho));
+                        break;
+                    default:
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho)); //TODO: icono gato gris
+                        break;
+                }
+
+            }
         }
 
         ((TextView) publicacionView.findViewById(R.id.publicacion_name)).setText(publicaciones.get(i).getNombreMascota());
