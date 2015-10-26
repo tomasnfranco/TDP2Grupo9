@@ -456,7 +456,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 Usuario.getInstancia().setTelefono(etTelefono.getText().toString());
                 Usuario.getInstancia().setLatitud(currentLat);
                 Usuario.getInstancia().setLongitud(currentLon);
-                userRegisterTask = new UserRegisterTask();
+                userRegisterTask = new UserRegisterTask(this);
                 userRegisterTask.execute((Void) null);
             }
         }
@@ -497,8 +497,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
 
     public class UserRegisterTask  extends AsyncTask<Void, Void, Boolean> {
 
-        UserRegisterTask () {
+        private final Context context;
 
+        public UserRegisterTask (Context context) {
+            this.context = context;
         }
 
         @Override
@@ -517,11 +519,18 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
             userRegisterTask = null;
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    obtenerAtributosTask = new ObtenerAtributosTask();
+                    obtenerAtributosTask = new ObtenerAtributosTask(this.context);
                     obtenerAtributosTask.execute((Void) null);
+                } else {
+                    //supongo que el error es ese :P
+                    Toast.makeText(this.context,
+                            "No se pudo registrar. El email ya existe.",
+                            Toast.LENGTH_LONG).show();
                 }
-                finish();
             } else {
+                Toast.makeText(this.context,
+                        "Error inesperado.",
+                        Toast.LENGTH_LONG).show();
             }
         }
 
@@ -532,6 +541,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
     }
 
     public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final Context context;
+
+        public ObtenerAtributosTask(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -553,13 +568,18 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
                 if (PublicacionAtributos.getInstancia().isLoaded()){
                     Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else {
-                    //TODO: NO SE PUDIERON CARGAR LOS ATRIBUTOS!!!
+                    Toast.makeText(this.context,
+                            "Error al cargar los datos de la aplicación.",
+                            Toast.LENGTH_LONG).show();
                 }
                 finish();
             } else {
-                //TODO: ERROR
+                Toast.makeText(this.context,
+                        "Error inesperado.",
+                        Toast.LENGTH_LONG).show();
             }
         }
 
