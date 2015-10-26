@@ -141,10 +141,8 @@ public class Usuario {
             urlConnection = Connection.getHttpUrlConnection("usuario");
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            /*
             urlConnection.setRequestProperty("Content-Type", "application/json");
+
             JSONObject params = new JSONObject();
             if (this.getFacebookId() != null)
                 params.put("facebookId", this.getFacebookId());
@@ -165,39 +163,12 @@ public class Usuario {
             params.put("telefono", this.telefono);
             params.put("latitud", this.latitud);
             params.put("longitud", this.longitud);
-            */
-
-            String parametros = "";
-            if (this.getFacebookId() != null)
-                parametros += "facebookId="+this.getFacebookId();
-            if (!this.getEmail().isEmpty()) {
-                if (this.getFacebookId() != null)
-                    parametros += "&email="+this.getEmail();
-                else
-                    parametros += "email="+this.getEmail();
-            }
-            if (!this.getPassword().isEmpty())
-                parametros += "&password="+this.getPassword();
-            if (this.getAutoPublicar() != null)
-                parametros += "&autoPublicar="+this.autopublicar;
-            if (this.getOfreceTransito() != null)
-                parametros += "&ofreceTransito="+this.ofreceTransito;
-            if (!this.getUsername().isEmpty())
-                parametros += "&username="+this.getUsername();
-            //if (this.foto != null)
-            //    parametros += "&foto="+Imagen.base64URL_SAFEFromBytes(this.foto.getImg());
-
-            parametros += "&direccion="+this.direccion;
-            parametros += "&telefono="+this.telefono;
-            parametros += "&latitud="+this.latitud;
-            parametros += "&longitud="+this.longitud;
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(parametros);
-            //out.write(params.toString());
+            out.write(params.toString());
             out.close();
 
-            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            Log.d(LOG_TAG, METHOD + " url= " + params.toString());
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
@@ -438,8 +409,12 @@ public class Usuario {
     }
 
     public String getUsername() {
-        if (this.username.isEmpty())
-            return this.nombre.concat(".").concat(this.apellido).toLowerCase();
+        if (this.username.isEmpty()) {
+            if (!this.email.isEmpty())
+                return this.email.substring(0, this.email.indexOf('@'));
+            if (!this.nombre.isEmpty())
+                return this.nombre.toLowerCase();
+        }
         return this.username;
     }
 

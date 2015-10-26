@@ -495,14 +495,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         }
     }
 
-    /*private boolean isValidTelefono(){
-        if (etTelefono.getText().toString().isEmpty() || etTelefono.getText().toString().length() < 8
-                || etTelefono.getText().toString().length() > 15){
-            etTelefono.setError("Telefono invalido");
-            return false;
-        }else return true;
-    }*/
-
     public class UserRegisterTask  extends AsyncTask<Void, Void, Boolean> {
 
         UserRegisterTask () {

@@ -61,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private static final String LOG_TAG = "BSH.LoginAct";
 
+    private static final Integer LONGPASSWORD = 6;
+
     private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
     private UserFacebookLoginTask authenticationFacebookTask = null;
@@ -91,6 +93,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public void showProgress(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void createEmailTextView() {
@@ -194,25 +213,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return email.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-    }
-
     private boolean isPasswordValid(String password) {
-        return password.length() == 6;
+        if (password.length() != LONGPASSWORD) {
+            passwordEditText.setError(getString(R.string.error_invalid_password_longitud) + " " + LONGPASSWORD);
+            return false;
+        }
+        if (!password.matches("^[a-zA-Z0-9]*$")) {
+            passwordEditText.setError(getString(R.string.error_invalid_password_alfanumerica));
+            return false;
+        }
+        return true;
     }
 
     private boolean isLoginFormValid() {
@@ -222,7 +232,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             valid = false;
         }
         if (!isPasswordValid(passwordEditText.getText().toString())){
-            passwordEditText.setError(getString(R.string.error_invalid_password));
             valid = false;
         }
         return valid;
@@ -317,8 +326,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
-                    startActivity(intent);
+                    obtenerAtributosTask = new ObtenerAtributosTask();
+                    obtenerAtributosTask.execute((Void) null);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);

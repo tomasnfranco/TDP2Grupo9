@@ -54,8 +54,8 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         if (!Usuario.getInstancia().getEmail().isEmpty())
             email = Usuario.getInstancia().getEmail();
 
-        if (!Usuario.getInstancia().getNombre().isEmpty())
-            username = Usuario.getInstancia().getNombre() + " " + Usuario.getInstancia().getApellido();
+        if (!Usuario.getInstancia().getUsername().isEmpty())
+            username = Usuario.getInstancia().getUsername();
 
         List<DrawerMenuItem> menuItems = generateDrawerMenuItems();
         mDrawerMenuAdapter = new DrawerMenuItemAdapter(getApplicationContext(), menuItems, email, username);
