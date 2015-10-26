@@ -3,11 +3,6 @@ package com.tdp2grupo9.adapter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,29 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.Fecha;
-import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.publicacion.Castrado;
-import com.tdp2grupo9.modelo.publicacion.Color;
-import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
-import com.tdp2grupo9.modelo.publicacion.Edad;
-import com.tdp2grupo9.modelo.publicacion.Energia;
-import com.tdp2grupo9.modelo.publicacion.Especie;
-import com.tdp2grupo9.modelo.publicacion.PapelesAlDia;
-import com.tdp2grupo9.modelo.publicacion.Proteccion;
-import com.tdp2grupo9.modelo.publicacion.Raza;
-import com.tdp2grupo9.modelo.publicacion.Sexo;
-import com.tdp2grupo9.modelo.publicacion.Tamanio;
-import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
+import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -199,7 +179,7 @@ public class AlertaAdapter extends BaseAdapter{
 
         String infoAdicional="";
 
-        VacunasAlDia vacunasEntity = alertasList.get(i).getVacunasAlDia();
+        AtributoPublicacion vacunasEntity = alertasList.get(i).getVacunasAlDia();
         if (vacunasEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getVacunasAlDia(vacunasEntity).getValor();
             if (valor.equals("Si"))
@@ -208,7 +188,7 @@ public class AlertaAdapter extends BaseAdapter{
                 infoAdicional += "Que no " + alertaView.getContext().getString(R.string.tenga_vacunas).toLowerCase() + ". ";
         }
 
-        PapelesAlDia papelesEntity = alertasList.get(i).getPapelesAlDia();
+        AtributoPublicacion papelesEntity = alertasList.get(i).getPapelesAlDia();
         if (papelesEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getPapelesAlDia(papelesEntity).getValor();
             if (valor.equals("Si"))
@@ -217,7 +197,7 @@ public class AlertaAdapter extends BaseAdapter{
                 infoAdicional += "Que no " + alertaView.getContext().getString(R.string.tenga_papeles).toLowerCase() + ". ";
         }
 
-        Castrado castradoEntity = alertasList.get(i).getCastrado();
+        AtributoPublicacion castradoEntity = alertasList.get(i).getCastrado();
         if (castradoEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getCastrado(castradoEntity).getValor();
             if (valor.equals("Si"))
@@ -226,21 +206,21 @@ public class AlertaAdapter extends BaseAdapter{
                 infoAdicional+= "Que no " + alertaView.getContext().getString(R.string.este_castrado).toLowerCase() + ". ";
         }
 
-        CompatibleCon compatibleEntity = alertasList.get(i).getCompatibleCon();
+        AtributoPublicacion compatibleEntity = alertasList.get(i).getCompatibleCon();
         if (compatibleEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getCompatibleCon(compatibleEntity).getValor();
             if (!valor.equals("No aplica") && !valor.isEmpty())
                 infoAdicional += "Que " + alertaView.getContext().getString(R.string.sea_compatible) + " " + valor.toLowerCase() + ". ";
         }
 
-        Energia energiaEntity = alertasList.get(i).getEnergia();
+        AtributoPublicacion energiaEntity = alertasList.get(i).getEnergia();
         if (energiaEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getEnergia(energiaEntity).getValor();
             if (!valor.equals("No aplica") && !valor.isEmpty())
                 infoAdicional += "Sea " + valor.toLowerCase() + ". ";
         }
 
-        Proteccion proteccionEntity = alertasList.get(i).getProteccion();
+        AtributoPublicacion proteccionEntity = alertasList.get(i).getProteccion();
         if (proteccionEntity.getId() > 0) {
             String valor = PublicacionAtributos.getInstancia().getProteccion(proteccionEntity).getValor();
             if (!valor.equals("No aplica") && !valor.isEmpty())

@@ -12,13 +12,10 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -27,7 +24,6 @@ import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +44,7 @@ import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.Postulante;
+import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.utils.TiposClickeableEnum;
@@ -516,7 +513,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarInformacionAdicional(int i, View v){
         String condiciones = publicaciones.get(i).getCondiciones();
-        String vacunas = PublicacionAtributos.getInstancia().getVacunasAlDia().get(PublicacionAtributos.getInstancia().getVacunasAlDia().indexOf(publicaciones.get(i).getVacunasAlDia())).toString();
+        if (condiciones.isEmpty())
+            condiciones = "No tiene.";
+
+
         String castrado = PublicacionAtributos.getInstancia().getCastrados().get(PublicacionAtributos.getInstancia().getCastrados().indexOf(publicaciones.get(i).getCastrado())).toString();
         String proteccion = PublicacionAtributos.getInstancia().getProtecciones().get(PublicacionAtributos.getInstancia().getProtecciones().indexOf(publicaciones.get(i).getProteccion())).toString();
         String energia = PublicacionAtributos.getInstancia().getEnergias().get(PublicacionAtributos.getInstancia().getEnergias().indexOf(publicaciones.get(i).getEnergia())).toString();
@@ -526,35 +526,61 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         if (!condiciones.isEmpty())
             ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
 
-        String mensaje="";
+        String infoAdicional="";
 
-        if (vacunas.equals("Si"))
-            mensaje+= v.getContext().getString(R.string.tiene_vacunas)+". ";
-        else if (vacunas.equals("No"))
-            mensaje+= "No " + v.getContext().getString(R.string.tiene_vacunas).toLowerCase() + ". ";
 
-        if (papeles.equals("Si"))
-            mensaje+= v.getContext().getString(R.string.tiene_papeles)+". ";
-        else if (papeles.equals("No"))
-            mensaje+= "No " + v.getContext().getString(R.string.tiene_papeles).toLowerCase() + ". ";
+        AtributoPublicacion vacunasEntity = publicaciones.get(i).getVacunasAlDia();
+        if (vacunasEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getVacunasAlDia(vacunasEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional += v.getContext().getString(R.string.tiene_vacunas) + ". ";
+            else if (valor.equals("No"))
+                infoAdicional += "No " + v.getContext().getString(R.string.tiene_vacunas).toLowerCase() + ". ";
+        }
 
-        if (castrado.equals("Si"))
-            mensaje+= v.getContext().getString(R.string.esta_castrado)+". ";
-        else if (papeles.equals("No"))
-            mensaje+= "No " + v.getContext().getString(R.string.esta_castrado).toLowerCase() + ". ";
+        AtributoPublicacion papelesEntity = publicaciones.get(i).getPapelesAlDia();
+        if (papelesEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getPapelesAlDia(papelesEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional += v.getContext().getString(R.string.tiene_papeles) + ". ";
+            else if (valor.equals("No"))
+                infoAdicional += "No " + v.getContext().getString(R.string.tiene_papeles).toLowerCase() + ". ";
+        }
 
-        if(!compatibleCon.equals("No aplica"))
-            mensaje+= v.getContext().getString(R.string.es_compatible) +" " + compatibleCon.toLowerCase() + ". ";
+        AtributoPublicacion castradoEntity = publicaciones.get(i).getCastrado();
+        if (castradoEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getCastrado(castradoEntity).getValor();
+            if (valor.equals("Si"))
+                infoAdicional+= v.getContext().getString(R.string.esta_castrado)+". ";
+            else if (valor.equals("No"))
+                infoAdicional+= "No " + v.getContext().getString(R.string.esta_castrado).toLowerCase() + ". ";
+        }
 
-        if(!energia.equals("No aplica"))
-            mensaje+= "Es " + energia.toLowerCase() + ". ";
+        AtributoPublicacion compatibleEntity = publicaciones.get(i).getCompatibleCon();
+        if (compatibleEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getCompatibleCon(compatibleEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += v.getContext().getString(R.string.es_compatible) + " " + valor.toLowerCase() + ". ";
+        }
 
-        if(!proteccion.equals("No aplica"))
-            mensaje+= "Es " + proteccion.toLowerCase() + ". ";
+        AtributoPublicacion energiaEntity = publicaciones.get(i).getEnergia();
+        if (energiaEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getEnergia(energiaEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += "Es " + valor.toLowerCase() + ". ";
+        }
 
-        if (mensaje.isEmpty()) mensaje =  "No tiene.";
+        AtributoPublicacion proteccionEntity = publicaciones.get(i).getProteccion();
+        if (proteccionEntity.getId() > 0) {
+            String valor = PublicacionAtributos.getInstancia().getProteccion(proteccionEntity).getValor();
+            if (!valor.equals("No aplica") && !valor.isEmpty())
+                infoAdicional += "Es " + valor.toLowerCase() + ". ";
+        }
 
-        ((TextView) v.findViewById(R.id.infAdicional)).setText(mensaje);
+        if (infoAdicional.isEmpty()) infoAdicional =  "No tiene.";
+
+        ((TextView) v.findViewById(R.id.infAdicional)).setText(infoAdicional);
+
     }
 
     private void cargarFotos(int i, View view) {
@@ -754,7 +780,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             Mensaje mensaje = new Mensaje();
             mensaje.setPregunta(pregunta);
             mensaje.setPublicacionId(publicaciones.get(i).getId());
-            mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
             enviarConsultaTask = new EnviarConsultaTask(mensaje, i, v);
             enviarConsultaTask.execute((Void) null);
         }

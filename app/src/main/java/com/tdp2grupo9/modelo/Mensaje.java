@@ -1,6 +1,7 @@
 package com.tdp2grupo9.modelo;
 
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -19,7 +20,6 @@ public class Mensaje {
 
     private int id;
     private int publicacionId;
-    private int usuarioPreguntaId;
     private String usuarioPreguntaNombre;
     private String pregunta;
     private String respuesta;
@@ -29,7 +29,6 @@ public class Mensaje {
     public Mensaje() {
         this.id = 0;
         this.publicacionId = 0;
-        this.usuarioPreguntaId = 0;
         this.usuarioPreguntaNombre = "";
         this.pregunta = "";
         this.respuesta = "";
@@ -61,7 +60,13 @@ public class Mensaje {
                     this.fechaPregunta = Fecha.parseStringToDateTime(reader.nextString());
                     break;
                 case "fechaRespuesta":
-                    this.fechaRespuesta = Fecha.parseStringToDateTime(reader.nextString());
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        String fecha = reader.nextString();
+                        if (!fecha.isEmpty())
+                            this.fechaRespuesta = Fecha.parseStringToDateTime(fecha);
+                    }
                     break;
                 case "publicacion":
                     reader.beginObject();
@@ -79,31 +84,28 @@ public class Mensaje {
                     reader.endObject();
                     break;
                 case "respuesta":
-                    this.respuesta = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.respuesta = reader.nextString();
                     break;
                 case "texto":
-                    this.pregunta = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.pregunta = reader.nextString();
                     break;
                 case "pregunta":
-                    this.pregunta = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.pregunta = reader.nextString();
                     break;
                 case "usuarioPregunta":
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        String nameusuario = reader.nextName();
-                        switch (nameusuario) {
-                            case "id":
-                                this.usuarioPreguntaId = reader.nextInt();
-                                break;
-                            default:
-                                reader.skipValue();
-                                break;
-                        }
-                    }
-                    reader.endObject();
-                    break;
-                case "usuarioPreguntaNombre":
-                    this.usuarioPreguntaNombre = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.usuarioPreguntaNombre = reader.nextString();
                     break;
                 default:
                     reader.skipValue();
@@ -274,10 +276,6 @@ public class Mensaje {
         return fechaRespuesta;
     }
 
-    public int getUsuarioPreguntaId() {
-        return usuarioPreguntaId;
-    }
-
     public String getUsuarioPreguntaNombre() {
         return usuarioPreguntaNombre;
     }
@@ -304,10 +302,6 @@ public class Mensaje {
 
     public void setFechaRespuesta(Date fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
-    }
-
-    public void setUsuarioPreguntaId(int usuarioPreguntaId) {
-        this.usuarioPreguntaId = usuarioPreguntaId;
     }
 
     public void setUsuarioPreguntaNombre(String usuarioPreguntaNombre) {
