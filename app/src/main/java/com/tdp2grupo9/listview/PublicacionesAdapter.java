@@ -884,9 +884,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-               /* Intent intent = new Intent(this.view.getContext(), DrawerMenuActivity.class);
-                intent.putExtra("tab", 4);
-                this.view.getContext().startActivity(intent);*/
             }
             guardarPostulacionTask = null;
         }
