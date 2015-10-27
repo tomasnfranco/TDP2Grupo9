@@ -121,11 +121,17 @@ public class MensajeAdapter extends BaseAdapter {
         return consultasView;
     }
 
+    public void updateRespuesta(int i){
+        viewContainerRespuesta.setVisibility(View.VISIBLE);
+        infRespuesta.setText(mensajes.get(i).getRespuesta());
+        fechaRespuesta.setText(parserDateText(mensajes.get(i).getFechaRespuesta()));
+    }
+
     public void clickEnviarRespuesta(int i, String resp){
         if (!resp.isEmpty()){
             System.out.println("CLICK ENVIAR RESPUESTA: " + resp.toString());
             mensajes.get(i).setRespuesta(resp);
-            enviarRespuestaTask = new EnviarRespuestaTask(mensajes.get(i));
+            enviarRespuestaTask = new EnviarRespuestaTask(mensajes.get(i), i);
             enviarRespuestaTask.execute((Void) null);
         }else {
             System.out.println("CLICK DEBE COMPLETAR RESPUESTA");
@@ -176,9 +182,11 @@ public class MensajeAdapter extends BaseAdapter {
     public class EnviarRespuestaTask extends AsyncTask<Void, Void, Boolean> {
 
         Mensaje respuesta;
+        int position;
 
-        EnviarRespuestaTask(Mensaje mensaje) {
+        EnviarRespuestaTask(Mensaje mensaje, int i) {
             respuesta = mensaje;
+            position = i;
         }
 
         @Override
@@ -195,7 +203,9 @@ public class MensajeAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-
+                viewContainer.setVisibility(View.GONE);
+                updateRespuesta(position);
+                notifyDataSetChanged();
             }
             enviarRespuestaTask = null;
         }

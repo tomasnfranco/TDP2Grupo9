@@ -214,7 +214,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isPasswordValid(String password) {
-        if (password.length() != LONGPASSWORD) {
+        if (password.length() < LONGPASSWORD) {
             passwordEditText.setError(getString(R.string.error_invalid_password_longitud) + " " + LONGPASSWORD);
             return false;
         }

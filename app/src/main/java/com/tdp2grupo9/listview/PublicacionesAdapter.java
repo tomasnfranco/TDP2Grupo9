@@ -36,6 +36,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.GalleryAdapter;
 import com.tdp2grupo9.adapter.MensajeAdapter;
 import com.tdp2grupo9.adapter.PostulacionesAdapter;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Mensaje;
@@ -96,6 +97,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ListView listViewOfrecenTransito;
     private android.support.v7.app.AlertDialog dialogIcon;
     private TextView replicaConsulta;
+    private View itemView;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -284,7 +286,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(final int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        View itemView = getInflatedViewItemIfNecessary(view, viewGroup);
+        itemView = getInflatedViewItemIfNecessary(view, viewGroup);
 
         initialiceClickable(itemView);
         activateClickable(i);
@@ -325,15 +327,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void activateClickable(final int i){
-        List<Integer> postulantesAdopciones = publicaciones.get(i).getQuierenAdoptarIds();
-        List<Integer> postulantesHogarTr = publicaciones.get(i).getOfrecenTransitoIds();
 
         if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION) &&
-                !isPostulatePublicacion(postulantesAdopciones) &&
+                !isPostulateAdopcion(i) &&
                 tipos != TiposEnum.MIS_PUBLICACIONES)
             postularmeAdopcionClickable.setVisibility(View.VISIBLE);
 
-        if (publicaciones.get(i).getNecesitaTransito() && !isPostulatePublicacion(postulantesHogarTr) &&
+        if (publicaciones.get(i).getNecesitaTransito() && !isPostulateTransito(i) &&
                 tipos != TiposEnum.MIS_PUBLICACIONES){
             postularmeTransitoClickable.setVisibility(View.VISIBLE);
         }
@@ -344,16 +344,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
 
         if (tipos == TiposEnum.MIS_POSTULACIONES){
-            if (isPostulatePublicacion(postulantesAdopciones) && isPostulatePublicacion(postulantesHogarTr)){
-                eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
-                eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
-            }else if (!isPostulatePublicacion(postulantesAdopciones) && isPostulatePublicacion(postulantesHogarTr)){
-                eliminarPostulacionAdopcionClickable.setVisibility(View.GONE);
-                eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
-            }else if (isPostulatePublicacion(postulantesAdopciones) && !isPostulatePublicacion(postulantesHogarTr)){
-                eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
-                eliminarPostulacionTransitoClickable.setVisibility(View.GONE);
-            }
+            if (isPostulateAdopcion(i))  eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
+            if (isPostulateTransito(i))  eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
         }
     }
 
@@ -411,15 +403,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         });
     }
 
-    private Boolean isPostulatePublicacion(List<Integer> postulantes){
-        Boolean postulado = false;
+    private Boolean isPostulateAdopcion(int i){
+        return publicaciones.get(i).isPostuladoAdopcion(Usuario.getInstancia().getId());
+    }
 
-        for ( Integer p: postulantes){
-            if (p == Usuario.getInstancia().getId()){
-                postulado = true;
-            }
-        }
-        return postulado;
+    private Boolean isPostulateTransito(int i){
+        return publicaciones.get(i).isPostuladoTransito(Usuario.getInstancia().getId());
     }
 
     private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacion(final TiposClickeableEnum tipo,
@@ -476,11 +465,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private void ejecutarAccionClickeable(TiposClickeableEnum tipo, final int i){
         switch(tipo) {
             case POST_ADOPCION:
-                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_ADOPCION);
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_ADOPCION, itemView);
                 guardarPostulacionTask.execute((Void) null);
                 break;
             case POST_TRANSITO:
-                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_TRANSITO);
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_TRANSITO, itemView);
                 guardarPostulacionTask.execute((Void) null);
                 break;
             case EDITAR_PUBL:
@@ -513,7 +502,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarInformacionAdicional(int i, View v){
         String condiciones = publicaciones.get(i).getCondiciones();
-        if (condiciones.isEmpty())
+        if (condiciones != null && condiciones.isEmpty())
             condiciones = "No tiene.";
         else
             ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
@@ -721,6 +710,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     }
 
+    private void updateConsultaEnviada(View v, int i){
+        consultaParaEnviar.setText("");
+        replicaConsulta.setText("");
+        mensajes = publicaciones.get(i).getMensajes();
+        listView.setVisibility(View.VISIBLE);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view,
+                                    final int position, long arg) {
+
+            }
+        });
+        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+    }
+
     private void initialiceElementosMensajes(View v){
         consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         replicaConsulta = (TextView) v.findViewById(R.id.replica_consulta);
@@ -854,11 +858,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         int id_publicacion;
         int position;
         TiposClickeableEnum tipo;
+        View view;
 
-        GuardarPostulacionTask(int position, int id_publicacion, TiposClickeableEnum tipo) {
+        GuardarPostulacionTask(int position, int id_publicacion, TiposClickeableEnum tipo, View v) {
             this.id_publicacion = id_publicacion;
             this.position = position;
             this.tipo = tipo;
+            this.view = v;
         }
 
         @Override
@@ -878,7 +884,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                //TODO ir a la pantalla correspondiente
+               /* Intent intent = new Intent(this.view.getContext(), DrawerMenuActivity.class);
+                intent.putExtra("tab", 4);
+                this.view.getContext().startActivity(intent);*/
             }
             guardarPostulacionTask = null;
         }
@@ -894,7 +902,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         Mensaje consulta;
         View v;
         int i;
-
 
         EnviarConsultaTask(Mensaje mensaje,final int position, View itemView) {
             consulta = mensaje;
@@ -917,8 +924,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 if (consulta.getId() > 0){
-                    consultaParaEnviar.setText("");
-                    replicaConsulta.setText("");
+                    updateConsultaEnviada(v, i);
                     notifyDataSetChanged();
                 }else {
                 }
@@ -966,7 +972,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
     }
 
-
     public class EliminarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
 
         int id_publicacion;
@@ -998,7 +1003,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                //TODO ir a la pantalla correspondiente
             }
             eliminarPostulacionTask = null;
         }

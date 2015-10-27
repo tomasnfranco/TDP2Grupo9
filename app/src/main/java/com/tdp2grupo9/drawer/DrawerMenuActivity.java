@@ -51,6 +51,10 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         email = getString(R.string.campo_anonimo);
         username = getString(R.string.campo_anonimo);
 
+        /*int flag = getIntent().getIntExtra("tab",-1);
+        if (flag == 4)
+            navigateToMisPostulaciones();*/
+
         if (!Usuario.getInstancia().getEmail().isEmpty())
             email = Usuario.getInstancia().getEmail();
 
@@ -225,6 +229,10 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
 
     public void navigateToMisPublicaciones() {
         setFragment(3, MisPublicacionesFragment.class);
+    }
+
+    public void navigateToMisPostulaciones() {
+        setFragment(4, MisPostulacionesFragment.class);
     }
 
     public void navigateToMisNotificaciones() {
