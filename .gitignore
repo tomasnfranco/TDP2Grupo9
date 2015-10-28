@@ -4,6 +4,8 @@
 /build
 /captures
 
+
+
 .idea/
 .idea/compiler.xml
 .idea/encodings.xml
@@ -16,6 +18,9 @@
 TDP2Grupo9.iml
 app/app.iml
 facebook/facebook.iml
+
+backend/build
+backend/backend.iml
 
 *.BACKUP.*
 *.BASE.*
