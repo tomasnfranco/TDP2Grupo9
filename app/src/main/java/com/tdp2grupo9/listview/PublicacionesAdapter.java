@@ -83,7 +83,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private EditText consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
 
-    private String sexo;
     private View postularmeAdopcionClickable;
     private View postularmeTransitoClickable;
     private View eliminarPublicacionClickable;
@@ -98,6 +97,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private android.support.v7.app.AlertDialog dialogIcon;
     private TextView replicaConsulta;
     private View itemView;
+    private String valorSexo;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -241,7 +241,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         Sexo sexoEntity = publicaciones.get(i).getSexo();
         if (sexoEntity.getId() > 0) {
-            String valorSexo = PublicacionAtributos.getInstancia().getSexo(sexoEntity).getValor();
+            valorSexo = PublicacionAtributos.getInstancia().getSexo(sexoEntity).getValor();
             if (valorEspecie.equals("Perro")) {
                 switch (valorSexo) {
                     case "Hembra":
@@ -251,7 +251,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                         publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho));
                         break;
                     default:
-                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_macho)); //TODO: icono perro gris
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_perro_desconocido));
                         break;
                 }
             } else { //es Gato
@@ -263,7 +263,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                         publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho));
                         break;
                     default:
-                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_macho)); //TODO: icono gato gris
+                        publicacionSexoMascota.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_gato_desconocido));
                         break;
                 }
 
@@ -662,7 +662,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 intent.putExtra("longitud", longitud);
                 intent.putExtra("nombre", nombreMascota);
                 intent.putExtra("especie", especieView);
-                intent.putExtra("sexo", sexo);
+                intent.putExtra("sexo", valorSexo);
                 context.startActivity(intent);
             }
         });
@@ -884,9 +884,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-               /* Intent intent = new Intent(this.view.getContext(), DrawerMenuActivity.class);
-                intent.putExtra("tab", 4);
-                this.view.getContext().startActivity(intent);*/
             }
             guardarPostulacionTask = null;
         }

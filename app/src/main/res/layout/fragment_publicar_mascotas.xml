@@ -21,7 +21,7 @@
                 layout="@layout/cardview_informacion_basica" />
             <include
                 android:id="@+id/cardview_localizacion"
-                layout="@layout/cardview_localizacion" />
+                layout="@layout/carview_localizaciones" />
             <include
                 android:id="@+id/cardview_fotos"
                 layout="@layout/cardview_fotos" />

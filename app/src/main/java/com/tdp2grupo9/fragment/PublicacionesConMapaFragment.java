@@ -8,8 +8,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -28,15 +32,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.view.clickable.GuardarLocalizacionClickable;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Tomas on 18/10/2015.
- */
-public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFragment implements GoogleMap.OnMapClickListener,
+
+public class PublicacionesConMapaFragment extends FragmentActivity implements GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,
@@ -49,8 +52,8 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
     private static final long FASTEST_INTERVAL = 1000;
 
     protected Location currentLocation;
-    protected double currentLat = Usuario.getInstancia().getLatitud();
-    protected double currentLon = Usuario.getInstancia().getLongitud();
+    protected double currentLat;
+    protected double currentLon;
     protected GoogleApiClient googleApiClient;
     protected LatLng map_center;
     protected GoogleMap map;
@@ -68,21 +71,50 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
     protected SharedPreferences prefs;
     protected SharedPreferences.Editor prefsEditor;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps_completa);
+        currentLat = getIntent().getDoubleExtra("latitud",0.0);
+        currentLon = getIntent().getDoubleExtra("longitud", 0.0);
+
+        createMap();
+        initializeGoogleApi();
+        createGuardarUbicacionButton();
+    }
+
+    private void createGuardarUbicacionButton() {
+        View guardarUbicacionClickable = findViewById(R.id.view_localizacion_click);
+
+        guardarUbicacionClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent data = new Intent();
+                data.putExtra("longitud", currentLon);
+                data.putExtra("latitud", currentLat);
+                data.putExtra("direccion", tvZona.getText().toString());
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+    }
+
     protected void createMap() {
-        mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.fragment_map_publicacion);
-        map = mMapFragment.getMap();
+        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_select))
+                .getMap();
+        tvZona = (TextView) findViewById(R.id.tv_zona_localizacion);
         if(map != null){
             currentZoom = map.getMaxZoomLevel()-zoomOffset;
             map.setOnMapClickListener(this);
 
         } else {
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(getApplicationContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
     }
 
     protected void initializeGoogleApi() {
-        googleApiClient = new GoogleApiClient.Builder(mFragmentView.getContext())
+        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -96,7 +128,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
         markerOptions = new MarkerOptions();
 
 
-        prefs = getActivity().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
         prefsEditor = prefs.edit();
     }
 
@@ -113,7 +145,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
         if (map != null) {
             initializeMap();
         } else {
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(getApplicationContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -137,7 +169,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
         boolean omitCountry = true;
         String returnString = "";
 
-        Geocoder gcoder = new Geocoder(mFragmentView.getContext());
+        Geocoder gcoder = new Geocoder(getApplicationContext());
 
         try{
             List<Address> results = null;
@@ -193,6 +225,8 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
 
     }
 
+
+
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -230,7 +264,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
                         bearing, map.getCameraPosition().tilt, true);
             }
         } else {
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error),
+            Toast.makeText(getApplicationContext(), getString(R.string.nomap_error),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -304,7 +338,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
                              String strokeColor, String fillColor){
 
         if(map == null){
-            Toast.makeText(mFragmentView.getContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.nomap_error), Toast.LENGTH_LONG).show();
             return null;
         }
 
@@ -343,7 +377,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
         }
         Log.i(TAG, "onResume: Zoom=" + currentZoom);
 
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -360,7 +394,7 @@ public abstract class PublicacionesConMapaFragment extends SeleccionAtributosFra
         }
         googleApiClient.disconnect();
 
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         super.onStop();
     }

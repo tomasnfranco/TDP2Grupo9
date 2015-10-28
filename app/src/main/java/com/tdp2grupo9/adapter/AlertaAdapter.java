@@ -166,11 +166,11 @@ public class AlertaAdapter extends BaseAdapter{
         if (alertasList.get(i).getSexo().getId() > 0)
             infoBasica += PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getSexo()).getValor() + ". ";
         if (alertasList.get(i).getEdad().getId() > 0)
-            infoBasica += PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getEdad()).getValor() + ". ";
+            infoBasica += PublicacionAtributos.getInstancia().getEdad(alertasList.get(i).getEdad()).getValor() + ". ";
         if (alertasList.get(i).getTamanio().getId() > 0)
-            infoBasica += alertaView.getContext().getString(R.string.tamanio) + " " +PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getTamanio()).getValor() + ". ";
+            infoBasica += alertaView.getContext().getString(R.string.tamanio) + " " +PublicacionAtributos.getInstancia().getTamanio(alertasList.get(i).getTamanio()).getValor() + ". ";
         if (alertasList.get(i).getColor().getId() > 0)
-            infoBasica += alertaView.getContext().getString(R.string.color)+ " " + PublicacionAtributos.getInstancia().getSexo(alertasList.get(i).getColor()).getValor() + ". ";
+            infoBasica += alertaView.getContext().getString(R.string.color)+ " " + PublicacionAtributos.getInstancia().getColor(alertasList.get(i).getColor()).getValor() + ". ";
 
         return infoBasica;
     }

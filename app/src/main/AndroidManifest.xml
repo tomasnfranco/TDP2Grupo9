@@ -49,6 +49,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".fragment.PublicacionesConMapaFragment"
+            android:label="" >
+            <intent-filter>
+                <action android:name="com.tdp2grupo9.fragment.PublicacionesConMapaFragment" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".drawer.DrawerMenuActivity"
             android:label="" >
             <intent-filter>

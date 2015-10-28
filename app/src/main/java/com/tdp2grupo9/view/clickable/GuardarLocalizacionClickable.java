@@ -7,19 +7,18 @@ import android.util.AttributeSet;
 import com.tdp2grupo9.R;
 
 /**
- * Created by Tomas on 05/10/2015.
+ * Created by emmanuelfls371 on 27/10/2015.
  */
-public class MapaClickable extends CustomClickable {
-
-    public MapaClickable(Context context) {
+public class GuardarLocalizacionClickable extends CustomClickable{
+    public GuardarLocalizacionClickable(Context context) {
         super(context);
     }
 
-    public MapaClickable(Context context, AttributeSet attrs) {
+    public GuardarLocalizacionClickable(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MapaClickable(Context context, AttributeSet attrs, int defStyleAttr) {
+    public GuardarLocalizacionClickable(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -30,7 +29,6 @@ public class MapaClickable extends CustomClickable {
 
     @Override
     public Drawable getImageDrawable() {
-        return getResources().getDrawable(R.drawable.ic_localizacion);
+        return getResources().getDrawable(R.drawable.button_localizacion);
     }
-
 }

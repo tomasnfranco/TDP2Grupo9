@@ -1,7 +1,12 @@
 package com.tdp2grupo9.fragment.adopcion;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -18,6 +24,7 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
+import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
@@ -43,17 +50,23 @@ import java.util.Set;
 /**
  * Created by Tomas on 11/10/2015.
  */
-public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
+public class BuscarMascotaFragment extends SeleccionAtributosFragment {
 
     private static final int TABBED_FRAGMENT_REQUEST_CODE = 1;
-    private Double mLatitud = Usuario.getInstancia().getLatitud();
-    private Double mLongitud = Usuario.getInstancia().getLongitud();
+    private static final int DATA_MAPA_REQUEST = 10;
+
     private Button mBuscarMascotaButton;
     private Spinner mMaximasDistanciasSpinner;
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
     private CrearAlertaTask crearAlertaTask;
     private RadioGroup radioGroupPublicaciones;
     private String tipoPublicacion = "";
+    private ImageView imagenPosicion;
+    protected double currentLat = Usuario.getInstancia().getLatitud();
+    protected double currentLon = Usuario.getInstancia().getLongitud();
+    private String direccion = Usuario.getInstancia().getDireccion();
+    private TextView localizacion_mascota;
+
 
     public static BuscarMascotaFragment newInstance(Fragment targetFragment) {
         BuscarMascotaFragment fragment = new BuscarMascotaFragment();
@@ -93,25 +106,45 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         cleanSpinner(spVacunas);
         cleanSpinner(spPapeles);
         cleanSpinner(mMaximasDistanciasSpinner);
-        mLatitud = Usuario.getInstancia().getLatitud();
-        mLongitud = Usuario.getInstancia().getLongitud();
+        currentLat = Usuario.getInstancia().getLatitud();
+        currentLon = Usuario.getInstancia().getLongitud();
+        localizacion_mascota.setText(Usuario.getInstancia().getDireccion());
     }
 
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFragmentView = inflater.inflate(R.layout.fragment_buscar_mascota, container, false);
-        createMap();
         createBuscarMascotaButton();
         createLimpiarFiltrosButton();
         createMaximaDistanciaSpinner();
         createCrearAlerta();
         createLocalizacionTextView();
         hideInnecessaryFields();
-        initializeGoogleApi();
+        //initializeGoogleApi();
         initializeSpinners();
         initializeTipoPublicaciones();
+        createMapsButton();
+
+        localizacion_mascota = (TextView) mFragmentView.findViewById(R.id.tv_direccion_mascota);
+        localizacion_mascota.setText(direccion);
+
         return mFragmentView;
+    }
+
+    private void createMapsButton() {
+
+        imagenPosicion = (ImageView) mFragmentView.findViewById(R.id.iv_localizacion_mascota);
+        imagenPosicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getBaseContext(), PublicacionesConMapaFragment.class);
+                intent.putExtra("latitud", currentLat);
+                intent.putExtra("longitud", currentLon);
+                getActivity().startActivityForResult(intent, DATA_MAPA_REQUEST);
+            }
+        });
     }
 
     private void initializeTipoPublicaciones(){
@@ -128,6 +161,18 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ((requestCode == DATA_MAPA_REQUEST) && (resultCode == Activity.RESULT_OK)){
+            currentLon = data.getDoubleExtra("longitud",0.0);
+            currentLat = data.getDoubleExtra("latitud", 0.0);
+            direccion = data.getStringExtra("direccion");
+            localizacion_mascota.setText(direccion);
+        }
     }
     
     private void createBuscarMascotaButton() {
@@ -156,8 +201,8 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
         createMaximaDistanciasMap();
         String[] distancias = createMaximaDistanciaMapKeySet();
         mMaximasDistanciasSpinner = (Spinner) mFragmentView.findViewById(R.id.maxima_distancia);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mFragmentView.getContext(), android.R.layout.simple_spinner_item, distancias);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mFragmentView.getContext(), R.layout.spinner_item, distancias);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         mMaximasDistanciasSpinner.setAdapter(adapter);
 
         mMaximasDistanciasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -201,7 +246,7 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
     }
 
     private void createLocalizacionTextView() {
-        tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
+        //tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
     }
 
 
@@ -286,8 +331,8 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
                 bundle.putInt("distancia", -1);
             else
                 bundle.putInt("distancia", distancia);
-            bundle.putDouble("latitud", mLatitud);
-            bundle.putDouble("longitud", mLongitud);
+            bundle.putDouble("latitud", currentLat);
+            bundle.putDouble("longitud", currentLon);
             ((TabbedFragment) getTargetFragment()).showBuscarMascotaResults(bundle);
       }
     }
@@ -317,8 +362,8 @@ public class BuscarMascotaFragment extends PublicacionesConMapaFragment {
             alerta.setVacunasAlDia((VacunasAlDia) spVacunas.getSelectedItem());
             alerta.setPapelesAlDia((PapelesAlDia) spPapeles.getSelectedItem());
             alerta.setDistancia(getDistanciaElegida());
-            alerta.setLatitud(mLatitud);
-            alerta.setLongitud(mLongitud);
+            alerta.setLatitud(currentLat);
+            alerta.setLongitud(currentLon);
             crearAlertaTask = new CrearAlertaTask(alerta);
             crearAlertaTask.execute((Void)null);
             }

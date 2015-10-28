@@ -3,6 +3,7 @@ package com.tdp2grupo9.fragment.adopcion;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
+import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.TipoPublicacion;
@@ -46,10 +48,12 @@ import com.tdp2grupo9.view.foto.FotoPicker;
 import java.text.DecimalFormat;
 
 
-public class PublicarAdopcionFragment extends PublicacionesConMapaFragment implements View.OnClickListener {
+public class PublicarAdopcionFragment extends SeleccionAtributosFragment implements View.OnClickListener {
 
     private static final String PHOTO_INTENT_TYPE = "image/*";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int DATA_MAPA_REQUEST = 10;
+
 
     private EditText nombreDescripcion;
     private EditText videoLink;
@@ -58,12 +62,17 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
     private TextView contacto;
     private TextView condicionesAdopcion;
     private Button btnPublicar;
+    protected double currentLat = Usuario.getInstancia().getLatitud();
+    protected double currentLon = Usuario.getInstancia().getLongitud();
+    private String direccion = Usuario.getInstancia().getDireccion();
 
     private FotoPicker mFotoPicker;
 
     private PublicarAdopcionTask publicarAdopcionTask;
     private RadioGroup radioGroupPublicaciones;
     private String tipoPublicacion = "";
+    private TextView localizacion_mascota;
+    private ImageView imagenPosicion;
 
     public static PublicarAdopcionFragment newInstance() {
         PublicarAdopcionFragment publicarAdopcion = new PublicarAdopcionFragment();
@@ -74,19 +83,17 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFragmentView = inflater.inflate(R.layout.fragment_publicar_mascotas, container, false);
-        createMap();
         inicializarWidgets();
         hideInnecessaryFields();
-        initializeGoogleApi();
         initializeSpinners();
-
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        createMapsButton();
+        //getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         return mFragmentView;
     }
 
     private void hideInnecessaryFields() {
-        mFragmentView.findViewById(R.id.maxima_distancia).setVisibility(View.GONE);
+        mFragmentView.findViewById(R.id.panel_maxima_distancia).setVisibility(View.GONE);
     }
 
     @Override
@@ -120,6 +127,9 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         cleanSpinner(spCastrado);
         cleanSpinner(spProteccion);
         cleanSpinner(spEnergia);
+        currentLat = Usuario.getInstancia().getLatitud();
+        currentLon = Usuario.getInstancia().getLongitud();
+        localizacion_mascota.setText(Usuario.getInstancia().getDireccion());
     }
 
     private void inicializarWidgets(){
@@ -131,7 +141,10 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         condicionesAdopcion = (EditText) mFragmentView.findViewById(R.id.condiciones_edit_text);
         btnPublicar = (Button) mFragmentView.findViewById(R.id.btn_publicar_adopcion);
         btnPublicar.setOnClickListener(this);
-        tvZona = (TextView) mFragmentView.findViewById(R.id.tv_zona);
+
+        localizacion_mascota = (TextView) mFragmentView.findViewById(R.id.tv_direccion_mascota);
+        localizacion_mascota.setText(Usuario.getInstancia().getDireccion());
+
         mFotoPicker = (FotoPicker) mFragmentView.findViewById(R.id.foto_picker);
         mFotoPicker.setFragment(this);
         radioGroupPublicaciones = (RadioGroup) mFragmentView.findViewById(R.id.radio_group_tipo_publicacion);
@@ -186,7 +199,7 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
 
                 publicacion.setLatitud(currentLat);
                 publicacion.setLongitud(currentLon);
-                publicacion.setDireccion(tvZona.getText().toString());
+                publicacion.setDireccion(direccion);
 
                 publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
                 publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
@@ -263,6 +276,12 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        if ((requestCode == DATA_MAPA_REQUEST) && (resultCode == Activity.RESULT_OK)){
+            currentLon = data.getDoubleExtra("longitud",0.0);
+            currentLat = data.getDoubleExtra("latitud", 0.0);
+            direccion = data.getStringExtra("direccion");
+            localizacion_mascota.setText(direccion);
         }
     }
 
@@ -347,6 +366,22 @@ public class PublicarAdopcionFragment extends PublicacionesConMapaFragment imple
         return df.format(number);
 
     }
+
+
+    private void createMapsButton() {
+
+        imagenPosicion = (ImageView) mFragmentView.findViewById(R.id.iv_localizacion_mascota);
+        imagenPosicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getBaseContext(), PublicacionesConMapaFragment.class);
+                intent.putExtra("latitud", currentLat);
+                intent.putExtra("longitud", currentLon);
+                getActivity().startActivityForResult(intent, DATA_MAPA_REQUEST);
+            }
+        });
+    }
+
 
 
 }
