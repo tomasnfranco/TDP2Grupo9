@@ -11,12 +11,21 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@style/AppTheme" >
@@ -26,6 +35,7 @@
             android:label="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,6 +44,7 @@
             android:label="" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.listview.ResultadosBusquedaActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -42,6 +53,7 @@
             android:label="" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.drawerNavigationMenu.DrawerMenuActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -50,6 +62,7 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.login.LoginActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -58,15 +71,16 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.login.LogoutActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".login.RegisterActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.tdp2grupo9.login.RegisterActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -88,6 +102,18 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <receiver
+            android:name="com.tdp2grupo9.gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.tdp2grupo9" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.tdp2grupo9.gcm.GcmIntentService" />
 
         <activity
             android:name=".maps.MapsActivity"
