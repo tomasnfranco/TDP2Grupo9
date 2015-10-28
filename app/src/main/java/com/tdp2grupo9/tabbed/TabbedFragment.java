@@ -40,8 +40,6 @@ public class TabbedFragment extends Fragment {
 
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(1);
-        this.context = v.getContext();
         tabbedFragment = this;
         return v;
     }
@@ -60,29 +58,27 @@ public class TabbedFragment extends Fragment {
             fragment.setArguments(args);
 
             switch (position) {
-                case 0: return PublicarAdopcionFragment.newInstance();
-                case 1: return  UltimasPublicacionesFragment.newInstance();
-                case 2: return new Fragment();
+                case 0: return  UltimasPublicacionesFragment.newInstance();
+                case 1: return PublicarAdopcionFragment.newInstance();
+                case 2: return BuscarMascotaFragment.newInstance(tabbedFragment);
                 case 3: return ResultadosBusquedaFragment.newInstance();
-                case 4: return BuscarMascotaFragment.newInstance(tabbedFragment);
                 default: return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0: return context.getResources().getString(R.string.publicaciones);
-                case 1: return context.getResources().getString(R.string.ultimas_publicaciones);
-                case 2: return context.getResources().getString(R.string.publicar_busqueda);
-                case 3: return context.getResources().getString(R.string.resultados_busqueda);
-                case 4: return context.getResources().getString(R.string.buscar_mascota);
+                case 0: return getResources().getString(R.string.ultimas_publicaciones);
+                case 1: return getResources().getString(R.string.publicaciones);
+                case 2: return getResources().getString(R.string.buscar_mascota);
+                case 3: return getResources().getString(R.string.resultados_busqueda);
             }
             return "";
         }
@@ -105,18 +101,6 @@ public class TabbedFragment extends Fragment {
             dummyTextView.setText(Integer.toString(getArguments().getInt(
                     ARG_SECTION_NUMBER)));
             return rootView;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        List<Fragment> childFragments = getChildFragmentManager().getFragments();
-        if (childFragments != null) {
-            for (Fragment fragment : childFragments) {
-                if (fragment != null)
-                    fragment.onActivityResult(requestCode, resultCode, data);
-            }
         }
     }
 
