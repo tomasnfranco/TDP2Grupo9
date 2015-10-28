@@ -102,6 +102,8 @@
     <string name="consulta1">¿Come cualquier alimento?</string>
     <string name="consulta3">¿Le gustan los niños?</string>
     <string name="escriba_su_consulta">Escriba su consulta</string>
+    <string name="guardar">Guardar</string>
+
 
 
 </resources>
