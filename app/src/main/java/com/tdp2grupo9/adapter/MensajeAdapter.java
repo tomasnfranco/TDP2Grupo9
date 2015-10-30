@@ -160,8 +160,25 @@ public class MensajeAdapter extends BaseAdapter {
         int dia = fecha.getDate();
         int mes = fecha.getMonth() + 1;
         int anio = fecha.getYear() + 1900;
+        long hora = fecha.getHours();
+        long minutos = fecha.getMinutes();
+        long segundos = fecha.getSeconds();
+        String min_string;
+        String sec_string;
 
-        String date = dia + "/" + mes + "/" + anio;
+        if (String.valueOf(minutos).length() == 1){
+            min_string = "0"+String.valueOf(minutos);
+        }else {
+            min_string = String.valueOf(minutos);
+        }
+
+        if (String.valueOf(segundos).length() == 1){
+            sec_string = "0"+String.valueOf(segundos);
+        }else {
+            sec_string = String.valueOf(segundos);
+        }
+
+        String date = dia + "/" + mes + "/" + anio + " - "  +hora+":"+min_string+":"+sec_string;
 
         return date;
     }

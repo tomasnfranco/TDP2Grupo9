@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -147,25 +150,82 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    private boolean cargarIconoSiEsNecesario(Publicacion publicacion, View view, boolean necesario, Drawable drawable, int loadedIcons) {
+    private boolean cargarIconoSiEsNecesario(Publicacion publicacion, View view, boolean necesario, Drawable drawable, int loadedIcons, final String tooltip) {
         if (necesario) {
-            getNextIconView(view, loadedIcons).setImageDrawable(drawable);
+            final ImageView image =  getNextIconView(view, loadedIcons);
+            image.setImageDrawable(drawable);
+
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displayToastAboveButton(image, tooltip);
+                }
+            });
         }
         return necesario;
     }
 
+    private void displayToastAboveButton(View v, String tooltip)
+    {
+        int xOffset = 0;
+        int yOffset = 0;
+        Rect gvr = new Rect();
+
+        View parent = (View) v.getParent();
+        int parentHeight = parent.getHeight();
+
+        if (v.getGlobalVisibleRect(gvr))
+        {
+            View root = v.getRootView();
+
+            int halfWidth = root.getRight() / 2;
+            int halfHeight = root.getBottom() / 2;
+
+            int parentCenterX = ((gvr.right - gvr.left) / 2) + gvr.left;
+
+            int parentCenterY = ((gvr.bottom - gvr.top) / 2) + gvr.top;
+
+            if (parentCenterY <= halfHeight)
+            {
+                yOffset = -(halfHeight - parentCenterY) - parentHeight;
+            }
+            else
+            {
+                yOffset = (parentCenterY - halfHeight) - parentHeight;
+            }
+
+            if (parentCenterX < halfWidth)
+            {
+                xOffset = -(halfWidth - parentCenterX);
+            }
+
+            if (parentCenterX >= halfWidth)
+            {
+                xOffset = parentCenterX - halfWidth;
+            }
+        }
+
+        Toast toast = Toast.makeText(context, tooltip, Toast.LENGTH_SHORT);
+        System.out.println("X: " + xOffset  + " " + "Y: "  + yOffset);
+        toast.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL, xOffset - 80, yOffset + 200);
+        toast.show();
+    }
+
     private boolean cargarIconoHogarTransito(Publicacion publicacion, View view, int loadedIcons) {
-        return cargarIconoSiEsNecesario(publicacion, view, publicacion.getNecesitaTransito(), view.getResources().getDrawable(R.drawable.home_transit), loadedIcons);
+        return cargarIconoSiEsNecesario(publicacion, view, publicacion.getNecesitaTransito(), view.getResources().getDrawable(R.drawable.home_transit), loadedIcons,
+                context.getResources().getString(R.string.hogar_transito));
     }
 
     private boolean cargarIconoCuidadosEspeciales(Publicacion publicacion, View view, int loadedIcons) {
-        return cargarIconoSiEsNecesario(publicacion, view, publicacion.getRequiereCuidadosEspeciales(), view.getResources().getDrawable(R.drawable.cuidados_especiales), loadedIcons);
+        return cargarIconoSiEsNecesario(publicacion, view, publicacion.getRequiereCuidadosEspeciales(), view.getResources().getDrawable(R.drawable.cuidados_especiales), loadedIcons,
+                context.getResources().getString(R.string.cuidados_especiales));
     }
-
 
     private boolean cargarIconoCondicionesAdopcion(Publicacion publicacion, View view, int loadedIcons) {
-        return cargarIconoSiEsNecesario(publicacion, view, !publicacion.getCondiciones().isEmpty(), view.getResources().getDrawable(R.drawable.ic_condiciones), loadedIcons);
+        return cargarIconoSiEsNecesario(publicacion, view, !publicacion.getCondiciones().isEmpty(), view.getResources().getDrawable(R.drawable.ic_condiciones), loadedIcons,
+                context.getResources().getString(R.string.condiciones_adopcion));
     }
+
 
     private String parserDateText(Date fecha){
         int dia = fecha.getDate();
@@ -274,6 +334,15 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         ((ImageView) publicacionView.findViewById(R.id.ivLocalizacion)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_localizacion));
         if (publicaciones.get(i).getImagenes().size() > 0)
             ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(publicaciones.get(i).getImagenes().get(0).getBitmap());
+        else {
+            if (valorEspecie.equals("Gato")){
+                ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.sin_foto_gato));
+            }else {
+                ((ImageView) publicacionView.findViewById(R.id.publicacion_image)).setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.sin_foto_perro));
+            }
+        }
+
+
         ((TextView) publicacionView.findViewById(R.id.tv_fecha_publicacion)).setText(parserDateText(publicaciones.get(i).getFechaPublicacion()));
         String distancia = publicaciones.get(i).getDistancia().toString() + "km";
         ((TextView) publicacionView.findViewById(R.id.tvLocalizacion)).setText(distancia);
@@ -415,11 +484,30 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                                                                                       final int position){
         final android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(context);
-        String mensaje = getMensajeDeConfirmacion(tipo);
 
-        builder.setMessage(mensaje)
-                .setTitle(context.getString(R.string.title_dialog_confirmacion))
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        String title = "\n ";
+        title += getMensajeDeConfirmacion(tipo);
+
+        TextView myMsg = new TextView(context);
+        TextView myTitle = new TextView(context);
+
+        if (tipo == TiposClickeableEnum.POST_ADOPCION || tipo == TiposClickeableEnum.POST_TRANSITO ){
+            String mensaje = "\n";
+            mensaje += context.getString(R.string.se_enviara_notificacion);
+            myMsg.setText(mensaje);
+            myMsg.setTextSize(14);
+            myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+
+        myTitle.setText(title);
+        myTitle.setTextSize(18);
+        myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        builder.setView(myMsg);
+        builder.setCustomTitle(myTitle);
+
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
                         ejecutarAccionClickeable(tipo, position);

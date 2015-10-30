@@ -59,8 +59,8 @@ public class SplashScreenActivity extends Activity {
 
 
         Log.d("MAINACT", "INICIANDO GCM TASK.....................");
-        GcmRegistrationAsyncTask gcmtask = new GcmRegistrationAsyncTask(this);
-        gcmtask.execute((Void) null);
+        // gcmtask = new GcmRegistrationAsyncTask(this);
+        //gcmtask.execute((Void) null);
 
     }
 

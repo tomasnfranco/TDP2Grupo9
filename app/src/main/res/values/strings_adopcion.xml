@@ -42,6 +42,11 @@
     <string name="postularme_adopcion">Postularme a Adoptar</string>
     <string name="postularme_hogar">Postularme a Tránsito</string>
 
+    <string name="cuidados_especiales">Cuidados especiales</string>
+    <string name="condiciones_adopcion">Condiciones de adopción</string>
+    <string name="hogar_transito">Hogar de tránsito</string>
+
+
     <string name="publicacion_guardada">Publicación guardada</string>
     <string name="energia">Energía</string>
     <string name="vacunas_al_dia">Vacunas al día</string>
@@ -90,8 +95,9 @@
     <string name="title_dialog_confirmacion">Confirmación</string>
     <string name="confirmacion_adopcion">¿Confirma la adopción?</string>
     <string name="confirmacion_transito">¿Confirma el tránsito?</string>
-    <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar?</string>
+    <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar? </string>
     <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
+    <string name="se_enviara_notificacion">Se enviará una notificación al publicante para informar de tu postulación</string>
     <string name="confirmacion_eliminar">¿Confirma que desea eliminar la publicación?</string>
     <string name="confirmacion_editar">¿Confirma que desea editar la publicación?</string>
     <string name="confirmacion_eliminar_post_adopcion">¿Confirma que desea cancelar la postulación de adopción?</string>
@@ -103,6 +109,7 @@
     <string name="consulta3">¿Le gustan los niños?</string>
     <string name="escriba_su_consulta">Escriba su consulta</string>
     <string name="guardar">Guardar</string>
+
 
 
 

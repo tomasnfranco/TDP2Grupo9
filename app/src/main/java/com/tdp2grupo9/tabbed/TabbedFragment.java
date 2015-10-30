@@ -104,6 +104,18 @@ public class TabbedFragment extends Fragment {
         }
     }
 
+    @Override
+         public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                 super.onActivityResult(requestCode, resultCode, data);
+                 List<Fragment> childFragments = getChildFragmentManager().getFragments();
+                 if (childFragments != null) {
+                         for (Fragment fragment : childFragments) {
+                                 if (fragment != null)
+                                         fragment.onActivityResult(requestCode, resultCode, data);
+                             }
+                     }
+    }
+
     public void showBuscarMascotaResults(Bundle bundle) {
         List<Fragment> childFragments = getChildFragmentManager().getFragments();
         if (childFragments != null) {

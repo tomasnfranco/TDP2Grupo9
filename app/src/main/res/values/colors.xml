@@ -15,6 +15,8 @@
     <color name="gray_transparent">#A6212121</color>
     <color name="black_transparent">#D9000000</color>
     <color name="white_transparent">#80FFFFFF</color>
+    <color name="silver">#009966</color>
+
 
     <integer-array name="androidcolors">
         <item>@color/white</item>
