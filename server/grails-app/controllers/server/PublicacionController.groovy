@@ -197,6 +197,10 @@ class PublicacionController extends RestfulController<Publicacion>  {
         render status: publicacionService.concretarAdopcion(params)
     }
 
+    def misTransitos(){
+        render publicacionService.misTransitos(params) as JSON
+    }
+
     def ofrezcoTransito(){
         render status: publicacionService.ofrezcoTransito(params)
     }
@@ -212,7 +216,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def mensajes(){
         Publicacion publicacion = Publicacion.get(params.publicacion)
-        render publicacion.preguntas as JSON
+        render publicacion.preguntas.sort{fechaPregunta} as JSON
         /*.collect{[id:it.id,
                                             fechaPregunta:it.fechaPregunta,
                                             pregunta:it.texto,
