@@ -9,8 +9,8 @@ class NotificacionesService {
     def pie = "<br/><br/>"
     def logoApp = "<br/><img width='114px' height='114px' src='https://raw.githubusercontent.com/tomasnfranco/TDP2Grupo9/master/app/src/main/res/drawable/logo_aplicacion.png'/>"
 
-    def nuevaPostulacion(def postulante, def mascota, Usuario publicador){
-        if(publicador.email && !publicador.email.empty) {
+    def nuevaPostulacion(def postulante, def mascota, Usuario publicador) {
+        if (publicador.email && !publicador.email.empty) {
             mailService.sendMail {
                 async true
                 to "${publicador.email}"
@@ -22,7 +22,13 @@ class NotificacionesService {
         } else {
             println "No se envio mail por postulación al usuario que habia publicado ${publicador.username} debido que no tiene el mail registrado en el sistema."
         }
-        androidGcmService.sendInstantMessage([],'')
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "$postulante se postuló para adoptar a $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def concretarAdopcionElegido(Usuario postulante, def mascota, Usuario publicador){
@@ -41,6 +47,13 @@ class NotificacionesService {
             println "E-mail enviado al usuario ${postulante.username} al mail ${postulante.email} porque ${publicador.username} concreto por $mascota"
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 
@@ -96,6 +109,14 @@ class NotificacionesService {
         } else {
             println "No se envio mail por cancelación de adopcion al usuario que se habia postulado ${postulante.username} debido que no tiene el mail registrado en el sistema."
         }
+
+        if (postulante.gcmId != null && postulante.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota"], [postulante.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def nuevaPregunta(Mensaje mensaje, def mascota, Usuario publicador){
@@ -113,6 +134,13 @@ class NotificacionesService {
             println "E-mail enviado al usuario ${publicador.username} al mail ${publicador.email} porque ${mensaje.usuarioPregunta.username} pregunto por $mascota"
         } else {
             println "No se envio mail por pregunta al publicador ${publicador.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${mensaje.usuarioPregunta.username} ha preguntado por $mascota: ${mensaje.texto}"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 
@@ -133,6 +161,13 @@ class NotificacionesService {
         } else {
             println "No se envio mail por pregunta al publicador ${mensaje.usuarioPregunta.username} debido que no tiene el mail registrado en el sistema."
         }
+        if (mensaje.usuarioPregunta.gcmId != null && mensaje.usuarioPregunta.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicador.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}"], [mensaje.usuarioPregunta.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def alertaPublicacionCumple(def mascota, Usuario usuario){
@@ -142,12 +177,19 @@ class NotificacionesService {
                 to "${usuario.email}"
                 subject "[BUSCA SUS HUELLAS]: Han Publicado una mascota que cumple tus requisitos"
                 html "<html><body>Hola ${usuario.username},<br/>" +
-                        "Recientemente publicaron a  <b><em>$mascota</em></b> que cumple tus requisitos de búsqueda." +
+                        "Recientemente publicaron a <b><em>$mascota</em></b> que cumple tus requisitos de búsqueda." +
                         "<br/><br/>Entra a BUSCA SUS HUELLAS y en la sección Mis Alertas podes ver la publicación ${logoApp}</body></html>"
             }
             println "E-mail enviado al usuario ${usuario.username} al mail ${usuario.email} por alerta , mascota: $mascota"
         } else {
             println "No se envio mail por adopción exitosa al publicador ${usuario.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (usuario.gcmId != null && usuario.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda"], [usuario.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 
@@ -164,7 +206,13 @@ class NotificacionesService {
         } else {
             println "No se envio mail por postulación al usuario que habia publicado ${publicador.username} debido que no tiene el mail registrado en el sistema."
         }
-        androidGcmService.sendInstantMessage([],'')
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "$postulante se ofreció para dar un hogar de tránsito a $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def concretarTransitoElegido(Usuario postulante, def mascota, Usuario publicador){
@@ -183,6 +231,13 @@ class NotificacionesService {
             println "E-mail enviado al usuario ${postulante.username} al mail ${postulante.email} porque ${publicador.username} concreto por $mascota"
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para darle hogar de tránsito a $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 
@@ -237,7 +292,13 @@ class NotificacionesService {
         } else {
             println "No se envio mail por postulación al usuario que habia publicado ${publicador.username} debido que no tiene el mail registrado en el sistema."
         }
-        androidGcmService.sendInstantMessage([],'')
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "$postulante cree tener a $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def concretarPerdidaElegido(Usuario postulante, def mascota, Usuario publicador){
@@ -246,7 +307,7 @@ class NotificacionesService {
                 async true
                 to "${postulante.email}"
                 subject "[BUSCA SUS HUELLAS]: Gracias por ayudar a encontrar a $mascota!"
-                html "<html><body>Hola ${postulante.username},<br/> <b>${publicador.username}</b> ha seleccionado que tenes a  <b><em>$mascota</em></b> " +
+                html "<html><body>Hola ${postulante.username},<br/> <b>${publicador.username}</b> ha seleccionado que tenes a <b><em>$mascota</em></b> " +
                         "<br/>Estos son los datos de ${publicador.username} para que lo contactes y puedan coordinar:<br/>" +
                         "Email: ${publicador.email}<br/>" +
                         "Teléfono: ${publicador.telefono}<br/>" +
@@ -256,6 +317,13 @@ class NotificacionesService {
             println "E-mail enviado al usuario ${postulante.username} al mail ${postulante.email} porque ${publicador.username} concreto por $mascota"
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que tenes a $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 
@@ -293,7 +361,13 @@ class NotificacionesService {
         } else {
             println "No se envio mail por postulación al usuario que habia publicado ${publicador.username} debido que no tiene el mail registrado en el sistema."
         }
-        androidGcmService.sendInstantMessage([],'')
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "$postulante dice ser el dueño de $mascota"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
+        }
     }
 
     def concretarEncontradaElegido(Usuario postulante, def mascota, Usuario publicador){
@@ -312,6 +386,13 @@ class NotificacionesService {
             println "E-mail enviado al usuario ${postulante.username} al mail ${postulante.email} porque ${publicador.username} concreto por $mascota"
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
+        }
+        if (publicador.gcmId != null && publicador.gcmId != '') {
+            try {
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que $mascota te pertenece"], [publicador.gcmId])
+            } catch (Exception e) {
+                println "No se pudo mandar la push $e"
+            }
         }
     }
 

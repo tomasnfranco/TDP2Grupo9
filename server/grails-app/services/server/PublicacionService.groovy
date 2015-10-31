@@ -8,7 +8,6 @@ class PublicacionService {
     final static def DISTANCIA_MAXIMA = 500
     def notificacionesService
 
-    //TODO: Cambiar distancia maxima por parametro configurable por el administrador del sistema
     def buscar(def params, def usuario) {
 		println params
 		println params.raza
@@ -178,7 +177,7 @@ class PublicacionService {
             }
             publicacion.addToOfrecenTransito(user)
             publicacion.save(flush:true)
-            //TODO: Notificacion de Transito
+            notificacionesService.nuevoOfrecimientoTransito(user,publicacion.nombreMascota,publicacion.publicador)
             return OK
         }
         return NOT_FOUND
@@ -225,7 +224,13 @@ class PublicacionService {
             }
             publicacion.transito = ofrecioTransito
             publicacion.save(flush:true)
-            //TODO: Ver Notificaciones
+            notificacionesService.concretarTransitoElegido(ofrecioTransito,publicacion.nombreMascota,publicacion.publicador)
+            notificacionesService.concretarTransitoPublicador(ofrecioTransito,publicacion.nombreMascota,publicacion.publicador)
+            publicacion.ofrecenTransito.each {
+                if (it.id != ofrecioTransito.id) {
+                    notificacionesService.concretarTransitoNoElegido(it, publicacion.nombreMascota, publicacion.publicador)
+                }
+            }
             println "salio todo OK"
             return OK
         }
