@@ -29,7 +29,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Publicacion {
 
@@ -738,6 +740,12 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public static List<Publicacion> obtenerTodasLasPostulacionesDeUsuario(String token, Integer offset, Integer max) {
+        List<Publicacion> adopcionesReclamos = Publicacion.obtenerPostulacionesDeUsuario(token, offset, max);
+        List<Publicacion> transitos = Publicacion.obtenerTransitosDeUsuario(token, offset, max);
+        return new ArrayList<Publicacion>(new HashSet<Publicacion>(adopcionesReclamos));
+    }
+
     public static List<Publicacion> obtenerPostulacionesDeUsuario(String token, Integer offset, Integer max) {
         String METHOD = "obtenerPostulacionesDeUsuario";
         List<Publicacion> publicaciones = new ArrayList<>();
@@ -1367,5 +1375,14 @@ public class Publicacion {
         this.longitudTransito = longitudTransito;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return Objects.equals(this.id, ((Publicacion) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
 
 }
