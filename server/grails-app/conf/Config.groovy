@@ -132,3 +132,5 @@ grails {
     }
 }
 grails.mail.default.from="grupo9tdp2@gmail.com"
+
+android.gcm.api.key="AIzaSyC31gKNXGxVyANrqDxzEVEs27Guwdc_E3M"

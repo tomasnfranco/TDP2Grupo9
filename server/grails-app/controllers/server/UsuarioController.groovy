@@ -164,6 +164,18 @@ class UsuarioController {
         render status:OK
     }
 
+    def registrarGCM(){
+        if(params.gcmToken != null && params.gcmToken != ''){
+            Usuario usuario = params.usuario
+            usuario.gcmId = params.gcmToken
+            usuario.save(flush:true)
+            render status: OK
+        } else {
+            render status: BAD_REQUEST
+        }
+
+    }
+
     protected void notFound() {
         request.withFormat {
             html {
