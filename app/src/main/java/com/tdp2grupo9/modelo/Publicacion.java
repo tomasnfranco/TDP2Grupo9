@@ -775,6 +775,43 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public static List<Publicacion> obtenerTransitosDeUsuario(String token, Integer offset, Integer max) {
+        String METHOD = "obtenerTransitosDeUsuario";
+        List<Publicacion> publicaciones = new ArrayList<>();
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = "?token="+token;
+            //"&offset="+offset+"max="+max
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            urlConnection = Connection.getHttpUrlConnection("publicacion/misTransitos"+atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
+                Log.d(LOG_TAG, METHOD + " misTransitos obtenidos " + publicaciones.size());
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicaciones;
+    }
+
     public static void ofrezcoTransito(String token, Integer publicacionId) {
         String METHOD = "ofrezcoTransito";
         HttpURLConnection urlConnection = null;
@@ -1329,4 +1366,6 @@ public class Publicacion {
     public void setLongitudTransito(Double longitudTransito) {
         this.longitudTransito = longitudTransito;
     }
+
+
 }

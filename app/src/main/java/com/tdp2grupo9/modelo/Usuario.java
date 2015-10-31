@@ -296,6 +296,10 @@ public class Usuario {
         return Publicacion.obtenerPostulacionesDeUsuario(this.token, offset, max);
     }
 
+    public List<Publicacion> obtenerMisTransitos(Integer offset, Integer max) {
+        return Publicacion.obtenerTransitosDeUsuario(this.token, offset, max);
+    }
+
     public List<Alerta> obtenerMisAlertas(Integer offset, Integer max) {
         return Alerta.obtenerAlertasDeUsuario(this.token, offset, max);
     }
