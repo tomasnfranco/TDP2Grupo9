@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:background="@drawable/button_drawable"
-                android:text="@string/publicar_adopcion"
+                android:text="@string/guardar_publicacion"
                 android:textColor="@color/white"/>
         </LinearLayout>
 

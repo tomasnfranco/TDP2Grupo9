@@ -742,7 +742,7 @@ public class Publicacion {
 
     public static List<Publicacion> obtenerTodasLasPostulacionesDeUsuario(String token, Integer offset, Integer max) {
         List<Publicacion> adopcionesReclamos = Publicacion.obtenerPostulacionesDeUsuario(token, offset, max);
-        List<Publicacion> transitos = Publicacion.obtenerTransitosDeUsuario(token, offset, max);
+        adopcionesReclamos.addAll(Publicacion.obtenerTransitosDeUsuario(token, offset, max));
         return new ArrayList<Publicacion>(new HashSet<Publicacion>(adopcionesReclamos));
     }
 

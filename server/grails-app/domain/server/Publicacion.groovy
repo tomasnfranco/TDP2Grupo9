@@ -60,8 +60,8 @@ class Publicacion {
 			publicadorNombre {value,json -> json.value(value.publicador?.username ?: '')}
 			publicadorId {value,json -> json.value(value.publicador?.id ?: '')}
 			direccionTransito {value,json -> json.value(value.transito?.direccion ?: '')}
-			longitudTransito {value,json -> json.value(value.transito?.longitud?: '')}
-			latitudTransito {value,json -> json.value(value.transito?.latitud ?: '')}
+			longitudTransito {value,json -> json.value(value.transito?.longitud?: null)}
+			latitudTransito {value,json -> json.value(value.transito?.latitud ?: null)}
 			transitoNombre {value,json -> json.value(value.transito?.username ?: '')}
 			transitoId {value,json -> json.value(value.transito?.id ?: '')}
 			concretadoNombre {value,json -> json.value(value.concretado?.username ?: '')}
