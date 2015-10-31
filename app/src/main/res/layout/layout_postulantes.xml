@@ -27,13 +27,22 @@
             android:textSize="16dp" />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/btnConcretar"
             android:layout_alignTop="@+id/tv_username_postulante"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp" />
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/btnSendMail"
+            android:layout_alignTop="@+id/btnConcretar"
+            android:layout_toLeftOf="@+id/btnConcretar"
+            android:layout_toStartOf="@+id/btnConcretar"
+            android:layout_marginRight="10dp" />
     </RelativeLayout>
 </LinearLayout>
