@@ -17,7 +17,7 @@ import java.util.List;
 public class Usuario {
 
 
-    private static final String LOG_TAG = "BSH.Publicacion";
+    private static final String TAG = "BSH.Publicacion";
 
     private static final Usuario INSTANCIA = new Usuario();
 
@@ -133,7 +133,7 @@ public class Usuario {
     public void registrarse(){
         String METHOD = "registrarse";
 
-        Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
+        Log.d(TAG, METHOD + " facebookId " + this.facebookId);
 
         HttpURLConnection urlConnection = null;
         try {
@@ -168,19 +168,19 @@ public class Usuario {
             out.write(params.toString());
             out.close();
 
-            Log.d(LOG_TAG, METHOD + " url= " + params.toString());
+            Log.d(TAG, METHOD + " url= " + params.toString());
 
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_CREATED) {
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
-                Log.d(LOG_TAG, METHOD + " usuario registrado y logueado correctamente.");
+                Log.d(TAG, METHOD + " usuario registrado y logueado correctamente.");
             } else {
                 this.logueado = false;
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no registrado. " + urlConnection.getResponseMessage());
+                Log.w(TAG, METHOD + " respuesta no esperada. Usuario no registrado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+            Log.e(TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -190,8 +190,8 @@ public class Usuario {
     public void login(){
         String METHOD = "login";
 
-        Log.d(LOG_TAG, METHOD + " facebookId " + this.facebookId);
-        Log.d(LOG_TAG, METHOD + " email " + this.email + " password " + this.password);
+        Log.d(TAG, METHOD + " facebookId " + this.facebookId);
+        Log.d(TAG, METHOD + " email " + this.email + " password " + this.password);
 
         HttpURLConnection urlConnection = null;
         try {
@@ -220,13 +220,13 @@ public class Usuario {
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 this.logueado = true;
-                Log.d(LOG_TAG, METHOD + " usuario logueado correctamente.");
+                Log.d(TAG, METHOD + " usuario logueado correctamente.");
             } else {
                 this.logueado = false;
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
+                Log.w(TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException | JSONException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+            Log.e(TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -236,7 +236,7 @@ public class Usuario {
     public void logout(){
         String METHOD = "logout";
 
-        Log.d(LOG_TAG, METHOD + " token " + this.token);
+        Log.d(TAG, METHOD + " token " + this.token);
 
         HttpURLConnection urlConnection = null;
         try {
@@ -252,16 +252,44 @@ public class Usuario {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 this.resetearAtributos();
-                Log.d(LOG_TAG, METHOD + " usuario deslogueado correctamente.");
+                Log.d(TAG, METHOD + " usuario deslogueado correctamente.");
             } else {
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada. Usuario no deslogueado. " + urlConnection.getResponseMessage());
+                Log.w(TAG, METHOD + " respuesta no esperada. Usuario no deslogueado. " + urlConnection.getResponseMessage());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+            Log.e(TAG, METHOD + " ERROR ", e);
         }  finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+    }
+
+    public void registrarGCM(String gcmToken) {
+        String METHOD = "registrarGCM";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("usuario/registrarGCM");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token=" + this.token +"&gcmToken=" + gcmToken;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                Log.d(TAG, METHOD + " token GCM enviado al servidor para recibir mensajes ");
+            } else {
+                Log.w(TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(TAG, METHOD + " finalizado.");
     }
 
     public void quieroAdoptar(int publicacionId) {

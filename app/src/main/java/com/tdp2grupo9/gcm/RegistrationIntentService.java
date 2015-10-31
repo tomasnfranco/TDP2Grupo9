@@ -27,6 +27,7 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.modelo.Usuario;
 
 import java.io.IOException;
 
@@ -88,6 +89,7 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        Usuario.getInstancia().registrarGCM(token);
     }
 
     /**

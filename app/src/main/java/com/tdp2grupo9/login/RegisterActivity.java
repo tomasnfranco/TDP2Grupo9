@@ -46,14 +46,13 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class RegisterActivity extends Activity implements View.OnClickListener, GoogleMap.OnMapClickListener,
+public class RegisterActivity extends InitialActivity implements View.OnClickListener, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,
         com.google.android.gms.location.LocationListener,
         GoogleMap.OnInfoWindowClickListener {
 
-    private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserRegisterTask userRegisterTask = null;
     private Button btnRegistrarse;
     private EditText etTelefono;
@@ -519,8 +518,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
             userRegisterTask = null;
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    obtenerAtributosTask = new ObtenerAtributosTask(this.context);
-                    obtenerAtributosTask.execute((Void) null);
+                    iniciar();
                 } else {
                     //supongo que el error es ese :P
                     Toast.makeText(this.context,
@@ -540,52 +538,4 @@ public class RegisterActivity extends Activity implements View.OnClickListener, 
         }
     }
 
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final Context context;
-
-        public ObtenerAtributosTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                if (!PublicacionAtributos.getInstancia().isLoaded()) {
-                    PublicacionAtributos.getInstancia().cargarAtributos(Usuario.getInstancia().getToken());
-                    Thread.sleep(200);
-                }
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-            if (success) {
-                if (PublicacionAtributos.getInstancia().isLoaded()){
-                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Toast.makeText(this.context,
-                            "Error al cargar los datos de la aplicación.",
-                            Toast.LENGTH_LONG).show();
-                }
-                finish();
-            } else {
-                Toast.makeText(this.context,
-                        "Error inesperado.",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
-    }
 }

@@ -3,26 +3,17 @@ package com.tdp2grupo9.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -41,17 +32,10 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
-import com.tdp2grupo9.gcm.QuickstartPreferences;
-import com.tdp2grupo9.gcm.RegistrationIntentService;
-import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
 
@@ -59,23 +43,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = "BSH.LoginAct";
+    private static final String TAG = "BSH.LoginAct";
 
     private static final Integer LONGPASSWORD = 6;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
     private UserFacebookLoginTask authenticationFacebookTask = null;
     private UserFacebookGetPhoto authenticationFacebookGetPhoto = null;
@@ -86,17 +65,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View progressView;
     CallbackManager callbackManager;
 
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private TextView mInformationTextView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Usuario.getInstancia().isLogueado()) {
-            obtenerAtributosTask = new ObtenerAtributosTask();
-            obtenerAtributosTask.execute((Void) null);
-        }
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
@@ -109,7 +80,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         progressView = findViewById(R.id.login_progress);
 
-        startGCM();
     }
 
     @Override
@@ -267,17 +237,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         if (authenticationEmailPasswordTask != null)
             return;
 
-        Log.i(LOG_TAG, METHOD + " Login con email y password solicitado ");
+        Log.i(TAG, METHOD + " Login con email y password solicitado ");
 
         resetErrors();
         if (!isLoginFormValid()){
-            Log.w(LOG_TAG, METHOD + " El formulario de logueo no es valido");
+            Log.w(TAG, METHOD + " El formulario de logueo no es valido");
             if (emailTextView.getError() != null && !emailTextView.getError().toString().isEmpty())
                 emailTextView.requestFocus();
             else if (passwordEditText.getError() != null && !passwordEditText.getError().toString().isEmpty())
                 passwordEditText.requestFocus();
         } else {
-            Log.i(LOG_TAG, METHOD + " El formulario de logueo es valido");
+            Log.i(TAG, METHOD + " El formulario de logueo es valido");
             showProgress(true);
             Usuario.getInstancia().setEmail(emailTextView.getText().toString());
             Usuario.getInstancia().setPassword(passwordEditText.getText().toString());
@@ -349,8 +319,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    obtenerAtributosTask = new ObtenerAtributosTask();
-                    obtenerAtributosTask.execute((Void) null);
+                    iniciar();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
@@ -418,8 +387,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
-                    obtenerAtributosTask = new ObtenerAtributosTask();
-                    obtenerAtributosTask.execute((Void) null);
+                    iniciar();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
@@ -440,109 +408,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-
-    public class ObtenerAtributosTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                if (!PublicacionAtributos.getInstancia().isLoaded()) {
-                    PublicacionAtributos.getInstancia().cargarAtributos(Usuario.getInstancia().getToken());
-                    Thread.sleep(200);
-                }
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            obtenerAtributosTask = null;
-            if (success) {
-                if (PublicacionAtributos.getInstancia().isLoaded()){
-                    Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    //TODO: NO SE PUDIERON CARGAR LOS ATRIBUTOS!!!
-                }
-                finish();
-            } else {
-                //TODO: ERROR
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            obtenerAtributosTask = null;
-        }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
-    }
-
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }
-
-    private void startGCM() {
-
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                SharedPreferences sharedPreferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences
-                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-                    Log.i(LOG_TAG, getString(R.string.gcm_send_message));
-                    //mInformationTextView.setText(getString(R.string.gcm_send_message));
-                } else {
-                    Log.i(LOG_TAG, getString(R.string.token_error_message));
-                    //mInformationTextView.setText(getString(R.string.token_error_message));
-                }
-            }
-        };
-        //mInformationTextView = (TextView) findViewById(R.id.informationTextView);
-
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-
-    }
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(LOG_TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
 }
