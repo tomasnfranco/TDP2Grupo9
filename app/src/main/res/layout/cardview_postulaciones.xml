@@ -62,7 +62,7 @@
                 android:textStyle="bold"
                 android:textColor="#ffa9a9a9" />
 
-            <ListView
+            <ExpandableListView
                 android:id="@+id/listView_quieren_adoptar"
                 android:layout_width="fill_parent"
                 android:layout_height="100dp"
@@ -89,7 +89,7 @@
                 android:textStyle="bold"
                 android:textColor="#ffa9a9a9" />
 
-            <ListView
+            <ExpandableListView
                 android:id="@+id/listView_ofrecen_transito"
                 android:layout_width="fill_parent"
                 android:layout_height="100dp"

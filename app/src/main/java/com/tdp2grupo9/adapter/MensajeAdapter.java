@@ -28,6 +28,9 @@ public class MensajeAdapter extends BaseAdapter {
     private TiposEnum tipo;
     private String consulta = "";
     private String respuesta = "";
+    private String fecha_consulta;
+    private String fecha_respuesta;
+
     private TextView infConsulta;
     private TextView infRespuesta;
     private View viewContainer;
@@ -35,8 +38,6 @@ public class MensajeAdapter extends BaseAdapter {
     private View viewContainerRespuesta;
     private TextView fechaConsulta;
     private TextView fechaRespuesta;
-    private String fecha_consulta;
-    private String fecha_respuesta;
     private EditText respuesta_edit;
     private TextView fechaSinResponder;
     private ImageButton botonRespuesta;
@@ -183,17 +184,6 @@ public class MensajeAdapter extends BaseAdapter {
         return date;
     }
 
-
-    private String getFechaActual(){
-        Calendar fecha = new GregorianCalendar();
-        int anio = fecha.get(Calendar.YEAR);
-        int mes = fecha.get(Calendar.MONTH);
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-
-        String date = dia + "/" + mes + "/" + anio;
-
-        return date;
-    }
 
 
     public class EnviarRespuestaTask extends AsyncTask<Void, Void, Boolean> {

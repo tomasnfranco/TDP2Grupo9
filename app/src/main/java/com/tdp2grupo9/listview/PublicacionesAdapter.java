@@ -23,9 +23,11 @@ import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,8 @@ import com.tdp2grupo9.modelo.publicacion.Especie;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.utils.TiposClickeableEnum;
 import com.tdp2grupo9.modelo.TiposEnum;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,8 +99,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private List<Postulante> postulantesAdopcion;
     private List<Postulante> postulantesOfrecenTransito;
-    private ListView listViewAdopciones;
-    private ListView listViewOfrecenTransito;
+    private ExpandableListView listViewAdopciones;
+    private ExpandableListView listViewOfrecenTransito;
     private android.support.v7.app.AlertDialog dialogIcon;
     private TextView replicaConsulta;
     private View itemView;
@@ -205,9 +209,14 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }
         }
 
+
+        if (tipos == TiposEnum.RECIENTES || tipos == TiposEnum.BUSQUEDA){
+                xOffset -= 70;
+        }
+
         Toast toast = Toast.makeText(context, tooltip, Toast.LENGTH_SHORT);
-        System.out.println("X: " + xOffset  + " " + "Y: "  + yOffset);
-        toast.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL, xOffset - 80, yOffset + 200);
+        System.out.println("X: " + xOffset + " " + "Y: " + yOffset);
+        toast.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL, xOffset, yOffset + 225);
         toast.show();
     }
 
@@ -225,7 +234,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return cargarIconoSiEsNecesario(publicacion, view, !publicacion.getCondiciones().isEmpty(), view.getResources().getDrawable(R.drawable.ic_condiciones), loadedIcons,
                 context.getResources().getString(R.string.condiciones_adopcion));
     }
-
 
     private String parserDateText(Date fecha){
         int dia = fecha.getDate();
@@ -372,6 +380,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return itemView;
     }
 
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return false;
+    }
+
     private void initialiceClickable(View itemView){
         postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
         postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
@@ -490,6 +503,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         TextView myMsg = new TextView(context);
         TextView myTitle = new TextView(context);
+
+
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        llp.setMargins(10, 0, 10, 0); // llp.setMargins(left, top, right, bottom);
 
         if (tipo == TiposClickeableEnum.POST_ADOPCION || tipo == TiposClickeableEnum.POST_TRANSITO ){
             String mensaje = "\n";
@@ -795,7 +812,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             onClickButtonMensaje(i,v);
         }
 
-
     }
 
     private void updateConsultaEnviada(View v, int i){
@@ -877,8 +893,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES){
 
-            listViewAdopciones = (ListView) v.findViewById(R.id.listView_quieren_adoptar);
-            listViewOfrecenTransito = (ListView) v.findViewById(R.id.listView_ofrecen_transito);
+            listViewAdopciones = (ExpandableListView) v.findViewById(R.id.listView_quieren_adoptar);
+            listViewOfrecenTransito = (ExpandableListView) v.findViewById(R.id.listView_ofrecen_transito);
 
             listViewAdopciones.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -896,7 +912,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 }
             });
 
-            if (postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
+            if (postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()
+                    && publicaciones.get(i).getConcreatada()){
                 CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
                 cardview_postulaciones.setVisibility(View.GONE);
             }else if (!postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
@@ -917,7 +934,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void setAdapterAdopciones(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
-        listViewAdopciones.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion));
+        List<Mensaje> mensajesPrivadas = getListMensajesPrivadosMock();
+        listViewAdopciones.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion,
+                mensajesPrivadas));
+
         listViewAdopciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,
@@ -927,18 +947,15 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void setAdapterTransito(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
-        listViewOfrecenTransito.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion));
+        List<Mensaje> mensajesPrivados = new ArrayList<>();
+        listViewOfrecenTransito.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion,
+                mensajesPrivados));
         listViewOfrecenTransito.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view,
                                     int position, long arg) {
             }
         });
-    }
-
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return false;
     }
 
     public class GuardarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
@@ -1096,6 +1113,17 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onCancelled() {
             eliminarPostulacionTask = null;
         }
+    }
+
+    private List<Mensaje> getListMensajesPrivadosMock(){
+        List<Mensaje> mensajes = new ArrayList<>();
+        Mensaje m1 = new Mensaje();
+        m1.setPregunta("Te gustan los animales");
+        m1.setRespuesta("Si, me encantan.");
+        m1.setFechaPregunta(new Date(2015, 10, 12));
+        m1.setFechaRespuesta(new Date(2015,11,12));
+        mensajes.add(m1);
+        return mensajes;
     }
 
 
