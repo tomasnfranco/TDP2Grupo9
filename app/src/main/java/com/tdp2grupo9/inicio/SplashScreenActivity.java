@@ -61,8 +61,8 @@ public class SplashScreenActivity extends Activity {
             }
         }).start();
 
-        GcmRegistrationAsyncTask gcmtask = new GcmRegistrationAsyncTask(this);
-        gcmtask.execute((Void) null);
+        //GcmRegistrationAsyncTask gcmtask = new GcmRegistrationAsyncTask(this);
+        //gcmtask.execute((Void) null);
     }
 
     private void pasarASiguienteActivity() {
@@ -70,6 +70,7 @@ public class SplashScreenActivity extends Activity {
         startActivity(intent);
     }
 
+    @Deprecated
     class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         private Registration regService = null;
         private GoogleCloudMessaging gcm;

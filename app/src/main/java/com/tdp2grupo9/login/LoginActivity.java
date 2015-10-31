@@ -5,9 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +19,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -39,8 +45,12 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
+import com.tdp2grupo9.gcm.QuickstartPreferences;
+import com.tdp2grupo9.gcm.RegistrationIntentService;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
@@ -63,6 +73,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = "BSH.LoginAct";
 
     private static final Integer LONGPASSWORD = 6;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private ObtenerAtributosTask obtenerAtributosTask = null;
     private UserEmailPasswordLoginTask authenticationEmailPasswordTask = null;
@@ -74,6 +85,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private LoginButton facebookSignInButton;
     private View progressView;
     CallbackManager callbackManager;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private TextView mInformationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         createFacebookSignInButton();
 
         progressView = findViewById(R.id.login_progress);
+
+        startGCM();
     }
 
     @Override
@@ -463,6 +479,70 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected void onCancelled() {
             obtenerAtributosTask = null;
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    private void startGCM() {
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                    Log.i(LOG_TAG, getString(R.string.gcm_send_message));
+                    //mInformationTextView.setText(getString(R.string.gcm_send_message));
+                } else {
+                    Log.i(LOG_TAG, getString(R.string.token_error_message));
+                    //mInformationTextView.setText(getString(R.string.token_error_message));
+                }
+            }
+        };
+        //mInformationTextView = (TextView) findViewById(R.id.informationTextView);
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
 }
