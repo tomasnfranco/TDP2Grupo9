@@ -30,7 +30,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.login.LoginActivity;
+import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.Random;
 
@@ -84,8 +86,13 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String message) {
+        Intent intent = null;
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        if (Usuario.getInstancia().isLogueado())
+            intent = new Intent(this, DrawerMenuActivity.class);
+        else
+            intent = new Intent(this, LoginActivity.class);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

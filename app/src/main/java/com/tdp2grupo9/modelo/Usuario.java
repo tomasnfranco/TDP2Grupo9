@@ -278,7 +278,7 @@ public class Usuario {
             out.close();
             Log.d(TAG, METHOD + " url= " + parametros);
             int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
                 Log.d(TAG, METHOD + " token GCM enviado al servidor para recibir mensajes ");
             } else {
                 Log.w(TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());

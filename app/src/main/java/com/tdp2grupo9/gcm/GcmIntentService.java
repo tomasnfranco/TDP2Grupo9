@@ -13,6 +13,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Deprecated
 public class GcmIntentService extends IntentService {
 
     public GcmIntentService() {
