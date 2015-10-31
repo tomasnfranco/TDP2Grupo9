@@ -78,7 +78,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private ListView listView;
     private List<Mensaje> mensajes;
     private ImageView imagenSeleccionada;
-    private Gallery gallery;
     private List<Imagen> imagenes;
     private String especieView;
     private ImageView imagenPosicion;
@@ -719,31 +718,29 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     }
 
-    private void cargarFotos(int i, View view) {
-        imagenes = publicaciones.get(i).getImagenes();
+    private void cargarFotos(final int i, final View view) {
 
-        if (imagenes.isEmpty()) {
+        if (publicaciones.get(i).getImagenes().isEmpty()) {
             CardView cardview_photos = (CardView) view.findViewById(R.id.cardview_fotos_pm);
             cardview_photos.setVisibility(View.GONE);
         } else {
             CardView cardview_photos = (CardView) view.findViewById(R.id.cardview_fotos_pm);
             cardview_photos.setVisibility(View.VISIBLE);
+            Gallery galleryImagenes = (Gallery) view.findViewById(R.id.gallery_photos);
+            galleryImagenes.setVisibility(View.GONE);
+            final ImageView imagenSelect = (ImageView) view.findViewById(R.id.image_seleccionada);
+            imagenSelect.setImageBitmap(publicaciones.get(i).getImagenes().get(0).getBitmap());
 
-            if(imagenes.size() > 1){
-                imagenSeleccionada = (ImageView) view.findViewById(R.id.image_seleccionada);
-                gallery = (Gallery) view.findViewById(R.id.gallery_photos);
-
-                gallery.setAdapter(new GalleryAdapter(view.getContext(), imagenes));
-                gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            if(publicaciones.get(i).getImagenes().size() > 1){
+                galleryImagenes.setVisibility(View.VISIBLE);
+                galleryImagenes.setAdapter(new GalleryAdapter(context, publicaciones.get(i).getImagenes()));
+                galleryImagenes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     public void onItemClick(AdapterView parent, View v, int position, long id) {
-                        imagenSeleccionada.setImageBitmap(imagenes.get(position).getBitmap());
+                        imagenSelect.setImageBitmap(publicaciones.get(i).getImagenes().get(position).getBitmap());
                     }
 
                 });
-            } else {
-                imagenSeleccionada = (ImageView) view.findViewById(R.id.image_seleccionada);
-                imagenSeleccionada.setImageBitmap(imagenes.get(0).getBitmap());
             }
         }
 

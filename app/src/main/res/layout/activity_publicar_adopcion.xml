@@ -239,7 +239,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/darkorange"
                 android:text="@string/guardar_publicacion"
                 android:textColor="@color/white"/>
 
