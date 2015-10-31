@@ -86,7 +86,12 @@ class PublicacionService {
             }
             publicacion.addToQuierenAdoptar(user)
             publicacion.save(flush:true)
-            notificacionesService.nuevaPostulacion(user.username,publicacion.nombreMascota,publicacion.publicador);
+            if(publicacion.tipoPublicacion == 1)
+                notificacionesService.nuevaPostulacion(user.username,publicacion.nombreMascota,publicacion.publicador)
+            if(publicacion.tipoPublicacion == 2)
+                notificacionesService.nuevoPostulacionPerdida(user,publicacion.nombreMascota,publicacion.publicador)
+            if(publicacion.tipoPublicacion == 3)
+                notificacionesService.nuevoPostulacionEncontrada(user,publicacion.nombreMascota,publicacion.publicador)
             return OK
         }
         return NOT_FOUND
@@ -123,23 +128,35 @@ class PublicacionService {
             return BAD_REQUEST
         }
         if(publicacion) {
-            if(!publicacion.quierenAdoptar.contains(quiereAdoptar)){
+            if (!publicacion.quierenAdoptar.contains(quiereAdoptar)) {
                 println "salio porque no existe quiereAdoptar en la lista de los que quieren"
                 return FORBIDDEN
             }
-            if(!publicacion.publicador.equals(supuestoPublicador)){
+            if (!publicacion.publicador.equals(supuestoPublicador)) {
                 println "salio porque no es su publicacion"
                 return UNAUTHORIZED
             }
             publicacion.concretado = quiereAdoptar
             publicacion.activa = false //TODO: Ver si con esto esta bien
-            publicacion.save(flush:true)
+            publicacion.save(flush: true)
             //Notificaciones
-            notificacionesService.concretarAdopcionElegido(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
-            notificacionesService.concretarAdopcionPublicador(quiereAdoptar,publicacion.nombreMascota,publicacion.publicador)
-            publicacion.quierenAdoptar.each {
-                if(it.id != quiereAdoptar.id){
-                    notificacionesService.concretarAdopcionNoElegido(it,publicacion.nombreMascota,publicacion.publicador)
+            if (publicacion.tipoPublicacion == 1) {
+                notificacionesService.concretarAdopcionElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarAdopcionPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+            }
+            if(publicacion.tipoPublicacion == 2){
+                notificacionesService.concretarPerdidaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarPerdidaPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+            }
+            if(publicacion.tipoPublicacion == 3){
+                notificacionesService.concretarEncontradaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarEncontradaPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+            }
+            if(publicacion.tipoPublicacion == 1) {
+                publicacion.quierenAdoptar.each {
+                    if (it.id != quiereAdoptar.id) {
+                        notificacionesService.concretarAdopcionNoElegido(it, publicacion.nombreMascota, publicacion.publicador)
+                    }
                 }
             }
             println "salio todo OK"
