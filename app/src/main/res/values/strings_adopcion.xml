@@ -41,6 +41,7 @@
     <string name="crear_alerta">Crear alerta</string>
     <string name="postularme_adopcion">Postularme a Adoptar</string>
     <string name="postularme_hogar">Postularme a Tránsito</string>
+    <string name="reclamar_mascota">Reclamar la mascota</string>
 
     <string name="cuidados_especiales">Cuidados especiales</string>
     <string name="condiciones_adopcion">Condiciones de adopción</string>
@@ -85,23 +86,34 @@
     <string name="perdida">PERDIDA</string>
     <string name="encontrada">ENCONTRADA</string>
     <string name="en_adopcion">EN ADOPCIÓN</string>
+
+    <string name="reencontrada">REENCONTRADA</string>
+    <string name="adoptada">ADOPTADA</string>
+
     <string name="quieren_adoptar">Quieren adoptar</string>
     <string name="ofrecen_hogar_transito">Ofrecen hogar de tránsito</string>
     <string name="eliminar_publicacion">Eliminar publicación</string>
+    <string name="cancelar_reclamo">Cancelar reclamo</string>
     <string name="editar_publicacion">Editar publicación</string>
     <string name="cancelar_postulacion">Cancelar postulación</string>
+    <string name="reclaman_mascota">Reclaman la mascota</string>
+    <string name="en_hogar_de_transito">En hogar de tránsito</string>
 
 
     <string name="title_dialog_confirmacion">Confirmación</string>
     <string name="confirmacion_adopcion">¿Confirma la adopción?</string>
     <string name="confirmacion_transito">¿Confirma el tránsito?</string>
+    <string name="confirmacion_reclamo">¿Confirma el reclamo?</string>
+
     <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar? </string>
     <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
+    <string name="confirmacion_reclamar">¿Confirma que desea reclamar la mascota como suya?</string>
     <string name="se_enviara_notificacion">Se enviará una notificación al publicante para informar de tu postulación</string>
     <string name="confirmacion_eliminar">¿Confirma que desea eliminar la publicación?</string>
     <string name="confirmacion_editar">¿Confirma que desea editar la publicación?</string>
     <string name="confirmacion_eliminar_post_adopcion">¿Confirma que desea cancelar la postulación de adopción?</string>
     <string name="confirmacion_eliminar_post_transito">¿Confirma que desea cancelar la postulación de hogar de tránsito?</string>
+    <string name="confirmacion_eliminar_reclamo">¿Confirma que desea cancelar el reclamo de mascota como suya?</string>
 
 
 

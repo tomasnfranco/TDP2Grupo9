@@ -75,8 +75,10 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
         if (tipo.equals("Transito"))
             title+=context.getString(R.string.confirmacion_transito);
-        else
+        else if (tipo.equals("Adopcion"))
             title+=context.getString(R.string.confirmacion_adopcion);
+        else if (tipo.equals("Encontrada"))
+            title+=context.getString(R.string.confirmacion_reclamo);
 
         TextView myMsg = new TextView(context);
         TextView myTitle = new TextView(context);
@@ -103,7 +105,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
-                if (tipo.equals("Adopcion")){
+                if (tipo.equals("Adopcion") || tipo.equals("Encontrada")){
                     concretarAdopcionTask = new ConcretarAdopcionTask(idPostulante, id_publicacion);
                     concretarAdopcionTask.execute((Void) null);
                 }else {
@@ -245,7 +247,8 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
         if (tipo.equals("Adopcion"))
             btnConcretar.setBackgroundResource(R.drawable.button_adoptar);
-        else btnConcretar.setBackgroundResource(R.drawable.button_transito);
+        else if (tipo.equals("Transito")) btnConcretar.setBackgroundResource(R.drawable.button_transito);
+        else if (tipo.equals("Encontrada")) btnConcretar.setBackgroundResource(R.drawable.button_reclamo);
 
         usernamePostulante.setText(postulantes.get(i).getUsername());
         if (postulantes.get(i).getFoto().getBitmap()!= null)

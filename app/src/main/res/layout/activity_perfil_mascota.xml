@@ -45,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></RelativeLayout>
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,8 +71,8 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="10dp" />
 
-                <com.tdp2grupo9.view.clickable.EliminarPublicacionClickable
-                    android:id="@+id/eliminar_publicacion"
+                <com.tdp2grupo9.view.clickable.ReclamarMascotaClickable
+                    android:id="@+id/reclamar_mascota"
                     android:layout_alignParentLeft="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,17 +82,26 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="10dp" />
 
+                <com.tdp2grupo9.view.clickable.EliminarPublicacionClickable
+                    android:id="@+id/eliminar_publicacion"
+                    android:layout_alignParentLeft="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/reclamar_mascota"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp" />
+
                 <com.tdp2grupo9.view.clickable.EditarPublicacionClickable
                     android:id="@+id/editar_publicacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/eliminar_publicacion"
                     android:layout_alignStart="@+id/eliminar_publicacion"
                     android:layout_below="@+id/eliminar_publicacion" />
 
-
-                <com.tdp2grupo9.view.clickable.EliminarPostulacionAdopcionClickable
-                    android:id="@+id/eliminar_postulacion_adoptar"
+                <com.tdp2grupo9.view.clickable.EliminarReclamoClickable
+                    android:id="@+id/eliminar_reclamo"
                     android:layout_alignParentLeft="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,11 +111,21 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="10dp" />
 
+                <com.tdp2grupo9.view.clickable.EliminarPostulacionAdopcionClickable
+                    android:id="@+id/eliminar_postulacion_adoptar"
+                    android:layout_alignParentLeft="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/eliminar_reclamo"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp" />
+
                 <com.tdp2grupo9.view.clickable.EliminarPostulacionTransitoClickable
                     android:id="@+id/eliminar_postulacion_transito"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/eliminar_postulacion_adoptar"
                     android:layout_alignStart="@+id/eliminar_postulacion_adoptar"
                     android:layout_below="@+id/eliminar_postulacion_adoptar"
                     android:layout_marginBottom="10dp" />

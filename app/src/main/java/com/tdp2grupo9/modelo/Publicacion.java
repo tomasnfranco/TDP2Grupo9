@@ -298,7 +298,7 @@ public class Publicacion {
                     else
                         this.longitud = reader.nextDouble();
                     break;
-                case "latitudTransito":
+                /*case "latitudTransito":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else
@@ -309,7 +309,7 @@ public class Publicacion {
                         reader.nextNull();
                     else
                         this.longitudTransito = reader.nextDouble();
-                    break;
+                    break;*/
                 case "distancia":
                     this.distancia = reader.nextDouble();
                     break;

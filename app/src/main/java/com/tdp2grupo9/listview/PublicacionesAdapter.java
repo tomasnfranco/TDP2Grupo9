@@ -96,6 +96,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private View editarPublicacionClickable;
     private View eliminarPostulacionAdopcionClickable;
     private View eliminarPostulacionTransitoClickable;
+    private View eliminarReclamoClickable;
+    private View reclamarMascotaClickable;
 
     private List<Postulante> postulantesAdopcion;
     private List<Postulante> postulantesOfrecenTransito;
@@ -105,6 +107,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private TextView replicaConsulta;
     private View itemView;
     private String valorSexo;
+    private ExpandableListView listViewReclamarMascota;
+    private View panelPostulantesEnAdopcion;
+    private View panelPostulantesReclamanMascotas;
+    private View panelPostulantesOfrecenTransito;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos) {
@@ -292,13 +298,17 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         switch (publicaciones.get(i).getTipoPublicacion()){
             case ADOPCION:
-                tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
+                if (publicaciones.get(i).getConcreatada())
+                    tipo_publicacion.setText(publicacionView.getContext().getString(R.string.adoptada));
+                else tipo_publicacion.setText(publicacionView.getContext().getString(R.string.en_adopcion));
                 break;
             case PERDIDA:
                 tipo_publicacion.setText(publicacionView.getContext().getString(R.string.perdida));
                 break;
             case ENCONTRADA:
-                tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
+                if (publicaciones.get(i).getConcreatada())
+                    tipo_publicacion.setText(publicacionView.getContext().getString(R.string.reencontrada));
+                else tipo_publicacion.setText(publicacionView.getContext().getString(R.string.encontrada));
                 break;
         }
 
@@ -388,10 +398,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private void initialiceClickable(View itemView){
         postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
         postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
+        reclamarMascotaClickable = itemView.findViewById(R.id.reclamar_mascota);
         eliminarPublicacionClickable = itemView.findViewById(R.id.eliminar_publicacion);
         editarPublicacionClickable = itemView.findViewById(R.id.editar_publicacion);
         eliminarPostulacionAdopcionClickable = itemView.findViewById(R.id.eliminar_postulacion_adoptar);
         eliminarPostulacionTransitoClickable = itemView.findViewById(R.id.eliminar_postulacion_transito);
+        eliminarReclamoClickable = itemView.findViewById(R.id.eliminar_reclamo);
 
         postularmeAdopcionClickable.setFocusable(false);
         postularmeTransitoClickable.setFocusable(false);
@@ -402,10 +414,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         postularmeAdopcionClickable.setVisibility(View.GONE);
         postularmeTransitoClickable.setVisibility(View.GONE);
+        reclamarMascotaClickable.setVisibility(View.GONE);
         eliminarPublicacionClickable.setVisibility(View.GONE);
         editarPublicacionClickable.setVisibility(View.GONE);
         eliminarPostulacionAdopcionClickable.setVisibility(View.GONE);
         eliminarPostulacionTransitoClickable.setVisibility(View.GONE);
+        eliminarReclamoClickable.setVisibility(View.GONE);
     }
 
     private void activateClickable(final int i){
@@ -414,6 +428,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 !isPostulateAdopcion(i) &&
                 tipos != TiposEnum.MIS_PUBLICACIONES)
             postularmeAdopcionClickable.setVisibility(View.VISIBLE);
+
+        if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ENCONTRADA) &&
+                !isPostulateAdopcion(i) &&
+                tipos != TiposEnum.MIS_PUBLICACIONES)
+            reclamarMascotaClickable.setVisibility(View.VISIBLE);
 
         if (publicaciones.get(i).getNecesitaTransito() && !isPostulateTransito(i) &&
                 tipos != TiposEnum.MIS_PUBLICACIONES){
@@ -426,7 +445,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
 
         if (tipos == TiposEnum.MIS_POSTULACIONES){
-            if (isPostulateAdopcion(i))  eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
+            if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION)  && isPostulateAdopcion(i))  eliminarPostulacionAdopcionClickable.setVisibility(View.VISIBLE);
+            if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ENCONTRADA)  && isPostulateAdopcion(i))  eliminarReclamoClickable.setVisibility(View.VISIBLE);
             if (isPostulateTransito(i))  eliminarPostulacionTransitoClickable.setVisibility(View.VISIBLE);
         }
     }
@@ -445,6 +465,15 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.POST_TRANSITO, i).create();
+                dialogIcon.show();
+            }
+        });
+
+
+        reclamarMascotaClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.RECLAMAR_MASCOTA, i).create();
                 dialogIcon.show();
             }
         });
@@ -480,6 +509,14 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.ELIMINAR_POST_TRANS, i).create();
+                dialogIcon.show();
+            }
+        });
+
+        eliminarReclamoClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.ELIMINAR_RECLAMO, i).create();
                 dialogIcon.show();
             }
         });
@@ -549,6 +586,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             case POST_TRANSITO:
                 mensaje = context.getString(R.string.confirmacion_postulacion_transito);
                 break;
+            case RECLAMAR_MASCOTA:
+                mensaje = context.getString(R.string.confirmacion_reclamar);
+                break;
             case EDITAR_PUBL:
                 mensaje = context.getString(R.string.confirmacion_editar);
                 break;
@@ -560,6 +600,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 break;
             case ELIMINAR_POST_TRANS:
                 mensaje = context.getString(R.string.confirmacion_eliminar_post_transito);
+                break;
+            case ELIMINAR_RECLAMO:
+                mensaje = context.getString(R.string.confirmacion_eliminar_reclamo);
                 break;
             default:
                 break;
@@ -577,6 +620,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.POST_TRANSITO, itemView);
                 guardarPostulacionTask.execute((Void) null);
                 break;
+            case RECLAMAR_MASCOTA:
+                guardarPostulacionTask = new GuardarPostulacionTask(i, publicaciones.get(i).getId(), TiposClickeableEnum.RECLAMAR_MASCOTA, itemView);
+                guardarPostulacionTask.execute((Void) null);
+                break;
             case EDITAR_PUBL:
                 break;
             case ELIMINAR_PUBL:
@@ -585,6 +632,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 break;
             case ELIMINAR_POST_ADOP:
                 eliminarPostulacionTask = new EliminarPostulacionTask(i, publicaciones.get(i).getId(),TiposClickeableEnum.ELIMINAR_POST_ADOP );
+                eliminarPostulacionTask.execute((Void) null);
+                break;
+            case ELIMINAR_RECLAMO:
+                eliminarPostulacionTask = new EliminarPostulacionTask(i, publicaciones.get(i).getId(),TiposClickeableEnum.ELIMINAR_RECLAMO );
                 eliminarPostulacionTask.execute((Void) null);
                 break;
             case ELIMINAR_POST_TRANS:
@@ -809,15 +860,15 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
             consultaParaEnviar.setVisibility(View.VISIBLE);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
-            onClickButtonMensaje(i,v);
+            onClickButtonMensaje(i, v);
         }
 
     }
 
-    private void updateConsultaEnviada(View v, int i){
+    private void updateConsultaEnviada(View v, int i, Mensaje consulta){
         consultaParaEnviar.setText("");
         replicaConsulta.setText("");
-        mensajes = publicaciones.get(i).getMensajes();
+        mensajes.add(consulta);
         listView.setVisibility(View.VISIBLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -862,10 +913,13 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         consultaParaEnviar.addTextChangedListener(new TextWatcher() {
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {}
+                                          int after) {
+            }
+
             public void afterTextChanged(Editable s) {
                 replicaConsulta.setText(s.toString());
             }
@@ -888,13 +942,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         postulantesAdopcion = publicaciones.get(i).getQuierenAdoptar();
         postulantesOfrecenTransito = publicaciones.get(i).getOfrecenTransito();
-        View panelPostulantesEnAdopcion = (View) v.findViewById(R.id.view_adoptantes);
-        View panelPostulantesOfrecenTransito = (View) v.findViewById(R.id.view_ofrecen_transito);
+
+        panelPostulantesEnAdopcion = (View) v.findViewById(R.id.view_adoptantes);
+        panelPostulantesOfrecenTransito = (View) v.findViewById(R.id.view_ofrecen_transito);
+        panelPostulantesReclamanMascotas = (View) v.findViewById(R.id.view_reclaman_su_mascota);
+
+        panelPostulantesEnAdopcion.setVisibility(View.GONE);
+        panelPostulantesOfrecenTransito.setVisibility(View.GONE);
+        panelPostulantesReclamanMascotas.setVisibility(View.GONE);
+
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES){
 
             listViewAdopciones = (ExpandableListView) v.findViewById(R.id.listView_quieren_adoptar);
             listViewOfrecenTransito = (ExpandableListView) v.findViewById(R.id.listView_ofrecen_transito);
+            listViewReclamarMascota = (ExpandableListView) v.findViewById(R.id.listView_reclaman_mascota);
 
             listViewAdopciones.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -912,18 +974,47 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 }
             });
 
-            if (postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()
-                    && publicaciones.get(i).getConcreatada()){
+
+            listViewReclamarMascota.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            TipoPublicacion tipo = publicaciones.get(i).getTipoPublicacion();
+
+            if (postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
                 CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
                 cardview_postulaciones.setVisibility(View.GONE);
-            }else if (!postulantesAdopcion.isEmpty() && postulantesOfrecenTransito.isEmpty()){
-                panelPostulantesOfrecenTransito.setVisibility(View.GONE);
-                setAdapterAdopciones(v,"Adopcion", postulantesAdopcion, publicaciones.get(i).getId());
-            }else if (postulantesAdopcion.isEmpty() && !postulantesOfrecenTransito.isEmpty()){
-                panelPostulantesEnAdopcion.setVisibility(View.GONE);
+            }else if (publicaciones.get(i).getConcreatada() && publicaciones.get(i).getEnTransito()){
+                CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
+                cardview_postulaciones.setVisibility(View.GONE);
+            }else if (publicaciones.get(i).getConcreatada() && postulantesOfrecenTransito.isEmpty()){
+                CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
+                cardview_postulaciones.setVisibility(View.GONE);
+            } else if (publicaciones.get(i).getEnTransito() && postulantesAdopcion.isEmpty()){
+                CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
+                cardview_postulaciones.setVisibility(View.GONE);
+            }else if (!postulantesAdopcion.isEmpty() && tipo == TipoPublicacion.ADOPCION && (postulantesOfrecenTransito.isEmpty()||publicaciones.get(i).getEnTransito()) ){
+                panelPostulantesEnAdopcion.setVisibility(View.VISIBLE);
+                setAdapterAdopciones(v, "Adopcion", postulantesAdopcion, publicaciones.get(i).getId());
+            } else if (!postulantesAdopcion.isEmpty() && tipo == TipoPublicacion.ENCONTRADA && (postulantesOfrecenTransito.isEmpty()||publicaciones.get(i).getEnTransito()) ){
+                panelPostulantesReclamanMascotas.setVisibility(View.VISIBLE);
+                setAdapterReclamanMascota(v, "Encontrada", postulantesAdopcion, publicaciones.get(i).getId());
+            } else if ((postulantesAdopcion.isEmpty() || publicaciones.get(i).getConcreatada()) && !postulantesOfrecenTransito.isEmpty()){
+                panelPostulantesOfrecenTransito.setVisibility(View.VISIBLE);
+                setAdapterTransito(v, "Transito", postulantesOfrecenTransito,publicaciones.get(i).getId());
+            } else if (tipo == TipoPublicacion.ADOPCION) {
+                panelPostulantesEnAdopcion.setVisibility(View.VISIBLE);
+                panelPostulantesOfrecenTransito.setVisibility(View.VISIBLE);
+                setAdapterAdopciones(v, "Adopcion", postulantesAdopcion, publicaciones.get(i).getId());
                 setAdapterTransito(v,"Transito", postulantesOfrecenTransito,publicaciones.get(i).getId());
-            }else {
-                setAdapterAdopciones(v, "Adopcion", postulantesAdopcion,publicaciones.get(i).getId());
+            } else if (tipo == TipoPublicacion.ENCONTRADA) {
+                panelPostulantesReclamanMascotas.setVisibility(View.VISIBLE);
+                panelPostulantesOfrecenTransito.setVisibility(View.VISIBLE);
+                setAdapterReclamanMascota(v, "Encontrada", postulantesAdopcion, publicaciones.get(i).getId());
                 setAdapterTransito(v,"Transito", postulantesOfrecenTransito,publicaciones.get(i).getId());
             }
         }else{
@@ -931,6 +1022,18 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             cardview_postulaciones.setVisibility(View.GONE);
         }
 
+    }
+
+    private void setAdapterReclamanMascota(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
+        List<Mensaje> mensajesPrivados = new ArrayList<>();
+        listViewReclamarMascota.setAdapter(new PostulacionesAdapter(v.getContext(), tipoAdapter, postulantes, id_publicacion,
+                mensajesPrivados));
+        listViewReclamarMascota.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view,
+                                    int position, long arg) {
+            }
+        });
     }
 
     private void setAdapterAdopciones(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
@@ -975,7 +1078,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                if (tipo == TiposClickeableEnum.POST_ADOPCION)
+                if (tipo == TiposClickeableEnum.POST_ADOPCION ||
+                        tipo == TiposClickeableEnum.RECLAMAR_MASCOTA )
                     Usuario.getInstancia().quieroAdoptar(id_publicacion);
                 else
                     Usuario.getInstancia().ofrezcoTransito(id_publicacion);
@@ -1026,7 +1130,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 if (consulta.getId() > 0){
-                    updateConsultaEnviada(v, i);
+                    updateConsultaEnviada(v, i, consulta);
                     notifyDataSetChanged();
                 }else {
                 }
@@ -1089,7 +1193,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                if (tipo == TiposClickeableEnum.ELIMINAR_POST_ADOP){
+                if (tipo == TiposClickeableEnum.ELIMINAR_POST_ADOP || tipo == TiposClickeableEnum.ELIMINAR_RECLAMO){
                     Usuario.getInstancia().cancelarQuieroAdoptar(id_publicacion);
                 }
                 else {
