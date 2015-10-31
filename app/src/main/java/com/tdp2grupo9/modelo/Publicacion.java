@@ -29,7 +29,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Publicacion {
 
@@ -38,10 +40,13 @@ public class Publicacion {
     private Integer id;
     private TipoPublicacion tipoPublicacion;
     private Integer postulanteConcretadoId;
+    private Integer postulanteTransitoId;
     private Integer publicadorId;
     private String direccion;
     private String direccionTransito;
     private String publicadorNombre;
+    private String concretadoNombre;
+    private String transitoNombre;
     private String nombreMascota;
     private String condiciones;
     private String videoLink;
@@ -83,6 +88,7 @@ public class Publicacion {
         this.publicadorId = 0;
         this.tipoPublicacion = null;
         this.direccion = "";
+        this.direccionTransito = "";
         this.nombreMascota = "";
         this.condiciones = "";
         this.videoLink = "";
@@ -106,6 +112,8 @@ public class Publicacion {
         this.postulanteConcretadoId = 0;
         this.latitud = 0.0;
         this.longitud = 0.0;
+        this.latitudTransito = 0.0;
+        this.longitudTransito = 0.0;
         this.distancia = null;
         this.fechaPublicacion = null;
         this.imagenes = new ArrayList<>();
@@ -174,13 +182,40 @@ public class Publicacion {
                     this.id = reader.nextInt();
                     break;
                 case "publicadorId":
-                    this.publicadorId = reader.nextInt();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.publicadorId = reader.nextInt();
                     break;
                 case "direccion":
-                    this.direccion = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.direccion = reader.nextString();
+                    break;
+                case "direccionTransito":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.direccionTransito = reader.nextString();
                     break;
                 case "publicadorNombre":
-                    this.publicadorNombre = reader.nextString();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.publicadorNombre = reader.nextString();
+                    break;
+                case "concretadoNombre":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.concretadoNombre = reader.nextString();
+                    break;
+                case "transitoNombre":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.transitoNombre = reader.nextString();
                     break;
                 case "concretado":
                     this.concreatada = false;
@@ -203,8 +238,32 @@ public class Publicacion {
                         reader.endObject();
                     }
                     break;
+                case "transito":
+                    this.enTransito = false;
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            String nameconcret = reader.nextName();
+                            switch (nameconcret) {
+                                case "id":
+                                    this.postulanteTransitoId = reader.nextInt();
+                                    this.enTransito = true;
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
+                        }
+                        reader.endObject();
+                    }
+                    break;
                 case "tipoPublicacion":
-                    this.tipoPublicacion = TipoPublicacion.getTipoPublicacion(reader.nextInt());
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.tipoPublicacion = TipoPublicacion.getTipoPublicacion(reader.nextInt());
                     break;
                 case "nombreMascota":
                     this.nombreMascota = "";
@@ -228,10 +287,28 @@ public class Publicacion {
                         this.videoLink = reader.nextString();
                     break;
                 case "latitud":
-                    this.latitud = reader.nextDouble();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.latitud = reader.nextDouble();
                     break;
                 case "longitud":
-                    this.longitud = reader.nextDouble();
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.longitud = reader.nextDouble();
+                    break;
+                case "latitudTransito":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.latitudTransito = reader.nextDouble();
+                    break;
+                case "longitudTransito":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.longitudTransito = reader.nextDouble();
                     break;
                 case "distancia":
                     this.distancia = reader.nextDouble();
@@ -663,6 +740,12 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public static List<Publicacion> obtenerTodasLasPostulacionesDeUsuario(String token, Integer offset, Integer max) {
+        List<Publicacion> adopcionesReclamos = Publicacion.obtenerPostulacionesDeUsuario(token, offset, max);
+        List<Publicacion> transitos = Publicacion.obtenerTransitosDeUsuario(token, offset, max);
+        return new ArrayList<Publicacion>(new HashSet<Publicacion>(adopcionesReclamos));
+    }
+
     public static List<Publicacion> obtenerPostulacionesDeUsuario(String token, Integer offset, Integer max) {
         String METHOD = "obtenerPostulacionesDeUsuario";
         List<Publicacion> publicaciones = new ArrayList<>();
@@ -688,6 +771,43 @@ public class Publicacion {
                     }
                 }
                 Log.d(LOG_TAG, METHOD + " misPostulaciones obtenidas " + publicaciones.size());
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        }  finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return publicaciones;
+    }
+
+    public static List<Publicacion> obtenerTransitosDeUsuario(String token, Integer offset, Integer max) {
+        String METHOD = "obtenerTransitosDeUsuario";
+        List<Publicacion> publicaciones = new ArrayList<>();
+        HttpURLConnection urlConnection = null;
+        try {
+            String atributos = "?token="+token;
+            //"&offset="+offset+"max="+max
+            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            urlConnection = Connection.getHttpUrlConnection("publicacion/misTransitos"+atributos);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+
+                for (Publicacion publicacion: publicaciones) {
+                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
+
+                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
+                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+
+                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
+                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
+                    }
+                }
+                Log.d(LOG_TAG, METHOD + " misTransitos obtenidos " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
             }
@@ -1197,6 +1317,72 @@ public class Publicacion {
 
     public Boolean isPostuladoTransito(Integer usuarioId) {
         return Collections.frequency(this.ofrecenTransitoIds, usuarioId) > 0;
+    }
+
+    public Integer getPostulanteTransitoId() {
+        return postulanteTransitoId;
+    }
+
+    public void setPostulanteTransitoId(Integer postulanteTransitoId) {
+        this.postulanteTransitoId = postulanteTransitoId;
+    }
+
+    public String getDireccionTransito() {
+        return direccionTransito;
+    }
+
+    public void setDireccionTransito(String direccionTransito) {
+        this.direccionTransito = direccionTransito;
+    }
+
+    public String getConcretadoNombre() {
+        return concretadoNombre;
+    }
+
+    public void setConcretadoNombre(String concretadoNombre) {
+        this.concretadoNombre = concretadoNombre;
+    }
+
+    public String getTransitoNombre() {
+        return transitoNombre;
+    }
+
+    public void setTransitoNombre(String transitoNombre) {
+        this.transitoNombre = transitoNombre;
+    }
+
+    public Boolean getEnTransito() {
+        return enTransito;
+    }
+
+    public void setEnTransito(Boolean enTransito) {
+        this.enTransito = enTransito;
+    }
+
+    public Double getLatitudTransito() {
+        return latitudTransito;
+    }
+
+    public void setLatitudTransito(Double latitudTransito) {
+        this.latitudTransito = latitudTransito;
+    }
+
+    public Double getLongitudTransito() {
+        return longitudTransito;
+    }
+
+    public void setLongitudTransito(Double longitudTransito) {
+        this.longitudTransito = longitudTransito;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return Objects.equals(this.id, ((Publicacion) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 
 }

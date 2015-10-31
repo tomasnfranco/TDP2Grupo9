@@ -78,6 +78,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Usuario.getInstancia().isLogueado()) {
+            obtenerAtributosTask = new ObtenerAtributosTask();
+            obtenerAtributosTask.execute((Void) null);
+        }
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         callbackManager = CallbackManager.Factory.create();

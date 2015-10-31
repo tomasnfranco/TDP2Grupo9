@@ -1,11 +1,16 @@
 package com.tdp2grupo9.inicio;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -13,15 +18,14 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.googlecloudmessaging.registration.Registration;
-import com.tdp2grupo9.modelo.Connection;
+import com.tdp2grupo9.login.LoginActivity;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class SplashScreenActivity extends Activity {
@@ -57,11 +61,8 @@ public class SplashScreenActivity extends Activity {
             }
         }).start();
 
-
-        Log.d("MAINACT", "INICIANDO GCM TASK.....................");
-        // gcmtask = new GcmRegistrationAsyncTask(this);
-        //gcmtask.execute((Void) null);
-
+        GcmRegistrationAsyncTask gcmtask = new GcmRegistrationAsyncTask(this);
+        gcmtask.execute((Void) null);
     }
 
     private void pasarASiguienteActivity() {
@@ -84,18 +85,23 @@ public class SplashScreenActivity extends Activity {
         protected String doInBackground(Void... params) {
             if (regService == null) {
 
-                Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
+                //===>https://tdp2-1112.appspot.com/
+                Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                        .setRootUrl("https://tdp2-1112.appspot.com/_ah/api/");
+
+                //===>http://10.0.3.2:8080/_ah/api/
+                /*Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)
                         // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
                         // otherwise they can be skipped
-                        .setRootUrl("http://" + Connection.GENYHOST + ":8080/_ah/api/")
+                        .setRootUrl("http://10.0.3.2:8080/_ah/api/")
                         .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                             @Override
                             public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
                                     throws IOException {
                                 abstractGoogleClientRequest.setDisableGZipContent(true);
                             }
-                        });
+                        });*/
                 // end of optional local run code
 
                 regService = builder.build();
@@ -131,8 +137,40 @@ public class SplashScreenActivity extends Activity {
 
         @Override
         protected void onPostExecute(String msg) {
+            Log.d("MENSAJES", "Nuevo MENSAJE");
             Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this.context, LoginActivity.class);
+
+            // Sets the Activity to start in a new, empty task
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(
+                            this.context,
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
+            Notification noti = new Notification.Builder(this.context)
+                    .setContentTitle("Busca sus Huellas")
+                    .setContentText(msg)
+                    .setSmallIcon(R.drawable.ic_notificaciones)
+                    .setContentIntent(resultPendingIntent)
+                    .setAutoCancel(true) //Make this notification automatically dismissed when the user touches it
+                    .setOnlyAlertOnce(true)
+                    .build();
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // mId allows you to update the notification later on.
+            int mId = new Random().nextInt((25000 - 1) + 1) + 1;
+            Log.d("MENSAJES", "Nuevo random " + mId);
+            mNotificationManager.notify(mId, noti);
         }
     }
-
 }

@@ -1,6 +1,10 @@
 package com.tdp2grupo9.drawer;
 
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -9,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -16,16 +21,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.fragment.MiPerfilFragment;
 import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.fragment.MisPublicacionesFragment;
+import com.tdp2grupo9.googlecloudmessaging.registration.Registration;
 import com.tdp2grupo9.login.LoginActivity;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
