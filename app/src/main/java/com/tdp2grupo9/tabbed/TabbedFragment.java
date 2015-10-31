@@ -61,7 +61,7 @@ public class TabbedFragment extends Fragment {
                 case 0: return  UltimasPublicacionesFragment.newInstance();
                 case 1: return PublicarAdopcionFragment.newInstance();
                 case 2: return BuscarMascotaFragment.newInstance(tabbedFragment);
-                case 3: return ResultadosBusquedaFragment.newInstance();
+                case 3: return ResultadosBusquedaFragment.newInstance(tabbedFragment);
                 default: return null;
             }
         }
@@ -123,6 +123,19 @@ public class TabbedFragment extends Fragment {
                 Fragment fragment = childFragments.get(i);
                 if (fragment instanceof ResultadosBusquedaFragment) {
                     ((ResultadosBusquedaFragment) fragment).startSearch(bundle);
+                    mViewPager.setCurrentItem(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void volverABusqueda() {
+        List<Fragment> childFragments = getChildFragmentManager().getFragments();
+        if (childFragments != null) {
+            for (int i = 0; i < childFragments.size(); i++) {
+                Fragment fragment = childFragments.get(i);
+                if (fragment instanceof BuscarMascotaFragment) {
                     mViewPager.setCurrentItem(i);
                     break;
                 }

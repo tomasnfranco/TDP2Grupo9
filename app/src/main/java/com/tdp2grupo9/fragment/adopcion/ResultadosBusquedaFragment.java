@@ -14,6 +14,7 @@ import com.tdp2grupo9.fragment.PublicacionesFragment;
 import com.tdp2grupo9.listview.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.TipoPublicacion;
+import com.tdp2grupo9.modelo.TiposEnum;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
@@ -27,7 +28,6 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
-import com.tdp2grupo9.modelo.TiposEnum;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
 /**
@@ -35,11 +35,14 @@ import com.tdp2grupo9.tabbed.TabbedFragment;
  */
 public class ResultadosBusquedaFragment extends PublicacionesFragment {
 
+    private static final int TABBED_FRAGMENT_REQUEST_CODE = 1;
+
     private View mFragmentView;
     private ImageButton mReturnSearchButton;
 
-    public static ResultadosBusquedaFragment newInstance() {
+    public static ResultadosBusquedaFragment newInstance(Fragment targetFragment) {
         ResultadosBusquedaFragment fragment = new ResultadosBusquedaFragment();
+        fragment.setTargetFragment(targetFragment, TABBED_FRAGMENT_REQUEST_CODE);
         return fragment;
     }
 
@@ -57,7 +60,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         mReturnSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ((TabbedFragment) getTargetFragment()).volverABusqueda();
             }
         });
     }
