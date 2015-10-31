@@ -32,4 +32,5 @@ public class EliminarPostulacionTransitoClickable extends CustomClickable{
     public Drawable getImageDrawable() {
         return getResources().getDrawable(R.drawable.button_transito);
     }
+
 }
