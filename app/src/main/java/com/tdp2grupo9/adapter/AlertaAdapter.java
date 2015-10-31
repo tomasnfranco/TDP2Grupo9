@@ -121,6 +121,7 @@ public class AlertaAdapter extends BaseAdapter{
                 bundle.putDouble("latitud", alertasList.get(i).getLatitud());
                 bundle.putDouble("longitud", alertasList.get(i).getLongitud());
 
+
                 TabbedFragment.newInstance().showBuscarMascotaResults(bundle);
 
             }

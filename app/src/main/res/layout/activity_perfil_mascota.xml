@@ -41,81 +41,112 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"></RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp">
+                android:layout_marginLeft="16dp"
+                android:paddingLeft="10dp">
 
                 <com.tdp2grupo9.view.clickable.PostularmeAdopcionClickable
                     android:id="@+id/postularme_a_adoptar"
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="false"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="false" />
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentStart="false"
+                    android:paddingStart="130dp" />
 
                 <com.tdp2grupo9.view.clickable.PostularmeHogarTransitoClickable
                     android:id="@+id/postular_a_hogar"
                     android:layout_alignParentLeft="false"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/postularme_a_adoptar"
                     android:layout_marginTop="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="10dp" />
+                    android:paddingStart="130dp" />
 
-                <com.tdp2grupo9.view.clickable.EliminarPublicacionClickable
-                    android:id="@+id/eliminar_publicacion"
+                <com.tdp2grupo9.view.clickable.ReclamarMascotaClickable
+                    android:id="@+id/reclamar_mascota"
                     android:layout_alignParentLeft="false"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/postular_a_hogar"
                     android:layout_marginTop="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="10dp" />
+                    android:paddingStart="130dp" />
+
+                <com.tdp2grupo9.view.clickable.EliminarPublicacionClickable
+                    android:id="@+id/eliminar_publicacion"
+                    android:layout_alignParentLeft="false"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/reclamar_mascota"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingStart="130dp" />
 
                 <com.tdp2grupo9.view.clickable.EditarPublicacionClickable
                     android:id="@+id/editar_publicacion"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/eliminar_publicacion"
                     android:layout_alignStart="@+id/eliminar_publicacion"
-                    android:layout_below="@+id/eliminar_publicacion" />
+                    android:layout_below="@+id/eliminar_publicacion"
+                    android:layout_marginRight="16dp"
+                    android:paddingStart="130dp" />
 
-
-                <com.tdp2grupo9.view.clickable.EliminarPostulacionAdopcionClickable
-                    android:id="@+id/eliminar_postulacion_adoptar"
+                <com.tdp2grupo9.view.clickable.EliminarReclamoClickable
+                    android:id="@+id/eliminar_reclamo"
                     android:layout_alignParentLeft="false"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/editar_publicacion"
                     android:layout_marginTop="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="10dp" />
+                    android:paddingStart="130dp" />
+
+                <com.tdp2grupo9.view.clickable.EliminarPostulacionAdopcionClickable
+                    android:id="@+id/eliminar_postulacion_adoptar"
+                    android:layout_alignParentLeft="false"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/eliminar_reclamo"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingStart="130dp" />
 
                 <com.tdp2grupo9.view.clickable.EliminarPostulacionTransitoClickable
                     android:id="@+id/eliminar_postulacion_transito"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/eliminar_postulacion_adoptar"
                     android:layout_alignStart="@+id/eliminar_postulacion_adoptar"
                     android:layout_below="@+id/eliminar_postulacion_adoptar"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginRight="16dp"
+                    android:paddingStart="130dp" />
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="10dp">
+            </RelativeLayout>¿
+
             <View style="@style/HorizontalDivider"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp">
+                android:layout_height="10dp"
+                android:layout_marginTop="10dp">
             </RelativeLayout>¿
         </LinearLayout>
 

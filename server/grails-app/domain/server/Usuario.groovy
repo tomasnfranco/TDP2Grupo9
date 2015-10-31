@@ -14,6 +14,7 @@ class Usuario {
 	boolean activo = true
 	String token = ""
 	String foto = ""
+	String gcmId = ""
 
 	static mapping = {
 		foto type: 'text'
@@ -52,6 +53,7 @@ class Usuario {
 		telefono (blank:false)
 		direccion (blank:false)
 		foto blank:true, nullable: true
+		gcmId blank: true, nullable: true
     }
 	
 	def generator = { String alphabet, int n ->
