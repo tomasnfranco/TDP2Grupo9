@@ -27,6 +27,7 @@ import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SeleccionAtributosFragment extends Fragment {
@@ -56,10 +57,11 @@ public abstract class SeleccionAtributosFragment extends Fragment {
             atributoPublicacion.setValor(atributoPublicacion.getName());
         }
 
-        if (atributos.size() > 0 && atributos.get(0).getId() > 0)
-            atributos.add(0, atributoPublicacion);
+        List<AtributoPublicacion> atts = new ArrayList<>();
+        atts.addAll(atributos);
+        atts.add(0, atributoPublicacion);
 
-        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(mFragmentView.getContext(), android.R.layout.simple_spinner_item, atributos);
+        AtributosPublicacionArrayAdapter atributosArrayAdapter = new AtributosPublicacionArrayAdapter(mFragmentView.getContext(), android.R.layout.simple_spinner_item, atts);
         atributosArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinner = (Spinner) mFragmentView.findViewById(id);
         spinner.setAdapter(atributosArrayAdapter);

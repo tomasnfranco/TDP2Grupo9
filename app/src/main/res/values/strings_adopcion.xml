@@ -2,7 +2,6 @@
 <resources>
     <string name="adopcion_toolbar_title">Adopción</string>
     <string name="ultimas_publicaciones"><font color='white'>Recientes</font></string>
-    <string name="publicar_adopcion"><font color='white'>Publicar Adopción</font></string>
     <string name="publicar_busqueda"><font color='white'>Publicar Búsqueda</font></string>
     <string name="buscar_mascota"><font color='white'>Buscar Mascota</font></string>
     <string name="guardar_publicacion"><font color='white'>Guardar Publicación</font></string>
