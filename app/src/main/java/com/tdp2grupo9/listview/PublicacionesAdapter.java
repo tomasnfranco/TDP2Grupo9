@@ -877,6 +877,25 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
     }
 
+    private void updateCancelacionDePostulacion(TiposClickeableEnum tipo){
+        switch(tipo) {
+            case ELIMINAR_POST_ADOP:
+                eliminarPostulacionAdopcionClickable.setVisibility(View.GONE);
+                postularmeAdopcionClickable.setVisibility(View.VISIBLE);
+                break;
+            case ELIMINAR_RECLAMO:
+                eliminarReclamoClickable.setVisibility(View.GONE);
+                reclamarMascotaClickable.setVisibility(View.VISIBLE);
+                break;
+            case ELIMINAR_POST_TRANS:
+                eliminarPostulacionTransitoClickable.setVisibility(View.GONE);
+                postularmeTransitoClickable.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+        }
+    }
+
     private void initialiceElementosMensajes(View v){
         consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         replicaConsulta = (TextView) v.findViewById(R.id.replica_consulta);
@@ -1020,6 +1039,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }
 
     }
+
 
     private void setAdapterReclamanMascota(View v, String tipoAdapter, List<Postulante> postulantes, int id_publicacion){
         List<Mensaje> mensajesPrivados = new ArrayList<>();
@@ -1206,6 +1226,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
+
+                notifyDataSetChanged();
             }
             eliminarPostulacionTask = null;
         }
