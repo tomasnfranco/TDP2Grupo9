@@ -128,7 +128,7 @@ class PublicacionService {
             return BAD_REQUEST
         }
         if(publicacion) {
-            if (!publicacion.quierenAdoptar.contains(quiereAdoptar)) {
+            if (!publicacion.quierenAdoptar.id.contains(quiereAdoptar.id)) {
                 println "salio porque no existe quiereAdoptar en la lista de los que quieren"
                 return FORBIDDEN
             }
