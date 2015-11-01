@@ -48,9 +48,9 @@ class NotificacionesService {
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
         }
-        if (publicador.gcmId != null && publicador.gcmId != '') {
+        if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota"], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
