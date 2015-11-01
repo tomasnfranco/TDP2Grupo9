@@ -3,6 +3,7 @@ package com.tdp2grupo9.adapter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.Fecha;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
@@ -37,10 +39,12 @@ public class AlertaAdapter extends BaseAdapter{
     private ImageButton btnEditar;
     private EliminarAlertaTask eliminarAlertaTask;
     private View alertaView;
+    private FragmentActivity activity;
 
-    public AlertaAdapter(Context context, List<Alerta> alertas){
+    public AlertaAdapter(Context context, List<Alerta> alertas, FragmentActivity activity){
         this.alertasList = alertas;
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -121,7 +125,7 @@ public class AlertaAdapter extends BaseAdapter{
                 bundle.putDouble("latitud", alertasList.get(i).getLatitud());
                 bundle.putDouble("longitud", alertasList.get(i).getLongitud());
 
-                TabbedFragment.newInstance().showBuscarMascotaResults(bundle);
+                ((DrawerMenuActivity) activity).showBuscarMascotaResults(bundle);
 
             }
         });

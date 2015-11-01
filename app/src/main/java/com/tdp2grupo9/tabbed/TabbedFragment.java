@@ -17,6 +17,7 @@ import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
 import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
 import com.tdp2grupo9.fragment.adopcion.ResultadosBusquedaFragment;
 import com.tdp2grupo9.fragment.adopcion.UltimasPublicacionesFragment;
+import com.tdp2grupo9.utils.EjecucionAlertaIntermediary;
 
 import java.util.List;
 import java.util.Locale;
@@ -28,15 +29,10 @@ public class TabbedFragment extends Fragment {
     private Context context;
     private TabbedFragment tabbedFragment;
 
-    public static TabbedFragment newInstance() {
-        return new TabbedFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tabbed, container, false);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(
-                getChildFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -52,11 +48,6 @@ public class TabbedFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new TabbedContentFragment();
-            Bundle args = new Bundle();
-            args.putInt(TabbedContentFragment.ARG_SECTION_NUMBER, position + 10);
-            fragment.setArguments(args);
-
             switch (position) {
                 case 0: return  UltimasPublicacionesFragment.newInstance();
                 case 1: return PublicarAdopcionFragment.newInstance();
@@ -84,36 +75,16 @@ public class TabbedFragment extends Fragment {
         }
     }
 
-    public static class TabbedContentFragment extends Fragment {
-
-        public static final String ARG_SECTION_NUMBER = "section_number";
-
-        public TabbedContentFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_tabbed_content,
-                    container, false);
-            TextView dummyTextView = (TextView) rootView
-                    .findViewById(R.id.section_label);
-            dummyTextView.setText(Integer.toString(getArguments().getInt(
-                    ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
-
     @Override
-         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                 super.onActivityResult(requestCode, resultCode, data);
-                 List<Fragment> childFragments = getChildFragmentManager().getFragments();
-                 if (childFragments != null) {
-                         for (Fragment fragment : childFragments) {
-                                 if (fragment != null)
-                                         fragment.onActivityResult(requestCode, resultCode, data);
-                             }
-                     }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         super.onActivityResult(requestCode, resultCode, data);
+         List<Fragment> childFragments = getChildFragmentManager().getFragments();
+         if (childFragments != null) {
+             for (Fragment fragment : childFragments) {
+                 if (fragment != null)
+                     fragment.onActivityResult(requestCode, resultCode, data);
+                 }
+         }
     }
 
     public void showBuscarMascotaResults(Bundle bundle) {
@@ -128,6 +99,12 @@ public class TabbedFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public void showResultadosBusquedaAlerta(Bundle bundle) {
+        mViewPager.setCurrentItem(3);
+        EjecucionAlertaIntermediary.shouldEjecutarAlerta = true;
+        EjecucionAlertaIntermediary.searchData = bundle;
     }
 
     public void volverABusqueda() {
