@@ -331,7 +331,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 contacto.setText("");
                 condicionesAdopcion.setText("");
 
-                Toast toast3 = new Toast(getActivity().getApplicationContext());
+                /*Toast toast3 = new Toast(getActivity().getApplicationContext());
 
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View layout = inflater.inflate(R.layout.toast_layout,
@@ -341,7 +341,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
                 toast3.setDuration(Toast.LENGTH_SHORT);
                 toast3.setView(layout);
-                toast3.show();
+                toast3.show();*/
 
                 navigateToMisPublicaciones();
             } else {

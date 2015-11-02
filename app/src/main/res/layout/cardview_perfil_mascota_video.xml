@@ -41,18 +41,39 @@
 
         <View style="@style/HorizontalDivider"/>
 
-        <com.daimajia.slider.library.SliderLayout
-            android:id="@+id/video_slider"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:paddingTop="8dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="186dp">
 
-        <com.daimajia.slider.library.Indicators.PagerIndicator
-                   android:id="@+id/custom_indicator_video"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:paddingTop="16dp"
-                   android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/image_video"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentEnd="false"
+                android:background="@drawable/publicacion_background"
+                android:id="@+id/view_reproducir_video">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/reproducir_video"
+                    android:id="@+id/textView6"
+                    android:textColor="#ffffffff"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical|center_horizontal" />
+            </RelativeLayout>
+        </RelativeLayout>
+
         <!--style="@style/AndroidImageSlider_Magnifier_Oval_Black"-->
 
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.listview.PublicacionesAdapter;
+import com.tdp2grupo9.adapter.PublicacionesAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.TiposEnum;
 

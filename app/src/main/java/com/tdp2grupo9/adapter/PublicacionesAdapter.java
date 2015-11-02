@@ -1,9 +1,10 @@
-package com.tdp2grupo9.listview;
+package com.tdp2grupo9.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -58,6 +59,8 @@ import com.tdp2grupo9.modelo.TiposEnum;
 
 import org.w3c.dom.Text;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,8 +76,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private EliminarPublicacionTask eliminarPublicacionTask;
     private EliminarPostulacionTask eliminarPostulacionTask;
 
-    private SliderLayout photo_slider;
-    private SliderLayout video_slider;
     private ListView listView;
     private List<Mensaje> mensajes;
     private ImageView imagenSeleccionada;
@@ -440,7 +441,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         if (tipos == TiposEnum.MIS_PUBLICACIONES){
             eliminarPublicacionClickable.setVisibility(View.VISIBLE);
-            editarPublicacionClickable.setVisibility(View.VISIBLE);
+            if (!publicaciones.get(i).getConcreatada())
+                editarPublicacionClickable.setVisibility(View.VISIBLE);
         }
 
         if (tipos == TiposEnum.MIS_POSTULACIONES){
@@ -657,10 +659,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarInformacionAdicional(int i, View v){
         String condiciones = publicaciones.get(i).getCondiciones();
-        if (condiciones != null && condiciones.isEmpty())
+        if (condiciones == null || condiciones.isEmpty() || condiciones.equals(" "))
             condiciones = "No tiene.";
-        else
-            ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
+
+        ((TextView) v.findViewById(R.id.infCondicionesAdopcion)).setText(condiciones);
 
         String infoAdicional="";
 
@@ -748,14 +750,14 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void cargarVideos(int i, View view) {
 
-        String video = publicaciones.get(i).getVideoLink();
-        video_slider = (SliderLayout) view.findViewById(R.id.video_slider);
+        String video = "";
+
         final HashMap<String, String> videos = new HashMap<>();
 
-        if (video != null && !video.isEmpty() && video.length() > 32) {
-            video = video.substring(32);
-            int aux = 0;
-            videos.put("Video " + aux, video);
+        if (publicaciones.get(i).getVideoLink() != null && !publicaciones.get(i).getVideoLink().isEmpty() &&
+                publicaciones.get(i).getVideoLink().length() > 32) {
+            video = publicaciones.get(i).getVideoLink().substring(32);
+            videos.put("Video", video);
         }
 
         if (videos.isEmpty()) {
@@ -764,30 +766,29 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         } else {
             CardView cardview_video = (CardView) view.findViewById(R.id.cardview_videos_pm);
             cardview_video.setVisibility(View.VISIBLE);
-            for (final String name : videos.keySet()) {
-                TextSliderView slide = new TextSliderView(view.getContext());
-                slide.image("http://img.youtube.com/vi/" + videos.get(name) + "/mqdefault.jpg");
-                slide.setScaleType(BaseSliderView.ScaleType.CenterCrop);
-                slide.description("Reproducir");
-                slide.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                    @Override
-                    public void onSliderClick(BaseSliderView baseSliderView) {
-                        Toast.makeText(baseSliderView.getContext(), "Click", Toast.LENGTH_SHORT).show();
-                        try {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videos.get(name)));
-                            intent.putExtra("force_fullscreen", true);
-                            context.startActivity(intent);
-                        } catch (ActivityNotFoundException e) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videos.get(name)));
-                            context.startActivity(intent);
-                        }
+
+            View view_reproducir = view.findViewById(R.id.view_reproducir_video);
+            ImageView image_video = (ImageView) view.findViewById(R.id.image_video);
+
+            new DownloadImageTask(image_video)
+                    .execute("http://img.youtube.com/vi/" + video + "/mqdefault.jpg");
+
+            view_reproducir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videos.get("Video")));
+                        intent.putExtra("force_fullscreen", true);
+                        context.startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videos.get("Video")));
+                        context.startActivity(intent);
                     }
-                });
-                video_slider.addSlider(slide);
-            }
-            video_slider.setPresetTransformer(SliderLayout.Transformer.RotateDown);
-            video_slider.setCustomAnimation(new DescriptionAnimation());
-            video_slider.setCustomIndicator((PagerIndicator) view.findViewById(R.id.custom_indicator_video));
+                }
+            });
+
+
+
         }
     }
 
@@ -982,7 +983,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 }
             });
 
-            listViewAdopciones.setOnTouchListener(new View.OnTouchListener() {
+            listViewOfrecenTransito.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
                     view.getParent().requestDisallowInterceptTouchEvent(true);
@@ -1007,7 +1008,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }else if (publicaciones.get(i).getConcreatada() && publicaciones.get(i).getEnTransito()){
                 CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
                 cardview_postulaciones.setVisibility(View.GONE);
-            }else if (publicaciones.get(i).getConcreatada() && postulantesOfrecenTransito.isEmpty()){
+            }else if (publicaciones.get(i).getConcreatada()){
                 CardView cardview_postulaciones = (CardView) v.findViewById(R.id.cardview_postulaciones);
                 cardview_postulaciones.setVisibility(View.GONE);
             } else if (publicaciones.get(i).getEnTransito() && postulantesAdopcion.isEmpty()){
@@ -1226,7 +1227,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-
+                Toast.makeText(context, context.getResources().getString(R.string.postulacion_cancelada),
+                        Toast.LENGTH_LONG).show();
+                removeItem(position);
                 notifyDataSetChanged();
             }
             eliminarPostulacionTask = null;
@@ -1249,7 +1252,31 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return mensajes;
     }
 
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
 
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
 
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+                //URL newurl = new URL(urldisplay);
+                //mIcon11 = BitmapFactory.decodeStream(newurl.openConnection() .getInputStream());
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
 }

@@ -36,6 +36,8 @@
     <string name="maximo_fotos_alcanzado">Ya ha alcanzado el máximo de fotos que puede cargar</string>
     <string name="no_hay_fotos">No hay fotos para eliminar</string>
     <string name="limpiar_filtros">Limpiar filtros</string>
+    <string name="postulacion_cancelada">Postulación cancelada</string>
+    <string name="reproducir_video">Reproducir video</string>
 
     <string name="crear_alerta">Crear alerta</string>
     <string name="postularme_adopcion">Postularme a Adoptar</string>
