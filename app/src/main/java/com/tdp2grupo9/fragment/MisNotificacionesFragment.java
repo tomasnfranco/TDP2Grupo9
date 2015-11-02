@@ -34,7 +34,7 @@ public class MisNotificacionesFragment extends AlertasFragment{
 
     @Override
     protected void cargarListView() {
-        AlertaAdapter adapter = new AlertaAdapter(mFragmentView.getContext(), mAlertas);
+        AlertaAdapter adapter = new AlertaAdapter(mFragmentView.getContext(), mAlertas, getActivity());
         mListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

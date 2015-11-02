@@ -29,6 +29,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
 import com.tdp2grupo9.tabbed.TabbedFragment;
+import com.tdp2grupo9.utils.EjecucionAlertaIntermediary;
 
 /**
  * Created by Tomas on 15/10/2015.
@@ -53,6 +54,15 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         mListView = (ExpandableListView) mFragmentView.findViewById(R.id.list_view_resultados_busqueda);
         configureReturnSearchButton();
         return mFragmentView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (EjecucionAlertaIntermediary.shouldEjecutarAlerta) {
+            EjecucionAlertaIntermediary.shouldEjecutarAlerta = false;
+            startSearch(EjecucionAlertaIntermediary.searchData);
+        }
     }
 
     public void configureReturnSearchButton() {

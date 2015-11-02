@@ -191,6 +191,12 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         return result;
     }
 
+    public void showBuscarMascotaResults(Bundle bundle) {
+        setFragment(1, TabbedFragment.class);
+        getSupportFragmentManager().executePendingTransactions();
+        ((TabbedFragment) getSupportFragmentManager().getFragments().get(0)).showResultadosBusquedaAlerta(bundle);
+    }
+
     public class UserLogoutTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override

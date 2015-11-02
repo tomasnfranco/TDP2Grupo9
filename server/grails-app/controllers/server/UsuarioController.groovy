@@ -119,17 +119,22 @@ class UsuarioController {
 		println "Login $params"
         def user = null
 		if(params.facebookId != null){
+            println "Encontro usuario de facebook"
 			user = Usuario.findByFacebookId(params.facebookId)
 		} else if(params.email != null) {
             user = Usuario.findByEmail(params.email)
             if(params.password == null ||params.password.trim() == ''){
+                println "no se envio contraseña"
                 render status: FORBIDDEN
                 return
             } else {
                 if(user != null) {
+                    println "se encontro usuario por mail"
                     if (!user.password.equals(params.password)) {
-                        notFound()
+                        println "las contraseñas no coinciden"
+                        render status: METHOD_NOT_ALLOWED
                         user = null
+                        return
                     }
                 }
             }
