@@ -24,7 +24,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante se postuló para adoptar a $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante se postuló para adoptar a $mascota",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -50,7 +50,7 @@ class NotificacionesService {
         }
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota"], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota",token:postulante.token], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -112,7 +112,7 @@ class NotificacionesService {
 
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota"], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota",token:postulante.token], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -137,7 +137,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${mensaje.usuarioPregunta.username} ha preguntado por $mascota: ${mensaje.texto}"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "${mensaje.usuarioPregunta.username} ha preguntado por $mascota: ${mensaje.texto}",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -163,7 +163,7 @@ class NotificacionesService {
         }
         if (mensaje.usuarioPregunta.gcmId != null && mensaje.usuarioPregunta.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}"], [mensaje.usuarioPregunta.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",token:mensaje.usuarioPregunta.token], [mensaje.usuarioPregunta.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -186,7 +186,7 @@ class NotificacionesService {
         }
         if (usuario.gcmId != null && usuario.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda"], [usuario.gcmId])
+                androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda",token:usuario.token], [usuario.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -208,7 +208,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante se ofreció para dar un hogar de tránsito a $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante se ofreció para dar un hogar de tránsito a $mascota",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -234,7 +234,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para darle hogar de tránsito a $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para darle hogar de tránsito a $mascota",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -294,7 +294,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante cree tener a $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante cree tener a $mascota",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -318,9 +318,9 @@ class NotificacionesService {
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
         }
-        if (publicador.gcmId != null && publicador.gcmId != '') {
+        if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que tenes a $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que tenes a $mascota",token:postulante.token], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -363,7 +363,7 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante dice ser el dueño de $mascota"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante dice ser el dueño de $mascota",token:publicador.token], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -387,9 +387,9 @@ class NotificacionesService {
         } else {
             println "No se envio mail por adopción exitosa al usuario que quedó ${postulante.username} debido que no tiene el mail registrado en el sistema."
         }
-        if (publicador.gcmId != null && publicador.gcmId != '') {
+        if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que $mascota te pertenece"], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que $mascota te pertenece",token:postulante.token], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
