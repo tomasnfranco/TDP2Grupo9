@@ -168,7 +168,7 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
 
     @Override
     protected void cargarListView(){
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones ,TiposEnum.BUSQUEDA));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones ,TiposEnum.BUSQUEDA, getActivity()));
     }
 
 }

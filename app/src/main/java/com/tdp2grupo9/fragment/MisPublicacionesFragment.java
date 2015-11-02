@@ -37,6 +37,10 @@ public class MisPublicacionesFragment  extends PublicacionesFragment {
 
     @Override
     protected void cargarListView() {
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_PUBLICACIONES));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_PUBLICACIONES, getActivity()));
+    }
+
+    public void updateFragment(){
+        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 }

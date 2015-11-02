@@ -42,7 +42,7 @@ public class UltimasPublicacionesFragment extends PublicacionesFragment {
     }
 
     protected void cargarListView(){
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.RECIENTES));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.RECIENTES, getActivity()));
     }
 
 }

@@ -1,8 +1,11 @@
 package com.tdp2grupo9.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
+import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.Postulante;
@@ -58,13 +63,16 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
     private ImageButton btnSendMail;
     private EnviarConsultaRespuestaTask enviarConsultaRespuestaTask;
     private ConcretarTransitoTask concretarTransitoTask;
+    FragmentActivity activity;
 
-    public PostulacionesAdapter(Context context,String tipo, List<Postulante> postulantes, int idPublicacion, List<Mensaje> mensajes){
+    public PostulacionesAdapter(Context context,String tipo, List<Postulante> postulantes, int idPublicacion, List<Mensaje> mensajes,
+                                FragmentActivity activity){
         this.context = context;
         this.tipo = tipo;
         this.postulantes = postulantes;
         this.id_publicacion = idPublicacion;
         this.mensajesPrivados = mensajes;
+        this.activity = activity;
     }
 
     private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacion(final int idPostulante){
@@ -340,6 +348,11 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         return false;
     }
 
+
+    private void updateConcretarPostulacion(){
+        ((DrawerMenuActivity) activity).showUpdateConcretarPostulacion();
+    }
+
     public class ConcretarTransitoTask extends AsyncTask<Void, Void, Boolean> {
         int id_publicacion;
         int id_postulante;
@@ -363,6 +376,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
+                updateConcretarPostulacion();
             }
             concretarTransitoTask = null;
         }
@@ -396,6 +410,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
+                updateConcretarPostulacion();
             }
             concretarAdopcionTask = null;
         }

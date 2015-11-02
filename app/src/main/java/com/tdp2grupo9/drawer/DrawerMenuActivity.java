@@ -27,6 +27,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.adapter.PostulacionesAdapter;
 import com.tdp2grupo9.fragment.MiPerfilFragment;
 import com.tdp2grupo9.fragment.MisNotificacionesFragment;
 import com.tdp2grupo9.fragment.MisPostulacionesFragment;
@@ -195,6 +196,23 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         setFragment(1, TabbedFragment.class);
         getSupportFragmentManager().executePendingTransactions();
         ((TabbedFragment) getSupportFragmentManager().getFragments().get(0)).showResultadosBusquedaAlerta(bundle);
+    }
+
+    public void showUpdatePostulaciones() {
+        setFragment(4, MisPostulacionesFragment.class);
+        getSupportFragmentManager().executePendingTransactions();
+    }
+
+    public void showUpdateCancelPostulaciones() {
+        setFragment(4, MisPostulacionesFragment.class);
+        getSupportFragmentManager().executePendingTransactions();
+        ((MisPostulacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
+    }
+
+    public void showUpdateConcretarPostulacion() {
+        setFragment(3, MisPublicacionesFragment.class);
+        getSupportFragmentManager().executePendingTransactions();
+        ((MisPublicacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
     }
 
     public class UserLogoutTask extends AsyncTask<Void, Void, Boolean> {

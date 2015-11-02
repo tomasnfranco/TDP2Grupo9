@@ -1,5 +1,7 @@
 package com.tdp2grupo9.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +31,16 @@ public class MisPostulacionesFragment extends PublicacionesFragment {
 
         mBuscarAdopcionesTask = new PublicacionesFragment.BuscarAdopcionesTask(publicacion, TiposEnum.MIS_POSTULACIONES);
         mBuscarAdopcionesTask.execute((Void) null);
+
         return mFragmentView;
     }
 
     @Override
     protected void cargarListView() {
-        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_POSTULACIONES));
+        mListView.setAdapter(new PublicacionesAdapter(mFragmentView.getContext(), mPublicaciones, TiposEnum.MIS_POSTULACIONES, getActivity()));
+    }
+
+    public void updateFragment(){
+        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 }
