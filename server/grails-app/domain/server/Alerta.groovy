@@ -19,7 +19,7 @@ class Alerta {
     VacunasAlDia vacunasAlDia
     double latitud = 0
     double longitud = 0
-    double distancia = 50
+    double distancia = 500
     boolean requiereCuidadosEspeciales = false
     boolean necesitaTransito = false
     int tipoPublicacion = 1
