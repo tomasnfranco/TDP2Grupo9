@@ -10,6 +10,7 @@
     <string name="error_invalid_email">Dirección de correo inválida</string>
     <string name="error_invalid_password_longitud">Longitud mínima</string>
     <string name="error_invalid_password_alfanumerica">Sólo números y/o letras</string>
+    <string name="error_invalid_password">Email o password incorrecta</string>
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Debe completar este campo</string>
 

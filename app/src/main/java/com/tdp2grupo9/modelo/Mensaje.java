@@ -217,7 +217,7 @@ public class Mensaje {
         try {
             String atributos = +id+ "?token=" + token;
 
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
 
             urlConnection = Connection.getHttpUrlConnection("mensaje/"+atributos);
 
@@ -249,7 +249,7 @@ public class Mensaje {
         try {
             String parametros = "?token="+token+"&publicacion="+publicacion.getId();
 
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + parametros);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + parametros);
 
             urlConnection = Connection.getHttpUrlConnection("publicacion/mensajes"+parametros);
 

@@ -66,6 +66,7 @@ public class SplashScreenActivity extends Activity {
     private void pasarASiguienteActivity() {
         Intent intent = new Intent("com.tdp2grupo9.login.LoginActivity");
         startActivity(intent);
+        finish();
     }
 
 }

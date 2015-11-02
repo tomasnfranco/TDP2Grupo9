@@ -28,7 +28,7 @@ public class InitialActivity extends Activity {
     private static final String TAG = "BSH.GcmAct";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private BroadcastReceiver mRegistrationBroadcastReceiver = null;
     private ObtenerAtributosTask obtenerAtributosTask = null;
 
     @Override
@@ -39,13 +39,15 @@ public class InitialActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+        if (mRegistrationBroadcastReceiver != null)
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
     }
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        if (mRegistrationBroadcastReceiver != null)
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
 

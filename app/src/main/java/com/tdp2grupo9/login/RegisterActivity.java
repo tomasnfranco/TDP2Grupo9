@@ -520,10 +520,6 @@ public class RegisterActivity extends InitialActivity implements View.OnClickLis
                 if (Usuario.getInstancia().isLogueado()) {
                     iniciar();
                 } else {
-                    //supongo que el error es ese :P
-                    Toast.makeText(this.context,
-                            "No se pudo registrar. El email ya existe.",
-                            Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(this.context,

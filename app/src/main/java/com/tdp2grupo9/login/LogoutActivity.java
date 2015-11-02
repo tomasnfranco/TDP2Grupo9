@@ -68,6 +68,8 @@ public class LogoutActivity extends Activity implements View.OnClickListener {
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().logout();
+                if (!Usuario.getInstancia().isLogueado())
+                    Usuario.getInstancia().registrarGCM("");
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
@@ -83,7 +85,6 @@ public class LogoutActivity extends Activity implements View.OnClickListener {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                 }
-
                 finish();
             } else {
             }

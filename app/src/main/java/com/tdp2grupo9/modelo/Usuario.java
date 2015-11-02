@@ -5,6 +5,8 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import com.tdp2grupo9.modelo.exceptions.WrongPasswordException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +19,7 @@ import java.util.List;
 public class Usuario {
 
 
-    private static final String TAG = "BSH.Publicacion";
+    private static final String TAG = "BSH.Usuario";
 
     private static final Usuario INSTANCIA = new Usuario();
 
@@ -187,7 +189,7 @@ public class Usuario {
         }
     }
 
-    public void login(){
+    public void login() throws WrongPasswordException {
         String METHOD = "login";
 
         Log.d(TAG, METHOD + " facebookId " + this.facebookId);
@@ -217,14 +219,21 @@ public class Usuario {
             out.close();
 
             int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                this.logueado = true;
-                Log.d(TAG, METHOD + " usuario logueado correctamente.");
-            } else {
-                this.logueado = false;
-                Log.w(TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
+            switch (HttpResult) {
+                case HttpURLConnection.HTTP_OK:
+                    this.jsonToUsuario(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
+                    this.logueado = true;
+                    Log.d(TAG, METHOD + " usuario logueado correctamente.");
+                    break;
+                case HttpURLConnection.HTTP_BAD_METHOD:
+                    Log.d(TAG, METHOD + " password incorrecta.");
+                    throw new WrongPasswordException();
+                default:
+                    this.logueado = false;
+                    Log.w(TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());
+                    break;
             }
+
         } catch (IOException | JSONException e) {
             Log.e(TAG, METHOD + " ERROR ", e);
         }  finally {

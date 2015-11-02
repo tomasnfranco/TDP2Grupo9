@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -38,6 +39,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.exceptions.WrongPasswordException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -146,7 +148,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
             if (authenticationFacebookGetPhoto != null)
                 return;
-            authenticationFacebookGetPhoto = new UserFacebookGetPhoto();
+            authenticationFacebookGetPhoto = new UserFacebookGetPhoto(this);
             authenticationFacebookGetPhoto.execute((Void) null);
 
         } catch (JSONException e) {
@@ -253,7 +255,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
             Usuario.getInstancia().setPassword(passwordEditText.getText().toString());
             Usuario.getInstancia().setFacebookId(null);
             Usuario.getInstancia().setFacebookToken("");
-            authenticationEmailPasswordTask = new UserEmailPasswordLoginTask();
+            authenticationEmailPasswordTask = new UserEmailPasswordLoginTask(this);
             authenticationEmailPasswordTask.execute((Void) null);
         }
     }
@@ -300,13 +302,18 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
     public class UserEmailPasswordLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        UserEmailPasswordLoginTask() {}
+        private Context context;
+        private boolean wrongpass = false;
+
+        UserEmailPasswordLoginTask(Context context) { this.context = context; }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().login();
                 Thread.sleep(200);
+            } catch (WrongPasswordException e) {
+                this.wrongpass = true;
             } catch (InterruptedException e) {
                 return false;
             }
@@ -320,13 +327,20 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
                     iniciar();
+                    finish();
+                }else if (this.wrongpass) {
+                    Toast.makeText(this.context,
+                            "Password incorrecta. Intente nuevamente.",
+                        Toast.LENGTH_LONG).show();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
+                    finish();
                 }
-                finish();
             } else {
-                //TODO: ERROR
+                Toast.makeText(this.context,
+                        "Error inesperado.",
+                        Toast.LENGTH_LONG).show();
             }
         }
 
@@ -338,6 +352,10 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
     }
 
     public class UserFacebookGetPhoto extends AsyncTask<Void, Void, Boolean> {
+
+        private Context context;
+
+        UserFacebookGetPhoto(Context context) { this.context = context; }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -356,7 +374,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
         @Override
         protected void onPostExecute(final Boolean success) {
             authenticationFacebookGetPhoto = null;
-            authenticationFacebookTask = new UserFacebookLoginTask();
+            authenticationFacebookTask = new UserFacebookLoginTask(this.context);
             authenticationFacebookTask.execute((Void) null);
         }
 
@@ -368,13 +386,18 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
     public class UserFacebookLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        UserFacebookLoginTask() {}
+        private Context context;
+        private boolean wrongpass = false;
+
+        UserFacebookLoginTask(Context context) { this.context = context; }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 Usuario.getInstancia().login();
                 Thread.sleep(200);
+            } catch (WrongPasswordException e) {
+                this.wrongpass = true;
             } catch (InterruptedException e) {
                 return false;
             }
@@ -388,13 +411,20 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
             if (success) {
                 if (Usuario.getInstancia().isLogueado()) {
                     iniciar();
+                    finish();
+                }else if (this.wrongpass) {
+                    Toast.makeText(this.context,
+                            "Password incorrecta. Intente nuevamente.",
+                            Toast.LENGTH_LONG).show();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
+                    finish();
                 }
-                finish();
             } else {
-                //TODO: ERROR
+                Toast.makeText(this.context,
+                        "Error inesperado.",
+                        Toast.LENGTH_LONG).show();
             }
         }
 

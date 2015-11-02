@@ -3,6 +3,7 @@ package com.tdp2grupo9;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.exceptions.WrongPasswordException;
 import com.tdp2grupo9.modelo.publicacion.Castrado;
 import com.tdp2grupo9.modelo.publicacion.Color;
 import com.tdp2grupo9.modelo.publicacion.CompatibleCon;
@@ -188,7 +189,11 @@ public class UsuarioTest {
         usuario.logout();
         usuario.setEmail("usuario.loginmail@prueba.com");
         usuario.setPassword("121545787");
-        usuario.login();
+        try {
+            usuario.login();
+        } catch (WrongPasswordException e) {
+            e.printStackTrace();
+        }
 
         assertTrue("Debe estar logueado", usuario.isLogueado());
 
@@ -211,7 +216,11 @@ public class UsuarioTest {
 
         usuario.setEmail("usuario.wrongpassword@prueba.com");
         usuario.setPassword("654321");
-        usuario.login();
+        try {
+            usuario.login();
+        } catch (WrongPasswordException e) {
+            e.printStackTrace();
+        }
 
         assertFalse("No debe estar logueado", usuario.isLogueado());
     }

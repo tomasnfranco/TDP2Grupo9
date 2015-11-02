@@ -595,7 +595,7 @@ public class Publicacion {
         HttpURLConnection urlConnection = null;
         try {
             String atributos = +id+ "?token=" + token;
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
@@ -672,7 +672,7 @@ public class Publicacion {
             if (publicacionBusqueda.getNecesitaTransito() != null)
                 atributos += "&necesitaTransito="+publicacionBusqueda.getNecesitaTransito();
 
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/buscar"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
@@ -710,7 +710,7 @@ public class Publicacion {
         try {
             String atributos = "?token="+token;
             //"&offset="+offset+"max="+max
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/misPublicaciones"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
@@ -753,7 +753,7 @@ public class Publicacion {
         try {
             String atributos = "?token="+token;
             //"&offset="+offset+"max="+max
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/misPostulaciones"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
@@ -790,7 +790,7 @@ public class Publicacion {
         try {
             String atributos = "?token="+token;
             //"&offset="+offset+"max="+max
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
             urlConnection = Connection.getHttpUrlConnection("publicacion/misTransitos"+atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {

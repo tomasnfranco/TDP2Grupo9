@@ -67,7 +67,7 @@ public class Postulante {
         try {
             String atributos = +postulanteId+ "?token=" + token;
 
-            Log.e(LOG_TAG, METHOD + " enviado al servidor " + atributos);
+            Log.d(LOG_TAG, METHOD + " enviado al servidor " + atributos);
 
             urlConnection = Connection.getHttpUrlConnection("usuario/" + atributos);
 

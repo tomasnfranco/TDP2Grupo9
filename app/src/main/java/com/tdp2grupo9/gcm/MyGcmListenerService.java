@@ -54,6 +54,14 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
+        String userToken = data.getString("token");
+
+        if (!Usuario.getInstancia().getToken().equals(userToken)) {
+            Log.w(TAG, String.format("El token de usuario %s no coincide con el token de la notificacion %s ",
+                    Usuario.getInstancia().getToken(), userToken));
+            return;
+        }
+
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
