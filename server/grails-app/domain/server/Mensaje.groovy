@@ -2,20 +2,26 @@ package server
 
 class Mensaje {
     Publicacion publicacion
-    String texto
+    String pregunta
     String respuesta = ''
-    Usuario usuarioPregunta
-    Date fechaPregunta
+    Usuario usuarioOrigen
+    Usuario usuarioDestino
+    Date fechaPregunta = new Date()
     Date fechaRespuesta
 
     static constraints = {
-        texto blank: false
+        pregunta blank: false
         respuesta blank:true
+        usuarioOrigen nullable: true
+        usuarioDestino nullable: true
     }
 
     static marshalling = {
         virtual {
-            usuarioPreguntaNombre {value,json -> json.value(value.usuarioPregunta?.username ?: '')}
+            usuarioOrigenNombre {value,json -> json.value(value.usuarioOrigen?.username ?: '')}
+            usuarioOrigenId {value,json -> json.value(value.usuarioOrigen?.id ?: null)}
+            usuarioDestinoNombre {value,json -> json.value(value.usuarioDestino?.username ?: '')}
+            usuarioDestinoId {value,json -> json.value(value.usuarioDestino?.id ?: null)}
         }
     }
 }

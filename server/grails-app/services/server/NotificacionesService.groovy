@@ -119,53 +119,61 @@ class NotificacionesService {
         }
     }
 
-    def nuevaPregunta(Mensaje mensaje, def mascota, Usuario publicador){
-        if(publicador.email && !publicador.email.empty) {
-            mailService.sendMail {
-                async true
-                to "${publicador.email}"
-                subject "[BUSCA SUS HUELLAS]: Preguntaron por $mascota"
-                html "<html><body>Hola ${publicador.username},<br/>" +
-                        "${mensaje.usuarioPregunta.username} ha preguntado:" +
-                        "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.texto}" +
-                        "<br/><br/>" +
-                        "Entra a BUSCA SUS HUELLAS para responderle ${logoApp}</body></html>"
+    def nuevaPregunta(Mensaje mensaje, def mascota){
+        if(mensaje.usuarioDestino){
+            Usuario destino = mensaje.usuarioDestino
+            Usuario origen = mensaje.usuarioOrigen
+            if(destino.email && !destino.email.empty) {
+                mailService.sendMail {
+                    async true
+                    to "${destino.email}"
+                    subject "[BUSCA SUS HUELLAS]: Preguntaron por $mascota"
+                    html "<html><body>Hola ${destino.username},<br/>" +
+                            "${origen.username} ha preguntado:" +
+                            "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.pregunta}" +
+                            "<br/><br/>" +
+                            "Entra a BUSCA SUS HUELLAS para responderle ${logoApp}</body></html>"
+                }
+                println "E-mail enviado al usuario ${destino.username} al mail ${destino.email} porque ${origen.username} pregunto por $mascota"
+            } else {
+                println "No se envio mail por pregunta al publicador ${destino.username} debido que no tiene el mail registrado en el sistema."
             }
-            println "E-mail enviado al usuario ${publicador.username} al mail ${publicador.email} porque ${mensaje.usuarioPregunta.username} pregunto por $mascota"
-        } else {
-            println "No se envio mail por pregunta al publicador ${publicador.username} debido que no tiene el mail registrado en el sistema."
-        }
-        if (publicador.gcmId != null && publicador.gcmId != '') {
-            try {
-                androidGcmService.sendMessage([message: "${mensaje.usuarioPregunta.username} ha preguntado por $mascota: ${mensaje.texto}",token:publicador.token], [publicador.gcmId])
-            } catch (Exception e) {
-                println "No se pudo mandar la push $e"
+            if (destino.gcmId != null && destino.gcmId != '') {
+                try {
+                    androidGcmService.sendMessage([message: "${origen.username} ha preguntado por $mascota: ${mensaje.pregunta}",token:destino.token], [destino.gcmId])
+                } catch (Exception e) {
+                    println "No se pudo mandar la push $e"
+                }
             }
         }
     }
 
-    def respuestaAPregunta(Mensaje mensaje, def mascota, Usuario publicador){
-        if(mensaje.usuarioPregunta.email && !mensaje.usuarioPregunta.email.empty) {
-            mailService.sendMail {
-                async true
-                to "${mensaje.usuarioPregunta.email}"
-                subject "[BUSCA SUS HUELLAS]: Respondieron tu consulta por $mascota"
-                html "<html><body>Hola ${mensaje.usuarioPregunta.username},<br/>" +
-                        "${publicador.username} respondió tu consulta" +
-                        "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.texto}" +
-                        "<br/><span style='padding-left:5px;'><img src='http://i61.tinypic.com/2h84mz5.jpg'/>${mensaje.respuesta}</span>"+
-                        "<br/><br/>" +
-                        "Entra a BUSCA SUS HUELLAS para realizar otra consulta por $mascota ${logoApp}</body></html>"
+    def respuestaAPregunta(Mensaje mensaje, def mascota){
+        if(mensaje.usuarioOrigen) {
+            Usuario destino = mensaje.usuarioDestino
+            Usuario origen = mensaje.usuarioOrigen
+            if(origen.email && !origen.email.empty) {
+                mailService.sendMail {
+                    async true
+                    to "${origen.email}"
+                    subject "[BUSCA SUS HUELLAS]: Respondieron tu consulta por $mascota"
+                    html "<html><body>Hola ${origen.username},<br/>" +
+                            "${destino.username} respondió tu consulta" +
+                            "<br/><img src='http://i61.tinypic.com/212egw0.jpg'/> ${mensaje.pregunta}" +
+                            "<br/><span style='padding-left:5px;'><img src='http://i61.tinypic.com/2h84mz5.jpg'/>${mensaje.respuesta}</span>"+
+                            "<br/><br/>" +
+                            "Entra a BUSCA SUS HUELLAS para realizar otra consulta por $mascota ${logoApp}</body></html>"
+                }
+                println "E-mail enviado al usuario ${origen.username} al mail ${origen.email} porque ${destino.username} respondio por $mascota"
+            } else {
+                println "No se envio mail por pregunta al publicador ${origen.username} debido que no tiene el mail registrado en el sistema."
             }
-            println "E-mail enviado al usuario ${mensaje.usuarioPregunta.username} al mail ${mensaje.usuarioPregunta.email} porque ${publicador.username} respondio por $mascota"
-        } else {
-            println "No se envio mail por pregunta al publicador ${mensaje.usuarioPregunta.username} debido que no tiene el mail registrado en el sistema."
-        }
-        if (mensaje.usuarioPregunta.gcmId != null && mensaje.usuarioPregunta.gcmId != '') {
-            try {
-                androidGcmService.sendMessage([message: "${publicador.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",token:mensaje.usuarioPregunta.token], [mensaje.usuarioPregunta.gcmId])
-            } catch (Exception e) {
-                println "No se pudo mandar la push $e"
+            if (origen.gcmId != null && origen.gcmId != '') {
+                try {
+                    androidGcmService.sendMessage([message: "${destino.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",token:origen.token], [origen.gcmId])
+                } catch (Exception e) {
+                    println "No se pudo mandar la push $e"
+                }
             }
         }
     }
