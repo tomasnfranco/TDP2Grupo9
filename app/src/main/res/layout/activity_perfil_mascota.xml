@@ -133,6 +133,39 @@
                     android:layout_marginRight="16dp"
                     android:paddingStart="130dp" />
 
+
+                <com.tdp2grupo9.view.clickable.EncontreMascotaClickable
+                    android:id="@+id/encontre_tu_mascota"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignStart="@+id/eliminar_postulacion_transito"
+                    android:layout_below="@+id/eliminar_postulacion_transito"
+                    android:layout_marginRight="16dp"
+                    android:paddingStart="130dp" />
+
+                <com.tdp2grupo9.view.clickable.DenunciarPublicacionClickable
+                    android:id="@+id/denunciar_publicacion"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignStart="@+id/encontre_tu_mascota"
+                    android:layout_below="@+id/encontre_tu_mascota"
+                    android:layout_marginRight="16dp"
+                    android:paddingStart="130dp" />
+
+                <com.tdp2grupo9.view.clickable.EliminarEncontreMascotaClickable
+                    android:id="@+id/eliminar_aviso"
+                    android:layout_alignParentLeft="false"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/denunciar_publicacion"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="16dp"
+                    android:paddingStart="130dp" />
+
+
             </RelativeLayout>
 
             <RelativeLayout

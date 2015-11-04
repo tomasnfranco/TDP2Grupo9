@@ -75,8 +75,8 @@ public class RegistrationIntentService extends IntentService {
             sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false).apply();
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
-        Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+        //Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
+        //LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
     /**

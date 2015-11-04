@@ -27,6 +27,6 @@ public class CrearAlertaClickable extends CustomClickable{
 
     @Override
     public Drawable getImageDrawable() {
-        return getResources().getDrawable(R.drawable.ic_alerta);
+        return getResources().getDrawable(R.drawable.button_alerta);
     }
 }

@@ -36,7 +36,6 @@ public class AlertaAdapter extends BaseAdapter{
     private TextView titleAdicional;
     private ImageButton btnBuscar;
     private ImageButton btnEliminar;
-    private ImageButton btnEditar;
     private EliminarAlertaTask eliminarAlertaTask;
     private View alertaView;
     private FragmentActivity activity;
@@ -81,8 +80,6 @@ public class AlertaAdapter extends BaseAdapter{
         infFechaAlerta = (TextView) alertaView.findViewById(R.id.fecha_alerta);
         btnBuscar = (ImageButton) alertaView.findViewById(R.id.btn_Buscar);
         btnEliminar= (ImageButton) alertaView.findViewById(R.id.btn_Delete);
-        btnEditar = (ImageButton) alertaView.findViewById(R.id.btn_Editar);
-
 
         String infoBasica = getInformacionBasica(i, alertaView);
         String infoAdicional= getInformacionAdicional(i,alertaView);
@@ -127,13 +124,6 @@ public class AlertaAdapter extends BaseAdapter{
 
                 ((DrawerMenuActivity) activity).showBuscarMascotaResults(bundle);
 
-            }
-        });
-
-        btnEditar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO implementar
             }
         });
 

@@ -44,6 +44,15 @@
     <string name="postularme_adopcion">Postularme a Adoptar</string>
     <string name="postularme_hogar">Postularme a Tránsito</string>
     <string name="reclamar_mascota">Reclamar la mascota</string>
+    <string name="encontre_mascota">Encontré tu mascota</string>
+    <string name="denunciar_publicacion">Denunciar publicación</string>
+
+
+    <string name="motivo_denuncia_1">Motivo 1</string>
+    <string name="motivo_denuncia_2">Motivo 2</string>
+    <string name="motivo_denuncia_3">Motivo 3</string>
+
+
 
     <string name="cuidados_especiales">Cuidados especiales</string>
     <string name="condiciones_adopcion">Condiciones de adopción</string>
@@ -96,9 +105,11 @@
     <string name="ofrecen_hogar_transito">Ofrecen hogar de tránsito</string>
     <string name="eliminar_publicacion">Eliminar publicación</string>
     <string name="cancelar_reclamo">Cancelar reclamo</string>
+    <string name="cancelar_aviso">Cancelar aviso</string>
     <string name="editar_publicacion">Editar publicación</string>
     <string name="cancelar_postulacion">Cancelar postulación</string>
     <string name="reclaman_mascota">Reclaman la mascota</string>
+    <string name="encontraron_mascota">Encontraron tu mascota</string>
     <string name="en_hogar_de_transito">En hogar de tránsito</string>
 
 
@@ -106,16 +117,23 @@
     <string name="confirmacion_adopcion">¿Confirma la adopción?</string>
     <string name="confirmacion_transito">¿Confirma el tránsito?</string>
     <string name="confirmacion_reclamo">¿Confirma el reclamo?</string>
+    <string name="confirmacion_aviso">¿Confirma qué es tu mascota?</string>
+    <string name="envia_notificacion_a_postulado">Se enviará una notificación al postulado para informar su decisión.</string>
 
     <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar? </string>
     <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
     <string name="confirmacion_reclamar">¿Confirma que desea reclamar la mascota como suya?</string>
     <string name="se_enviara_notificacion">Se enviará una notificación al publicante para informar de tu postulación</string>
+    <string name="se_enviara_notificacion_reclamo">Se enviará una notificación al publicante para informar de su reclamo</string>
+    <string name="se_enviara_notificacion_encontre">Se enviará una notificación al publicante para informar que encontró su mascota.</string>
     <string name="confirmacion_eliminar">¿Confirma que desea eliminar la publicación?</string>
     <string name="confirmacion_editar">¿Confirma que desea editar la publicación?</string>
     <string name="confirmacion_eliminar_post_adopcion">¿Confirma que desea cancelar la postulación de adopción?</string>
     <string name="confirmacion_eliminar_post_transito">¿Confirma que desea cancelar la postulación de hogar de tránsito?</string>
     <string name="confirmacion_eliminar_reclamo">¿Confirma que desea cancelar el reclamo de mascota como suya?</string>
+    <string name="confirmacion_eliminar_aviso">¿Confirma que desea cancelar el aviso de haber encontrado la mascota del publicante?</string>
+    <string name="confirmacion_encontre_tu_mascota">¿Confirma que desea avisar al publicante qué encontró su mascota?</string>
+    <string name="confirmacion_denunciar_publicacion">¿Confirma que desea denunciar esta publicación?. Seleccione el motivo</string>
 
 
 

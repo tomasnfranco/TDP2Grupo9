@@ -119,26 +119,15 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_Editar"
-                android:layout_alignTop="@+id/btn_Delete"
-                android:layout_toLeftOf="@+id/btn_Delete"
-                android:layout_toStartOf="@+id/btn_Delete"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/button_drawable_icon"
-                android:src="@drawable/ic_editar" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/btn_Buscar"
-                android:layout_alignTop="@+id/btn_Editar"
                 android:layout_centerHorizontal="true"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/btn_Editar"
                 android:background="@drawable/button_drawable_icon"
                 android:focusable="false"
                 android:longClickable="false"
-                android:src="@drawable/ic_buscar" />
+                android:src="@drawable/ic_buscar"
+                android:layout_alignTop="@+id/btn_Delete"
+                android:layout_toLeftOf="@+id/btn_Delete" />
 
         </RelativeLayout>
 

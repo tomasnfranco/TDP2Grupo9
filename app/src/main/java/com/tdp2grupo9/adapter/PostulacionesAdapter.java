@@ -87,24 +87,25 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
             title+=context.getString(R.string.confirmacion_adopcion);
         else if (tipo.equals("Encontrada"))
             title+=context.getString(R.string.confirmacion_reclamo);
+        else if (tipo.equals("Perdida"))
+            title+=context.getString(R.string.confirmacion_aviso);
 
         TextView myMsg = new TextView(context);
         TextView myTitle = new TextView(context);
 
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(10, 0, 10, 0); // llp.setMargins(left, top, right, bottom);
+        llp.setMargins(30, 0, 30, 0); // llp.setMargins(left, top, right, bottom);
 
         myTitle.setText(title);
         myTitle.setTextSize(18);
         myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 
         String mensaje = "\n";
-        mensaje += context.getString(R.string.se_enviara_notificacion);
+        mensaje += context.getString(R.string.envia_notificacion_a_postulado);
         myMsg.setText(mensaje);
         myMsg.setTextSize(14);
         myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
         myMsg.setLayoutParams(llp);
-
 
         builder.setView(myMsg);
         builder.setCustomTitle(myTitle);
@@ -257,6 +258,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
             btnConcretar.setBackgroundResource(R.drawable.button_adoptar);
         else if (tipo.equals("Transito")) btnConcretar.setBackgroundResource(R.drawable.button_transito);
         else if (tipo.equals("Encontrada")) btnConcretar.setBackgroundResource(R.drawable.button_reclamo);
+        else if (tipo.equals("Perdida")) btnConcretar.setBackgroundResource(R.drawable.button_reclamo);
 
         usernamePostulante.setText(postulantes.get(i).getUsername());
         if (postulantes.get(i).getFoto().getBitmap()!= null)

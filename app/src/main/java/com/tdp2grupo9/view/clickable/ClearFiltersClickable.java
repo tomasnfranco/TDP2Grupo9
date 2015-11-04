@@ -30,6 +30,6 @@ public class ClearFiltersClickable extends CustomClickable {
 
     @Override
     public Drawable getImageDrawable() {
-        return getResources().getDrawable(R.drawable.ic_clear_filters);
+        return getResources().getDrawable(R.drawable.button_clear_filters);
     }
 }
