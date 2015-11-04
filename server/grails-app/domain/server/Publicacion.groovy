@@ -5,6 +5,7 @@ import com.javadocmd.simplelatlng.util.LengthUnit;
 
 class Publicacion {
 	Date fechaPublicacion = new Date()
+	Date fechaConcretado = null
 	boolean activa = true
 	Usuario publicador
 	Usuario concretado = null
@@ -52,6 +53,7 @@ class Publicacion {
 		concretado nullable: true
 		transito nullable: true
 		direccion nullable:true, blank:true
+		fechaConcretado nullable: true
     }
 
 	static marshalling = {

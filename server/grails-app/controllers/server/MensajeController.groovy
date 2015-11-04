@@ -18,83 +18,30 @@ class MensajeController {
         respond mensajeInstance
     }
 
-    def create() {
-        respond new Mensaje(params)
-    }
-
     @Transactional
     def save(Mensaje mensajeInstance) {
         if (mensajeInstance == null) {
             notFound()
             return
         }
-        params.usuarioPregunta = params.usuario
+        params.usuarioOrigen = params.usuario
         params.fechaPregunta = new Date()
         params.fechaRespuesta = new Date()
         mensajeInstance = new Mensaje(params)
-        if(mensajeInstance.usuarioPregunta.equals(mensajeInstance.publicacion?.publicador)){
-            render status:FORBIDDEN
-            return
-        }
+
         if (mensajeInstance.hasErrors()) {
             respond mensajeInstance.errors, view:'create'
             return
         }
 
         mensajeInstance.save flush:true
-        notificacionesService.nuevaPregunta(mensajeInstance,mensajeInstance.publicacion.nombreMascota,mensajeInstance.publicacion.publicador)
+        notificacionesService.nuevaPregunta(mensajeInstance,mensajeInstance.publicacion.nombreMascota)
         request.withFormat {
             html {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'mensaje.label', default: 'Mensaje'), mensajeInstance.id])
                 redirect mensajeInstance
             }
             '*' { respond mensajeInstance, [status: CREATED] }
-        }
-    }
-
-    def edit(Mensaje mensajeInstance) {
-        respond mensajeInstance
-    }
-
-    @Transactional
-    def update(Mensaje mensajeInstance) {
-        if (mensajeInstance == null) {
-            notFound()
-            return
-        }
-
-        if (mensajeInstance.hasErrors()) {
-            respond mensajeInstance.errors, view:'edit'
-            return
-        }
-
-        mensajeInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Mensaje.label', default: 'Mensaje'), mensajeInstance.id])
-                redirect mensajeInstance
-            }
-            '*'{ respond mensajeInstance, [status: OK] }
-        }
-    }
-
-    @Transactional
-    def delete(Mensaje mensajeInstance) {
-
-        if (mensajeInstance == null) {
-            notFound()
-            return
-        }
-
-        mensajeInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Mensaje.label', default: 'Mensaje'), mensajeInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
         }
     }
 
@@ -110,21 +57,16 @@ class MensajeController {
 
     def responder(){
         def mensaje = Mensaje.get(params.mensaje)
-        def respuesta = params.texto
+        def respuesta = params.texto ?: params.respuesta
         if(!mensaje){
             println "No existe el mensaje"
             render status: NOT_FOUND
             return
         }
-        if(!mensaje.publicacion.publicador.equals(params.usuario)){
-            println "Intento responder un mensaje que no es suyo"
-            render status: FORBIDDEN
-            return
-        }
         mensaje.fechaRespuesta = new Date()
         mensaje.respuesta = respuesta
         mensaje.save flush: true
-        notificacionesService.respuestaAPregunta(mensaje,mensaje.publicacion.nombreMascota,mensaje.publicacion.publicador)
+        notificacionesService.respuestaAPregunta(mensaje,mensaje.publicacion.nombreMascota)
         render status: OK
     }
 }

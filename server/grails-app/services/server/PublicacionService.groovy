@@ -136,6 +136,7 @@ class PublicacionService {
                 return UNAUTHORIZED
             }
             publicacion.concretado = quiereAdoptar
+            publicacion.fechaConcretado = new Date()
             publicacion.activa = false //TODO: Ver si con esto esta bien
             publicacion.save(flush: true)
             //Notificaciones
