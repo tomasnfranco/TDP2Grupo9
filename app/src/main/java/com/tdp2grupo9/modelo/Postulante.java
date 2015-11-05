@@ -10,6 +10,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Postulante {
 
@@ -19,12 +21,14 @@ public class Postulante {
     private String username;
     private String email;
     private Imagen foto;
+    private List<Mensaje> mensajesPrivados;
 
     public Postulante() {
         this.id = 0;
         this.username = "";
         this.email = "";
         this.foto = null;
+        this.mensajesPrivados = new ArrayList<>();
     }
 
     private void jsonToPostulante(JsonReader reader) throws JSONException, IOException {
@@ -120,6 +124,14 @@ public class Postulante {
     public void setFoto(Bitmap imagen) {
         this.foto = new Imagen();
         foto.setBitmap(imagen);
+    }
+
+    public List<Mensaje> getMensajesPrivados() {
+        return this.mensajesPrivados;
+    }
+
+    public void addMensajePrivado(Mensaje m) {
+        this.mensajesPrivados.add(m);
     }
 
 }

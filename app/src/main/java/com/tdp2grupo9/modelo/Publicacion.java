@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -423,6 +424,43 @@ public class Publicacion {
         reader.endObject();
     }
 
+    private void cargarDatosExtra(String token) {
+        if (this.getId() > 0) {
+            List<Mensaje> mensajes = Mensaje.buscarMensajes(token, this);
+            for (Integer postulanteId: this.getQuierenAdoptarIds()) {
+                Postulante postulante = Postulante.obtenerPostulante(token, postulanteId);
+
+                Iterator<Mensaje> i = mensajes.iterator();
+                while (i.hasNext()) {
+                    Mensaje m = i.next();
+                    if (m.getUsuarioRespuestaId() == postulante.getId()) {
+                        postulante.addMensajePrivado(m);
+                        i.remove();
+                        break;
+                    }
+                }
+
+                this.addPostulanteAdopcion(postulante);
+            }
+            for (Integer postulanteId: this.getOfrecenTransitoIds()) {
+                Postulante postulante = Postulante.obtenerPostulante(token, postulanteId);
+
+                Iterator<Mensaje> i = mensajes.iterator();
+                while (i.hasNext()) {
+                    Mensaje m = i.next();
+                    if (m.getUsuarioRespuestaId() == postulante.getId()) {
+                        postulante.addMensajePrivado(m);
+                        i.remove();
+                        break;
+                    }
+                }
+
+                this.addPostulanteTransito(postulante);
+            }
+            this.setMensajes(mensajes);
+        }
+    }
+
     public void guardarPublicacion(String token) {
         String METHOD = "guardarPublicacion";
         HttpURLConnection urlConnection = null;
@@ -612,18 +650,7 @@ public class Publicacion {
                 urlConnection.disconnect();
         }
 
-        if (publicacion.getId() > 0) {
-            publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
-
-            for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
-                publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
-            }
-
-            for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
-                publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
-            }
-
-        }
+        publicacion.cargarDatosExtra(token);
 
         return publicacion;
     }
@@ -678,18 +705,6 @@ public class Publicacion {
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
 
-                for (Publicacion publicacion: publicaciones) {
-                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
-
-                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
-                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-
-                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
-                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-                }
-
                 Log.d(LOG_TAG, METHOD + " publicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -700,6 +715,11 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        for (Publicacion publicacion: publicaciones) {
+            publicacion.cargarDatosExtra(token);
+        }
+
         return publicaciones;
     }
 
@@ -715,18 +735,6 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-
-                for (Publicacion publicacion: publicaciones) {
-                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
-
-                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
-                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-
-                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
-                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-                }
                 Log.d(LOG_TAG, METHOD + " misPublicaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -737,6 +745,11 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        for (Publicacion publicacion: publicaciones) {
+            publicacion.cargarDatosExtra(token);
+        }
+
         return publicaciones;
     }
 
@@ -758,18 +771,6 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-
-                for (Publicacion publicacion: publicaciones) {
-                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
-
-                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
-                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-
-                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
-                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-                }
                 Log.d(LOG_TAG, METHOD + " misPostulaciones obtenidas " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -780,6 +781,11 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        for (Publicacion publicacion: publicaciones) {
+            publicacion.cargarDatosExtra(token);
+        }
+
         return publicaciones;
     }
 
@@ -795,18 +801,6 @@ public class Publicacion {
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 publicaciones = Publicacion.jsonToPublicaciones(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-
-                for (Publicacion publicacion: publicaciones) {
-                    publicacion.setMensajes(Mensaje.buscarMensajes(token, publicacion));
-
-                    for (Integer postulanteId: publicacion.getQuierenAdoptarIds()) {
-                        publicacion.addPostulanteAdopcion(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-
-                    for (Integer postulanteId: publicacion.getOfrecenTransitoIds()) {
-                        publicacion.addPostulanteTransito(Postulante.obtenerPostulante(token, postulanteId));
-                    }
-                }
                 Log.d(LOG_TAG, METHOD + " misTransitos obtenidos " + publicaciones.size());
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
@@ -817,6 +811,11 @@ public class Publicacion {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+        for (Publicacion publicacion: publicaciones) {
+            publicacion.cargarDatosExtra(token);
+        }
+
         return publicaciones;
     }
 
@@ -1176,11 +1175,7 @@ public class Publicacion {
     public String getContacto() {
         return contacto;
     }
-
-    private void addMensaje(Mensaje mensaje) {
-        this.mensajes.add(mensaje);
-    }
-
+    
     private void addPostulanteAdopcion(Postulante postulante) {
         this.quierenAdoptar.add(postulante);
     }
@@ -1283,20 +1278,8 @@ public class Publicacion {
         this.condiciones = condiciones;
     }
 
-    public void setPublicadorId(Integer publicadorId) {
-        this.publicadorId = publicadorId;
-    }
-
-    public void setPublicadorNombre(String publicadorNombre) {
-        this.publicadorNombre = publicadorNombre;
-    }
-
     public Date getFechaPublicacion() {
         return fechaPublicacion;
-    }
-
-    public void setFechaPublicacion(Date fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
     }
 
     public void setDistancia(Double distancia) {
@@ -1347,32 +1330,16 @@ public class Publicacion {
         return transitoNombre;
     }
 
-    public void setTransitoNombre(String transitoNombre) {
-        this.transitoNombre = transitoNombre;
-    }
-
     public Boolean getEnTransito() {
         return enTransito;
-    }
-
-    public void setEnTransito(Boolean enTransito) {
-        this.enTransito = enTransito;
     }
 
     public Double getLatitudTransito() {
         return latitudTransito;
     }
 
-    public void setLatitudTransito(Double latitudTransito) {
-        this.latitudTransito = latitudTransito;
-    }
-
     public Double getLongitudTransito() {
         return longitudTransito;
-    }
-
-    public void setLongitudTransito(Double longitudTransito) {
-        this.longitudTransito = longitudTransito;
     }
 
     @Override

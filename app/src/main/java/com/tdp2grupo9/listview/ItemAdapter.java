@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tdp2grupo9.R;
 
+@Deprecated
 public class ItemAdapter extends BaseAdapter {
 
     private Context context;
@@ -55,9 +56,9 @@ public class ItemAdapter extends BaseAdapter {
         ImageView ivCondiciones = (ImageView) rowView.findViewById(R.id.iv_condiciones);
 
 
-        TextView tvRaza = (TextView) rowView.findViewById(R.id.tvRaza);
-        TextView tvEdad = (TextView) rowView.findViewById(R.id.tvEdad);
-        TextView tvZona = (TextView) rowView.findViewById(R.id.tv_zona);
+        //TextView tvRaza = (TextView) rowView.findViewById(R.id.tvRaza);
+        //TextView tvEdad = (TextView) rowView.findViewById(R.id.tvEdad);
+        //TextView tvZona = (TextView) rowView.findViewById(R.id.tv_zona);
 
         Item item = this.items.get(position);
         tvTitle.setText(item.getTitle());

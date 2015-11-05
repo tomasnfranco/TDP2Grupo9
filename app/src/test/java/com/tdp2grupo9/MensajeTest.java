@@ -23,6 +23,7 @@ public class MensajeTest {
         Usuario.getInstancia().resetearAtributos();
         Usuario.getInstancia().setFacebookId(1156897635L);
         Usuario.getInstancia().setToken("12345");
+        Usuario.getInstancia().setId(1);
         usuario = Usuario.getInstancia();
     }
 
@@ -31,6 +32,7 @@ public class MensajeTest {
         Mensaje mp = new Mensaje();
         mp.setPublicacionId(2);
         mp.setPregunta("Es jugueton??");
+        mp.setUsuarioRespuestaId(3);
         mp.guardarPregunta(usuario.getToken());
         assertTrue(mp.getId() > 0);
 
@@ -44,6 +46,30 @@ public class MensajeTest {
         assertEquals("El id no coincide", mp.getId(), m.getId());
         assertEquals("La pregunta no coincide", mp.getPregunta(), m.getPregunta());
         assertEquals("La respuesta no coincide", mr.getRespuesta(), m.getRespuesta());
+    }
+
+    @Test
+    public void usuarioPreguntaEnPublicacion() {
+        //EL MENSAJE ES PUBLICO
+        Mensaje mp = new Mensaje();
+        mp.setPublicacionId(2);
+        mp.setPregunta("Es jugueton??");
+        mp.guardarPregunta(usuario.getToken());
+        assertTrue(mp.getId() > 0);
+
+    }
+
+    @Test
+    public void publicadorPreguntaEnPublicacionAPostulante() {
+        //EL MENSAJE ES PRIVADO
+        Mensaje mp = new Mensaje();
+        mp.setPublicacionId(7);
+        mp.setPregunta("Tenes jardin?");
+        mp.setUsuarioPreguntaId(usuario.getId());
+        mp.setUsuarioRespuestaId(3);
+        mp.guardarPregunta(usuario.getToken());
+        assertTrue(mp.getId() > 0);
+
     }
 
 

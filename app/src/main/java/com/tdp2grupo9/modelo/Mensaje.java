@@ -22,6 +22,8 @@ public class Mensaje {
     private int publicacionId;
     private int usuarioPreguntaId;
     private String usuarioPreguntaNombre;
+    private int usuarioRespuestaId;
+    private String usuarioRespuestaNombre;
     private String pregunta;
     private String respuesta;
     private Date fechaPregunta;
@@ -103,26 +105,55 @@ public class Mensaje {
                     else
                         this.pregunta = reader.nextString();
                     break;
-                /*case "usuarioPregunta":
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        String nameusuario = reader.nextName();
-                        switch (nameusuario) {
-                            case "id":
-                                this.usuarioPreguntaId = reader.nextInt();
-                                break;
-                            default:
-                                reader.skipValue();
-                                break;
+                case "usuarioOrigen":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            String nameusuario = reader.nextName();
+                            switch (nameusuario) {
+                                case "id":
+                                    this.usuarioPreguntaId = reader.nextInt();
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
                         }
+                        reader.endObject();
                     }
-                    reader.endObject();
-                    break;*/
-                case "usuarioPreguntaNombre":
+                    break;
+                case "usuarioOrigenNombre":
                     if(reader.peek()== JsonToken.NULL)
                         reader.nextNull();
                     else
                         this.usuarioPreguntaNombre = reader.nextString();
+                    break;
+                case "usuarioDestino":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            String nameusuario = reader.nextName();
+                            switch (nameusuario) {
+                                case "id":
+                                    this.usuarioRespuestaId = reader.nextInt();
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
+                        }
+                        reader.endObject();
+                    }
+                    break;
+                case "usuarioDestinoNombre":
+                    if(reader.peek()== JsonToken.NULL)
+                        reader.nextNull();
+                    else
+                        this.usuarioRespuestaNombre = reader.nextString();
                     break;
                 default:
                     reader.skipValue();
@@ -142,7 +173,13 @@ public class Mensaje {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            String parametros = "token="+token+"&texto="+this.pregunta+ "&publicacion="+this.publicacionId;
+            String parametros = "token="+token+"&pregunta="+this.pregunta+ "&publicacion="+this.publicacionId;
+
+
+            if (this.usuarioPreguntaId > 0)
+                parametros += "&usuarioOrigen="+this.usuarioPreguntaId;
+            if (this.usuarioRespuestaId > 0)
+                parametros += "&usuarioDestino="+this.usuarioRespuestaId;
 
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
@@ -293,14 +330,6 @@ public class Mensaje {
         return fechaRespuesta;
     }
 
-    public int getUsuarioPreguntaId() {
-        return usuarioPreguntaId;
-    }
-
-    public String getUsuarioPreguntaNombre() {
-        return usuarioPreguntaNombre;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -325,11 +354,29 @@ public class Mensaje {
         this.fechaRespuesta = fechaRespuesta;
     }
 
+    public int getUsuarioPreguntaId() {
+        return usuarioPreguntaId;
+    }
+
+    public String getUsuarioPreguntaNombre() {
+        return usuarioPreguntaNombre;
+    }
+
+    public int getUsuarioRespuestaId() {
+        return usuarioRespuestaId;
+    }
+
+    public String getUsuarioRespuestaNombre() {
+        return usuarioRespuestaNombre;
+    }
+
     public void setUsuarioPreguntaId(int usuarioPreguntaId) {
         this.usuarioPreguntaId = usuarioPreguntaId;
     }
 
-    public void setUsuarioPreguntaNombre(String usuarioPreguntaNombre) {
-        this.usuarioPreguntaNombre = usuarioPreguntaNombre;
+    public void setUsuarioRespuestaId(int usuarioRespuestaId) {
+        this.usuarioRespuestaId = usuarioRespuestaId;
     }
+
+
 }

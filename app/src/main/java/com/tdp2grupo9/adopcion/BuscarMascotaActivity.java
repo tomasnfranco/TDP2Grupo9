@@ -8,7 +8,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.listview.ResultadosBusquedaActivity;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;

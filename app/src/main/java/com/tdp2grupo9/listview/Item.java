@@ -10,6 +10,7 @@ import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
 import com.tdp2grupo9.modelo.publicacion.Raza;
 
+@Deprecated
 public class Item {
 
     private Activity activity;
@@ -23,7 +24,6 @@ public class Item {
     }
 
     public Bitmap getImage() {
-        //if (publicacion.getImagenes().size() > 0) return publicacion.getImagenes().get(0);
         return BitmapFactory.decodeResource(this.activity.getResources(), R.drawable.icon_default);
     }
 

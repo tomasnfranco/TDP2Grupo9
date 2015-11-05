@@ -1,4 +1,4 @@
-package com.tdp2grupo9.listview;
+package com.tdp2grupo9.adopcion;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.listview.Item;
+import com.tdp2grupo9.listview.ItemAdapter;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
@@ -25,7 +27,7 @@ import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Deprecated
 public class ResultadosBusquedaActivity extends AppCompatActivity {
 
     private ListView listView;
