@@ -30,10 +30,12 @@ public class InitialActivity extends Activity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver = null;
     private ObtenerAtributosTask obtenerAtributosTask = null;
+    private Boolean playServicesAvailable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.playServicesAvailable = checkPlayServices();
     }
 
     @Override
@@ -79,7 +81,7 @@ public class InitialActivity extends Activity {
             }
         };
 
-        if (checkPlayServices()) {
+        if (this.playServicesAvailable) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);

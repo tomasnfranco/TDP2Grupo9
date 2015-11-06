@@ -21,4 +21,15 @@ class HelloController {
 		], [token])
 		render "Enviado Ok a $params.gcmToken"
 	}
+	
+	def enviarNotificacion(){
+		androidGcmService.sendMessage([
+				data : 'The message value for the key aMessageKey',
+				tipo_id : params.tipo_id,
+				id : params.id,
+				message: params.message,
+				token : params.token
+		], [params.gcmToken])
+		render "Enviado Ok a $params.gcmToken"
+	}
 }
