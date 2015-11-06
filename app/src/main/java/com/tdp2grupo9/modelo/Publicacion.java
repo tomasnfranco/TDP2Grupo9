@@ -436,7 +436,6 @@ public class Publicacion {
                     if (m.getUsuarioRespuestaId() == postulante.getId()) {
                         postulante.addMensajePrivado(m);
                         i.remove();
-                        break;
                     }
                 }
 
@@ -451,7 +450,6 @@ public class Publicacion {
                     if (m.getUsuarioRespuestaId() == postulante.getId()) {
                         postulante.addMensajePrivado(m);
                         i.remove();
-                        break;
                     }
                 }
 
