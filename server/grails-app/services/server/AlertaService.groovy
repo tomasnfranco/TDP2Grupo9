@@ -31,7 +31,7 @@ class AlertaService {
         println "Hay ${alertas.size()} alertas que cumplen con la publicación enviada"
 
         alertas.each {
-            notificacionesService.alertaPublicacionCumple(publicacion.nombreMascota,it.usuario)
+            notificacionesService.alertaPublicacionCumple(publicacion.nombreMascota,it.usuario,it)
         }
     }
 }

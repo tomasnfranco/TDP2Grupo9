@@ -6,10 +6,10 @@ import grails.transaction.Transactional
 class NotificacionesService {
     def androidGcmService
     def mailService
-    def pie = "<br/><br/>"
+
     def logoApp = "<br/><img width='114px' height='114px' src='https://raw.githubusercontent.com/tomasnfranco/TDP2Grupo9/master/app/src/main/res/drawable/logo_aplicacion.png'/>"
 
-    def nuevaPostulacion(def postulante, def mascota, Usuario publicador) {
+    def nuevaPostulacion(def postulante, def mascota, Usuario publicador, Publicacion publicacion) {
         if (publicador.email && !publicador.email.empty) {
             mailService.sendMail {
                 async true
@@ -24,14 +24,15 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante se postuló para adoptar a $mascota",token:publicador.token], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante se postuló para adoptar a $mascota",token:publicador.token,
+                                                tipo_id:'1', id:"$publicacion.id" ], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
         }
     }
 
-    def concretarAdopcionElegido(Usuario postulante, def mascota, Usuario publicador){
+    def concretarAdopcionElegido(Usuario postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(postulante.email && !postulante.email.empty) {
             mailService.sendMail {
                 async true
@@ -50,7 +51,8 @@ class NotificacionesService {
         }
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota",token:postulante.token], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota",
+                                               token:postulante.token,tipo_id:'2',id:"$publicacion.id"], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -112,7 +114,8 @@ class NotificacionesService {
 
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota",token:postulante.token], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota",
+                                               token:postulante.token,tipo_id:'3',id:null], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -136,11 +139,14 @@ class NotificacionesService {
                 }
                 println "E-mail enviado al usuario ${destino.username} al mail ${destino.email} porque ${origen.username} pregunto por $mascota"
             } else {
-                println "No se envio mail por pregunta al publicador ${destino.username} debido que no tiene el mail registrado en el sistema."
+                println "No se envio mail por pregunta al usuario ${destino.username} debido que no tiene el mail registrado en el sistema."
             }
             if (destino.gcmId != null && destino.gcmId != '') {
                 try {
-                    androidGcmService.sendMessage([message: "${origen.username} ha preguntado por $mascota: ${mensaje.pregunta}",token:destino.token], [destino.gcmId])
+                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 6 : 4
+                    println "Tipo de Push: $tipo_id"
+                    androidGcmService.sendMessage([message: "${origen.username} ha preguntado por $mascota: ${mensaje.pregunta}",
+                                                   token:destino.token,tipo_id:tipo_id.toString(),id:mensaje.publicacion.id.toString()], [destino.gcmId])
                 } catch (Exception e) {
                     println "No se pudo mandar la push $e"
                 }
@@ -170,7 +176,10 @@ class NotificacionesService {
             }
             if (origen.gcmId != null && origen.gcmId != '') {
                 try {
-                    androidGcmService.sendMessage([message: "${destino.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",token:origen.token], [origen.gcmId])
+                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 7 : 5
+                    println "Tipo de Push: $tipo_id"
+                    androidGcmService.sendMessage([message: "${destino.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",
+                                                   token:origen.token,tipo_id:tipo_id.toString(),id:mensaje.publicacion.id.toString()], [origen.gcmId])
                 } catch (Exception e) {
                     println "No se pudo mandar la push $e"
                 }
@@ -178,7 +187,7 @@ class NotificacionesService {
         }
     }
 
-    def alertaPublicacionCumple(def mascota, Usuario usuario){
+    def alertaPublicacionCumple(def mascota, Usuario usuario,Alerta alerta){
         if(usuario.email && !usuario.email.empty) {
             mailService.sendMail {
                 async true
@@ -194,14 +203,15 @@ class NotificacionesService {
         }
         if (usuario.gcmId != null && usuario.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda",token:usuario.token], [usuario.gcmId])
+                androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda",token:usuario.token,
+                                                tipo_id:'8',id:"$alerta.id"], [usuario.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
         }
     }
 
-    def nuevoOfrecimientoTransito(def postulante, def mascota, Usuario publicador){
+    def nuevoOfrecimientoTransito(def postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(publicador.email && !publicador.email.empty) {
             mailService.sendMail {
                 async true
@@ -216,14 +226,15 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante se ofreció para dar un hogar de tránsito a $mascota",token:publicador.token], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante se ofreció para dar un hogar de tránsito a $mascota",
+                                               token:publicador.token,tipo_id:'1',id:"$publicacion.id"], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
         }
     }
 
-    def concretarTransitoElegido(Usuario postulante, def mascota, Usuario publicador){
+    def concretarTransitoElegido(Usuario postulante, def mascota, Usuario publicador, Publicacion publicacion){
         if(postulante.email && !postulante.email.empty) {
             mailService.sendMail {
                 async true
@@ -242,7 +253,8 @@ class NotificacionesService {
         }
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para darle hogar de tránsito a $mascota",token:postulante.token], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para darle hogar de tránsito a $mascota",token:postulante.token,
+                                                                    tipo_id:'2', id:"$publicacion.id" ], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -287,7 +299,7 @@ class NotificacionesService {
     }
 
     //Para publicaciones de Pedidas
-    def nuevoPostulacionPerdida(def postulante, def mascota, Usuario publicador){
+    def nuevoPostulacionPerdida(def postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(publicador.email && !publicador.email.empty) {
             mailService.sendMail {
                 async true
@@ -302,14 +314,15 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante cree tener a $mascota",token:publicador.token], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante cree tener a $mascota",token:publicador.token,
+                                                                tipo_id:'1', id:"$publicacion.id" ], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
         }
     }
 
-    def concretarPerdidaElegido(Usuario postulante, def mascota, Usuario publicador){
+    def concretarPerdidaElegido(Usuario postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(postulante.email && !postulante.email.empty) {
             mailService.sendMail {
                 async true
@@ -328,7 +341,8 @@ class NotificacionesService {
         }
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que tenes a $mascota",token:postulante.token], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que tenes a $mascota",token:postulante.token,
+                                                tipo_id:'2',id:"$publicacion.id"], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -356,7 +370,7 @@ class NotificacionesService {
     }
 
     //Para publicaciones de Encontradas
-    def nuevoPostulacionEncontrada(def postulante, def mascota, Usuario publicador){
+    def nuevoPostulacionEncontrada(def postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(publicador.email && !publicador.email.empty) {
             mailService.sendMail {
                 async true
@@ -371,14 +385,15 @@ class NotificacionesService {
         }
         if (publicador.gcmId != null && publicador.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "$postulante dice ser el dueño de $mascota",token:publicador.token], [publicador.gcmId])
+                androidGcmService.sendMessage([message: "$postulante dice ser el dueño de $mascota",token:publicador.token,
+                                                        tipo_id:'1', id:"$publicacion.id" ], [publicador.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
         }
     }
 
-    def concretarEncontradaElegido(Usuario postulante, def mascota, Usuario publicador){
+    def concretarEncontradaElegido(Usuario postulante, def mascota, Usuario publicador,Publicacion publicacion){
         if(postulante.email && !postulante.email.empty) {
             mailService.sendMail {
                 async true
@@ -397,7 +412,8 @@ class NotificacionesService {
         }
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
-                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que $mascota te pertenece",token:postulante.token], [postulante.gcmId])
+                androidGcmService.sendMessage([message: "${publicador.username} ha seleccionado que $mascota te pertenece",token:postulante.token,
+                                               tipo_id:'2', id:"$publicacion.id"], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
