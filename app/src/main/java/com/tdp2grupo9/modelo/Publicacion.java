@@ -1175,7 +1175,7 @@ public class Publicacion {
     public String getContacto() {
         return contacto;
     }
-    
+
     private void addPostulanteAdopcion(Postulante postulante) {
         this.quierenAdoptar.add(postulante);
     }
