@@ -219,6 +219,14 @@ class PublicacionController extends RestfulController<Publicacion>  {
         render publicacion.preguntas.sort{it.fechaPregunta} as JSON
     }
 
+    def denunciar(){
+        Denuncia denuncia = new Denuncia(params)
+        denuncia.fecha = new Date()
+        denuncia.denunciante = params.usuario
+        denuncia.save(flush:true)
+        render status:OK
+    }
+
     def reporte(){
         Date desde = params.fechaDesde ?: new Date()
         println "Desde: $desde"
