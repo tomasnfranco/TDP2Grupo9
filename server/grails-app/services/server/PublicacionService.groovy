@@ -86,11 +86,11 @@ class PublicacionService {
             publicacion.addToQuierenAdoptar(user)
             publicacion.save(flush:true)
             if(publicacion.tipoPublicacion == 1)
-                notificacionesService.nuevaPostulacion(user.username,publicacion.nombreMascota,publicacion.publicador)
+                notificacionesService.nuevaPostulacion(user.username,publicacion.nombreMascota,publicacion.publicador,publicacion)
             if(publicacion.tipoPublicacion == 2)
-                notificacionesService.nuevoPostulacionPerdida(user,publicacion.nombreMascota,publicacion.publicador)
+                notificacionesService.nuevoPostulacionPerdida(user,publicacion.nombreMascota,publicacion.publicador,publicacion)
             if(publicacion.tipoPublicacion == 3)
-                notificacionesService.nuevoPostulacionEncontrada(user,publicacion.nombreMascota,publicacion.publicador)
+                notificacionesService.nuevoPostulacionEncontrada(user,publicacion.nombreMascota,publicacion.publicador,publicacion)
             return OK
         }
         return NOT_FOUND
@@ -141,15 +141,15 @@ class PublicacionService {
             publicacion.save(flush: true)
             //Notificaciones
             if (publicacion.tipoPublicacion == 1) {
-                notificacionesService.concretarAdopcionElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarAdopcionElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador,publicacion)
                 notificacionesService.concretarAdopcionPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
             }
             if(publicacion.tipoPublicacion == 2){
-                notificacionesService.concretarPerdidaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarPerdidaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador,publicacion)
                 notificacionesService.concretarPerdidaPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
             }
             if(publicacion.tipoPublicacion == 3){
-                notificacionesService.concretarEncontradaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
+                notificacionesService.concretarEncontradaElegido(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador,publicacion)
                 notificacionesService.concretarEncontradaPublicador(quiereAdoptar, publicacion.nombreMascota, publicacion.publicador)
             }
             if(publicacion.tipoPublicacion == 1) {
@@ -178,7 +178,7 @@ class PublicacionService {
             }
             publicacion.addToOfrecenTransito(user)
             publicacion.save(flush:true)
-            notificacionesService.nuevoOfrecimientoTransito(user,publicacion.nombreMascota,publicacion.publicador)
+            notificacionesService.nuevoOfrecimientoTransito(user,publicacion.nombreMascota,publicacion.publicador,publicacion)
             return OK
         }
         return NOT_FOUND
@@ -225,7 +225,7 @@ class PublicacionService {
             }
             publicacion.transito = ofrecioTransito
             publicacion.save(flush:true)
-            notificacionesService.concretarTransitoElegido(ofrecioTransito,publicacion.nombreMascota,publicacion.publicador)
+            notificacionesService.concretarTransitoElegido(ofrecioTransito,publicacion.nombreMascota,publicacion.publicador,publicacion)
             notificacionesService.concretarTransitoPublicador(ofrecioTransito,publicacion.nombreMascota,publicacion.publicador)
             publicacion.ofrecenTransito.each {
                 if (it.id != ofrecioTransito.id) {

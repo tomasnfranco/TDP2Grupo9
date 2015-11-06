@@ -218,4 +218,30 @@ class PublicacionController extends RestfulController<Publicacion>  {
         Publicacion publicacion = Publicacion.get(params.publicacion)
         render publicacion.preguntas.sort{it.fechaPregunta} as JSON
     }
+
+    def reporte(){
+        Date desde = params.fechaDesde ?: new Date()
+        println "Desde: $desde"
+        Date hasta = params.fechaHasta ?: new Date()
+        println "Hasta: $hasta"
+        List<Publicacion> publicaciones = Publicacion.findAll(){
+            /*fechaPublicacion >= desde
+            fechaPublicacion <= hasta
+            if(fechaConcretado != null & fechaConcretado != fechaPublicacion){
+                fechaConcretado >= desde
+                fechaConcretado <= hasta
+            }*/
+            //or(between(fechaConcretado,desde,hasta),null(fechaConcretado))
+        }
+        println "Publicaciones encontradas: ${publicaciones.size()}"
+        List<Publicacion> enAdopcion = publicaciones.findAll(){
+            it.tipoPublicacion == 1
+            it.concretado == null
+        }
+        List<Publicacion> adoptadas = publicaciones.findAll(){
+            it.tipoPublicacion == 1
+            it.concretado != null
+        }
+        return [perdidas:100,encontradas:30,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size()]
+    }
 }
