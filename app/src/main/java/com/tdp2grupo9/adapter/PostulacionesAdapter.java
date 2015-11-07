@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
@@ -54,8 +55,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
     private String fecha_consulta;
     private String fecha_respuesta;
 
-    private List<Mensaje> mensajesPrivados;
-
     private android.support.v7.app.AlertDialog dialogIcon;
 
     private android.support.v7.app.AlertDialog dialogMensaje;
@@ -71,7 +70,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         this.tipo = tipo;
         this.postulantes = postulantes;
         this.id_publicacion = idPublicacion;
-        this.mensajesPrivados = mensajes;
         this.activity = activity;
     }
 
@@ -93,9 +91,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         TextView myMsg = new TextView(context);
         TextView myTitle = new TextView(context);
 
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(30, 0, 30, 0); // llp.setMargins(left, top, right, bottom);
-
         myTitle.setText(title);
         myTitle.setTextSize(18);
         myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -105,7 +100,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         myMsg.setText(mensaje);
         myMsg.setTextSize(14);
         myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
-        myMsg.setLayoutParams(llp);
 
         builder.setView(myMsg);
         builder.setCustomTitle(myTitle);
@@ -148,14 +142,9 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         myTitle.setTextSize(18);
         myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 
-
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(30, 0, 30, 0); // llp.setMargins(left, top, right, bottom);
-
         final EditText input = new EditText(context);
         input.setTextSize(16);
         input.setMaxLines(4);
-        input.setLayoutParams(llp);
         builder.setCustomTitle(myTitle);
         builder.setView(input);
 
@@ -164,7 +153,11 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
                 String consulta = input.getText().toString();
                 System.out.println("CONSULTA: " + consulta);
                 Mensaje mensaje = new Mensaje();
+
                 mensaje.setPregunta(consulta);
+                mensaje.setPublicacionId(id_publicacion);
+                mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
+                mensaje.setUsuarioRespuestaId(postulantes.get(i).getId());
 
                 Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
                 enviarConsultaRespuestaTask = new EnviarConsultaRespuestaTask(mensaje, i);
@@ -213,7 +206,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
     @Override
     public int getChildrenCount(int i) {
-        return mensajesPrivados.size();
+        return postulantes.get(i).getMensajesPrivados().size();
     }
 
     @Override
@@ -223,7 +216,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
     @Override
     public Object getChild(int i, int i1) {
-        return mensajesPrivados.get(i1);
+        return postulantes.get(i).getMensajesPrivados().get(i1);
     }
 
     @Override
@@ -297,26 +290,28 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         viewContainerConsulta = consultasChildView.findViewById(R.id.viewsContainerConsulta);
         viewContainerRespuesta = consultasChildView.findViewById(R.id.viewsContainerRespuesta);
 
-        consulta = mensajesPrivados.get(i1).getPregunta();
-        fecha_consulta = parserDateText(mensajesPrivados.get(i1).getFechaPregunta());
-        respuesta = mensajesPrivados.get(i1).getRespuesta();
+        if (postulantes.get(i).getMensajesPrivados().size() >  0 ){
 
-        if (respuesta.isEmpty()) {
-            infConsulta.setText(consulta);
-            fechaConsulta.setText(fecha_consulta);
-            viewContainerRespuesta.setVisibility(View.GONE);
-        }else {
-            fecha_respuesta = parserDateText(mensajesPrivados.get(i1).getFechaRespuesta());
-            infConsulta.setText(consulta);
-            fechaConsulta.setText(fecha_consulta);
-            infRespuesta.setText(respuesta);
-            fechaRespuesta.setText(fecha_respuesta);
-            respuesta = "";
+            consulta = postulantes.get(i).getMensajesPrivados().get(i1).getPregunta();
+            fecha_consulta = parserDateText(postulantes.get(i).getMensajesPrivados().get(i1).getFechaPregunta());
+            respuesta = postulantes.get(i).getMensajesPrivados().get(i1).getRespuesta();
+
+            if (respuesta.isEmpty()) {
+                infConsulta.setText(consulta);
+                fechaConsulta.setText(fecha_consulta);
+                viewContainerRespuesta.setVisibility(View.GONE);
+            }else {
+                fecha_respuesta = parserDateText(postulantes.get(i).getMensajesPrivados().get(i1).getFechaRespuesta());
+                infConsulta.setText(consulta);
+                fechaConsulta.setText(fecha_consulta);
+                infRespuesta.setText(respuesta);
+                fechaRespuesta.setText(fecha_respuesta);
+                respuesta = "";
+            }
         }
 
         return consultasChildView;
     }
-
 
     private String parserDateText(Date fecha){
         int dia = fecha.getDate();
@@ -349,7 +344,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int i, int i1) {
         return false;
     }
-
 
     private void updateConcretarPostulacion(){
         ((DrawerMenuActivity) activity).showUpdateConcretarPostulacion();
@@ -436,7 +430,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                //respuesta.responderPregunta(Usuario.getInstancia().getToken());
+                mensaje.guardarPregunta(Usuario.getInstancia().getToken());
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
@@ -447,8 +441,8 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                //viewContainer.setVisibility(View.GONE);
-                //updateRespuesta(position);
+                Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT);
+                updateConcretarPostulacion();
                 notifyDataSetChanged();
             }
             enviarConsultaRespuestaTask = null;
