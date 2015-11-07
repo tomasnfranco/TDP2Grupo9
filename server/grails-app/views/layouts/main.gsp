@@ -16,7 +16,7 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><h1><a href="#" style="font-weight: bold;text-decoration:none;cursor:default;">ENCONTRA A TU MEJOR AMIGO</a></h1></div>
+		<div id="grailsLogo" role="banner"><h1><a href="#" style="font-weight: bold;text-decoration:none;cursor:default;">BUSCA SUS HUELLAS</a></h1></div>
 		<g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>

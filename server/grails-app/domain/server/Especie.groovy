@@ -6,4 +6,8 @@ class Especie {
     String tipo
     static constraints = {
     }
+
+    String toString(){
+        tipo
+    }
 }

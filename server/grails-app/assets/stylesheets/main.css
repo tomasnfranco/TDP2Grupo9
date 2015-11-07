@@ -470,10 +470,10 @@ th.desc a {
 .even {
 	background: #ffffff;
 }
-
+/*
 th:hover, tr:hover {
 	background: #86AECC;
-}
+}*/
 
 /* PAGINATION */
 
@@ -550,6 +550,7 @@ th:hover, tr:hover {
 	background-color: #999999;
 	color: #ffffff;
 	outline: none;
+	font-weight: bold;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
 	   -moz-box-shadow: none;
 	-webkit-box-shadow: none;
