@@ -6,7 +6,7 @@ public enum TipoPublicacion {
 
     private final int value;
 
-    private TipoPublicacion(int value) {
+    TipoPublicacion(int value) {
         this.value = value;
     }
 

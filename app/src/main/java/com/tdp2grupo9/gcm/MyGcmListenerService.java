@@ -32,6 +32,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.login.LoginActivity;
+import com.tdp2grupo9.modelo.TipoNotificacion;
 import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.Random;
@@ -55,10 +56,17 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         String userToken = data.getString("token");
+        String tipo = data.getString("tipo_id");
+        String id = data.getString("id");
 
         if (!Usuario.getInstancia().getToken().equals(userToken)) {
             Log.w(TAG, String.format("El token de usuario %s no coincide con el token de la notificacion %s ",
                     Usuario.getInstancia().getToken(), userToken));
+            return;
+        }
+
+        if (tipo == null || id == null || tipo.isEmpty() || id.isEmpty()) {
+            Log.w(TAG, "No se puede determinar el tipo de notificacion. Parametros invalidos o faltantes.");
             return;
         }
 
@@ -83,27 +91,65 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        sendNotification(TipoNotificacion.getTipoPublicacion(Integer.parseInt(tipo)),
+                Integer.parseInt(id),
+                message);
         // [END_EXCLUDE]
     }
     // [END receive_message]
+
+    private PendingIntent getPendingIntent(TipoNotificacion tipo, Integer id) {
+        Intent intent;
+
+        if (!Usuario.getInstancia().isLogueado())
+            intent = new Intent(this, LoginActivity.class);
+        else {
+            intent = new Intent(this, DrawerMenuActivity.class);
+            switch (tipo) {
+                case POSTULACION:
+                case RESPPRIVADA:
+                case PREGPUBLICA:
+                    intent.setAction("MIS_PUBLICACIONES");
+                    intent.putExtra("publicacion_id", id);
+                    break;
+                case CONCRETADA:
+                case PREGPRIVADA:
+                    intent.setAction("MIS_POSTULACIONES");
+                    intent.putExtra("publicacion_id", id);
+                    break;
+                case CANCELADA:
+                    intent.setAction("RECIENTES");
+                    break;
+                case RESPPUBLICA:
+                    //TODO VER ESTO SI EL USUARIO ES POSTULANTE O NO PARA REDIRIGIR A MIS POSTULACIONES O A RESULTADO DE BUSQUEDA
+                    intent.setAction("RESULTADO_BUSQUEDA");
+                    intent.putExtra("publicacion_id", id);
+                    break;
+                case ALERTA:
+                    intent.setAction("MIS_ALERTAS");
+                    intent.putExtra("alerta_id", id);
+                    break;
+                default:
+                    intent.setAction("RECIENTES");
+                    break;
+            }
+        }
+
+        //As your intent set Flags: FLAG_ACTIVITY_SINGLE_TOP, "onCreate()" will not be called when the activity has been created,
+        //you should receive the params in the method called "onNewIntent()" instead.
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        return PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT); //.FLAG_ONE_SHOT
+
+    }
 
     /**
      * Create and show a simple notification containing the received GCM message.
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message) {
-        Intent intent = null;
-
-        if (Usuario.getInstancia().isLogueado())
-            intent = new Intent(this, DrawerMenuActivity.class);
-        else
-            intent = new Intent(this, LoginActivity.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+    private void sendNotification(TipoNotificacion tipo, Integer id, String message) {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -112,7 +158,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
+                .setContentIntent(getPendingIntent(tipo, id))
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY_EMAILS);
 

@@ -91,7 +91,36 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if(savedInstanceState == null){
-            setFragment(0, TabbedFragment.class);
+            navigateToTabbedFragment();
+        }
+
+        String action = getIntent().getAction();
+        if(action != null) {
+            newAction(action);
+        }
+
+    }
+
+    private void newAction(String action) {
+
+        Integer itemId = getIntent().getIntExtra("id", 0);
+
+        switch (action) {
+            case "MIS_PUBLICACIONES":
+                navigateToMisPublicaciones(); //TODO: PRIMERO MOSTRAR PUBLICACION ID = itemId expandida
+                break;
+            case "MIS_POSTULACIONES":
+                navigateToMisPostulaciones(); //TODO: PRIMERO MOSTRAR PUBLICACION ID = itemId expandida
+                break;
+            case "MIS_ALERTAS":
+                navigateToMisNotificaciones(); //TODO: MOSTRAR LA ALERTA O EJECUTARLA E IR A RESULTADO BUSQUEDA
+                break;
+            case "RECIENTES":
+                navigateToTabbedFragment(); //TODO: VER EL LISTADO DE RECIENTES
+                break;
+            case "RESULTADO_BUSQUEDA":
+                navigateToTabbedFragment(); //TODO: EJECUTAR LA BUSQUEDA PARA QUE MUESTRE LA PUBLICACION ID = itemId
+                break;
         }
     }
 
@@ -99,19 +128,19 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position){
             case 1:
-                setFragment(1, TabbedFragment.class);
+                navigateToTabbedFragment();
                 break;
             case 2:
-                setFragment(2, MiPerfilFragment.class);
+                navigateToMiPerfil();
                 break;
             case 3:
-                setFragment(3, MisPublicacionesFragment.class);
+                navigateToMisPublicaciones();
                 break;
             case 4:
-                setFragment(4, MisPostulacionesFragment.class);
+                navigateToMisPostulaciones();
                 break;
             case 5:
-                setFragment(5, MisNotificacionesFragment.class);
+                navigateToMisNotificaciones();
                 break;
             case 6:
                 logoutTask = new UserLogoutTask();
@@ -260,6 +289,14 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
                     fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
+    }
+
+    public void navigateToTabbedFragment() {
+        setFragment(1, TabbedFragment.class);
+    }
+
+    public void navigateToMiPerfil() {
+        setFragment(2, MiPerfilFragment.class);
     }
 
     public void navigateToMisPublicaciones() {
