@@ -399,6 +399,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         cargarInformacionAdicional(i, itemView);
         cargarMensajes(i, itemView);
         cargarPostulaciones(i, itemView);
+        cargarMensajesPublicante(i, itemView);
 
         return itemView;
     }
@@ -1010,6 +1011,66 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             consultaParaEnviar.setVisibility(View.VISIBLE);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
             onClickButtonMensaje(i, v);
+        }
+
+    }
+
+    private void cargarMensajesPublicante(final int i, final View v) {
+        List<Mensaje> mensajesPrivados = null;
+
+        ListView listViewConsultaPrivada = (ListView) v.findViewById(R.id.listView_consultas_publicante);
+        listViewConsultaPrivada.setVisibility(View.GONE);
+
+        listViewConsultaPrivada.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        if (isPostulateAdopcion(i)) {
+            for (Postulante p :publicaciones.get(i).getQuierenAdoptar()){
+                if (p.getId() == Usuario.getInstancia().getId()){
+                    List<Mensaje> mp = p.getMensajesPrivados();
+                    if (!mp.isEmpty())
+                        mensajesPrivados = mp;
+                }
+            }
+        }
+
+        if (isPostulateTransito(i)) {
+            for (Postulante p :publicaciones.get(i).getOfrecenTransito()){
+                if (p.getId() == Usuario.getInstancia().getId()){
+                    List<Mensaje> mp = p.getMensajesPrivados();
+                    if (!mp.isEmpty()) {
+                        if (mensajesPrivados != null)
+                            mensajesPrivados.addAll(mp);
+                        else mensajesPrivados = mp;
+                    }
+                }
+            }
+        }
+
+        if (tipos == TiposEnum.MIS_POSTULACIONES) {
+
+            if (mensajesPrivados == null) {
+                CardView cardViewMensajesPrivados = (CardView) v.findViewById(R.id.cardview_mensajes_privados);
+                cardViewMensajesPrivados.setVisibility(View.GONE);
+            } else {
+                listViewConsultaPrivada.setVisibility(View.VISIBLE);
+                listViewConsultaPrivada.setAdapter(new MensajePrivadoAdapter(v.getContext(), mensajesPrivados));
+                listViewConsultaPrivada.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View view,
+                                            final int position, long arg) {
+
+                    }
+                });
+            }
+        }else {
+            CardView cardViewMensajesPrivados = (CardView) v.findViewById(R.id.cardview_mensajes_privados);
+            cardViewMensajesPrivados.setVisibility(View.GONE);
         }
 
     }

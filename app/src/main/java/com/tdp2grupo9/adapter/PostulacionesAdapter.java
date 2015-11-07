@@ -55,8 +55,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
     private String fecha_consulta;
     private String fecha_respuesta;
 
-    private List<Mensaje> mensajesPrivados;
-
     private android.support.v7.app.AlertDialog dialogIcon;
 
     private android.support.v7.app.AlertDialog dialogMensaje;
@@ -72,7 +70,6 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         this.tipo = tipo;
         this.postulantes = postulantes;
         this.id_publicacion = idPublicacion;
-        this.mensajesPrivados = mensajes;
         this.activity = activity;
     }
 
@@ -219,7 +216,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
     @Override
     public Object getChild(int i, int i1) {
-        return mensajesPrivados.get(i1);
+        return postulantes.get(i).getMensajesPrivados().get(i1);
     }
 
     @Override
@@ -304,7 +301,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
                 fechaConsulta.setText(fecha_consulta);
                 viewContainerRespuesta.setVisibility(View.GONE);
             }else {
-                fecha_respuesta = parserDateText(mensajesPrivados.get(i1).getFechaRespuesta());
+                fecha_respuesta = parserDateText(postulantes.get(i).getMensajesPrivados().get(i1).getFechaRespuesta());
                 infConsulta.setText(consulta);
                 fechaConsulta.setText(fecha_consulta);
                 infRespuesta.setText(respuesta);
