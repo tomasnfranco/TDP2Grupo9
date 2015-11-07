@@ -109,6 +109,28 @@
             </tr>
         </tbody>
     </table>
+    <hr/>
+    <h1>Métricas</h1>
+    <g:form action="reporte" method="GET">
+        <table>
+            <tr>
+                <td>
+                    <div>
+                        <label for="fechaDesde">
+                            Promedio de En Adopcion-Adoptadas: ${10} días.
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <label for="fechaDesde">
+                            Promedio de Perdidas-Encontradas: ${10} días.
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </g:form>
 </div>
 </body>
 </html>

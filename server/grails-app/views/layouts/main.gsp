@@ -17,8 +17,17 @@
 	</head>
 	<body>
 		<div id="grailsLogo" role="banner"><h1><a href="#" style="font-weight: bold;text-decoration:none;cursor:default;">BUSCA SUS HUELLAS</a></h1></div>
+		<g:if test="${session.administrador}">
+			<div class="nav" role="navigation">
+				<ul>
+					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/chart_bar.png);">Estadísticas</g:link></li>
+					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/group.png);">Administrar Usuarios</g:link></li>
+					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/table_edit.png);">Administrar Publicaciones</g:link></li>
+				</ul>
+			</div>
+		</g:if>
 		<g:layoutBody/>
-		<div class="footer" role="contentinfo"></div>
+
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 	</body>
 </html>
