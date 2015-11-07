@@ -115,7 +115,7 @@ class NotificacionesService {
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
                 androidGcmService.sendMessage([message: "${publicacion.publicador.username} ha decidido cancelar la publicación de $publicacion.nombreMascota",
-                                               token:postulante.token,tipo_id:'3',id:null], [postulante.gcmId])
+                                               token:postulante.token,tipo_id:'4',id:null], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
@@ -143,7 +143,7 @@ class NotificacionesService {
             }
             if (destino.gcmId != null && destino.gcmId != '') {
                 try {
-                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 6 : 4
+                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 2 : 1
                     println "Tipo de Push: $tipo_id"
                     androidGcmService.sendMessage([message: "${origen.username} ha preguntado por $mascota: ${mensaje.pregunta}",
                                                    token:destino.token,tipo_id:tipo_id.toString(),id:mensaje.publicacion.id.toString()], [destino.gcmId])
@@ -176,7 +176,21 @@ class NotificacionesService {
             }
             if (origen.gcmId != null && origen.gcmId != '') {
                 try {
-                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 7 : 5
+                    int tipo_id = (origen.id == mensaje.publicacion.publicador.id) ? 1 : 3
+                    if(tipo_id == 3){
+                        def quierenAdoptar = mensaje.publicacion.quierenAdoptar
+                        def ofrecenTransito = mensaje.publicacion.ofrecenTransito
+                        if(quierenAdoptar && quierenAdoptar  != null && quierenAdoptar.id.contains(origen.id)){
+                            println "Es respuesta publica pero es postulante para adoptar/encontrado/perdido"
+                            tipo_id = 2
+                        }
+                        if(ofrecenTransito && ofrecenTransito != null & ofrecenTransito.id.contains(origen.id)){
+                            println "Es respuesta publica pero es postulante para transito"
+                            tipo_id = 2
+                        }
+                        if(tipo_id == 3)
+                            println "Es respuesta publica pero no esta postulado"
+                    }
                     println "Tipo de Push: $tipo_id"
                     androidGcmService.sendMessage([message: "${destino.username} respondió tu consulta sobre $mascota: ${mensaje.respuesta}",
                                                    token:origen.token,tipo_id:tipo_id.toString(),id:mensaje.publicacion.id.toString()], [origen.gcmId])
@@ -204,7 +218,7 @@ class NotificacionesService {
         if (usuario.gcmId != null && usuario.gcmId != '') {
             try {
                 androidGcmService.sendMessage([message: "Publicaron a $mascota que cumple tus requisitos de búsqueda",token:usuario.token,
-                                                tipo_id:'8',id:"$alerta.id"], [usuario.gcmId])
+                                                tipo_id:'5',id:"$alerta.id"], [usuario.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
