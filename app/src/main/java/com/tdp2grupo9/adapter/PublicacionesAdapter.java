@@ -74,6 +74,7 @@ import java.util.List;
 public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private List<Publicacion> publicaciones;
+
     private Context context;
     private GuardarPostulacionTask guardarPostulacionTask;
     private EnviarConsultaTask enviarConsultaTask;

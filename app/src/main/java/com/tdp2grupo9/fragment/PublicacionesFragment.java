@@ -21,8 +21,14 @@ public abstract class PublicacionesFragment extends Fragment {
     protected List<Publicacion> mPublicaciones;
     protected ExpandableListView mListView;
     protected BuscarAdopcionesTask mBuscarAdopcionesTask;
+    protected Integer focusOnItemId = null;
 
     protected abstract void cargarListView();
+
+    private void setSelectedItem(int position) {
+        mListView.setSelection(position);
+        mListView.expandGroup(position);
+    }
 
     public class BuscarAdopcionesTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -63,6 +69,17 @@ public abstract class PublicacionesFragment extends Fragment {
 
             if (success) {
                 cargarListView();
+                if (focusOnItemId != null) {
+                    int i = 0;
+                    for (Publicacion p : mPublicaciones) {
+                        if (p.getId().equals(focusOnItemId)) {
+                            setSelectedItem(i);
+                            break;
+                        }
+                        i++;
+                    }
+                }
+
             } else {
                 Toast.makeText(getActivity().getBaseContext(),
                         getString(R.string.error_busqueda_publicaciones),

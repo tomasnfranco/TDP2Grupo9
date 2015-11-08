@@ -32,6 +32,10 @@ public class MisPublicacionesFragment  extends PublicacionesFragment {
 
         mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.MIS_PUBLICACIONES);
         mBuscarAdopcionesTask.execute((Void) null);
+
+        if (getArguments() != null)
+            focusOnItemId = getArguments().getInt("itemId");
+
         return mFragmentView;
     }
 

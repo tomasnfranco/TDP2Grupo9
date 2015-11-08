@@ -396,7 +396,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
             if (success) {
                 Toast.makeText(mFragmentView.getContext(), "Alerta creada",
                         Toast.LENGTH_LONG).show();
-                ((DrawerMenuActivity) getActivity()).navigateToMisNotificaciones();
+                ((DrawerMenuActivity) getActivity()).navigateToMisNotificaciones(null);
             }
             else {
                 Toast.makeText(mFragmentView.getContext(), "Error: No se pudo crear.",

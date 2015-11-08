@@ -28,11 +28,12 @@ import java.util.List;
 
 public class AlertaAdapter extends BaseAdapter{
 
-    Context context;
-    List<Alerta> alertasList;
-    TextView infAdicional;
-    TextView infBasica;
-    TextView infFechaAlerta;
+    private List<Alerta> alertasList;
+
+    private Context context;
+    private TextView infAdicional;
+    private TextView infBasica;
+    private TextView infFechaAlerta;
     private TextView titleAdicional;
     private ImageButton btnBuscar;
     private ImageButton btnEliminar;

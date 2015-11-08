@@ -28,6 +28,8 @@ public class MisNotificacionesFragment extends AlertasFragment{
         buscarAlertasTask = new BuscarAlertasTask();
         buscarAlertasTask.execute((Void) null);
 
+        if (getArguments() != null)
+            focusOnItemId = getArguments().getInt("itemId");
 
         return mFragmentView;
     }

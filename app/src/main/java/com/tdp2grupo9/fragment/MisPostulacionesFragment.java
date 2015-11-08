@@ -32,6 +32,9 @@ public class MisPostulacionesFragment extends PublicacionesFragment {
         mBuscarAdopcionesTask = new PublicacionesFragment.BuscarAdopcionesTask(publicacion, TiposEnum.MIS_POSTULACIONES);
         mBuscarAdopcionesTask.execute((Void) null);
 
+        if (getArguments() != null)
+            focusOnItemId = getArguments().getInt("itemId");
+
         return mFragmentView;
     }
 

@@ -11,7 +11,6 @@ import com.tdp2grupo9.modelo.Alerta;
 import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public abstract class AlertasFragment extends Fragment {
@@ -19,8 +18,13 @@ public abstract class AlertasFragment extends Fragment {
     protected List<Alerta> mAlertas;
     protected ListView mListView;
     protected BuscarAlertasTask buscarAlertasTask;
+    protected Integer focusOnItemId = null;
 
     protected abstract void cargarListView();
+
+    private void setSelectedItem(int position) {
+        mListView.setSelection(position);
+    }
 
     public class BuscarAlertasTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -48,6 +52,16 @@ public abstract class AlertasFragment extends Fragment {
 
             if (success) {
                 cargarListView();
+                if (focusOnItemId != null) {
+                    int i = 0;
+                    for (Alerta a : mAlertas) {
+                        if (a.getId().equals(focusOnItemId)) {
+                            setSelectedItem(i);
+                            break;
+                        }
+                        i++;
+                    }
+                }
             } else {
                 Toast.makeText(getActivity().getBaseContext(),
                         getString(R.string.error_busqueda_alertas),

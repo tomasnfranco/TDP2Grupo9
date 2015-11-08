@@ -91,35 +91,43 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if(savedInstanceState == null){
-            navigateToTabbedFragment();
+            navigateToTabbedFragment(null);
         }
 
-        String action = getIntent().getAction();
-        if(action != null) {
-            newAction(action);
+        String action_id = getIntent().getAction();
+        if(action_id != null) {
+            Integer itemId = null;
+            try {
+                String id = getIntent().getExtras().getString("id", null);
+                itemId = Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+
+            }
+
+            Integer action = Integer.parseInt(action_id);
+            newAction(DrawerMenuAction.getMenuAction(action), itemId);
+
         }
 
     }
 
-    private void newAction(String action) {
-
-        Integer itemId = getIntent().getIntExtra("id", 0);
+    private void newAction(DrawerMenuAction action, Integer itemId) {
 
         switch (action) {
-            case "MIS_PUBLICACIONES":
-                navigateToMisPublicaciones(); //TODO: PRIMERO MOSTRAR PUBLICACION ID = itemId expandida
+            case MIS_PUBLIACIONES:
+                navigateToMisPublicaciones(itemId);
                 break;
-            case "MIS_POSTULACIONES":
-                navigateToMisPostulaciones(); //TODO: PRIMERO MOSTRAR PUBLICACION ID = itemId expandida
+            case MIS_POSTULACIONES:
+                navigateToMisPostulaciones(itemId);
                 break;
-            case "MIS_ALERTAS":
-                navigateToMisNotificaciones(); //TODO: MOSTRAR LA ALERTA O EJECUTARLA E IR A RESULTADO BUSQUEDA
+            case MIS_ALERTAS:
+                navigateToMisNotificaciones(itemId);
                 break;
-            case "RECIENTES":
-                navigateToTabbedFragment(); //TODO: VER EL LISTADO DE RECIENTES
+            case RECIENTES:
+                navigateToTabbedFragment(itemId);
                 break;
-            case "RESULTADO_BUSQUEDA":
-                navigateToTabbedFragment(); //TODO: EJECUTAR LA BUSQUEDA PARA QUE MUESTRE LA PUBLICACION ID = itemId
+            case RESULTADO_BUSQUEDA:
+                navigateToTabbedFragment(itemId);
                 break;
         }
     }
@@ -128,19 +136,19 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position){
             case 1:
-                navigateToTabbedFragment();
+                navigateToTabbedFragment(null);
                 break;
             case 2:
-                navigateToMiPerfil();
+                navigateToMiPerfil(null);
                 break;
             case 3:
-                navigateToMisPublicaciones();
+                navigateToMisPublicaciones(null);
                 break;
             case 4:
-                navigateToMisPostulaciones();
+                navigateToMisPostulaciones(null);
                 break;
             case 5:
-                navigateToMisNotificaciones();
+                navigateToMisNotificaciones(null);
                 break;
             case 6:
                 logoutTask = new UserLogoutTask();
@@ -175,13 +183,20 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public void setFragment(int position, Class<? extends Fragment> fragmentClass) {
+    public void setFragment(int position, Class<? extends Fragment> fragmentClass, Integer itemId) {
         if (shouldCreateNewFragment(fragmentClass)) {
             mDrawerLayout.closeDrawer(mLvDrawerMenu);
             return;
         }
         try {
             Fragment fragment = fragmentClass.newInstance();
+
+            if (itemId != null) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("itemId", itemId);
+                fragment.setArguments(bundle);
+            }
+
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_container, fragment, fragmentClass.getSimpleName());
@@ -222,24 +237,24 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     }
 
     public void showBuscarMascotaResults(Bundle bundle) {
-        setFragment(1, TabbedFragment.class);
+        setFragment(1, TabbedFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((TabbedFragment) getSupportFragmentManager().getFragments().get(0)).showResultadosBusquedaAlerta(bundle);
     }
 
     public void showUpdatePostulaciones() {
-        setFragment(4, MisPostulacionesFragment.class);
+        setFragment(4, MisPostulacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
     }
 
     public void showUpdateCancelPostulaciones() {
-        setFragment(4, MisPostulacionesFragment.class);
+        setFragment(4, MisPostulacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((MisPostulacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
     }
 
     public void showUpdateConcretarPostulacion() {
-        setFragment(3, MisPublicacionesFragment.class);
+        setFragment(3, MisPublicacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((MisPublicacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
     }
@@ -291,24 +306,24 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         }
     }
 
-    public void navigateToTabbedFragment() {
-        setFragment(1, TabbedFragment.class);
+    public void navigateToTabbedFragment(Integer itemId) {
+        setFragment(1, TabbedFragment.class, itemId);
     }
 
-    public void navigateToMiPerfil() {
-        setFragment(2, MiPerfilFragment.class);
+    public void navigateToMiPerfil(Integer itemId) {
+        setFragment(2, MiPerfilFragment.class, itemId);
     }
 
-    public void navigateToMisPublicaciones() {
-        setFragment(3, MisPublicacionesFragment.class);
+    public void navigateToMisPublicaciones(Integer itemId) {
+        setFragment(3, MisPublicacionesFragment.class, itemId);
     }
 
-    public void navigateToMisPostulaciones() {
-        setFragment(4, MisPostulacionesFragment.class);
+    public void navigateToMisPostulaciones(Integer itemId) {
+        setFragment(4, MisPostulacionesFragment.class, itemId);
     }
 
-    public void navigateToMisNotificaciones() {
-        setFragment(5, MisNotificacionesFragment.class);
+    public void navigateToMisNotificaciones(Integer itemId) {
+        setFragment(5, MisNotificacionesFragment.class, itemId);
     }
 
 }

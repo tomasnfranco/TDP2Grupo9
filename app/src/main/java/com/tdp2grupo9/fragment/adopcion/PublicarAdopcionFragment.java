@@ -357,7 +357,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     }
 
     private void navigateToMisPublicaciones() {
-        ((DrawerMenuActivity )getActivity()).navigateToMisPublicaciones();
+        ((DrawerMenuActivity )getActivity()).navigateToMisPublicaciones(null);
     }
 
     public String formatDecimal(double number, String formatPattern){

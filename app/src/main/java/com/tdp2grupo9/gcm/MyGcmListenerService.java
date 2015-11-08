@@ -30,9 +30,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuAction;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.login.LoginActivity;
-import com.tdp2grupo9.modelo.TipoNotificacion;
 import com.tdp2grupo9.modelo.Usuario;
 
 import java.util.Random;
@@ -56,7 +56,7 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         String userToken = data.getString("token");
-        String tipo = data.getString("tipo_id");
+        String tipo_id = data.getString("tipo_id");
         String id = data.getString("id");
 
         if (!Usuario.getInstancia().getToken().equals(userToken)) {
@@ -65,7 +65,7 @@ public class MyGcmListenerService extends GcmListenerService {
             return;
         }
 
-        if (tipo == null || id == null || tipo.isEmpty() || id.isEmpty()) {
+        if (tipo_id == null || id == null || tipo_id.isEmpty() || id.isEmpty()) {
             Log.w(TAG, "No se puede determinar el tipo de notificacion. Parametros invalidos o faltantes.");
             return;
         }
@@ -91,48 +91,20 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(TipoNotificacion.getTipoPublicacion(Integer.parseInt(tipo)),
-                Integer.parseInt(id),
-                message);
+        sendNotification(tipo_id, id, message);
         // [END_EXCLUDE]
     }
     // [END receive_message]
 
-    private PendingIntent getPendingIntent(TipoNotificacion tipo, Integer id) {
+    private PendingIntent getPendingIntent(String tipo_id, String id) {
         Intent intent;
 
         if (!Usuario.getInstancia().isLogueado())
             intent = new Intent(this, LoginActivity.class);
         else {
             intent = new Intent(this, DrawerMenuActivity.class);
-            switch (tipo) {
-                case POSTULACION:
-                case RESPPRIVADA:
-                case PREGPUBLICA:
-                    intent.setAction("MIS_PUBLICACIONES");
-                    intent.putExtra("publicacion_id", id);
-                    break;
-                case CONCRETADA:
-                case PREGPRIVADA:
-                    intent.setAction("MIS_POSTULACIONES");
-                    intent.putExtra("publicacion_id", id);
-                    break;
-                case CANCELADA:
-                    intent.setAction("RECIENTES");
-                    break;
-                case RESPPUBLICA:
-                    //TODO VER ESTO SI EL USUARIO ES POSTULANTE O NO PARA REDIRIGIR A MIS POSTULACIONES O A RESULTADO DE BUSQUEDA
-                    intent.setAction("RESULTADO_BUSQUEDA");
-                    intent.putExtra("publicacion_id", id);
-                    break;
-                case ALERTA:
-                    intent.setAction("MIS_ALERTAS");
-                    intent.putExtra("alerta_id", id);
-                    break;
-                default:
-                    intent.setAction("RECIENTES");
-                    break;
-            }
+            intent.setAction(tipo_id);
+            intent.putExtra("id", id);
         }
 
         //As your intent set Flags: FLAG_ACTIVITY_SINGLE_TOP, "onCreate()" will not be called when the activity has been created,
@@ -149,16 +121,18 @@ public class MyGcmListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(TipoNotificacion tipo, Integer id, String message) {
+    private void sendNotification(String tipo_id, String id, String message) {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon_default)
                 .setContentTitle("Busca sus Huellas")
                 .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(getPendingIntent(tipo, id))
+                .setContentIntent(getPendingIntent(tipo_id, id))
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY_EMAILS);
 
