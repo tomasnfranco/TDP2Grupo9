@@ -32,4 +32,15 @@ class HelloController {
 		], [params.gcmToken])
 		render "Enviado Ok a $params.gcmToken"
 	}
+
+	def login() {
+		println "Entro en login"
+		if(params.password == 'admin'){
+			session.administrador = true
+			redirect action:'reporte', controller: 'publicacion'
+		} else {
+			flash.message = 'Usuario o contraseña incorrectos, intente nuevamente'
+			redirect uri:'/login'
+		}
+	}
 }

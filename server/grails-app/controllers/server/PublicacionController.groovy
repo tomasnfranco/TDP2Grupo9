@@ -1,7 +1,7 @@
 package server
 
 import grails.converters.JSON
-
+import groovy.time.TimeCategory
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.rest.RestfulController
@@ -228,28 +228,62 @@ class PublicacionController extends RestfulController<Publicacion>  {
     }
 
     def reporte(){
-        Date desde = params.fechaDesde ?: new Date()
+        Date desde = params.desde ?: (new Date() - 30)
         println "Desde: $desde"
-        Date hasta = params.fechaHasta ?: new Date()
+        Date hasta = params.hasta ?: new Date()
+        use( TimeCategory ) {
+            hasta += 59.minutes
+            hasta += 59.seconds
+            hasta += 23.hours
+        }
         println "Hasta: $hasta"
-        List<Publicacion> publicaciones = Publicacion.findAll(){
-            /*fechaPublicacion >= desde
-            fechaPublicacion <= hasta
-            if(fechaConcretado != null & fechaConcretado != fechaPublicacion){
-                fechaConcretado >= desde
-                fechaConcretado <= hasta
-            }*/
-            //or(between(fechaConcretado,desde,hasta),null(fechaConcretado))
+        List<Publicacion> publicaciones = Publicacion.withCriteria () {
+            or {
+                and {
+                    between("fechaPublicacion", desde, hasta)
+                    isNull("fechaConcretado")
+                }
+                or {
+                    between("fechaPublicacion", desde, hasta)
+                    between("fechaConcretado", desde, hasta)
+                }
+            }
+        }
+        println "${params.especie}"
+        if(params.especie && params.especie != null && params.especie != '-1'){
+            int especie = params.especie.toInteger()
+            println "Especie ${especie}"
+            publicaciones = publicaciones.findAll(){
+                                it.especie.id == especie
+                            }
+
         }
         println "Publicaciones encontradas: ${publicaciones.size()}"
         List<Publicacion> enAdopcion = publicaciones.findAll(){
-            it.tipoPublicacion == 1
-            it.concretado == null
+            it.tipoPublicacion == 1 && it.concretado == null
         }
         List<Publicacion> adoptadas = publicaciones.findAll(){
-            it.tipoPublicacion == 1
-            it.concretado != null
+            it.tipoPublicacion == 1 && it.concretado != null
         }
-        return [perdidas:100,encontradas:30,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size()]
+
+        int encontradasSinReclamar = publicaciones.findAll(){
+            it.tipoPublicacion == 3 && it.concretado == null
+        }.size()
+
+        int perdidasReclamadas = publicaciones.findAll(){
+            it.tipoPublicacion == 2 && it.concretado != null
+        }.size()
+
+        int perdidasSinReclamar = publicaciones.findAll(){
+            it.tipoPublicacion == 2 && it.concretado == null
+        }.size()
+
+        int encontradas = encontradasSinReclamar + perdidasReclamadas
+        int perdidas = encontradasSinReclamar + perdidasSinReclamar
+        println "Encontradas $encontradas"
+        println "Perdidas $perdidas"
+        println "EnAdopcion ${enAdopcion.size()}"
+        println "Adoptadas ${adoptadas.size()}"
+        return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta]
     }
 }
