@@ -194,7 +194,6 @@ class UsuarioController {
     def administrar(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         def lista = Usuario.list(params).sort(){it.id}
-        lista = lista.findAll(){it.activo == true}
         def publicacionesSize = [:]
         def publicacionesConDenuncias = [:]
         lista.each {
@@ -207,5 +206,23 @@ class UsuarioController {
         }
 
         return [lista:lista, usuarioInstanceCount: Usuario.count(),publicacionesSize:publicacionesSize,denuncias:publicacionesConDenuncias]
+    }
+
+    def bloquear(Usuario usuario){
+        usuario.activo = false
+        usuario.save(flush:true)
+        flash.message = "Usuario ${usuario.username} bloqueado."
+        redirect(action:'administrar',controller:'usuario')
+    }
+
+    def desbloquear(Usuario usuario){
+        usuario.activo = true
+        usuario.save(flush:true)
+        flash.message = "Se reactivo al usuario ${usuario.username}."
+        redirect(action:'administrar',controller:'usuario')
+    }
+
+    def publicaciones(Usuario usuario){
+        render usuario
     }
 }
