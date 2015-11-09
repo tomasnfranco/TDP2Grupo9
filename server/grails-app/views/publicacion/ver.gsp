@@ -23,10 +23,8 @@
                 <span id="publicador-label" class="property-label"><g:message code="publicacion.publicador.label"
                                                                               default="Publicador"/></span>
 
-                <span class="property-value" aria-labelledby="publicador-label"><g:link controller="usuario"
-                                                                                        action="show"
-                                                                                        id="${publicacionInstance?.publicador?.id}">${publicacionInstance?.publicador?.encodeAsHTML()}</g:link></span>
-
+                <span class="property-value" aria-labelledby="publicador-label">
+                    ${publicacionInstance?.publicador?.encodeAsHTML()}</span
             </li>
         </g:if>
 
@@ -88,19 +86,6 @@
             </li>
         </g:if>
 
-        <g:if test="${publicacionInstance?.concretado}">
-            <li class="fieldcontain">
-                <span id="concretado-label" class="property-label"><g:message code="publicacion.concretado.label"
-                                                                              default="Concretado"/></span>
-
-                <span class="property-value" aria-labelledby="concretado-label"><g:link controller="usuario"
-                                                                                        action="show"
-                                                                                        id="${publicacionInstance?.concretado?.id}">${publicacionInstance?.concretado?.encodeAsHTML()}</g:link></span>
-
-            </li>
-        </g:if>
-
-
         <g:if test="${publicacionInstance?.direccion}">
             <li class="fieldcontain">
                 <span id="direccion-label" class="property-label"><g:message code="publicacion.direccion.label"
@@ -108,17 +93,6 @@
 
                 <span class="property-value" aria-labelledby="direccion-label"><g:fieldValue
                         bean="${publicacionInstance}" field="direccion"/></span>
-
-            </li>
-        </g:if>
-
-        <g:if test="${publicacionInstance?.fechaConcretado}">
-            <li class="fieldcontain">
-                <span id="fechaConcretado-label" class="property-label"><g:message
-                        code="publicacion.fechaConcretado.label" default="Fecha Concretado"/></span>
-
-                <span class="property-value" aria-labelledby="fechaConcretado-label"><g:formatDate
-                        date="${publicacionInstance?.fechaConcretado}"/></span>
 
             </li>
         </g:if>
@@ -163,19 +137,6 @@
 
                 <span class="property-value"
                       aria-labelledby="compatibleCon-label">${publicacionInstance?.compatibleCon?.compatibleCon.encodeAsHTML()}</span>
-
-            </li>
-        </g:if>
-
-        <g:if test="${publicacionInstance?.denuncias}">
-            <li class="fieldcontain">
-                <span id="denuncias-label" class="property-label"><g:message code="publicacion.denuncias.label"
-                                                                             default="Denuncias"/></span>
-
-                <g:each in="${publicacionInstance.denuncias}" var="d">
-                    <span class="property-value"
-                          aria-labelledby="denuncias-label">${d.denunciante.username} : ${d?.motivo}</span>
-                </g:each>
 
             </li>
         </g:if>
@@ -313,7 +274,19 @@
 
             </li>
         </g:if>
+        <g:if test="${publicacionInstance?.denuncias}">
+            <li class="fieldcontain">
+                <span id="denuncias-label" class="property-label"><strong><g:message code="publicacion.denuncias.label"
+                                                                                     default="Denuncias"/></strong></span>
 
+                <g:each in="${publicacionInstance.denuncias}" var="d">
+                    <br/>
+                    <span class="property-value"
+                          aria-labelledby="denuncias-label">${d.denunciante.username} : ${d?.motivo}</span>
+                </g:each>
+
+            </li>
+        </g:if>
     </ol>
 </div>
 </body>

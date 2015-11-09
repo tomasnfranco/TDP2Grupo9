@@ -223,6 +223,11 @@ class UsuarioController {
     }
 
     def publicaciones(Usuario usuario){
-        render usuario
+        def publicaciones = Publicacion.findAllByPublicador(usuario,params)
+        def denuncias = [:]
+        publicaciones.each {
+            denuncias[it.id] = Denuncia.countByPublicacion(it)
+        }
+        [publicacionInstanceList: publicaciones, publicacionInstanceCount:publicaciones.size(),user:usuario,denuncias: denuncias]
     }
 }

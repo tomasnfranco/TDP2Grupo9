@@ -21,7 +21,7 @@
 			<div class="nav" role="navigation">
 				<ul>
 					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/chart_bar.png);">Estadísticas</g:link></li>
-					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/group.png);">Administrar Usuarios</g:link></li>
+					<li><g:link class="list" action="administrar" controller="usuario" style="background-image: url(../assets/skin/group.png);">Administrar Usuarios</g:link></li>
 					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/table_edit.png);">Administrar Publicaciones</g:link></li>
 				</ul>
 			</div>

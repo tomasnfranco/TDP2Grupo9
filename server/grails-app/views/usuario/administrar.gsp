@@ -39,7 +39,7 @@
 					
 						<td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
 					
-						<td>${publicacionesSize[usuarioInstance.id] ?: 0}</td>
+						<td><g:link action="publicaciones" target="_blank" id="${usuarioInstance.id}">${publicacionesSize[usuarioInstance.id] ?: 0}</g:link></td>
 					
 						<td>${denuncias[usuarioInstance.id] ?: 0}</td>
 
