@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -101,7 +103,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         myMsg.setTextSize(14);
         myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        builder.setView(myMsg);
+        builder.setView(myMsg,50,20,50,20);
         builder.setCustomTitle(myTitle);
 
 
@@ -128,33 +130,62 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
 
     }
 
-    private android.support.v7.app.AlertDialog.Builder getDialogoEnviarEmail(final int i){
+    private void getDialogoEnviarEmail(final int i){
+
         final android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(context);
-
-        String title = "\n ";
-
-        title+=context.getString(R.string.escriba_su_consulta);
-
-        TextView myTitle = new TextView(context);
-
-        myTitle.setText(title);
-        myTitle.setTextSize(18);
-        myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final EditText input = new EditText(context);
         input.setTextSize(16);
         input.setMaxLines(4);
-        builder.setCustomTitle(myTitle);
-        builder.setView(input);
+        input.setHint(R.string.escriba_su_consulta);
+        builder.setView(input,20,50,20,50);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String consulta = input.getText().toString();
-                System.out.println("CONSULTA: " + consulta);
+        builder.setPositiveButton("Aceptar", null);
+        builder.setNegativeButton("Cancelar", null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button btn_aceptar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button btn_cancelar = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
+                dialog.cancel();
+            }
+        });
+
+        btn_aceptar.setOnClickListener(new CustomListener(dialog,input, i));
+
+    }
+
+    private boolean validator(String mensaje){
+        return mensaje.toString().isEmpty();
+    }
+
+    public class CustomListener implements View.OnClickListener{
+        private final AlertDialog dialog;
+        private EditText consulta;
+        private String pregunta;
+        private int i;
+
+        public CustomListener(AlertDialog dialog, EditText consulta, int position){
+            this.dialog = dialog;
+            this.consulta = consulta;
+            this.i = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            pregunta = consulta.getText().toString();
+            if (!validator(pregunta)){
+                System.out.println("CLICK ENVIAR RESPUESTA: " + pregunta);
                 Mensaje mensaje = new Mensaje();
 
-                mensaje.setPregunta(consulta);
+                mensaje.setPregunta(pregunta);
                 mensaje.setPublicacionId(id_publicacion);
                 mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
                 mensaje.setUsuarioRespuestaId(postulantes.get(i).getId());
@@ -162,19 +193,16 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
                 Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
                 enviarConsultaRespuestaTask = new EnviarConsultaRespuestaTask(mensaje, i);
                 enviarConsultaRespuestaTask.execute((Void) null);
+                Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT);
+                dialog.dismiss();
+            } else {
+                System.out.println("CLICK DEBE COMPLETAR RESPUESTA");
+                consulta.setError("Debe escribir una pregunta");
             }
-        });
 
-        builder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
-                        dialog.cancel();
-                    }
-                });
+            Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
 
-        return builder;
-
+        }
     }
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
@@ -265,13 +293,10 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
             }
         });
 
-
         btnSendMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                dialogMensaje = getDialogoEnviarEmail(i).create();
-                dialogMensaje.show();
+                getDialogoEnviarEmail(i);
             }
         });
 
@@ -441,7 +466,7 @@ public class PostulacionesAdapter  extends BaseExpandableListAdapter{
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT).show();
                 updateConcretarPostulacion();
                 notifyDataSetChanged();
             }

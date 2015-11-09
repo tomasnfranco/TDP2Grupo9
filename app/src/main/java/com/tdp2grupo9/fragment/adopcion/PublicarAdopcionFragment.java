@@ -360,8 +360,6 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                 }
                 //publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
                 //publicarAdopcionTask.execute((Void)null);
-
-
             }
         }
     }

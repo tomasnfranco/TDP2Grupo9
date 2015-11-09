@@ -48,10 +48,9 @@
     <string name="denunciar_publicacion">Denunciar publicación</string>
 
 
-    <string name="motivo_denuncia_1">Motivo 1</string>
-    <string name="motivo_denuncia_2">Motivo 2</string>
-    <string name="motivo_denuncia_3">Motivo 3</string>
-
+    <string name="motivo_denuncia_1">Descripción no corresponde</string>
+    <string name="motivo_denuncia_2">Lenguaje obsceno</string>
+    <string name="motivo_denuncia_3">Pedido de dinero o venta de mascota</string>
 
 
     <string name="cuidados_especiales">Cuidados especiales</string>
@@ -141,6 +140,7 @@
     <string name="consulta1">¿Come cualquier alimento?</string>
     <string name="consulta3">¿Le gustan los niños?</string>
     <string name="escriba_su_consulta">Escriba su consulta</string>
+    <string name="escriba_su_respuesta">Escriba la respuesta</string>
     <string name="guardar">Guardar</string>
 
 

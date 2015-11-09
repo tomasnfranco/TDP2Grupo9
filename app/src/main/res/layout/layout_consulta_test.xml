@@ -44,6 +44,30 @@
             android:layout_alignLeft="@+id/icono_consulta"
             android:layout_alignStart="@+id/icono_consulta"
             android:textSize="13dp" />
+
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/imageButton_responder"
+            android:background="@drawable/ic_responder_consulta"
+            android:layout_marginRight="59dp"
+            android:layout_marginEnd="59dp"
+            android:layout_above="@+id/infConsulta"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Responder"
+            android:id="@+id/tv_responder"
+            android:textSize="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignBaseline="@+id/consulta_fecha"
+            android:layout_alignBottom="@+id/consulta_fecha"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -622,7 +622,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         myTitle.setTextSize(18);
         myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        builder.setView(myMsg);
+        builder.setView(myMsg,50,20,50,20);
         builder.setCustomTitle(myTitle);
 
 
@@ -1315,7 +1315,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         });
     }
 
-
     public class GuardarPostulacionTask extends AsyncTask<Void, Void, Boolean> {
 
         int id_publicacion;
@@ -1386,6 +1385,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 if (consulta.getId() > 0){
+                    Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT).show();
                     updateConsultaEnviada(v, i, consulta);
                     notifyDataSetChanged();
                 }else {

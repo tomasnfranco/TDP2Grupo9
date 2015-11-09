@@ -2,13 +2,17 @@ package com.tdp2grupo9.adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Mensaje;
@@ -37,10 +41,9 @@ public class MensajePrivadoAdapter extends BaseAdapter {
     private View viewContainerRespuesta;
     private TextView fechaConsulta;
     private TextView fechaRespuesta;
-    private EditText respuesta_edit;
-    private TextView fechaSinResponder;
-    private ImageButton botonRespuesta;
     private EnviarRespuestaTask enviarRespuestaTask;
+    private TextView text_responder;
+    private ImageButton btn_responder;
 
     public MensajePrivadoAdapter(Context context, List<Mensaje> mensajes) {
         this.mensajes = mensajes;
@@ -61,6 +64,7 @@ public class MensajePrivadoAdapter extends BaseAdapter {
     public long getItemId(int i) {
         return i;
     }
+
     @Override
     public View getView(final int i, View view, ViewGroup parent) {
         final View consultasView = getInflatedViewIfNecessary(view, parent);
@@ -69,12 +73,21 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         infRespuesta = (TextView) consultasView.findViewById(R.id.infRespuesta);
         fechaConsulta = (TextView) consultasView.findViewById(R.id.consulta_fecha);
         fechaRespuesta = (TextView) consultasView.findViewById(R.id.respuesta_fecha);
-        respuesta_edit = (EditText) consultasView.findViewById(R.id.respuesta_edit_text);
-        botonRespuesta = (ImageButton)consultasView.findViewById(R.id.btn_responder);
+
+        text_responder= (TextView) consultasView.findViewById(R.id.tv_responder);
+        btn_responder = (ImageButton)consultasView.findViewById(R.id.imageButton_responder);
 
         viewContainer = consultasView.findViewById(R.id.viewsContainer);
         viewContainerConsulta = consultasView.findViewById(R.id.viewsContainerConsulta);
         viewContainerRespuesta = consultasView.findViewById(R.id.viewsContainerRespuesta);
+
+        viewContainer.setVisibility(View.GONE);
+        viewContainerConsulta.setVisibility(View.GONE);
+        viewContainerRespuesta.setVisibility(View.GONE);
+        text_responder.setVisibility(View.GONE);
+        btn_responder.setVisibility(View.GONE);
+        text_responder.setFocusable(false);
+        btn_responder.setFocusable(false);
 
         consulta = mensajes.get(i).getPregunta();
         fecha_consulta = parserDateText(mensajes.get(i).getFechaPregunta());
@@ -82,46 +95,116 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         respuesta = mensajes.get(i).getRespuesta();
 
         if (respuesta.isEmpty()){
+
+            viewContainerConsulta.setVisibility(View.VISIBLE);
+            text_responder.setVisibility(View.VISIBLE);
+            btn_responder.setVisibility(View.VISIBLE);
+
             infConsulta.setText(consulta);
             fechaConsulta.setText(fecha_consulta);
-            viewContainerRespuesta.setVisibility(View.GONE);
 
-            botonRespuesta.setOnClickListener(new View.OnClickListener() {
+            btn_responder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    respuesta = respuesta_edit.getText().toString();
-                    clickEnviarRespuesta(i, respuesta);
+                    getDialogoResponderMensaje(i);
+                }
+            });
+
+            text_responder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getDialogoResponderMensaje(i);
                 }
             });
 
         }else {
-            fecha_respuesta = parserDateText(mensajes.get(i).getFechaRespuesta());
+
+            viewContainerConsulta.setVisibility(View.VISIBLE);
+            viewContainerRespuesta.setVisibility(View.VISIBLE);
+
             infConsulta.setText(consulta);
             fechaConsulta.setText(fecha_consulta);
+            fecha_respuesta = parserDateText(mensajes.get(i).getFechaRespuesta());
             infRespuesta.setText(respuesta);
             fechaRespuesta.setText(fecha_respuesta);
-            viewContainer.setVisibility(View.GONE);
             respuesta = "";
         }
 
         return consultasView;
     }
 
+    private void getDialogoResponderMensaje(final int i){
+
+        final android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(context);
+
+        final EditText input = new EditText(context);
+        input.setTextSize(16);
+        input.setMaxLines(4);
+        input.setHint(R.string.escriba_su_respuesta);
+        builder.setView(input, 20, 50, 20, 50);
+
+        builder.setPositiveButton("Aceptar", null);
+        builder.setNegativeButton("Cancelar", null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button btn_aceptar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button btn_cancelar = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
+                dialog.cancel();
+            }
+        });
+
+        btn_aceptar.setOnClickListener(new CustomListener(dialog,input, i));
+
+    }
+
+    private boolean validator(String mensaje){
+        return mensaje.toString().isEmpty();
+    }
+
     public void updateRespuesta(int i){
         viewContainerRespuesta.setVisibility(View.VISIBLE);
+        text_responder.setVisibility(View.GONE);
+        btn_responder.setVisibility(View.GONE);
         infRespuesta.setText(mensajes.get(i).getRespuesta());
         fechaRespuesta.setText(parserDateText(mensajes.get(i).getFechaRespuesta()));
     }
 
-    public void clickEnviarRespuesta(int i, String resp){
-        if (!resp.isEmpty()){
-            System.out.println("CLICK ENVIAR RESPUESTA: " + resp.toString());
-            mensajes.get(i).setRespuesta(resp);
-            enviarRespuestaTask = new EnviarRespuestaTask(mensajes.get(i), i);
-            enviarRespuestaTask.execute((Void) null);
-        }else {
-            System.out.println("CLICK DEBE COMPLETAR RESPUESTA");
-            respuesta_edit.setError("Error: debe escribir la respuesta.");
+    public class CustomListener implements View.OnClickListener{
+        private final AlertDialog dialog;
+        private EditText respuesta;
+        private String resp;
+        private int i;
+
+        public CustomListener(AlertDialog dialog, EditText respuesta, int position){
+            this.dialog = dialog;
+            this.respuesta = respuesta;
+            this.i = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            resp = respuesta.getText().toString();
+            if (!validator(resp)){
+                System.out.println("CLICK ENVIAR RESPUESTA: " + resp);
+                mensajes.get(i).setRespuesta(resp);
+                enviarRespuestaTask = new EnviarRespuestaTask(mensajes.get(i), i);
+                enviarRespuestaTask.execute((Void) null);
+                dialog.dismiss();
+            } else {
+                System.out.println("CLICK DEBE COMPLETAR RESPUESTA");
+                respuesta.setError("Debe escribir una respuesta");
+            }
+
+            Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
+
         }
     }
 
@@ -169,8 +252,6 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         return date;
     }
 
-
-
     public class EnviarRespuestaTask extends AsyncTask<Void, Void, Boolean> {
 
         Mensaje respuesta;
@@ -196,6 +277,7 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 viewContainer.setVisibility(View.GONE);
+                Toast.makeText(context, "Mensaje enviado", Toast.LENGTH_SHORT).show();
                 updateRespuesta(position);
                 notifyDataSetChanged();
             }
@@ -207,4 +289,5 @@ public class MensajePrivadoAdapter extends BaseAdapter {
             enviarRespuestaTask = null;
         }
     }
+
 }
