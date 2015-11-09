@@ -771,6 +771,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 guardarPostulacionTask.execute((Void) null);
                 break;
             case EDITAR_PUBL:
+                ((DrawerMenuActivity) activity).navigateToEditarPublicacion(publicaciones.get(i));
                 break;
             case DENUNCIAR_PUBLICACION:
                 denunciarPublicacionTask = new DenunciarPublicacionTask(i);

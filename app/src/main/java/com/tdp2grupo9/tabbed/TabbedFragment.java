@@ -17,6 +17,8 @@ import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
 import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
 import com.tdp2grupo9.fragment.adopcion.ResultadosBusquedaFragment;
 import com.tdp2grupo9.fragment.adopcion.UltimasPublicacionesFragment;
+import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.utils.EdicionPublicacionIntermediary;
 import com.tdp2grupo9.utils.EjecucionAlertaIntermediary;
 
 import java.util.List;
@@ -105,6 +107,12 @@ public class TabbedFragment extends Fragment {
         mViewPager.setCurrentItem(3);
         EjecucionAlertaIntermediary.shouldEjecutarAlerta = true;
         EjecucionAlertaIntermediary.searchData = bundle;
+    }
+
+    public void showEditarPublicacion(Publicacion publicacion) {
+        mViewPager.setCurrentItem(1);
+        EdicionPublicacionIntermediary.shouldLoadPublicacion = true;
+        EdicionPublicacionIntermediary.publicacion = publicacion;
     }
 
     public void volverABusqueda() {

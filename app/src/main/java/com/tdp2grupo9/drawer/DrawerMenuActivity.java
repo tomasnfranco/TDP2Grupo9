@@ -34,6 +34,7 @@ import com.tdp2grupo9.fragment.MisPostulacionesFragment;
 import com.tdp2grupo9.fragment.MisPublicacionesFragment;
 import com.tdp2grupo9.googlecloudmessaging.registration.Registration;
 import com.tdp2grupo9.login.LoginActivity;
+import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.tabbed.TabbedFragment;
 
@@ -240,6 +241,12 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
         setFragment(1, TabbedFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((TabbedFragment) getSupportFragmentManager().getFragments().get(0)).showResultadosBusquedaAlerta(bundle);
+    }
+
+    public void navigateToEditarPublicacion(Publicacion publicacion) {
+        setFragment(1, TabbedFragment.class, null);
+        getSupportFragmentManager().executePendingTransactions();
+        ((TabbedFragment) getSupportFragmentManager().getFragments().get(0)).showEditarPublicacion(publicacion);
     }
 
     public void showUpdatePostulaciones() {
