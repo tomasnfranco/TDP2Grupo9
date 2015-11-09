@@ -304,6 +304,10 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         if (v.getId() == R.id.btn_publicar_adopcion){
             if (isValidAttribute()){
                 //Publicacion publicacion = new Publicacion();
+                Boolean esNueva = (mPublicacionPrevia==null);
+
+                if(mPublicacionPrevia==null)
+                    mPublicacionPrevia = new Publicacion();
 
                 if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.adopciones)))
                     mPublicacionPrevia.setTipoPublicacion(TipoPublicacion.ADOPCION);
@@ -353,13 +357,14 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                     mPublicacionPrevia.addImagen(Imagen.resizeDefault(bitmap));
                 }
 
-                if (mPublicacionPrevia != null) {
+                if (!esNueva) {
                     mModificarPublicacionTask = new ModificarPublicacionTask(mPublicacionPrevia);
                     mModificarPublicacionTask.execute();
                     //mPublicacionPrevia = null;
+                }else{
+                    publicarAdopcionTask = new PublicarAdopcionTask(mPublicacionPrevia);
+                    publicarAdopcionTask.execute((Void)null);
                 }
-                //publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
-                //publicarAdopcionTask.execute((Void)null);
             }
         }
     }

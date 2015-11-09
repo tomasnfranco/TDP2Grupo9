@@ -242,7 +242,7 @@ public class MensajeAdapter extends BaseAdapter {
         int dia = fecha.getDate();
         int mes = fecha.getMonth() + 1;
         int anio = fecha.getYear() + 1900;
-        long hora = fecha.getHours();
+        long hora = fecha.getHours()-3;
         long minutos = fecha.getMinutes();
         long segundos = fecha.getSeconds();
         String min_string;
