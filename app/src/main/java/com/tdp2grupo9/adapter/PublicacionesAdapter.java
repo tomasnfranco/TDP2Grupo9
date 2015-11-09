@@ -532,8 +532,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         editarPublicacionClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogIcon = getDialogoConfirmacion(TiposClickeableEnum.EDITAR_PUBL, i).create();
-                dialogIcon.show();
+                ejecutarAccionClickeable(TiposClickeableEnum.EDITAR_PUBL, i);
             }
         });
 

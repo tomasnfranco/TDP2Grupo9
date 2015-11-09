@@ -22,6 +22,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.googlecloudmessaging.registration.Registration;
 import com.tdp2grupo9.login.LoginActivity;
+import com.tdp2grupo9.modelo.Usuario;
 
 import java.io.IOException;
 import java.util.Random;
@@ -39,6 +40,15 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Usuario.getInstancia().isLogueado()) {
+            Intent intent = new Intent(getApplicationContext(), DrawerMenuActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+
         setContentView(R.layout.activity_splash_screen);
 
         final ProgressBar progressBar =  (ProgressBar) findViewById(R.id.progress_bar);
