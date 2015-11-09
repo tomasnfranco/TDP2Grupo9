@@ -534,6 +534,9 @@ public class Publicacion {
     }
 
     public void modificarPublicacion(String token) {
+
+        List<Imagen> imagenesModificadas = this.imagenes;
+
         String METHOD = "modificarPublicacion";
         HttpURLConnection urlConnection = null;
         try {
@@ -583,17 +586,33 @@ public class Publicacion {
             Log.d(LOG_TAG, METHOD + " url= " + atributos);
             int HttpResult = urlConnection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
+                this.jsonToPublicacion(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
                 Log.d(LOG_TAG, METHOD + " publicacion modificada id " + this.id);
 
             } else {
                 Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             Log.e(LOG_TAG, METHOD + " ERROR ", e);
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+
+
+        Log.d(LOG_TAG, METHOD + " eliminando " + this.imagenes.size() + " imagenes....");
+        for (Imagen bmp : this.imagenes) {
+            bmp.eliminarImagen(token);
+        }
+
+        Log.d(LOG_TAG, METHOD + " adjuntando " + imagenesModificadas.size() + " imagenes....");
+        for (Imagen bmp : imagenesModificadas) {
+            bmp.setPublicacionId(this.id);
+            bmp.guardarImagen(token);
+        }
+
+        this.imagenes = imagenesModificadas;
+
     }
 
     public void cancelarPublicacion(String token) {

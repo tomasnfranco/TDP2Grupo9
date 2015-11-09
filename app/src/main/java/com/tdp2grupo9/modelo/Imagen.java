@@ -98,41 +98,6 @@ public class Imagen {
         reader.endObject();
     }
 
-    @Deprecated
-    public void guardarImagen2(String token) {
-        String METHOD = "guardarImagen";
-
-        HttpURLConnection urlConnection = null;
-        try {
-            String base64Posta = this.getBase64();
-            String content = "token=" + token + "&publicacion=" + this.publicacionId + "&base64=" + Imagen.base64URL_SAFEFromBytes(this.img).replaceAll("(\\r|\\n)", "");
-
-            urlConnection = Connection.getHttpUrlConnection("foto");
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(content);
-            out.close();
-
-            int HttpResult = urlConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_CREATED) {
-                this.jsonToImagen(new JsonReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8")));
-                Log.d(LOG_TAG, METHOD + " imagen guardada id " + this.id);
-            } else {
-                System.out.println("RESPUESTA NO ESPERADA " + HttpResult);
-                System.out.println(urlConnection.getResponseMessage());
-                Log.w(LOG_TAG, METHOD + " respuesta no esperada " + urlConnection.getResponseMessage());
-            }
-        } catch (IOException | JSONException e) {
-            Log.e(LOG_TAG, METHOD + " ERROR ", e);
-        } finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
-        }
-    }
-	
     public void guardarImagen(String token) {
         String METHOD = "guardarImagen";
 
@@ -170,6 +135,34 @@ public class Imagen {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
+    }
+
+    public void eliminarImagen(String token) {
+        String METHOD = "eliminarImagen";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("foto/delete");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&foto="+this.getId();
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                Log.d(LOG_TAG, METHOD + " imagen eliminada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
 	public void setId(int id) {

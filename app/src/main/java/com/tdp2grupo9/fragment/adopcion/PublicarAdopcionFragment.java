@@ -72,7 +72,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private FotoPicker mFotoPicker;
 
     private PublicarAdopcionTask publicarAdopcionTask;
-    private EliminarPublicacionTask mEliminarPublicacionTask;
+    private ModificarPublicacionTask mModificarPublicacionTask;
     private Publicacion mPublicacionPrevia;
     private RadioGroup radioGroupPublicaciones;
     private String tipoPublicacion = "";
@@ -303,62 +303,63 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         inicializarWidgets();
         if (v.getId() == R.id.btn_publicar_adopcion){
             if (isValidAttribute()){
-                Publicacion publicacion = new Publicacion();
+                //Publicacion publicacion = new Publicacion();
 
                 if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.adopciones)))
-                    publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
+                    mPublicacionPrevia.setTipoPublicacion(TipoPublicacion.ADOPCION);
 
                 if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.encontrados)))
-                    publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADA);
+                    mPublicacionPrevia.setTipoPublicacion(TipoPublicacion.ENCONTRADA);
 
                 if (tipoPublicacion.equals(mFragmentView.getContext().getString(R.string.perdidos)))
-                    publicacion.setTipoPublicacion(TipoPublicacion.PERDIDA);
+                    mPublicacionPrevia.setTipoPublicacion(TipoPublicacion.PERDIDA);
 
-                publicacion.setNombreMascota(nombreDescripcion.getText().toString());
-                publicacion.setEspecie(((Especie) spEspecie.getSelectedItem()));
-                publicacion.setRaza(((Raza) spRaza.getSelectedItem()));
-                publicacion.setColor(((Color) spColor.getSelectedItem()));
-                publicacion.setSexo(((Sexo) spSexo.getSelectedItem()));
-                publicacion.setTamanio(((Tamanio) spTamanio.getSelectedItem()));
-                publicacion.setEdad(((Edad) spEdad.getSelectedItem()));
+                mPublicacionPrevia.setNombreMascota(nombreDescripcion.getText().toString());
+                mPublicacionPrevia.setEspecie(((Especie) spEspecie.getSelectedItem()));
+                mPublicacionPrevia.setRaza(((Raza) spRaza.getSelectedItem()));
+                mPublicacionPrevia.setColor(((Color) spColor.getSelectedItem()));
+                mPublicacionPrevia.setSexo(((Sexo) spSexo.getSelectedItem()));
+                mPublicacionPrevia.setTamanio(((Tamanio) spTamanio.getSelectedItem()));
+                mPublicacionPrevia.setEdad(((Edad) spEdad.getSelectedItem()));
 
-                publicacion.setCompatibleCon(((CompatibleCon) spCompatibleCon.getSelectedItem()));
-                publicacion.setVacunasAlDia(((VacunasAlDia) spVacunas.getSelectedItem()));
-                publicacion.setPapelesAlDia(((PapelesAlDia) spPapeles.getSelectedItem()));
-                publicacion.setCastrado(((Castrado) spCastrado.getSelectedItem()));
-                publicacion.setProteccion(((Proteccion) spProteccion.getSelectedItem()));
-                publicacion.setEnergia(((Energia) spEnergia.getSelectedItem()));
+                mPublicacionPrevia.setCompatibleCon(((CompatibleCon) spCompatibleCon.getSelectedItem()));
+                mPublicacionPrevia.setVacunasAlDia(((VacunasAlDia) spVacunas.getSelectedItem()));
+                mPublicacionPrevia.setPapelesAlDia(((PapelesAlDia) spPapeles.getSelectedItem()));
+                mPublicacionPrevia.setCastrado(((Castrado) spCastrado.getSelectedItem()));
+                mPublicacionPrevia.setProteccion(((Proteccion) spProteccion.getSelectedItem()));
+                mPublicacionPrevia.setEnergia(((Energia) spEnergia.getSelectedItem()));
 
-                publicacion.setVideoLink("");
+                mPublicacionPrevia.setVideoLink("");
                 if(!videoLink.getText().toString().isEmpty())
-                    publicacion.setVideoLink(videoLink.getText().toString());
+                    mPublicacionPrevia.setVideoLink(videoLink.getText().toString());
 
-                publicacion.setLatitud(currentLat);
-                publicacion.setLongitud(currentLon);
-                publicacion.setDireccion(direccion);
+                mPublicacionPrevia.setLatitud(currentLat);
+                mPublicacionPrevia.setLongitud(currentLon);
+                mPublicacionPrevia.setDireccion(direccion);
 
-                publicacion.setNecesitaTransito(requiereHogarTransito.isChecked());
-                publicacion.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
+                mPublicacionPrevia.setNecesitaTransito(requiereHogarTransito.isChecked());
+                mPublicacionPrevia.setRequiereCuidadosEspeciales(cuidadosEspeciales.isChecked());
 
-                publicacion.setContacto("");
+                mPublicacionPrevia.setContacto("");
                 if (!contacto.getText().toString().isEmpty())
-                    publicacion.setContacto(contacto.getText().toString());
+                    mPublicacionPrevia.setContacto(contacto.getText().toString());
 
-                publicacion.setCondiciones("");
+                mPublicacionPrevia.setCondiciones("");
                 if (!condicionesAdopcion.getText().toString().isEmpty())
-                    publicacion.setCondiciones(condicionesAdopcion.getText().toString());
+                    mPublicacionPrevia.setCondiciones(condicionesAdopcion.getText().toString());
 
+                mPublicacionPrevia.getImagenes().clear();
                 for (Bitmap bitmap : mFotoPicker.getImagesBitmaps()) {
-                    publicacion.addImagen(Imagen.resizeDefault(bitmap));
+                    mPublicacionPrevia.addImagen(Imagen.resizeDefault(bitmap));
                 }
 
                 if (mPublicacionPrevia != null) {
-                    mEliminarPublicacionTask = new EliminarPublicacionTask(mPublicacionPrevia);
-                    mEliminarPublicacionTask.execute();
-                    mPublicacionPrevia = null;
+                    mModificarPublicacionTask = new ModificarPublicacionTask(mPublicacionPrevia);
+                    mModificarPublicacionTask.execute();
+                    //mPublicacionPrevia = null;
                 }
-                publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
-                publicarAdopcionTask.execute((Void)null);
+                //publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
+                //publicarAdopcionTask.execute((Void)null);
 
 
             }
@@ -523,18 +524,18 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         });
     }
 
-    public class EliminarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
+    public class ModificarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
 
         private Publicacion mPublicacion;
 
-        EliminarPublicacionTask(Publicacion publicacion) {
+        ModificarPublicacionTask(Publicacion publicacion) {
             this.mPublicacion = publicacion;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                mPublicacion.cancelarPublicacion(Usuario.getInstancia().getToken());
+                mPublicacion.modificarPublicacion(Usuario.getInstancia().getToken());
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
@@ -544,14 +545,16 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mEliminarPublicacionTask = null;
+            mModificarPublicacionTask = null;
+            navigateToMisPublicaciones();
         }
 
         @Override
         protected void onCancelled() {
-            mEliminarPublicacionTask = null;
+            mModificarPublicacionTask = null;
         }
     }
+
 
 }
 
