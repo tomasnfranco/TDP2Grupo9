@@ -190,4 +190,22 @@ class UsuarioController {
             '*'{ render status: NOT_FOUND }
         }
     }
+
+    def administrar(Integer max) {
+        params.max = Math.min(max ?: 10, 100)
+        def lista = Usuario.list(params).sort(){it.id}
+        lista = lista.findAll(){it.activo == true}
+        def publicacionesSize = [:]
+        def publicacionesConDenuncias = [:]
+        lista.each {
+            def publicaciones = Publicacion.findAllByPublicador(it)
+            publicacionesSize[it.id] = publicaciones.size()
+            println "Usuario: ${it.id}"
+            println publicacionesSize[it.id]
+            publicacionesConDenuncias[it.id] =publicaciones.inject(0) {result, p -> result + Denuncia.countByPublicacion(p)}
+            println publicacionesConDenuncias[it.id]
+        }
+
+        return [lista:lista, usuarioInstanceCount: Usuario.count(),publicacionesSize:publicacionesSize,denuncias:publicacionesConDenuncias]
+    }
 }

@@ -26,6 +26,10 @@ class PublicacionController extends RestfulController<Publicacion>  {
         respond publicacionInstance
     }
 
+    def ver(Publicacion publicacionInstance){
+        respond publicacionInstance
+    }
+
     def create() {
         respond new Publicacion(params)
     }
