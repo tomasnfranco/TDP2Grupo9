@@ -1152,6 +1152,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             Mensaje mensaje = new Mensaje();
             mensaje.setPregunta(pregunta);
             mensaje.setPublicacionId(publicaciones.get(i).getId());
+            mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
+            mensaje.setUsuarioRespuestaId(publicaciones.get(i).getPublicadorId());
             enviarConsultaTask = new EnviarConsultaTask(mensaje, i, v);
             enviarConsultaTask.execute((Void) null);
         }
