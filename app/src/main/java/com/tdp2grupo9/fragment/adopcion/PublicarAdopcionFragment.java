@@ -28,6 +28,7 @@ import com.tdp2grupo9.fragment.PublicacionesConMapaFragment;
 import com.tdp2grupo9.fragment.SeleccionAtributosFragment;
 import com.tdp2grupo9.modelo.Imagen;
 import com.tdp2grupo9.modelo.Publicacion;
+import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.TipoPublicacion;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.publicacion.AtributoPublicacion;
@@ -43,6 +44,8 @@ import com.tdp2grupo9.modelo.publicacion.Raza;
 import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.modelo.publicacion.Tamanio;
 import com.tdp2grupo9.modelo.publicacion.VacunasAlDia;
+import com.tdp2grupo9.utils.EdicionPublicacionIntermediary;
+import com.tdp2grupo9.view.clickable.EditarPublicacionClickable;
 import com.tdp2grupo9.view.foto.FotoPicker;
 
 import java.text.DecimalFormat;
@@ -69,6 +72,8 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
     private FotoPicker mFotoPicker;
 
     private PublicarAdopcionTask publicarAdopcionTask;
+    private EliminarPublicacionTask mEliminarPublicacionTask;
+    private Publicacion mPublicacionPrevia;
     private RadioGroup radioGroupPublicaciones;
     private String tipoPublicacion = "";
     private TextView localizacion_mascota;
@@ -91,6 +96,137 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
         return mFragmentView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (EdicionPublicacionIntermediary.shouldLoadPublicacion) {
+            EdicionPublicacionIntermediary.shouldLoadPublicacion = false;
+            loadPublicacionData(EdicionPublicacionIntermediary.publicacion);
+            mPublicacionPrevia = EdicionPublicacionIntermediary.publicacion;
+        }
+    }
+
+    private void loadPublicacionData(Publicacion publicacion) {
+        loadTipoPublicacion(publicacion);
+        loadNombre(publicacion);
+        loadEspecie(publicacion);
+        loadRaza(publicacion);
+        loadSexo(publicacion);
+        loadTamanio(publicacion);
+        loadEdad(publicacion);
+        loadColor(publicacion);
+        loadFotos(publicacion);
+        loadVideo(publicacion);
+        loadCompatibleCon(publicacion);
+        loadPapelesAlDia(publicacion);
+        loadVacunasAlDia(publicacion);
+        loadCastradoPublicacion(publicacion);
+        loadProteccion(publicacion);
+        loadEnergia(publicacion);
+        loadRequiereHogarDeTransito(publicacion);
+        loadRequiereCuidadosEspeciales(publicacion);
+        loadContacto(publicacion);
+        loadCondiciones(publicacion);
+    }
+
+    private void loadCondiciones(Publicacion publicacion) {
+        condicionesAdopcion.setText(publicacion.getCondiciones());
+    }
+
+    private void loadContacto(Publicacion publicacion) {
+        contacto.setText(publicacion.getContacto());
+    }
+
+    private void loadRequiereCuidadosEspeciales(Publicacion publicacion) {
+        cuidadosEspeciales.setChecked(publicacion.getRequiereCuidadosEspeciales());
+    }
+
+    private void loadRequiereHogarDeTransito(Publicacion publicacion) {
+        requiereHogarTransito.setChecked(publicacion.getNecesitaTransito());
+    }
+
+    private void loadEnergia(Publicacion publicacion) {
+        loadSpinner(spEnergia, PublicacionAtributos.getInstancia().getEnergia(publicacion.getEnergia()).getValor());
+    }
+
+    private void loadProteccion(Publicacion publicacion) {
+        loadSpinner(spProteccion, PublicacionAtributos.getInstancia().getProteccion(publicacion.getProteccion()).getValor());
+    }
+
+    private void loadCastradoPublicacion(Publicacion publicacion) {
+        loadSpinner(spCastrado, PublicacionAtributos.getInstancia().getCastrado(publicacion.getCastrado()).getValor());
+    }
+
+    private void loadVacunasAlDia(Publicacion publicacion) {
+        loadSpinner(spVacunas, PublicacionAtributos.getInstancia().getVacunasAlDia(publicacion.getVacunasAlDia()).getValor());
+    }
+
+    private void loadPapelesAlDia(Publicacion publicacion) {
+        loadSpinner(spPapeles, PublicacionAtributos.getInstancia().getPapelesAlDia(publicacion.getPapelesAlDia()).getValor());
+    }
+
+    private void loadCompatibleCon(Publicacion publicacion) {
+        loadSpinner(spCompatibleCon, PublicacionAtributos.getInstancia().getCompatibleCon(publicacion.getCompatibleCon()).getValor());
+    }
+
+    private void loadVideo(Publicacion publicacion) {
+        videoLink.setText(publicacion.getVideoLink());
+    }
+
+    private void loadFotos(Publicacion publicacion) {
+        for (Imagen imagen : publicacion.getImagenes()) {
+            mFotoPicker.addFoto(imagen.getBitmap());
+        }
+    }
+
+    private void loadColor(Publicacion publicacion) {
+        loadSpinner(spColor, PublicacionAtributos.getInstancia().getColor(publicacion.getColor()).getValor());
+    }
+
+    private void loadEdad(Publicacion publicacion) {
+        loadSpinner(spEdad, PublicacionAtributos.getInstancia().getEdad(publicacion.getEdad()).getValor());
+    }
+
+    private void loadTamanio(Publicacion publicacion) {
+        loadSpinner(spTamanio, PublicacionAtributos.getInstancia().getTamanio(publicacion.getTamanio()).getValor());
+    }
+
+    private void loadSexo(Publicacion publicacion) {
+        loadSpinner(spSexo, PublicacionAtributos.getInstancia().getSexo(publicacion.getSexo()).getValor());
+    }
+
+    private void loadRaza(Publicacion publicacion) {
+        loadSpinner(spRaza, PublicacionAtributos.getInstancia().getRaza(publicacion.getRaza()).getValor());
+    }
+
+
+    private void loadEspecie(Publicacion publicacion) {
+        loadSpinner(spEspecie, PublicacionAtributos.getInstancia().getEspecie(publicacion.getEspecie()).getValor());
+    }
+
+    private void loadSpinner(Spinner spinner, String valorPublicacion) {
+        for (int i = 0; i < spinner.getAdapter().getCount(); i++) {
+            if (spinner.getAdapter().getItem(i).toString().equals(valorPublicacion)) {
+                spinner.setSelection(i);
+                return;
+            }
+            spinner.setSelection(0);
+        }
+    }
+
+    private void loadNombre(Publicacion publicacion) {
+        nombreDescripcion.setText(publicacion.getNombreMascota());
+    }
+
+    private void loadTipoPublicacion(Publicacion publicacion) {
+        switch (publicacion.getTipoPublicacion()) {
+            case ADOPCION: ((RadioButton) mFragmentView.findViewById(R.id.btn_adopciones)).setChecked(true); break;
+            case PERDIDA: ((RadioButton) mFragmentView.findViewById(R.id.btn_perdidos)).setChecked(true); break;
+            case ENCONTRADA: ((RadioButton) mFragmentView.findViewById(R.id.btn_encontrados)).setChecked(true); break;
+        }
+    }
+
 
     private void hideInnecessaryFields() {
         mFragmentView.findViewById(R.id.panel_maxima_distancia).setVisibility(View.GONE);
@@ -216,6 +352,11 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
                     publicacion.addImagen(Imagen.resizeDefault(bitmap));
                 }
 
+                if (mPublicacionPrevia != null) {
+                    mEliminarPublicacionTask = new EliminarPublicacionTask(mPublicacionPrevia);
+                    mEliminarPublicacionTask.execute();
+                    mPublicacionPrevia = null;
+                }
                 publicarAdopcionTask = new PublicarAdopcionTask(publicacion);
                 publicarAdopcionTask.execute((Void)null);
 
@@ -382,7 +523,35 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
         });
     }
 
+    public class EliminarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
 
+        private Publicacion mPublicacion;
+
+        EliminarPublicacionTask(Publicacion publicacion) {
+            this.mPublicacion = publicacion;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                mPublicacion.cancelarPublicacion(Usuario.getInstancia().getToken());
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mEliminarPublicacionTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            mEliminarPublicacionTask = null;
+        }
+    }
 
 }
 
