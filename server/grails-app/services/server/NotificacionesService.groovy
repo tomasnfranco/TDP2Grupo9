@@ -52,7 +52,7 @@ class NotificacionesService {
         if (postulante.gcmId != null && postulante.gcmId != '') {
             try {
                 androidGcmService.sendMessage([message: "${publicador.username} te ha seleccionado para ser el nuevo dueño de $mascota",
-                                               token:postulante.token,tipo_id:'2',id:"$publicacion.id"], [postulante.gcmId])
+                                               token:postulante.token,tipo_id:'3',id:"$publicacion.id"], [postulante.gcmId])
             } catch (Exception e) {
                 println "No se pudo mandar la push $e"
             }
