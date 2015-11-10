@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="mainSinBarra">
+    <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'publicacion.label', default: 'Publicacion')}"/>
     <title><g:message code="default.show.label" args="[entityName]"/></title>
 </head>
@@ -12,7 +12,7 @@
                                                                   default="Skip to content&hellip;"/></a>
 
 <div id="show-publicacion" class="content scaffold-show" role="main">
-    <h1><g:message code="default.show.label" args="[entityName]"/></h1>
+    <h1>Mostrar Publicación</h1>
     <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
     </g:if>
@@ -88,8 +88,7 @@
 
         <g:if test="${publicacionInstance?.direccion}">
             <li class="fieldcontain">
-                <span id="direccion-label" class="property-label"><g:message code="publicacion.direccion.label"
-                                                                             default="Direccion"/></span>
+                <span id="direccion-label" class="property-label">Dirección</span>
 
                 <span class="property-value" aria-labelledby="direccion-label"><g:fieldValue
                         bean="${publicacionInstance}" field="direccion"/></span>
@@ -155,7 +154,7 @@
         <g:if test="${publicacionInstance?.energia}">
             <li class="fieldcontain">
                 <span id="energia-label" class="property-label"><g:message code="publicacion.energia.label"
-                                                                           default="Energia"/></span>
+                                                                           default="Energía"/></span>
 
                 <span class="property-value"
                       aria-labelledby="energia-label">${publicacionInstance?.energia?.tipo.encodeAsHTML()}</span>
@@ -168,7 +167,7 @@
         <g:if test="${publicacionInstance?.fechaPublicacion}">
             <li class="fieldcontain">
                 <span id="fechaPublicacion-label" class="property-label"><g:message
-                        code="publicacion.fechaPublicacion.label" default="Fecha Publicacion"/></span>
+                        code="publicacion.fechaPublicacion.label" default="Fecha Publicación"/></span>
 
                 <span class="property-value" aria-labelledby="fechaPublicacion-label"><g:formatDate
                         date="${publicacionInstance?.fechaPublicacion}" format="dd/MM/yyyy HH:mm 'Hs.'"/></span>
@@ -191,7 +190,7 @@
         <g:if test="${publicacionInstance?.papelesAlDia}">
             <li class="fieldcontain">
                 <span id="papelesAlDia-label" class="property-label"><g:message code="publicacion.papelesAlDia.label"
-                                                                                default="Papeles Al Dia"/></span>
+                                                                                default="Papeles Al Día"/></span>
 
                 <span class="property-value"
                       aria-labelledby="papelesAlDia-label">${publicacionInstance?.papelesAlDia?.tipo.encodeAsHTML()}</span>
@@ -202,7 +201,7 @@
         <g:if test="${publicacionInstance?.proteccion}">
             <li class="fieldcontain">
                 <span id="proteccion-label" class="property-label"><g:message code="publicacion.proteccion.label"
-                                                                              default="Proteccion"/></span>
+                                                                              default="Protección"/></span>
 
                 <span class="property-value" aria-labelledby="proteccion-label">
                     ${publicacionInstance?.proteccion?.tipo.encodeAsHTML()}</span>
@@ -245,7 +244,7 @@
         <g:if test="${publicacionInstance?.tamanio}">
             <li class="fieldcontain">
                 <span id="tamanio-label" class="property-label"><g:message code="publicacion.tamanio.label"
-                                                                           default="Tamanio"/></span>
+                                                                           default="Tamaño"/></span>
 
                 <span class="property-value" aria-labelledby="tamanio-label">
                     ${publicacionInstance?.tamanio?.tipo.encodeAsHTML()}</span>
@@ -256,7 +255,7 @@
         <g:if test="${publicacionInstance?.tipoPublicacion}">
             <li class="fieldcontain">
                 <span id="tipoPublicacion-label" class="property-label"><g:message
-                        code="publicacion.tipoPublicacion.label" default="Tipo Publicacion"/></span>
+                        code="publicacion.tipoPublicacion.label" default="Tipo Publicación"/></span>
 
                 <span class="property-value" aria-labelledby="tipoPublicacion-label">${publicacionInstance.tipoPublicacion == 1 ? 'Adopcion':
                  (publicacionInstance.tipoPublicacion == 2 ? 'Perdida' : 'Encontrada' )}</span>
@@ -267,7 +266,7 @@
         <g:if test="${publicacionInstance?.vacunasAlDia}">
             <li class="fieldcontain">
                 <span id="vacunasAlDia-label" class="property-label"><g:message code="publicacion.vacunasAlDia.label"
-                                                                                default="Vacunas Al Dia"/></span>
+                                                                                default="Vacunas Al Día"/></span>
 
                 <span class="property-value" aria-labelledby="vacunasAlDia-label">
                     ${publicacionInstance?.vacunasAlDia?.tipo.encodeAsHTML()}</span>

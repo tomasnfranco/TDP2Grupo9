@@ -288,6 +288,19 @@ class PublicacionController extends RestfulController<Publicacion>  {
         println "Perdidas $perdidas"
         println "EnAdopcion ${enAdopcion.size()}"
         println "Adoptadas ${adoptadas.size()}"
-        return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta]
+        def totalEnAdopcion = Publicacion.findAll(){tipoPublicacion == 1 && concretado == null}.size()
+        def pubAdoptadas = Publicacion.findAll(){tipoPublicacion == 1 && concretado != null}
+        def totalAdoptadas = pubAdoptadas.size() ?: 1
+        def tiempoAdopcion = [:]
+        pubAdoptadas.each{
+            tiempoAdopcion[it.id] = it.fechaConcretado - it.fechaPublicacion}
+        int tiempoPromAdop = 0
+        if(tiempoAdopcion.size() > 0)
+            tiempoPromAdop = tiempoAdopcion.values().sum()/ tiempoAdopcion.size()
+
+        println "Total en Adopcion: $totalEnAdopcion"
+        println "Total en Adoptadas: $totalAdoptadas"
+        return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta,
+            totalEnAdopcion : totalEnAdopcion, totalAdoptadas:totalAdoptadas,tiempoPromAdop:tiempoPromAdop]
     }
 }

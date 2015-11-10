@@ -18,9 +18,9 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="username" title="${message(code: 'usuario.username.label', default: 'Username')}" />
+						<g:sortableColumn property="username" title="Usuario" />
 					
-						<g:sortableColumn property="email" title="${message(code: 'usuario.email.label', default: 'Email')}" />
+						<g:sortableColumn property="email" title="Email" />
 
 						<th>Cantidad Publicaciones</th>
 
@@ -39,7 +39,7 @@
 					
 						<td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
 					
-						<td><g:link action="publicaciones" target="_blank" id="${usuarioInstance.id}">${publicacionesSize[usuarioInstance.id] ?: 0}</g:link></td>
+						<td><g:link action="publicaciones" id="${usuarioInstance.id}">${publicacionesSize[usuarioInstance.id] ?: 0}</g:link></td>
 					
 						<td>${denuncias[usuarioInstance.id] ?: 0}</td>
 

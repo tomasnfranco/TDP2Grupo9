@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="mainSinBarra">
+		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'publicacion.label', default: 'Publicacion')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
@@ -39,7 +39,7 @@
 					
 						<td>${fieldValue(bean: publicacionInstance, field: "especie")}</td>
 					
-						<td>${denuncias[publicacionInstance.id]}</td>
+						<td>${publicacionInstance.denuncias.size()}</td>
 					
 						<td></td>
 					

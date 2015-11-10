@@ -49,6 +49,28 @@
 
 <body>
 <div id="list-foto" class="content scaffold-list" role="main">
+    <h1>Métricas</h1>
+    <g:form action="reporte" method="GET">
+        <table>
+            <tr>
+                <td>
+                    <div>
+                        <label for="fechaDesde">
+                            Promedio de En Adopcion-Adoptadas: ${tiempoPromAdop} días. <br/>
+                            En Adopcion / Adoptadas: ${totalEnAdopcion/totalAdoptadas}
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <label for="fechaDesde">
+                            Promedio de Perdidas-Encontradas: ${10} días.
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </g:form>
     <h1>Estadísticas</h1>
     <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
@@ -109,28 +131,6 @@
             </tr>
         </tbody>
     </table>
-    <hr/>
-    <h1>Métricas</h1>
-    <g:form action="reporte" method="GET">
-        <table>
-            <tr>
-                <td>
-                    <div>
-                        <label for="fechaDesde">
-                            Promedio de En Adopcion-Adoptadas: ${10} días.
-                        </label>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <label for="fechaDesde">
-                            Promedio de Perdidas-Encontradas: ${10} días.
-                        </label>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </g:form>
 </div>
 </body>
 </html>

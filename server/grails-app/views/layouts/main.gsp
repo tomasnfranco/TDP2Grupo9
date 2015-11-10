@@ -20,9 +20,10 @@
 		<g:if test="${session.administrador}">
 			<div class="nav" role="navigation">
 				<ul>
-					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/chart_bar.png);">Estadísticas</g:link></li>
-					<li><g:link class="list" action="administrar" controller="usuario" style="background-image: url(../assets/skin/group.png);">Administrar Usuarios</g:link></li>
-					<li><g:link class="list" action="reporte" controller="publicacion" style="background-image: url(../assets/skin/table_edit.png);">Administrar Publicaciones</g:link></li>
+					<li><g:link class="reportes" action="reporte" controller="publicacion">Estadísticas</g:link></li>
+					<li><g:link class="usuarios" action="administrar" controller="usuario">Administrar Usuarios</g:link></li>
+					<li><g:link class="publicaciones" action="reporte" controller="publicacion">Administrar Publicaciones</g:link></li>
+					<li><g:link class="logout" action="logout" controller="hello">Cerrar Sesión</g:link> </li>
 				</ul>
 			</div>
 		</g:if>
