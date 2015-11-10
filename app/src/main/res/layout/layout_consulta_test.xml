@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="80dp"
         android:descendantFocusability="afterDescendants"
         android:id="@+id/viewsContainerConsulta">
 
@@ -28,33 +28,57 @@
             android:layout_height="wrap_content"
             android:text="10/12/1988"
             android:id="@+id/consulta_fecha"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:layout_alignTop="@+id/icono_consulta"
             android:layout_toRightOf="@+id/icono_consulta"
             android:layout_toEndOf="@+id/icono_consulta"
             android:layout_alignBottom="@+id/icono_consulta"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_marginLeft="-5dp" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="Nueva Consulta"
             android:id="@+id/infConsulta"
-            android:layout_below="@+id/consulta_fecha"
             android:layout_alignLeft="@+id/icono_consulta"
             android:layout_alignStart="@+id/icono_consulta"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            android:layout_below="@+id/icono_consulta" />
+
+        <ImageButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/imageButton_bloquear"
+            android:background="@drawable/ic_denuncia_focusable"
+            android:layout_marginRight="22dp"
+            android:layout_marginEnd="25dp"
+            android:layout_above="@+id/tv_bloquea"
+            android:layout_alignRight="@+id/infConsulta"
+            android:layout_alignEnd="@+id/infConsulta" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bloquear"
+            android:id="@+id/tv_bloquea"
+            android:textSize="10dp"
+            android:layout_marginRight="9dp"
+            android:layout_alignTop="@+id/tv_responder"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="9dp" />
 
         <ImageButton
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:id="@+id/imageButton_responder"
-            android:background="@drawable/ic_responder_consulta"
-            android:layout_marginRight="59dp"
-            android:layout_marginEnd="59dp"
-            android:layout_above="@+id/infConsulta"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignBottom="@+id/consulta_fecha"
+            android:layout_alignRight="@+id/tv_responder"
+            android:layout_alignEnd="@+id/tv_responder"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/ic_responder_consulta" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -62,17 +86,15 @@
             android:text="Responder"
             android:id="@+id/tv_responder"
             android:textSize="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_alignBaseline="@+id/consulta_fecha"
-            android:layout_alignBottom="@+id/consulta_fecha"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_above="@+id/infConsulta"
+            android:layout_toLeftOf="@+id/tv_bloquea"
+            android:layout_toStartOf="@+id/tv_bloquea"
+            android:layout_marginRight="15dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="80dp"
         android:descendantFocusability="afterDescendants"
         android:id="@+id/viewsContainerRespuesta">
 
@@ -93,22 +115,23 @@
             android:layout_height="wrap_content"
             android:text="10/12/1988"
             android:id="@+id/respuesta_fecha"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:layout_alignTop="@+id/icono_respuesta"
             android:layout_toRightOf="@+id/icono_respuesta"
             android:layout_toEndOf="@+id/icono_respuesta"
             android:layout_alignBottom="@+id/icono_respuesta"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_marginLeft="-5dp" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="Nueva Respuesta"
             android:id="@+id/infRespuesta"
-            android:layout_below="@+id/respuesta_fecha"
             android:layout_alignLeft="@+id/icono_respuesta"
             android:layout_alignStart="@+id/icono_respuesta"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            android:layout_below="@+id/icono_respuesta" />
 
     </RelativeLayout>
 

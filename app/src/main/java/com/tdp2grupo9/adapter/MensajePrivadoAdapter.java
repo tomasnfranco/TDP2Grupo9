@@ -17,11 +17,8 @@ import android.widget.Toast;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
-import com.tdp2grupo9.modelo.TiposEnum;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -44,6 +41,8 @@ public class MensajePrivadoAdapter extends BaseAdapter {
     private EnviarRespuestaTask enviarRespuestaTask;
     private TextView text_responder;
     private ImageButton btn_responder;
+    private TextView text_bloquear;
+    private ImageButton btn_bloquear;
 
     public MensajePrivadoAdapter(Context context, List<Mensaje> mensajes) {
         this.mensajes = mensajes;
@@ -74,8 +73,10 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         fechaConsulta = (TextView) consultasView.findViewById(R.id.consulta_fecha);
         fechaRespuesta = (TextView) consultasView.findViewById(R.id.respuesta_fecha);
 
-        text_responder= (TextView) consultasView.findViewById(R.id.tv_responder);
+        text_responder= (TextView) consultasView.findViewById(R.id.tv_bloquea);
         btn_responder = (ImageButton)consultasView.findViewById(R.id.imageButton_responder);
+        text_bloquear= (TextView) consultasView.findViewById(R.id.tv_responder);
+        btn_bloquear = (ImageButton)consultasView.findViewById(R.id.imageButton_bloquear);
 
         viewContainer = consultasView.findViewById(R.id.viewsContainer);
         viewContainerConsulta = consultasView.findViewById(R.id.viewsContainerConsulta);
@@ -88,6 +89,8 @@ public class MensajePrivadoAdapter extends BaseAdapter {
         btn_responder.setVisibility(View.GONE);
         text_responder.setFocusable(false);
         btn_responder.setFocusable(false);
+        text_bloquear.setVisibility(View.GONE);
+        btn_bloquear.setVisibility(View.GONE);
 
         consulta = mensajes.get(i).getPregunta();
         fecha_consulta = parserDateText(mensajes.get(i).getFechaPregunta());

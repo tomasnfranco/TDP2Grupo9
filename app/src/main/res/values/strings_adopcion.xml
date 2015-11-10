@@ -48,9 +48,12 @@
     <string name="denunciar_publicacion">Denunciar publicación</string>
 
 
-    <string name="motivo_denuncia_1">Descripción no corresponde</string>
-    <string name="motivo_denuncia_2">Lenguaje obsceno</string>
-    <string name="motivo_denuncia_3">Pedido de dinero o venta de mascota</string>
+    <string name="motivo_denuncia_1">Comercialización de mascotas</string>
+    <string name="motivo_denuncia_2">Descripción no corresponde</string>
+    <string name="motivo_denuncia_3">Lenguaje inadecuado</string>
+    <string name="motivo_denuncia_4">Spam</string>
+    <string name="motivo_denuncia_5">Otros</string>
+    <string name="descripcion_denuncia">Descripción</string>
 
 
     <string name="cuidados_especiales">Cuidados especiales</string>
@@ -122,6 +125,8 @@
     <string name="confirmacion_postulacion_adopcion">¿Confirma que desea adoptar? </string>
     <string name="confirmacion_postulacion_transito">¿Confirma que quiere ofrecer hogar de tránsito?</string>
     <string name="confirmacion_reclamar">¿Confirma que desea reclamar la mascota como suya?</string>
+    <string name="confirmacion_bloquear">¿Confirma que desea bloquear el mensaje?</string>
+
     <string name="se_enviara_notificacion">Se enviará una notificación al publicante para informar de tu postulación</string>
     <string name="se_enviara_notificacion_reclamo">Se enviará una notificación al publicante para informar de su reclamo</string>
     <string name="se_enviara_notificacion_encontre">Se enviará una notificación al publicante para informar que encontró su mascota.</string>

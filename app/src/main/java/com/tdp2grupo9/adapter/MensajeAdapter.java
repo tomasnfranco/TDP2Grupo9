@@ -1,9 +1,11 @@
 package com.tdp2grupo9.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +21,14 @@ import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.TiposEnum;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 
 public class MensajeAdapter extends BaseAdapter {
 
     private List<Mensaje> mensajes;
+    private Boolean concretada;
     private Context context;
     private TiposEnum tipo;
     private String consulta = "";
@@ -46,11 +47,16 @@ public class MensajeAdapter extends BaseAdapter {
     private EnviarRespuestaTask enviarRespuestaTask;
     private TextView text_responder;
     private ImageButton btn_responder;
+    private TextView text_bloquear;
+    private ImageButton btn_bloquear;
+    private BloquearMensajeTask bloquearMensajeTask;
+    private android.support.v7.app.AlertDialog dialogIcon;
 
-    public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type) {
+    public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type, Boolean concretada) {
         this.mensajes = mensajes;
         this.context = context;
         this.tipo = type;
+        this.concretada = concretada;
     }
 
     @Override
@@ -76,8 +82,10 @@ public class MensajeAdapter extends BaseAdapter {
         fechaConsulta = (TextView) consultasView.findViewById(R.id.consulta_fecha);
         fechaRespuesta = (TextView) consultasView.findViewById(R.id.respuesta_fecha);
 
-        text_responder= (TextView) consultasView.findViewById(R.id.tv_responder);
+        text_responder= (TextView) consultasView.findViewById(R.id.tv_bloquea);
         btn_responder = (ImageButton)consultasView.findViewById(R.id.imageButton_responder);
+        text_bloquear= (TextView) consultasView.findViewById(R.id.tv_responder);
+        btn_bloquear = (ImageButton)consultasView.findViewById(R.id.imageButton_bloquear);
 
         viewContainer = consultasView.findViewById(R.id.viewsContainer);
         viewContainerConsulta = consultasView.findViewById(R.id.viewsContainerConsulta);
@@ -88,8 +96,13 @@ public class MensajeAdapter extends BaseAdapter {
         viewContainerRespuesta.setVisibility(View.GONE);
         text_responder.setVisibility(View.GONE);
         btn_responder.setVisibility(View.GONE);
+        text_bloquear.setVisibility(View.GONE);
+        btn_bloquear.setVisibility(View.GONE);
+
         text_responder.setFocusable(false);
         btn_responder.setFocusable(false);
+        text_bloquear.setFocusable(false);
+        btn_bloquear.setFocusable(false);
 
         consulta = mensajes.get(i).getPregunta();
         fecha_consulta = parserDateText(mensajes.get(i).getFechaPregunta());
@@ -100,8 +113,12 @@ public class MensajeAdapter extends BaseAdapter {
             if (respuesta.isEmpty()){
 
                 viewContainerConsulta.setVisibility(View.VISIBLE);
-                text_responder.setVisibility(View.VISIBLE);
-                btn_responder.setVisibility(View.VISIBLE);
+                if (!concretada){
+                    text_responder.setVisibility(View.VISIBLE);
+                    btn_responder.setVisibility(View.VISIBLE);
+                    text_bloquear.setVisibility(View.VISIBLE);
+                    btn_bloquear.setVisibility(View.VISIBLE);
+                }
 
                 infConsulta.setText(consulta);
                 fechaConsulta.setText(fecha_consulta);
@@ -117,6 +134,22 @@ public class MensajeAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         getDialogoResponderMensaje(i);
+                    }
+                });
+
+                btn_bloquear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogIcon = getDialogoConfirmacion(i).create();
+                        dialogIcon.show();
+                    }
+                });
+
+                text_bloquear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogIcon = getDialogoConfirmacion(i).create();
+                        dialogIcon.show();
                     }
                 });
 
@@ -155,7 +188,7 @@ public class MensajeAdapter extends BaseAdapter {
         input.setTextSize(16);
         input.setMaxLines(4);
         input.setHint(R.string.escriba_su_respuesta);
-        builder.setView(input,20,50,20,50);
+        builder.setView(input,15,50,15,50);
 
         builder.setPositiveButton("Aceptar", null);
         builder.setNegativeButton("Cancelar", null);
@@ -186,6 +219,8 @@ public class MensajeAdapter extends BaseAdapter {
         viewContainerRespuesta.setVisibility(View.VISIBLE);
         text_responder.setVisibility(View.GONE);
         btn_responder.setVisibility(View.GONE);
+        text_bloquear.setVisibility(View.GONE);
+        btn_bloquear.setVisibility(View.GONE);
         infRespuesta.setText(mensajes.get(i).getRespuesta());
         fechaRespuesta.setText(parserDateText(mensajes.get(i).getFechaRespuesta()));
     }
@@ -265,7 +300,6 @@ public class MensajeAdapter extends BaseAdapter {
         return date;
     }
 
-
     public class EnviarRespuestaTask extends AsyncTask<Void, Void, Boolean> {
 
         Mensaje respuesta;
@@ -302,5 +336,75 @@ public class MensajeAdapter extends BaseAdapter {
         protected void onCancelled() {
             enviarRespuestaTask = null;
         }
+    }
+
+    public class BloquearMensajeTask extends AsyncTask<Void, Void, Boolean> {
+
+        Mensaje respuesta;
+        int position;
+
+        BloquearMensajeTask(Mensaje mensaje, int i) {
+            respuesta = mensaje;
+            position = i;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                //TODO
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success){
+                
+                notifyDataSetChanged();
+            }
+            bloquearMensajeTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            bloquearMensajeTask = null;
+        }
+    }
+
+    private android.support.v7.app.AlertDialog.Builder getDialogoConfirmacion(final int position){
+        final android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(context);
+
+        String title = "\n ";
+        title += context.getString(R.string.confirmacion_bloquear);
+
+        TextView myTitle = new TextView(context);
+
+
+        myTitle.setText(title);
+        myTitle.setTextSize(18);
+        myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        builder.setView(myTitle, 50, 15, 50, 15);
+
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
+                bloquearMensajeTask = new BloquearMensajeTask(mensajes.get(position), position);
+                bloquearMensajeTask.execute((Void)null);
+            }
+        })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
+                        dialog.cancel();
+                    }
+                });
+        return builder;
+
     }
 }

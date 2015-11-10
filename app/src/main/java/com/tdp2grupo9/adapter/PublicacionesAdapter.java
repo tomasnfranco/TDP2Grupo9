@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -448,7 +449,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     private void activateClickable(final int i){
 
-        if (tipos != TiposEnum.MIS_PUBLICACIONES || tipos != TiposEnum.MIS_POSTULACIONES )
+        if (tipos != TiposEnum.MIS_PUBLICACIONES)
             denunciarPublicacionClickable.setVisibility(View.VISIBLE);
 
         if (publicaciones.get(i).getTipoPublicacion().equals(TipoPublicacion.ADOPCION) &&
@@ -523,8 +524,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         denunciarPublicacionClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogIcon = getDialogoDenunciar(TiposClickeableEnum.DENUNCIAR_PUBLICACION, i).create();
-                dialogIcon.show();
+                getDialogoDenunciar(TiposClickeableEnum.DENUNCIAR_PUBLICACION, i);
             }
         });
 
@@ -641,72 +641,86 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
     }
 
-    private android.support.v7.app.AlertDialog.Builder getDialogoDenunciar(final TiposClickeableEnum tipo,
-                                                                              final int position){
+    private void getDialogoDenunciar(final TiposClickeableEnum tipo,final int position){
         final android.support.v7.app.AlertDialog.Builder builder =
                 new android.support.v7.app.AlertDialog.Builder(context);
 
         String title = "\n ";
         title += getMensajeDeConfirmacion(tipo);
-        title += "\n";
-
-        //radio group
-        RadioGroup radioGroup = new RadioGroup(context);
-        radioGroup.setOrientation(LinearLayout.VERTICAL);
-        radioGroup.setPadding(30,0,0,0);
-        RadioButton rb1 = new RadioButton(context);
-        RadioButton rb2 = new RadioButton(context);
-        RadioButton rb3 = new RadioButton(context);
-        rb1.setText(context.getString(R.string.motivo_denuncia_1));
-        rb1.setTextSize(14);
-        rb1.setTextColor(context.getResources().getColor(R.color.gray_transparent));
-        rb2.setText(context.getString(R.string.motivo_denuncia_2));
-        rb2.setTextSize(14);
-        rb2.setTextColor(context.getResources().getColor(R.color.gray_transparent));
-        rb3.setText(context.getString(R.string.motivo_denuncia_3));
-        rb3.setTextSize(14);
-        rb3.setTextColor(context.getResources().getColor(R.color.gray_transparent));
-
-        radioGroup.addView(rb1);
-        radioGroup.addView(rb2);
-        radioGroup.addView(rb3);
-
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                rb.setChecked(true);
-                if (null != rb && checkedId > -1) {
-                    motivo_denuncia = rb.getText().toString();
-                }
-            }
-        });
+        title += "\n \n";
+        final String[] items ={context.getString(R.string.motivo_denuncia_1),
+                context.getString(R.string.motivo_denuncia_3),
+                context.getString(R.string.motivo_denuncia_4),
+                context.getString(R.string.motivo_denuncia_5)};
 
         TextView myTitle = new TextView(context);
 
         myTitle.setText(title);
-        myTitle.setTextSize(18);
+        myTitle.setTextSize(19);
+        myTitle.setTextColor(Color.BLACK);
         myTitle.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        builder.setCustomTitle(myTitle);
-        builder.setView(radioGroup);
+        EditText editText_descripcion = new EditText(context);
+        editText_descripcion.setTextSize(18);
+        editText_descripcion.setMaxLines(4);
+        editText_descripcion.setHint(R.string.descripcion_denuncia);
 
-
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
-                ejecutarAccionClickeable(tipo, position);
+        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.i("Dialogos", "Opcion elegida: " + items[i]);
+                motivo_denuncia = items[i];
             }
-        })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
-                        dialog.cancel();
-                    }
-                });
-        return builder;
+        });
 
+        builder.setCustomTitle(myTitle);
+        builder.setView(editText_descripcion, 28, 50, 28, 50);
+
+        builder.setPositiveButton("Aceptar", null);
+        builder.setNegativeButton("Cancelar", null);
+
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button btn_aceptar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button btn_cancelar = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
+                dialog.cancel();
+            }
+        });
+
+        btn_aceptar.setOnClickListener(new CustomListener(dialog, position, motivo_denuncia,
+                editText_descripcion.getText().toString()));
+
+    }
+
+    public class CustomListener implements View.OnClickListener{
+        private final AlertDialog dialog;
+        private String descripcion;
+        private int i;
+        private String motivo_denuncia;
+
+        public CustomListener(AlertDialog dialog,int position, String motivo, String descripcion){
+            this.dialog = dialog;
+            this.i = position;
+            this.motivo_denuncia = motivo;
+            this.descripcion = descripcion;
+        }
+
+        @Override
+        public void onClick(View view) {
+            //TODO ver que hacemos con la descripcion y el motivo
+            denunciarPublicacionTask = new DenunciarPublicacionTask(i);
+            denunciarPublicacionTask.execute((Void)null);
+
+            Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
+
+        }
     }
 
     private String getMensajeDeConfirmacion(TiposClickeableEnum tipo){
@@ -987,7 +1001,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 cardViewMensajes.setVisibility(View.GONE);
             } else {
                 listView.setVisibility(View.VISIBLE);
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
@@ -999,7 +1013,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }else{
             if (!mensajes.isEmpty()) {
                 listView.setVisibility(View.VISIBLE);
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
@@ -1088,7 +1102,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
             }
         });
-        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos));
+        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
     }
 
     private void updateCancelacionDePostulacion(){
