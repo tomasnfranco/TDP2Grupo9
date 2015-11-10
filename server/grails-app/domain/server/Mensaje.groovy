@@ -8,6 +8,7 @@ class Mensaje {
     Usuario usuarioDestino
     Date fechaPregunta = new Date()
     Date fechaRespuesta
+    boolean bloqueado = false
 
     static constraints = {
         pregunta blank: false

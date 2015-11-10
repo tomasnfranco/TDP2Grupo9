@@ -220,7 +220,8 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def mensajes(){
         Publicacion publicacion = Publicacion.get(params.publicacion)
-        render publicacion.preguntas.sort{it.fechaPregunta} as JSON
+        def preguntas =publicacion.preguntas.findAll(){it.bloqueado == false}.sort{it.fechaPregunta}
+        render preguntas as JSON
     }
 
     def denunciar(){
