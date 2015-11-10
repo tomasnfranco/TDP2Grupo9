@@ -5,6 +5,7 @@ class Denuncia {
     Date fecha = new Date()
     Publicacion publicacion
     Usuario denunciante
+    String descripcion
 
     static constraints = {
     }

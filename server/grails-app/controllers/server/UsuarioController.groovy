@@ -193,7 +193,9 @@ class UsuarioController {
 
     def administrar(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def lista = Usuario.list(params).sort(){it.id}
+        def lista = Usuario.list(params)
+        if(params.sort == null)
+                lista = lista.sort(){it.id}
         def publicacionesSize = [:]
         def publicacionesConDenuncias = [:]
         lista.each {
@@ -211,6 +213,7 @@ class UsuarioController {
     def bloquear(Usuario usuario){
         usuario.activo = false
         usuario.save(flush:true)
+        //TODO: Enviar Mail al usuario
         flash.message = "Usuario ${usuario.username} bloqueado."
         redirect(action:'administrar',controller:'usuario')
     }

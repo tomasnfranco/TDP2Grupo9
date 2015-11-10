@@ -186,7 +186,7 @@ img {
 	text-decoration: underline;
 }
 
-.nav a.home, .nav a.list, .nav a.create {
+.nav a.home, .nav a.list, .nav a.create,.nav a.reportes,.nav a.usuarios,.nav a.logout,.nav a.publicaciones {
 	background-position: 0.7em center;
 	background-repeat: no-repeat;
 	text-indent: 25px;
@@ -202,6 +202,23 @@ img {
 
 .nav a.create {
 	background-image: url(../images/skin/database_add.png);
+}
+
+
+.nav a.reportes {
+	background-image: url(../images/skin/chart_bar.png);
+}
+
+.nav a.usuarios {
+	background-image: url(../images/skin/group.png);
+}
+
+.nav a.publicaciones {
+	background-image: url(../images/skin/table_edit.png);
+}
+
+.nav a.logout {
+	background-image: url(../images/skin/door_in.png);
 }
 
 /* CREATE/EDIT FORMS AND SHOW PAGES */
@@ -566,7 +583,8 @@ th:hover, tr:hover {
 	text-decoration: underline;
 }
 
-.buttons .delete, .buttons .edit, .buttons .save {
+.buttons .delete, .buttons .edit, .buttons .save, .buttons .usuarios,
+.buttons .reportes, .buttons .publicaciones,.buttons .logout{
 	background-position: 0.7em center;
 	background-repeat: no-repeat;
 	text-indent: 25px;
@@ -588,6 +606,7 @@ th:hover, tr:hover {
 .buttons .save {
 	background-image: url(../images/skin/database_save.png);
 }
+
 
 a.skip {
 	position: absolute;

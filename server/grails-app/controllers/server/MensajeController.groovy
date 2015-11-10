@@ -69,4 +69,16 @@ class MensajeController {
         notificacionesService.respuestaAPregunta(mensaje,mensaje.publicacion.nombreMascota)
         render status: OK
     }
+
+    def bloquear(){
+        def mensaje = Mensaje.get(params.mensaje)
+        if(!mensaje){
+            println "No existe el mensaje"
+            render status: NOT_FOUND
+            return
+        }
+        mensaje.bloqueado = true
+        mensaje.save flush:true
+        render status:OK
+    }
 }

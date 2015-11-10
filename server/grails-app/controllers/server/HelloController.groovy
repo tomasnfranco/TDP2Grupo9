@@ -43,4 +43,10 @@ class HelloController {
 			redirect uri:'/login'
 		}
 	}
+
+	def logout(){
+		session.administrador = null
+		redirect uri:'/login'
+		return
+	}
 }
