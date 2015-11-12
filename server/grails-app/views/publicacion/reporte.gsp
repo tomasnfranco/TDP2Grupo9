@@ -64,7 +64,8 @@
                 <td>
                     <div>
                         <label for="fechaDesde">
-                            Promedio de Perdidas-Encontradas: ${10} días.
+                            Promedio de Perdidas-Encontradas: ${tiempoPromEncontrar} días.<br/>
+                            Pedidas / Encontradas:  <g:formatNumber number="${totalPerdidas/totalEncontradas}" type="number" maxFractionDigits="2" />
                         </label>
                     </div>
                 </td>

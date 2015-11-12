@@ -292,7 +292,23 @@ class PublicacionController extends RestfulController<Publicacion>  {
         if(tiempoAdopcion.size() > 0)
             tiempoPromAdop = tiempoAdopcion.values().sum()/ tiempoAdopcion.size()
 
+        def pubEncontradas = Publicacion.findAll(){(tipoPublicacion == 2 && concretado != null)}
+        def totalPerdidas = Publicacion.findAll(){(tipoPublicacion == 2 || tipoPublicacion == 3) && concretado == null}.size()
+        println "total perdidas: $totalPerdidas"
+        def totalEncontradas = Publicacion.findAll(){(tipoPublicacion == 2 && concretado != null)||(tipoPublicacion == 3 && concretado == null)}.size()
+        println "total encontradas: $totalEncontradas"
+        if(totalEncontradas == 0)
+            totalEncontradas = 1
+        def tiempoPerdidas =[:]
+        pubEncontradas.each {
+            tiempoPerdidas[it.id] = it.fechaConcretado - it.fechaPublicacion
+        }
+        int tiempoPromEncontrar = 0
+        if(tiempoPerdidas.size()> 0)
+            tiempoPromEncontrar = tiempoPerdidas.values().sum() / tiempoPerdidas.size()
+
         return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta,
-            totalEnAdopcion : totalEnAdopcion, totalAdoptadas:totalAdoptadas,tiempoPromAdop:tiempoPromAdop]
+            totalEnAdopcion : totalEnAdopcion, totalAdoptadas:totalAdoptadas,tiempoPromAdop:tiempoPromAdop,
+            tiempoPromEncontrar:tiempoPromEncontrar,totalPerdidas:totalPerdidas,totalEncontradas:totalEncontradas]
     }
 }
