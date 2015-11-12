@@ -22,11 +22,11 @@
 					
 						<g:sortableColumn property="email" title="Email" />
 
-						<th>Cantidad Publicaciones</th>
+						<g:sortableColumn property="cantidadPublicaciones" title="Cantidad Publicaciones" />
 
-						<th>Cantidad Denuncias</th>
+						<g:sortableColumn property="publicacionesConDenuncias" title="Cantidad Denuncias" />
 
-						<th>Activo</th>
+						<g:sortableColumn property="activo" title="Activo" />
 
 						<th></th>
 					</tr>
@@ -39,9 +39,9 @@
 					
 						<td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
 					
-						<td><g:link action="publicaciones" id="${usuarioInstance.id}">${publicacionesSize[usuarioInstance.id] ?: 0}</g:link></td>
+						<td><g:link action="publicaciones" id="${usuarioInstance.id}">${usuarioInstance.cantidadPublicaciones ?: 0}</g:link></td>
 					
-						<td>${denuncias[usuarioInstance.id] ?: 0}</td>
+						<td>${usuarioInstance.publicacionesConDenuncias ?: 0}</td>
 
 						<td><g:formatBoolean boolean="${usuarioInstance.activo}" true="Si" false="No"></g:formatBoolean></td>
 

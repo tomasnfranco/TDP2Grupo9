@@ -15,7 +15,9 @@ class Usuario {
 	String token = ""
 	String foto = ""
 	String gcmId = ""
-
+	int publicacionesConDenuncias = 0;
+	int cantidadPublicaciones = 0;
+	static transients = ['publicacionesConDenuncias','cantidadPublicaciones']
 	static mapping = {
 		foto type: 'text'
 	}
@@ -71,6 +73,15 @@ class Usuario {
 				return
 			}
 		}
+	}
+
+	void calcularDenuncias(){
+		def publicaciones = Publicacion.findAllByPublicador(this)
+		publicacionesConDenuncias = publicaciones.inject(0) {result, p -> result + Denuncia.countByPublicacion(p)}
+	}
+
+	void calcularPublicaciones(){
+		cantidadPublicaciones = Publicacion.countByPublicador(this)
 	}
 
 	String toString(){

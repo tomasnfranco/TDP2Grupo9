@@ -193,21 +193,32 @@ class UsuarioController {
 
     def administrar(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        def sort = params.sort
+        if(params.sort == 'cantidadPublicaciones' || params.sort == 'publicacionesConDenuncias') {
+            params.sort = null
+        }
         def lista = Usuario.list(params)
-        if(params.sort == null)
-                lista = lista.sort(){it.id}
-        def publicacionesSize = [:]
-        def publicacionesConDenuncias = [:]
+
         lista.each {
-            def publicaciones = Publicacion.findAllByPublicador(it)
-            publicacionesSize[it.id] = publicaciones.size()
-            println "Usuario: ${it.id}"
-            println publicacionesSize[it.id]
-            publicacionesConDenuncias[it.id] =publicaciones.inject(0) {result, p -> result + Denuncia.countByPublicacion(p)}
-            println publicacionesConDenuncias[it.id]
+            it.calcularDenuncias()
+            it.calcularPublicaciones()
+        }
+        if(sort == null)
+            lista = lista.sort(){it.id}
+        else if (sort == 'cantidadPublicaciones'){
+            params.sort = sort
+            lista = lista.sort(){it.cantidadPublicaciones}
+            if(params.order == 'desc')
+                lista = lista.reverse()
+        }
+        else if (sort == 'publicacionesConDenuncias') {
+            lista = lista.sort() { it.publicacionesConDenuncias }
+            params.sort = sort
+            if(params.order == 'desc')
+                lista = lista.reverse()
         }
 
-        return [lista:lista, usuarioInstanceCount: Usuario.count(),publicacionesSize:publicacionesSize,denuncias:publicacionesConDenuncias]
+        return [lista:lista, usuarioInstanceCount: lista.size()]
     }
 
     def bloquear(Usuario usuario){
