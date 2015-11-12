@@ -14,6 +14,13 @@
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			<div style="text-align: right;padding-right: 10px;margin-bottom: 5px;font-weight: bold;">
+				<span style="border: solid 1px #FF2405;-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;padding:3px;">
+				<g:link action="bloquearPublicaciones" id="${user.id}" onclick="return confirm('¿Está seguro de bloquear todas las publicaciones de ${user.username}?');"><img src="${assetPath(src:'skin/table_delete.png')}" style="padding-right:2px;"/>Bloquear Publicaciones</g:link>
+				</span>
+			</div>
 			<table>
 			<thead>
 					<tr>
@@ -24,9 +31,9 @@
 					
 						<th>Cantidad de Denuncias</th>
 					
-						<th></th>
+						<th>Activa</th>
 					
-						<th></th>
+						<th>Bloquear</th>
 					
 						<th></th>
 					</tr>
@@ -41,9 +48,15 @@
 					
 						<td>${publicacionInstance.denuncias.size()}</td>
 					
-						<td></td>
+						<td><g:formatBoolean boolean="${publicacionInstance.activa}" true="Si" false="No"/></td>
 					
-						<td></td>
+						<td>
+							<g:if test="${publicacionInstance.activa}">
+							<g:link action="bloquearPublicacion" id="${publicacionInstance.id}" onclick="return confirm('¿Está seguro de bloquear todas las publicaciones de ${user.username}?');">
+								<img src="${assetPath(src:'skin/table_delete.png')}" style="padding-right:2px;" title="Bloquear"/>
+							</g:link>
+							</g:if>
+						</td>
 					
 						<td>
 						</td>

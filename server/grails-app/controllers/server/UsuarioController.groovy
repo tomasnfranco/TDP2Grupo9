@@ -233,4 +233,19 @@ class UsuarioController {
         }
         [publicacionInstanceList: publicaciones, publicacionInstanceCount:publicaciones.size(),user:usuario,denuncias: denuncias]
     }
+
+    def bloquearPublicaciones(Usuario usuario){
+        def publicaciones = Publicacion.findAllByPublicador(usuario,params)
+        publicaciones*.activa = false
+        publicaciones*.save flush:true
+        flash.message = "Se bloquearon todas las publicaciones del usuario ${usuario.username}."
+        redirect(action:'publicaciones',controller:'usuario',id: usuario.id)
+    }
+
+    def bloquearPublicacion(Publicacion publicacion){
+        publicacion.activa = false
+        publicacion.save flush:true
+        flash.message = "Se bloqueo la publicacion de ${publicacion.nombreMascota} del usuario ${publicacion.publicador.username}."
+        redirect(action:'publicaciones',controller:'usuario',id: publicacion.publicador.id)
+    }
 }
