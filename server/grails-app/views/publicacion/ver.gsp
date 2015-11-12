@@ -24,7 +24,7 @@
                                                                               default="Publicador"/></span>
 
                 <span class="property-value" aria-labelledby="publicador-label">
-                    ${publicacionInstance?.publicador?.encodeAsHTML()}</span
+                    <g:link action="publicaciones" controller="usuario" id="${publicacionInstance.publicador?.id}"> ${publicacionInstance?.publicador?.encodeAsHTML()}</g:link></span
             </li>
         </g:if>
 

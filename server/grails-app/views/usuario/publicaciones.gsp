@@ -21,17 +21,35 @@
 				<g:link action="bloquearPublicaciones" id="${user.id}" onclick="return confirm('¿Está seguro de bloquear todas las publicaciones de ${user.username}?');"><img src="${assetPath(src:'skin/table_delete.png')}" style="padding-right:2px;"/>Bloquear Publicaciones</g:link>
 				</span>
 			</div>
+			<g:form action="publicaciones" id="${params.id}">
+				<table>
+					<tr>
+						<td>Nombre Mascota: <g:textField name="mascota" value="${params.mascota}" /></td>
+						<td>Especie: <g:select name="especie" value="${params.especie}" from="[0:'Todas',1:'Perro',2:'Gato']" optionKey="key" optionValue="value"/></td>
+						<td>Tipo Publicacion: <g:select name="tipoPublicacion" from="[0:'Todos',1:'Adopcion',2:'Perdida',3:'Encontrada']" value="${params.tipoPublicacion}"  optionKey="key" optionValue="value"/></td>
+						<td>Activo: <g:select name="activo" from="['Todos','Si','No']"  value="${params.activo}"></g:select></td>
+					</tr>
+					<tr>
+						<td colspan="4" style="text-align: center" width="100%">
+							<g:submitButton name="Filtrar" action="administrar"></g:submitButton>&nbsp;&nbsp;
+							<g:link action="publicaciones" id="${params.id}">Limpiar Filtros</g:link>
+						</td>
+					</tr>
+				</table>
+			</g:form>
 			<table>
 			<thead>
 					<tr>
 
-						<g:sortableColumn property="nombreMascota" title="${message(code: 'publicacion.nombreMascota.label', default: 'Nombre Mascota')}" />
+						<g:sortableColumn property="nombreMascota" title="Nombre Mascota" />
 
-						<th>Especie</th>
-					
-						<th>Cantidad de Denuncias</th>
-					
-						<th>Activa</th>
+						<g:sortableColumn property="especie" title="Especie" />
+
+						<g:sortableColumn property="tipoPublicacion" title="Tipo" />
+
+						<g:sortableColumn property="denuncias" title="Cantidad de Denuncias" />
+
+						<g:sortableColumn property="activa" title="Activa" />
 					
 						<th>Bloquear</th>
 					
@@ -45,6 +63,8 @@
 						<td><g:link controller="publicacion" action="ver" id="${publicacionInstance.id}">${fieldValue(bean: publicacionInstance, field: "nombreMascota")}</g:link></td>
 					
 						<td>${fieldValue(bean: publicacionInstance, field: "especie")}</td>
+
+						<td>${publicacionInstance.tipoPublicacion == 1 ? 'Adopcion' : (publicacionInstance.tipoPublicacion == 2 ? 'Perdida' : 'Encontrada')}</td>
 					
 						<td>${publicacionInstance.denuncias.size()}</td>
 					
@@ -52,7 +72,7 @@
 					
 						<td>
 							<g:if test="${publicacionInstance.activa}">
-							<g:link action="bloquearPublicacion" id="${publicacionInstance.id}" onclick="return confirm('¿Está seguro de bloquear todas las publicaciones de ${user.username}?');">
+							<g:link action="bloquearPublicacion" id="${publicacionInstance.id}" onclick="return confirm('¿Está seguro de bloquear la publicación de ${publicacionInstance.nombreMascota}?');">
 								<img src="${assetPath(src:'skin/table_delete.png')}" style="padding-right:2px;" title="Bloquear"/>
 							</g:link>
 							</g:if>

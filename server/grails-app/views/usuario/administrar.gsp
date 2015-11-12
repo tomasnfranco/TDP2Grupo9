@@ -14,6 +14,21 @@
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			<g:form action="administrar">
+			<table>
+				<tr>
+					<td>Usuario: <g:textField name="username" value="${params.username}" /></td>
+					<td>Email: <g:textField name="email" value="${params.email}"/></td>
+					<td>Activo: <g:select name="activo" from="['Todos','Si','No']"  value="${params.activo}"></g:select></td>
+				</tr>
+				<tr>
+					<td colspan="3" style="text-align: center" width="100%">
+						<g:submitButton name="Filtrar" action="administrar"></g:submitButton>&nbsp;&nbsp;
+						<g:link action="administrar">Limpiar Filtros</g:link>
+					</td>
+				</tr>
+			</table>
+			</g:form>
 			<table>
 			<thead>
 					<tr>

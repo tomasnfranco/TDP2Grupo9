@@ -198,7 +198,20 @@ class UsuarioController {
             params.sort = null
         }
         def lista = Usuario.list(params)
-
+        if(params.username){
+            lista = lista.findAll(){it.username =~ params.username}
+        }
+        if(params.email){
+            lista = lista.findAll(){it.email =~ params.email}
+        }
+        if(params.activo){
+            if(params.activo == 'Si'){
+                lista = lista.findAll(){it.activo}
+            }
+            if(params.activo == 'No'){
+                lista = lista.findAll(){!(it.activo)}
+            }
+        }
         lista.each {
             it.calcularDenuncias()
             it.calcularPublicaciones()
@@ -237,10 +250,37 @@ class UsuarioController {
     }
 
     def publicaciones(Usuario usuario){
+        def sort = params.sort
+        if(params.sort == 'denuncias'){
+            params.sort = null
+        }
         def publicaciones = Publicacion.findAllByPublicador(usuario,params)
+        if(params.mascota){
+            publicaciones = publicaciones.findAll(){it.nombreMascota =~ params.mascota}
+        }
+        if(params.especie && params.especie != '0'){
+            publicaciones = publicaciones.findAll(){it.especie.id.toString() == params.especie}
+        }
+        if(params.tipoPublicacion && params.tipoPublicacion != '0'){
+            publicaciones = publicaciones.findAll(){it.tipoPublicacion.toString() == params.tipoPublicacion}
+        }
+        if(params.activo){
+            if(params.activo == 'Si'){
+                publicaciones = publicaciones.findAll(){it.activa}
+            }
+            if(params.activo == 'No'){
+                publicaciones = publicaciones.findAll(){!(it.activa)}
+            }
+        }
         def denuncias = [:]
         publicaciones.each {
             denuncias[it.id] = Denuncia.countByPublicacion(it)
+        }
+        if(sort == 'denuncias'){
+            params.sort = 'denuncias'
+            publicaciones = publicaciones.sort(){denuncias[it.id]}
+            if(params.order == 'desc')
+                publicaciones = publicaciones.reverse()
         }
         [publicacionInstanceList: publicaciones, publicacionInstanceCount:publicaciones.size(),user:usuario,denuncias: denuncias]
     }
