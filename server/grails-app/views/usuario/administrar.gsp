@@ -54,7 +54,7 @@
 					
 						<td>${fieldValue(bean: usuarioInstance, field: "email")}</td>
 					
-						<td><g:link action="publicaciones" id="${usuarioInstance.id}">${usuarioInstance.cantidadPublicaciones ?: 0}</g:link></td>
+						<td><g:link action="publicaciones" id="${usuarioInstance.id}" title="Mostrar Publicaciones de ${usuarioInstance.username}">${usuarioInstance.cantidadPublicaciones ?: 0}</g:link></td>
 					
 						<td>${usuarioInstance.publicacionesConDenuncias ?: 0}</td>
 
