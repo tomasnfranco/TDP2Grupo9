@@ -16,7 +16,18 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><h1><a href="#" style="font-weight: bold;text-decoration:none;cursor:default;">BUSCA SUS HUELLAS</a></h1></div>
+		<div id="grailsLogo" role="banner">
+			<table width="100%">
+				<tr>
+					<td width="100px" height="100px" style="padding:0px;">
+						<img src="${assetPath(src:'icono.png')}" alt="Busca Sus Huellas" style="width: 100px; float: left;height: 100px;">
+					</td>
+					<td style="vertical-align: middle;">
+						<a href="#">BUSCA SUS HUELLAS</a>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<g:if test="${session.administrador}">
 			<div class="nav" role="navigation">
 				<ul>

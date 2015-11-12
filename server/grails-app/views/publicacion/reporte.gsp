@@ -56,8 +56,8 @@
                 <td>
                     <div>
                         <label for="fechaDesde">
-                            Promedio de En Adopcion-Adoptadas: ${tiempoPromAdop} días. <br/>
-                            En Adopcion / Adoptadas: ${totalEnAdopcion/totalAdoptadas}
+                            Promedio de En Adopción-Adoptadas: ${tiempoPromAdop} días. <br/>
+                            Adoptadas / En Adopción: <g:formatNumber number="${totalAdoptadas/totalEnAdopcion}" type="number" maxFractionDigits="2" />
                         </label>
                     </div>
                 </td>
@@ -83,7 +83,7 @@
                     <label for="fechaDesde">
                         Desde:
                     </label>
-                    <g:datePicker name="desde" precision="day" value="${desde}" />
+                    <g:datePicker name="desde" precision="day" value="${desde}" relativeYears="[-1..0]" />
                 </div>
             </td>
             <td>
@@ -91,7 +91,7 @@
                     <label for="fechaHasta">
                         Hasta:
                     </label>
-                    <g:datePicker name="hasta" precision="day" value="${hasta}" />
+                    <g:datePicker name="hasta" precision="day" value="${hasta}" relativeYears="[-1..0]"  />
                 </div>
             </td>
             <td>

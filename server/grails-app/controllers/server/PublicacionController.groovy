@@ -234,14 +234,12 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
     def reporte(){
         Date desde = params.desde ?: (new Date() - 30)
-        println "Desde: $desde"
         Date hasta = params.hasta ?: new Date()
         use( TimeCategory ) {
             hasta += 59.minutes
             hasta += 59.seconds
             hasta += 23.hours
         }
-        println "Hasta: $hasta"
         List<Publicacion> publicaciones = Publicacion.withCriteria () {
             or {
                 and {
@@ -254,7 +252,6 @@ class PublicacionController extends RestfulController<Publicacion>  {
                 }
             }
         }
-        println "${params.especie}"
         if(params.especie && params.especie != null && params.especie != '-1'){
             int especie = params.especie.toInteger()
             println "Especie ${especie}"
@@ -263,7 +260,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
                             }
 
         }
-        println "Publicaciones encontradas: ${publicaciones.size()}"
+
         List<Publicacion> enAdopcion = publicaciones.findAll(){
             it.tipoPublicacion == 1 && it.concretado == null
         }
@@ -285,13 +282,9 @@ class PublicacionController extends RestfulController<Publicacion>  {
 
         int encontradas = encontradasSinReclamar + perdidasReclamadas
         int perdidas = encontradasSinReclamar + perdidasSinReclamar
-        println "Encontradas $encontradas"
-        println "Perdidas $perdidas"
-        println "EnAdopcion ${enAdopcion.size()}"
-        println "Adoptadas ${adoptadas.size()}"
         def totalEnAdopcion = Publicacion.findAll(){tipoPublicacion == 1 && concretado == null}.size()
         def pubAdoptadas = Publicacion.findAll(){tipoPublicacion == 1 && concretado != null}
-        def totalAdoptadas = pubAdoptadas.size() ?: 1
+        def totalAdoptadas = pubAdoptadas.size()
         def tiempoAdopcion = [:]
         pubAdoptadas.each{
             tiempoAdopcion[it.id] = it.fechaConcretado - it.fechaPublicacion}
@@ -299,8 +292,6 @@ class PublicacionController extends RestfulController<Publicacion>  {
         if(tiempoAdopcion.size() > 0)
             tiempoPromAdop = tiempoAdopcion.values().sum()/ tiempoAdopcion.size()
 
-        println "Total en Adopcion: $totalEnAdopcion"
-        println "Total en Adoptadas: $totalAdoptadas"
         return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta,
             totalEnAdopcion : totalEnAdopcion, totalAdoptadas:totalAdoptadas,tiempoPromAdop:tiempoPromAdop]
     }
