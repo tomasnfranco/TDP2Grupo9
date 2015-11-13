@@ -281,7 +281,9 @@
                 <g:each in="${publicacionInstance.denuncias}" var="d">
                     <br/>
                     <span class="property-value"
-                          aria-labelledby="denuncias-label">${d.denunciante.username} : ${d?.motivo}</span>
+                          aria-labelledby="denuncias-label">${d.denunciante.username} : ${d?.motivo}<br/>
+							Descripción: ${d?.descripcion}
+				  </span>
                 </g:each>
 
             </li>
