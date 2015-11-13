@@ -14,7 +14,7 @@ class PublicacionController extends RestfulController<Publicacion>  {
     def notificacionesService
     static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: ["DELETE","POST"],
                              atributos:'GET',quieroAdoptar: 'POST',concretarAdopcion:'POST',mensajes:'GET',
-                             ofrezcoTransito: "POST", cancelarTransito: "POST",concretarTransito:"POST"]
+                             ofrezcoTransito: "POST", cancelarTransito: "POST",concretarTransito:"POST",administrar: ["GET","POST"]]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -310,5 +310,50 @@ class PublicacionController extends RestfulController<Publicacion>  {
         return [perdidas:perdidas,encontradas:encontradas,enAdopcion:enAdopcion.size(),adoptadas:adoptadas.size(),especies : Especie.list(), desde: desde, hasta:hasta,
             totalEnAdopcion : totalEnAdopcion, totalAdoptadas:totalAdoptadas,tiempoPromAdop:tiempoPromAdop,
             tiempoPromEncontrar:tiempoPromEncontrar,totalPerdidas:totalPerdidas,totalEncontradas:totalEncontradas]
+    }
+
+    def administrar(){
+        def sort = params.sort
+        if(params.sort == 'denuncias'){
+            params.sort = null
+        }
+
+        def publicaciones =Publicacion.list(params)
+
+        if(params.mascota){
+            publicaciones = publicaciones.findAll(){it.nombreMascota =~ params.mascota}
+        }
+        if(params.especie && params.especie != '0'){
+            publicaciones = publicaciones.findAll(){it.especie.id.toString() == params.especie}
+        }
+        if(params.tipoPublicacion && params.tipoPublicacion != '0'){
+            publicaciones = publicaciones.findAll(){it.tipoPublicacion.toString() == params.tipoPublicacion}
+        }
+        if(params.activo){
+            if(params.activo == 'Si'){
+                publicaciones = publicaciones.findAll(){it.activa}
+            }
+            if(params.activo == 'No'){
+                publicaciones = publicaciones.findAll(){!(it.activa)}
+            }
+        }
+        def denuncias = [:]
+        publicaciones.each {
+            denuncias[it.id] = Denuncia.countByPublicacion(it)
+        }
+        if(sort == 'denuncias'){
+            params.sort = 'denuncias'
+            publicaciones = publicaciones.sort(){denuncias[it.id]}
+            if(params.order == 'desc')
+                publicaciones = publicaciones.reverse()
+        }
+        respond publicaciones, model:[publicacionInstanceCount: Publicacion.count()]
+    }
+
+    def bloquearPublicacion(Publicacion publicacion){
+        publicacion.activa = false
+        publicacion.save flush:true
+        flash.message = "Se bloqueo la publicacion de ${publicacion.nombreMascota}."
+        redirect(action:'administrar',controller:'publicacion')
     }
 }

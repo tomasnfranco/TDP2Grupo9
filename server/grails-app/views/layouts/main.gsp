@@ -33,7 +33,7 @@
 				<ul>
 					<li><g:link class="reportes" action="reporte" controller="publicacion">Estadísticas</g:link></li>
 					<li><g:link class="usuarios" action="administrar" controller="usuario">Administrar Usuarios</g:link></li>
-					<li><g:link class="publicaciones" action="reporte" controller="publicacion">Administrar Publicaciones</g:link></li>
+					<li><g:link class="publicaciones" action="administrar" controller="publicacion">Administrar Publicaciones</g:link></li>
 					<li><g:link class="logout" action="logout" controller="hello">Cerrar Sesión</g:link> </li>
 				</ul>
 			</div>
