@@ -244,7 +244,7 @@ public class Mensaje {
         Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
-    public void bloquear(String token) {
+    public void bloquearMensaje(String token) {
         String METHOD = "bloquear";
 
         HttpURLConnection urlConnection = null;

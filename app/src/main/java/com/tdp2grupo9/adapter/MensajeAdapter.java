@@ -340,18 +340,18 @@ public class MensajeAdapter extends BaseAdapter {
 
     public class BloquearMensajeTask extends AsyncTask<Void, Void, Boolean> {
 
-        Mensaje respuesta;
+        Mensaje mensaje;
         int position;
 
         BloquearMensajeTask(Mensaje mensaje, int i) {
-            respuesta = mensaje;
+            mensaje = mensaje;
             position = i;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                //TODO
+                mensaje.bloquearMensaje(Usuario.getInstancia().getToken());
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
