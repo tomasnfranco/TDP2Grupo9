@@ -453,4 +453,22 @@ class NotificacionesService {
             println "No se envio mail por adopción exitosa al publicador ${publicador.username} debido que no tiene el mail registrado en el sistema."
         }
     }
+
+    def bloquearUsuario(Usuario usuario){
+        if(usuario.email && !usuario.email.empty) {
+            mailService.sendMail {
+                async true
+                to "${usuario.email}"
+                subject "[BUSCA SUS HUELLAS]: ${usuario.username} has sido bloqueado"
+                html "<html><body>Hola ${usuario.username},<br/>" +
+                        "Recientemente el administrador del sistema ha decidido bloquear tu ingreso debido a las denuncias de otros usuarios. " +
+                        "<br/>En caso de querer volver a habilitar tu cuenta, por favor contactanos<br/>" +
+                        "<br/><br/>Atentamente,<br/>" +
+                        "El Equipo de BUSCA SUS HUELLAS ${logoApp}</body></html>"
+            }
+            println "E-mail enviado al usuario ${usuario.username} al mail ${usuario.email} porque fue bloqueado"
+        } else {
+            println "No se envio mail por adopción exitosa al publicador ${usuario.username} debido que no tiene el mail registrado en el sistema."
+        }
+    }
 }
