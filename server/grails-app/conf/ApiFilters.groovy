@@ -29,5 +29,15 @@ class ApiFilters {
 				println "$controllerName : $actionName"
 			}
 		}
+
+	   administrador(controller:"usuario|publicacion",action:'administrar|publicaciones|ver|reporte'){
+		   before={
+			   if(!session.administrador){
+				   flash.message = "Debe iniciar sesión para entrar"
+				   redirect uri:'/login'
+				   return false
+			   }
+		   }
+	   }
    }
 }

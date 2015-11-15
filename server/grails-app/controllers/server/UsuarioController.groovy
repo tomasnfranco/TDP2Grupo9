@@ -5,6 +5,7 @@ import grails.transaction.Transactional
 
 class UsuarioController {
 	static scaffold = true
+    def notificacionesService
 	static allowedMethods= [index:'GET',show:'GET',save:'POST',update:['POST','PUT'],delete:'DELETE',login:'POST', logout:['POST','PUT','DELETE']]
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -237,7 +238,7 @@ class UsuarioController {
     def bloquear(Usuario usuario){
         usuario.activo = false
         usuario.save(flush:true)
-        //TODO: Enviar Mail al usuario
+        notificacionesService.bloquearUsuario(usuario)
         flash.message = "Usuario ${usuario.username} bloqueado."
         redirect(action:'administrar',controller:'usuario')
     }

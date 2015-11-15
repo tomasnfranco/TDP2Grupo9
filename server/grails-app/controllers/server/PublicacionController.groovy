@@ -235,6 +235,9 @@ class PublicacionController extends RestfulController<Publicacion>  {
     def reporte(){
         Date desde = params.desde ?: (new Date() - 30)
         Date hasta = params.hasta ?: new Date()
+        if(hasta < desde){
+            flash.message ="La fecha Desde debe ser menor que la fecha Hasta."
+        }
         use( TimeCategory ) {
             hasta += 59.minutes
             hasta += 59.seconds
