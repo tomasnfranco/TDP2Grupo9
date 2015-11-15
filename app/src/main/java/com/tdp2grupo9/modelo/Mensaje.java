@@ -244,6 +244,42 @@ public class Mensaje {
         Log.d(LOG_TAG, METHOD + " finalizado.");
     }
 
+    public void bloquear(String token) {
+        String METHOD = "bloquear";
+
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("mensaje/bloquear");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            String parametros = "token="+token+"&mensaje="+this.id;
+
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+
+                Log.d(LOG_TAG, METHOD + " mensaje bloquedado enviada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
     public static Mensaje obtenerMensaje(String token, Integer id) {
 
         String METHOD = "obtenerMensaje";

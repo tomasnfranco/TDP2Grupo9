@@ -836,6 +836,35 @@ public class Publicacion {
         return publicaciones;
     }
 
+    public void denunciarPublicacion(String token, String motivo, String descripcion) {
+        String METHOD = "denunciarPublicacion";
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = Connection.getHttpUrlConnection("publicacion/denunciar");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            String parametros = "token="+token+"&publicacion="+this.getId()
+                    +"&motivo="+motivo+"&descripcion="+descripcion;
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(parametros);
+            out.close();
+            Log.d(LOG_TAG, METHOD + " url= " + parametros);
+            int HttpResult = urlConnection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                Log.d(LOG_TAG, METHOD + " postulacion denunciada ");
+            } else {
+                Log.w(LOG_TAG, METHOD + " respuesta no esperada" + urlConnection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, METHOD + " ERROR ", e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        Log.d(LOG_TAG, METHOD + " finalizado.");
+    }
+
     public static void ofrezcoTransito(String token, Integer publicacionId) {
         String METHOD = "ofrezcoTransito";
         HttpURLConnection urlConnection = null;

@@ -30,23 +30,11 @@ import android.widget.ExpandableListView;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.tdp2grupo9.MainActivity;
 import com.tdp2grupo9.R;
-import com.tdp2grupo9.adapter.GalleryAdapter;
-import com.tdp2grupo9.adapter.MensajeAdapter;
-import com.tdp2grupo9.adapter.PostulacionesAdapter;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.maps.MapsActivity;
 import com.tdp2grupo9.modelo.Imagen;
@@ -62,10 +50,7 @@ import com.tdp2grupo9.modelo.publicacion.Sexo;
 import com.tdp2grupo9.utils.TiposClickeableEnum;
 import com.tdp2grupo9.modelo.TiposEnum;
 
-import org.w3c.dom.Text;
-
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -125,6 +110,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private View panelPostulantesOfrecenTransito;
     FragmentActivity activity;
     private String motivo_denuncia;
+    private String descripcion;
 
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos, FragmentActivity activity) {
@@ -134,6 +120,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         this.imagenes = new ArrayList<>();
         this.tipos = tipos;
         this.activity = activity;
+        this.motivo_denuncia = "";
+        this.descripcion = "";
     }
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
@@ -694,8 +682,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             }
         });
 
+        descripcion = editText_descripcion.getText().toString();
+
         btn_aceptar.setOnClickListener(new CustomListener(dialog, position, motivo_denuncia,
-                editText_descripcion.getText().toString()));
+                descripcion));
 
     }
 
@@ -714,8 +704,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View view) {
-            //TODO ver que hacemos con la descripcion y el motivo
-            denunciarPublicacionTask = new DenunciarPublicacionTask(i);
+            denunciarPublicacionTask = new DenunciarPublicacionTask(i, this.motivo_denuncia, this.descripcion);
             denunciarPublicacionTask.execute((Void)null);
 
             Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
@@ -787,7 +776,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 ((DrawerMenuActivity) activity).navigateToEditarPublicacion(publicaciones.get(i));
                 break;
             case DENUNCIAR_PUBLICACION:
-                denunciarPublicacionTask = new DenunciarPublicacionTask(i);
+                denunciarPublicacionTask = new DenunciarPublicacionTask(i, this.motivo_denuncia, this.descripcion);
                 denunciarPublicacionTask.execute((Void) null);
                 break;
             case ELIMINAR_PUBL:
@@ -1452,16 +1441,19 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public class DenunciarPublicacionTask extends AsyncTask<Void, Void, Boolean> {
 
         private int position;
+        private String motivo_denuncia;
+        private String descripcion;
 
-        DenunciarPublicacionTask(int i) {
+        DenunciarPublicacionTask(int i, String motivo_denuncia, String descripcion) {
             this.position = i;
+            this.motivo_denuncia = motivo_denuncia;
+            this.descripcion = descripcion;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                //publicaciones.get(position).cancelarPublicacion(Usuario.getInstancia().getToken());
-                //TODO DENUNCIAR PUBLICACION
+                publicaciones.get(position).denunciarPublicacion(Usuario.getInstancia().getToken(), this.motivo_denuncia, this.descripcion);
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 return false;
