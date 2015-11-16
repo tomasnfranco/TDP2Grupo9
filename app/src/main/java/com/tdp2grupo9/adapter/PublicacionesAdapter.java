@@ -112,6 +112,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String motivo_denuncia;
     private String descripcion;
 
+    String[] itemsDenuncia;
 
     public PublicacionesAdapter(Context context, List<Publicacion> publicaciones, TiposEnum tipos, FragmentActivity activity) {
         this.publicaciones = publicaciones;
@@ -122,6 +123,12 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         this.activity = activity;
         this.motivo_denuncia = "";
         this.descripcion = "";
+
+        itemsDenuncia = new String[]{context.getString(R.string.motivo_denuncia_1),
+                context.getString(R.string.motivo_denuncia_3),
+                context.getString(R.string.motivo_denuncia_4),
+                context.getString(R.string.motivo_denuncia_5)};
+
     }
 
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
@@ -636,10 +643,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         String title = "\n ";
         title += getMensajeDeConfirmacion(tipo);
         title += "\n \n";
-        final String[] items ={context.getString(R.string.motivo_denuncia_1),
-                context.getString(R.string.motivo_denuncia_3),
-                context.getString(R.string.motivo_denuncia_4),
-                context.getString(R.string.motivo_denuncia_5)};
+
 
         TextView myTitle = new TextView(context);
 
@@ -653,11 +657,11 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         editText_descripcion.setMaxLines(4);
         editText_descripcion.setHint(R.string.descripcion_denuncia);
 
-        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(itemsDenuncia, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.i("Dialogos", "Opcion elegida: " + items[i]);
-                motivo_denuncia = items[i];
+                Log.i("Dialogos", "Opcion elegida: " + itemsDenuncia[i]);
+                motivo_denuncia = itemsDenuncia[i];
             }
         });
 
@@ -685,27 +689,45 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         descripcion = editText_descripcion.getText().toString();
 
         btn_aceptar.setOnClickListener(new CustomListener(dialog, position, motivo_denuncia,
-                descripcion));
+                editText_descripcion));
 
     }
 
     public class CustomListener implements View.OnClickListener{
         private final AlertDialog dialog;
-        private String descripcion;
+        private EditText descripcion;
         private int i;
         private String motivo_denuncia;
 
-        public CustomListener(AlertDialog dialog,int position, String motivo, String descripcion){
+        public CustomListener(AlertDialog dialog,int position, String motivo, EditText descripcion){
             this.dialog = dialog;
             this.i = position;
             this.motivo_denuncia = motivo;
             this.descripcion = descripcion;
+
+            Log.i("MOTIVO", motivo_denuncia);
+            Log.i("DESCRIPCION", descripcion.getText().toString());
         }
 
         @Override
         public void onClick(View view) {
-            denunciarPublicacionTask = new DenunciarPublicacionTask(i, this.motivo_denuncia, this.descripcion);
-            denunciarPublicacionTask.execute((Void)null);
+
+            int checkedPosition = dialog.getListView().getCheckedItemPosition();
+            dialog.dismiss();
+
+            if (checkedPosition >= 0) {
+                String motivoDenuncia = itemsDenuncia[checkedPosition];
+                String descripcionDenuncia = descripcion.getText().toString();
+
+                Log.i("MOTIVO", motivoDenuncia);
+                Log.i("DESCRIPCION", descripcionDenuncia);
+
+                if (!motivoDenuncia.isEmpty()) {
+                    denunciarPublicacionTask = new DenunciarPublicacionTask(i, motivoDenuncia,
+                            descripcionDenuncia);
+                    denunciarPublicacionTask.execute((Void) null);
+                }
+            }
 
             Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
 
@@ -775,10 +797,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
             case EDITAR_PUBL:
                 ((DrawerMenuActivity) activity).navigateToEditarPublicacion(publicaciones.get(i));
                 break;
-            case DENUNCIAR_PUBLICACION:
+            /*case DENUNCIAR_PUBLICACION:
                 denunciarPublicacionTask = new DenunciarPublicacionTask(i, this.motivo_denuncia, this.descripcion);
                 denunciarPublicacionTask.execute((Void) null);
-                break;
+                break;*/
             case ELIMINAR_PUBL:
                 eliminarPublicacionTask = new EliminarPublicacionTask(i);
                 eliminarPublicacionTask.execute((Void) null);

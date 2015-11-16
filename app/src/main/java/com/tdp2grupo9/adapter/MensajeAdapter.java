@@ -225,6 +225,14 @@ public class MensajeAdapter extends BaseAdapter {
         fechaRespuesta.setText(parserDateText(mensajes.get(i).getFechaRespuesta()));
     }
 
+    public void updateBloqueado(int i){
+        viewContainerRespuesta.setVisibility(View.GONE);
+        text_responder.setVisibility(View.GONE);
+        btn_responder.setVisibility(View.GONE);
+        text_bloquear.setVisibility(View.GONE);
+        btn_bloquear.setVisibility(View.GONE);
+    }
+
     public class CustomListener implements View.OnClickListener{
         private final AlertDialog dialog;
         private EditText respuesta;
@@ -340,12 +348,12 @@ public class MensajeAdapter extends BaseAdapter {
 
     public class BloquearMensajeTask extends AsyncTask<Void, Void, Boolean> {
 
-        Mensaje mensaje;
-        int position;
+        private Mensaje mensaje;
+        private int position;
 
         BloquearMensajeTask(Mensaje mensaje, int i) {
-            mensaje = mensaje;
-            position = i;
+            this.mensaje = mensaje;
+            this.position = i;
         }
 
         @Override
@@ -362,7 +370,9 @@ public class MensajeAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success){
-                
+                viewContainer.setVisibility(View.GONE);
+                Toast.makeText(context, "Mensaje bloqueado", Toast.LENGTH_SHORT).show();
+                updateBloqueado(position);
                 notifyDataSetChanged();
             }
             bloquearMensajeTask = null;

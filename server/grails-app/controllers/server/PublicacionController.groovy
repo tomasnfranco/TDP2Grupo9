@@ -282,10 +282,14 @@ class PublicacionController extends RestfulController<Publicacion>  {
         int perdidasSinReclamar = publicaciones.findAll(){
             it.tipoPublicacion == 2 && it.concretado == null
         }.size()
+		
+		int encontradasReclamadas = publicaciones.findAll(){
+			it.tipoPublicacion == 3 && it.concretado != null
+		}.size()
 
-        int encontradas = encontradasSinReclamar + perdidasReclamadas
+        int encontradas = encontradasReclamadas + perdidasReclamadas
         int perdidas = encontradasSinReclamar + perdidasSinReclamar
-        def totalEnAdopcion = Publicacion.findAll(){tipoPublicacion == 1 && concretado == null}.size()
+        def totalEnAdopcion = Publicacion.findAll(){tipoPublicacion == 1}.size()
         def pubAdoptadas = Publicacion.findAll(){tipoPublicacion == 1 && concretado != null}
         def totalAdoptadas = pubAdoptadas.size()
         def tiempoAdopcion = [:]
@@ -295,13 +299,13 @@ class PublicacionController extends RestfulController<Publicacion>  {
         if(tiempoAdopcion.size() > 0)
             tiempoPromAdop = tiempoAdopcion.values().sum()/ tiempoAdopcion.size()
 
-        def pubEncontradas = Publicacion.findAll(){(tipoPublicacion == 2 && concretado != null)}
-        def totalPerdidas = Publicacion.findAll(){(tipoPublicacion == 2 || tipoPublicacion == 3) && concretado == null}.size()
+        def pubEncontradas = Publicacion.findAll(){((tipoPublicacion == 2 || tipoPublicacion == 3) && concretado != null)}
+        def totalPerdidas = Publicacion.findAll(){tipoPublicacion == 2 || tipoPublicacion == 3}.size()
         println "total perdidas: $totalPerdidas"
-        def totalEncontradas = Publicacion.findAll(){(tipoPublicacion == 2 && concretado != null)||(tipoPublicacion == 3 && concretado == null)}.size()
+        def totalEncontradas = pubEncontradas.size()
         println "total encontradas: $totalEncontradas"
-        if(totalEncontradas == 0)
-            totalEncontradas = 1
+        if(totalPerdidas == 0)
+            totalPerdidas = 1
         def tiempoPerdidas =[:]
         pubEncontradas.each {
             tiempoPerdidas[it.id] = it.fechaConcretado - it.fechaPublicacion

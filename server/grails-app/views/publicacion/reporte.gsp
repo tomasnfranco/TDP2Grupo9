@@ -55,7 +55,7 @@
             <tr>
                 <td>
                     <div>
-                        <label for="fechaDesde">
+                        <label>
                             Promedio de En Adopción-Adoptadas: ${tiempoPromAdop} días. <br/>
                             Adoptadas / En Adopción: <g:formatNumber number="${totalAdoptadas/totalEnAdopcion}" type="number" maxFractionDigits="2" />
                         </label>
@@ -63,9 +63,9 @@
                 </td>
                 <td>
                     <div>
-                        <label for="fechaDesde">
+                        <label>
                             Promedio de Perdidas-Encontradas: ${tiempoPromEncontrar} días.<br/>
-                            Pedidas / Encontradas:  <g:formatNumber number="${totalPerdidas/totalEncontradas}" type="number" maxFractionDigits="2" />
+                            Encontradas / Perdidas :  <g:formatNumber number="${totalEncontradas/totalPerdidas}" type="number" maxFractionDigits="2" />
                         </label>
                     </div>
                 </td>
