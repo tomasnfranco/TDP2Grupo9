@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.AlertaAdapter;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 
 
 public class MisNotificacionesFragment extends AlertasFragment{
@@ -30,6 +31,8 @@ public class MisNotificacionesFragment extends AlertasFragment{
 
         if (getArguments() != null)
             focusOnItemId = getArguments().getInt("itemId");
+
+        ((DrawerMenuActivity) getActivity()).setToolbarTitle(getString(R.string.notificaciones));
 
         return mFragmentView;
     }

@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -331,6 +332,10 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
 
     public void navigateToMisNotificaciones(Integer itemId) {
         setFragment(5, MisNotificacionesFragment.class, itemId);
+    }
+
+    public void setToolbarTitle(String title) {
+        ((TextView) findViewById(R.id.toolbar_title)).setText(title);
     }
 
 }

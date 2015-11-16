@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.fragment.adopcion.BuscarMascotaFragment;
 import com.tdp2grupo9.fragment.adopcion.PublicarAdopcionFragment;
 import com.tdp2grupo9.fragment.adopcion.ResultadosBusquedaFragment;
@@ -39,6 +40,9 @@ public class TabbedFragment extends Fragment {
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabbedFragment = this;
+
+        ((DrawerMenuActivity) getActivity()).setToolbarTitle(getString(R.string.inicio));
+
         return v;
     }
 

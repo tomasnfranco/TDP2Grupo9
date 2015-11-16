@@ -15,4 +15,11 @@
     <string name="distancia_hasta_km">Hasta % km</string>
     <string name="maxima_distancia_mi_localizacion">Máxima distancia desde mi localización</string>
     <string name="adopcion">adopción</string>
+
+    <string name="inicio">Inicio</string>
+    <string name="mi_perfil">Mi Perfil</string>
+    <string name="mis_publicaciones">Mis Publicaciones</string>
+    <string name="mis_postulaciones">Mis Postulaciones</string>
+    <string name="notificaciones">Notificaciones</string>
+
 </resources>

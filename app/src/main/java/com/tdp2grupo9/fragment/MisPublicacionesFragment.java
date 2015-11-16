@@ -9,6 +9,7 @@ import android.widget.ExpandableListView;
 
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.adapter.PublicacionesAdapter;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.TiposEnum;
 
@@ -35,6 +36,8 @@ public class MisPublicacionesFragment  extends PublicacionesFragment {
 
         if (getArguments() != null)
             focusOnItemId = getArguments().getInt("itemId");
+
+        ((DrawerMenuActivity) getActivity()).setToolbarTitle(getString(R.string.mis_publicaciones));
 
         return mFragmentView;
     }
