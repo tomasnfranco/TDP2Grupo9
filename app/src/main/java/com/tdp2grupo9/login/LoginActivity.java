@@ -39,6 +39,7 @@ import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.PublicacionAtributos;
 import com.tdp2grupo9.modelo.Usuario;
+import com.tdp2grupo9.modelo.exceptions.UsuarioNoActivoException;
 import com.tdp2grupo9.modelo.exceptions.WrongPasswordException;
 
 import org.json.JSONException;
@@ -304,6 +305,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
         private Context context;
         private boolean wrongpass = false;
+        private boolean activo = true;
 
         UserEmailPasswordLoginTask(Context context) { this.context = context; }
 
@@ -314,6 +316,8 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
                 Thread.sleep(200);
             } catch (WrongPasswordException e) {
                 this.wrongpass = true;
+            } catch (UsuarioNoActivoException e) {
+                this.activo = false;
             } catch (InterruptedException e) {
                 return false;
             }
@@ -332,6 +336,10 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
                     Toast.makeText(this.context,
                             "Password incorrecta. Intente nuevamente.",
                         Toast.LENGTH_LONG).show();
+                }else if (!this.activo) {
+                    Toast.makeText(this.context,
+                            "Usuario bloqueado. Revise su casilla de correo.",
+                            Toast.LENGTH_LONG).show();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     startActivity(intent);
@@ -388,6 +396,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
         private Context context;
         private boolean wrongpass = false;
+        private boolean activo = true;
 
         UserFacebookLoginTask(Context context) { this.context = context; }
 
@@ -398,6 +407,8 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
                 Thread.sleep(200);
             } catch (WrongPasswordException e) {
                 this.wrongpass = true;
+            } catch (UsuarioNoActivoException e) {
+                this.activo = false;
             } catch (InterruptedException e) {
                 return false;
             }
@@ -415,6 +426,10 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
                 }else if (this.wrongpass) {
                     Toast.makeText(this.context,
                             "Password incorrecta. Intente nuevamente.",
+                            Toast.LENGTH_LONG).show();
+                }else if (!this.activo) {
+                    Toast.makeText(this.context,
+                            "Usuario bloqueado. Revise su casilla de correo.",
                             Toast.LENGTH_LONG).show();
                 }else{
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);

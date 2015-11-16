@@ -1487,6 +1487,9 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         protected void onPostExecute(final Boolean success) {
             if (success){
                 notifyDataSetChanged();
+                Toast.makeText(context, context.getResources().getString(R.string.publicacion_denunciada),
+                        Toast.LENGTH_LONG).show();
+//                denunciarPublicacionClickable.setVisibility(View.GONE);
             }
             denunciarPublicacionTask = null;
         }

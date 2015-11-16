@@ -845,7 +845,7 @@ public class Publicacion {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             String parametros = "token="+token+"&publicacion="+this.getId()
-                    +"&motivo="+motivo+"&descripcion="+descripcion;
+                    +"&motivo="+motivo+"&descripcion="+(descripcion.isEmpty() ? '.' : descripcion);
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(parametros);
             out.close();

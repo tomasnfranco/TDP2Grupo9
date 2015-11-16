@@ -282,7 +282,7 @@
                     <br/>
                     <span class="property-value"
                           aria-labelledby="denuncias-label">${d.denunciante.username} : ${d?.motivo}<br/>
-							Descripción: ${d?.descripcion}
+							Descripción: ${d?.descripcion != '.' ? d?.descripcion : ''}
 				  </span>
                 </g:each>
 

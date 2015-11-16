@@ -5,6 +5,7 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import com.tdp2grupo9.modelo.exceptions.UsuarioNoActivoException;
 import com.tdp2grupo9.modelo.exceptions.WrongPasswordException;
 
 import org.json.JSONException;
@@ -189,7 +190,7 @@ public class Usuario {
         }
     }
 
-    public void login() throws WrongPasswordException {
+    public void login() throws WrongPasswordException, UsuarioNoActivoException {
         String METHOD = "login";
 
         Log.d(TAG, METHOD + " facebookId " + this.facebookId);
@@ -228,6 +229,9 @@ public class Usuario {
                 case HttpURLConnection.HTTP_BAD_METHOD:
                     Log.d(TAG, METHOD + " password incorrecta.");
                     throw new WrongPasswordException();
+                case HttpURLConnection.HTTP_UNAUTHORIZED:
+                    Log.d(TAG, METHOD + " password incorrecta.");
+                    throw new UsuarioNoActivoException();
                 default:
                     this.logueado = false;
                     Log.w(TAG, METHOD + " respuesta no esperada. Usuario no logueado. " + urlConnection.getResponseMessage());

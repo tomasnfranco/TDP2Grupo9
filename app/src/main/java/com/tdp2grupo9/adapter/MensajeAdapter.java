@@ -226,6 +226,7 @@ public class MensajeAdapter extends BaseAdapter {
     }
 
     public void updateBloqueado(int i){
+        viewContainerConsulta.setVisibility(View.GONE);
         viewContainerRespuesta.setVisibility(View.GONE);
         text_responder.setVisibility(View.GONE);
         btn_responder.setVisibility(View.GONE);
@@ -359,9 +360,11 @@ public class MensajeAdapter extends BaseAdapter {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
+
                 mensaje.bloquearMensaje(Usuario.getInstancia().getToken());
                 Thread.sleep(200);
             } catch (InterruptedException e) {
+                Log.d("asd","Entro en el catch");
                 return false;
             }
             return true;
@@ -374,6 +377,8 @@ public class MensajeAdapter extends BaseAdapter {
                 Toast.makeText(context, "Mensaje bloqueado", Toast.LENGTH_SHORT).show();
                 updateBloqueado(position);
                 notifyDataSetChanged();
+
+
             }
             bloquearMensajeTask = null;
         }
@@ -406,6 +411,11 @@ public class MensajeAdapter extends BaseAdapter {
                 Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
                 bloquearMensajeTask = new BloquearMensajeTask(mensajes.get(position), position);
                 bloquearMensajeTask.execute((Void)null);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -417,4 +427,7 @@ public class MensajeAdapter extends BaseAdapter {
         return builder;
 
     }
+
+
+
 }
