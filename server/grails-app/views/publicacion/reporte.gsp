@@ -84,7 +84,7 @@
                     <label for="fechaDesde">
                         Desde:
                     </label>
-                    <g:datePicker name="desde" precision="day" value="${desde}" relativeYears="[-1..0]" />
+                    <g:datePicker name="desde" precision="day" value="${desde}" years="[2014,2015]" />
                 </div>
             </td>
             <td>
@@ -92,7 +92,7 @@
                     <label for="fechaHasta">
                         Hasta:
                     </label>
-                    <g:datePicker name="hasta" precision="day" value="${hasta}" relativeYears="[-1..0]"  />
+                    <g:datePicker name="hasta" precision="day" value="${hasta}" years="[2014,2015]"  />
                 </div>
             </td>
             <td>
@@ -106,7 +106,7 @@
         <tr>
             <td colspan="3">
                 <div>
-                <g:submitButton name="procesar" value="Procesar Busqueda"></g:submitButton>
+                <g:submitButton name="procesar" value="Procesar Búsqueda"></g:submitButton>
                 </div>
             </td>
         </tr>

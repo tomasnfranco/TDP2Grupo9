@@ -257,7 +257,7 @@
                 <span id="tipoPublicacion-label" class="property-label"><g:message
                         code="publicacion.tipoPublicacion.label" default="Tipo Publicación"/></span>
 
-                <span class="property-value" aria-labelledby="tipoPublicacion-label">${publicacionInstance.tipoPublicacion == 1 ? 'Adopcion':
+                <span class="property-value" aria-labelledby="tipoPublicacion-label">${publicacionInstance.tipoPublicacion == 1 ? 'Adopción':
                  (publicacionInstance.tipoPublicacion == 2 ? 'Perdida' : 'Encontrada' )}</span>
 
             </li>

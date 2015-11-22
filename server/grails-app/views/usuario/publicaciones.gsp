@@ -64,7 +64,7 @@
 					
 						<td>${fieldValue(bean: publicacionInstance, field: "especie")}</td>
 
-						<td>${publicacionInstance.tipoPublicacion == 1 ? 'Adopcion' : (publicacionInstance.tipoPublicacion == 2 ? 'Perdida' : 'Encontrada')}</td>
+						<td>${publicacionInstance.tipoPublicacion == 1 ? 'Adopción' : (publicacionInstance.tipoPublicacion == 2 ? 'Perdida' : 'Encontrada')}</td>
 					
 						<td>${publicacionInstance.denuncias.size()}</td>
 					

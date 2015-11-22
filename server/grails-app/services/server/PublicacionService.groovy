@@ -36,6 +36,8 @@ class PublicacionService {
                 vacunasAlDia.id == params.vacunasAlDia
 			if(params.raza)
                 raza.id == params.raza
+            if(params.necesitaTransito)
+                necesitaTransito == params.necesitaTransito
             publicador.id != usuario.id
             activa == true
             if(params.tipoPublicacion)
