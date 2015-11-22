@@ -3,6 +3,7 @@ package com.tdp2grupo9.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdp2grupo9.R;
+import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.modelo.Mensaje;
 import com.tdp2grupo9.modelo.Usuario;
 import com.tdp2grupo9.modelo.TiposEnum;
@@ -51,12 +53,14 @@ public class MensajeAdapter extends BaseAdapter {
     private ImageButton btn_bloquear;
     private BloquearMensajeTask bloquearMensajeTask;
     private android.support.v7.app.AlertDialog dialogIcon;
+    private FragmentActivity activity;
 
-    public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type, Boolean concretada) {
+    public MensajeAdapter(Context context, List<Mensaje> mensajes, TiposEnum type, Boolean concretada,FragmentActivity activity) {
         this.mensajes = mensajes;
         this.context = context;
         this.tipo = type;
         this.concretada = concretada;
+        this.activity = activity;
     }
 
     @Override
@@ -265,6 +269,10 @@ public class MensajeAdapter extends BaseAdapter {
         }
     }
 
+    private void updateBloquearMensaje(){
+        ((DrawerMenuActivity) activity).showUpdateConcretarPostulacion();
+    }
+
     private View getInflatedViewIfNecessary(View view, ViewGroup viewGroup) {
         View consultasView;
         if (view == null) {
@@ -375,7 +383,8 @@ public class MensajeAdapter extends BaseAdapter {
             if (success){
                 viewContainer.setVisibility(View.GONE);
                 Toast.makeText(context, "Mensaje bloqueado", Toast.LENGTH_SHORT).show();
-                updateBloqueado(position);
+                //updateBloqueado(position);
+                updateBloquearMensaje();
                 notifyDataSetChanged();
 
 
