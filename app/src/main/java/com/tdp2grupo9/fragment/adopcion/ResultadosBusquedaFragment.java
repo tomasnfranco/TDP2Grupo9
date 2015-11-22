@@ -96,6 +96,8 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         publicacion.setLongitud(getLongitudPublicacion(arguments.getDouble("longitud", -1.0)));
         publicacion.setLatitud(getLatitudPublicacion(arguments.getDouble("latitud", -1.0)));
 
+        //TODO: publicacion.setNecesitaTransito [SI: true, NO: false, AMBOS: null]
+
         mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.BUSQUEDA);
         mBuscarAdopcionesTask.execute((Void) null);
     }

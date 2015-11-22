@@ -57,6 +57,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
 
     private Button mBuscarMascotaButton;
     private Spinner mMaximasDistanciasSpinner;
+    private Spinner spNecesitaTransito;
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
     private CrearAlertaTask crearAlertaTask;
     private RadioGroup radioGroupPublicaciones;
@@ -88,6 +89,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         createCastradorSpinner();
         createProteccionSpinner();
         createEnergiaSpinner();
+        createNecesitaTransitoSpinner();
     }
 
     @Override
@@ -105,6 +107,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         cleanSpinner(spCompatibleCon);
         cleanSpinner(spVacunas);
         cleanSpinner(spPapeles);
+        cleanSpinner(spNecesitaTransito);
         cleanSpinner(mMaximasDistanciasSpinner);
         currentLat = Usuario.getInstancia().getLatitud();
         currentLon = Usuario.getInstancia().getLongitud();
@@ -189,6 +192,12 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
             }
         });
     }
+
+    private void createNecesitaTransitoSpinner() {
+        //TODO
+        //spNecesitaTransito = ... [SI, NO, AMBOS]
+    }
+
 
     /**
      * @return distancia en kilometros elegida por el usuario y null si no eligio ninguna
@@ -313,7 +322,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
                 return;
             }
             Bundle bundle = new Bundle();
-            bundle.putString("tipopublicacion",tipoPublicacion);
+            bundle.putString("tipopublicacion", tipoPublicacion);
             bundle.putInt("especie", ((Especie) spEspecie.getSelectedItem()).getId());
             bundle.putInt("raza", ((Raza) spRaza.getSelectedItem()).getId());
             bundle.putInt("sexo", ((Sexo) spSexo.getSelectedItem()).getId());
@@ -326,6 +335,9 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
             bundle.putInt("compatiblecon", ((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
             bundle.putInt("vacunas", ((VacunasAlDia) spVacunas.getSelectedItem()).getId());
             bundle.putInt("papeles", ((PapelesAlDia) spPapeles.getSelectedItem()).getId());
+
+            //TODO: bundle.putString("necesitaTransito", spNecesitaTransito....);
+
             Integer distancia = getDistanciaElegida();
             if (distancia == null)
                 bundle.putInt("distancia", -1);
