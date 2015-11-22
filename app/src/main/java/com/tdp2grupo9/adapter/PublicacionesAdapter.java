@@ -34,6 +34,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.maps.MapsActivity;
@@ -82,6 +85,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private EditText consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
 
+    private ShareButton shareButton;
     private View postularmeAdopcionClickable;
     private View postularmeTransitoClickable;
     private View eliminarPublicacionClickable;
@@ -385,7 +389,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     public View getChildView(final int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         itemView = getInflatedViewItemIfNecessary(view, viewGroup);
 
-        initialiceClickable(itemView);
+        initialiceClickable(itemView, i);
         activateClickable(i);
         onClickButtonPublicacion(i);
 
@@ -406,7 +410,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    private void initialiceClickable(View itemView){
+    private void initialiceClickable(View itemView, int i) {
+        createShareFacebookButton(i);
         postularmeAdopcionClickable = itemView.findViewById(R.id.postularme_a_adoptar);
         postularmeTransitoClickable = itemView.findViewById(R.id.postular_a_hogar);
         reclamarMascotaClickable = itemView.findViewById(R.id.reclamar_mascota);
@@ -440,6 +445,20 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         eliminarAvisoClickable.setVisibility(View.GONE);
         denunciarPublicacionClickable.setVisibility(View.GONE);
         encontreTuMascotaClickable.setVisibility(View.GONE);
+    }
+
+    private void createShareFacebookButton(int i) {
+        shareButton = (ShareButton) itemView.findViewById(R.id.fb_share_button);
+        List<SharePhoto> photos = new ArrayList<SharePhoto>();
+        for (Imagen imagen : publicaciones.get(i).getImagenes()) {
+            photos.add(new SharePhoto.Builder()
+                    .setBitmap(imagen.getBitmap())
+                    .build());
+        }
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhotos(photos)
+                .build();
+        shareButton.setShareContent(content);
     }
 
     private void activateClickable(final int i){
