@@ -95,11 +95,16 @@ public class ResultadosBusquedaFragment extends PublicacionesFragment {
         publicacion.setDistancia(getDistanciaPublicacion(arguments.getInt("distancia", -1)));
         publicacion.setLongitud(getLongitudPublicacion(arguments.getDouble("longitud", -1.0)));
         publicacion.setLatitud(getLatitudPublicacion(arguments.getDouble("latitud", -1.0)));
-
-        //TODO: publicacion.setNecesitaTransito [SI: true, NO: false, AMBOS: null]
+        publicacion.setNecesitaTransito(getNecesitaTransito(arguments.getString("necesitaTransito")));
 
         mBuscarAdopcionesTask = new BuscarAdopcionesTask(publicacion, TiposEnum.BUSQUEDA);
         mBuscarAdopcionesTask.execute((Void) null);
+    }
+
+    private Boolean getNecesitaTransito(String requiereTransito){
+        if (requiereTransito != null && requiereTransito.equals("No")) return false;
+        else if (requiereTransito != null)  return true;
+        else return null;
     }
 
     private Double getLongitudPublicacion(double longitud) {

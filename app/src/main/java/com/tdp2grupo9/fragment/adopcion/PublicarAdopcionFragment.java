@@ -230,6 +230,7 @@ public class PublicarAdopcionFragment extends SeleccionAtributosFragment impleme
 
     private void hideInnecessaryFields() {
         mFragmentView.findViewById(R.id.panel_maxima_distancia).setVisibility(View.GONE);
+        mFragmentView.findViewById(R.id.view_requiere_transito).setVisibility(View.GONE);
     }
 
     @Override

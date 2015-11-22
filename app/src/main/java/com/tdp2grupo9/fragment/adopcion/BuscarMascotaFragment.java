@@ -61,7 +61,9 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     private LinkedHashMap<String, Integer> mMaximasDistanciasMap;
     private CrearAlertaTask crearAlertaTask;
     private RadioGroup radioGroupPublicaciones;
+    private RadioGroup radioGroupTransito;
     private String tipoPublicacion = "";
+    private String requiereTransito = null;
     private ImageView imagenPosicion;
     protected double currentLat = Usuario.getInstancia().getLatitud();
     protected double currentLon = Usuario.getInstancia().getLongitud();
@@ -107,11 +109,13 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
         cleanSpinner(spCompatibleCon);
         cleanSpinner(spVacunas);
         cleanSpinner(spPapeles);
-        cleanSpinner(spNecesitaTransito);
         cleanSpinner(mMaximasDistanciasSpinner);
         currentLat = Usuario.getInstancia().getLatitud();
         currentLon = Usuario.getInstancia().getLongitud();
         localizacion_mascota.setText(Usuario.getInstancia().getDireccion());
+        radioGroupTransito.clearCheck();
+        tipoPublicacion = "";
+        requiereTransito = null;
     }
 
     @Override
@@ -194,8 +198,18 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
     }
 
     private void createNecesitaTransitoSpinner() {
-        //TODO
-        //spNecesitaTransito = ... [SI, NO, AMBOS]
+        radioGroupTransito = (RadioGroup) mFragmentView.findViewById(R.id.radio_group_hogar_transito);
+        radioGroupTransito.clearCheck();
+
+        radioGroupTransito.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if (null != rb && checkedId > -1) {
+                    requiereTransito = rb.getText().toString();
+                }
+            }
+        });
     }
 
 
@@ -335,8 +349,7 @@ public class BuscarMascotaFragment extends SeleccionAtributosFragment {
             bundle.putInt("compatiblecon", ((CompatibleCon) spCompatibleCon.getSelectedItem()).getId());
             bundle.putInt("vacunas", ((VacunasAlDia) spVacunas.getSelectedItem()).getId());
             bundle.putInt("papeles", ((PapelesAlDia) spPapeles.getSelectedItem()).getId());
-
-            //TODO: bundle.putString("necesitaTransito", spNecesitaTransito....);
+            bundle.putString("necesitaTransito", requiereTransito);
 
             Integer distancia = getDistanciaElegida();
             if (distancia == null)

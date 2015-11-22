@@ -84,10 +84,14 @@
     <string name="informacion_basica">Información Básica</string>
     <string name="alerta">Alerta</string>
     <string name="tipo_publicacion">Tipo de publicación</string>
+    <string name="requiere_transito">Requiere hogar de tránsito</string>
     <string name="publicaciones">Publicaciones</string>
     <string name="encontrados">Encontrados</string>
     <string name="perdidos">Perdidos</string>
     <string name="adopciones">Adopciones</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+
 
     <string name="tenga_vacunas">tenga vacunas al día</string>
     <string name="tenga_papeles">tenga papeles al día</string>
