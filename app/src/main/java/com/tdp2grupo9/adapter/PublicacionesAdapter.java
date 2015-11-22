@@ -1012,7 +1012,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 cardViewMensajes.setVisibility(View.GONE);
             } else {
                 listView.setVisibility(View.VISIBLE);
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada(),activity));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
@@ -1024,7 +1024,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         }else{
             if (!mensajes.isEmpty()) {
                 listView.setVisibility(View.VISIBLE);
-                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
+                listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada(), activity));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view,
@@ -1113,7 +1113,7 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
 
             }
         });
-        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada()));
+        listView.setAdapter(new MensajeAdapter(v.getContext(), mensajes, tipos, publicaciones.get(i).getConcreatada(), activity));
     }
 
     private void updateCancelacionDePostulacion(){
