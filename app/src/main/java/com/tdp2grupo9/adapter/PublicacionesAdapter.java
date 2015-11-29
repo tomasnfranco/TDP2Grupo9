@@ -34,9 +34,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.drawer.DrawerMenuActivity;
 import com.tdp2grupo9.maps.MapsActivity;
@@ -82,9 +86,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     private String nombreMascota;
     private TiposEnum tipos;
     private Button btnPostularme;
-    private EditText consultaParaEnviar;
     private ImageButton btnEnviarConsulta;
 
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
     private ShareButton shareButton;
     private View postularmeAdopcionClickable;
     private View postularmeTransitoClickable;
@@ -448,6 +453,10 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void createShareFacebookButton(int i) {
+        FacebookSdk.sdkInitialize(context);
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this.activity);
+
         shareButton = (ShareButton) itemView.findViewById(R.id.fb_share_button);
         List<SharePhoto> photos = new ArrayList<SharePhoto>();
         for (Imagen imagen : publicaciones.get(i).getImagenes()) {
@@ -458,8 +467,21 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         SharePhotoContent content = new SharePhotoContent.Builder()
                 .addPhotos(photos)
                 .build();
-        shareButton.setShareContent(content);
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            Publicacion p = publicaciones.get(i);
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle("Busca sus Huellas")
+                    .setContentDescription("La mascota " + p.getNombreMascota() + TipoPublicacion.getTipoPublicacionToStringSingular(
+                            p.getTipoPublicacion().getValue()
+                    ))
+                    .setImageUrl(Uri.parse("https://raw.githubusercontent.com/tomasnfranco/TDP2Grupo9/master/app/src/main/res/drawable/logo_aplicacion.png"))
+                    .setContentUrl(Uri.parse("http://www.facebook.com/buscasushuellas"))
+                    .build();
+            shareButton.setShareContent(linkContent);
+        }
+
     }
+
 
     private void activateClickable(final int i){
 
@@ -1053,8 +1075,8 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
                 });
             }
 
-            consultaParaEnviar.setVisibility(View.VISIBLE);
             btnEnviarConsulta.setVisibility(View.VISIBLE);
+            replicaConsulta.setVisibility(View.VISIBLE);
             onClickButtonMensaje(i, v);
         }
 
@@ -1121,8 +1143,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void updateConsultaEnviada(View v, int i, Mensaje consulta){
-        consultaParaEnviar.setText("");
-        replicaConsulta.setText("");
         mensajes.add(consulta);
         listView.setVisibility(View.VISIBLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1144,7 +1164,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
     }
 
     private void initialiceElementosMensajes(View v){
-        consultaParaEnviar = (EditText) v.findViewById(R.id.consulta_para_enviar);
         replicaConsulta = (TextView) v.findViewById(R.id.replica_consulta);
         btnEnviarConsulta = (ImageButton) v.findViewById(R.id.btn_enviar_consulta);
         listView = (ListView) v.findViewById(R.id.listView_consultas);
@@ -1153,8 +1172,6 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         replicaConsulta.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         btnEnviarConsulta.setVisibility(View.GONE);
-        consultaParaEnviar.setVisibility(View.GONE);
-        consultaParaEnviar.setText("");
 
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1170,28 +1187,94 @@ public class PublicacionesAdapter extends BaseExpandableListAdapter {
         btnEnviarConsulta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                executeActionButtonMensaje(i, replicaConsulta.getText().toString(), v);
+                getDialogoEnviarMensaje(i,v);
             }
         });
 
-        consultaParaEnviar.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            public void afterTextChanged(Editable s) {
-                replicaConsulta.setText(s.toString());
+        replicaConsulta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialogoEnviarMensaje(i,v);
             }
         });
+
+    }
+
+    private void getDialogoEnviarMensaje(final int i, final View v){
+
+        final android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(context);
+
+        final EditText input = new EditText(context);
+        input.setTextSize(16);
+        input.setMaxLines(4);
+        input.setHint(R.string.escriba_su_consulta);
+        builder.setView(input,15,50,15,50);
+
+        builder.setPositiveButton("Aceptar", null);
+        builder.setNegativeButton("Cancelar", null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button btn_aceptar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button btn_cancelar = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Dialogo confirmacion", "Confirmacion Cancelada.");
+                dialog.cancel();
+            }
+        });
+
+        btn_aceptar.setOnClickListener(new CustomListenerEnviar(dialog,input, i, v));
+
+    }
+
+    public class CustomListenerEnviar implements View.OnClickListener{
+        private final AlertDialog dialog;
+        private EditText pregunta;
+        private String consulta;
+        private int i;
+        private View v;
+
+        public CustomListenerEnviar(AlertDialog dialog, EditText respuesta, int position, View v){
+            this.dialog = dialog;
+            this.pregunta = respuesta;
+            this.i = position;
+            this.v = v;
+        }
+
+        @Override
+        public void onClick(View view) {
+            consulta = pregunta.getText().toString();
+            if (!validator(consulta)){
+                System.out.println("CLICK ENVIAR CONSULTA: " + consulta);
+                Mensaje mensaje = new Mensaje();
+                mensaje.setPregunta(consulta);
+                mensaje.setPublicacionId(publicaciones.get(i).getId());
+                mensaje.setUsuarioPreguntaId(Usuario.getInstancia().getId());
+                mensaje.setUsuarioRespuestaId(publicaciones.get(i).getPublicadorId());
+                enviarConsultaTask = new EnviarConsultaTask(mensaje, i, v);
+                enviarConsultaTask.execute((Void) null);
+                dialog.dismiss();
+            } else {
+                System.out.println("CLICK DEBE COMPLETAR CONSULTA");
+                pregunta.setError("Debe escribir una consulta");
+            }
+
+            Log.i("Dialogo confirmacion", "Confirmacion Aceptada.");
+
+        }
+    }
+
+    private boolean validator(String mensaje){
+        return mensaje.toString().isEmpty();
     }
 
     private void executeActionButtonMensaje(int i, String pregunta, View v){
         if (pregunta.isEmpty()){
-            consultaParaEnviar.setError("Error: Debe escribir una consulta.");
         }else{
             Mensaje mensaje = new Mensaje();
             mensaje.setPregunta(pregunta);

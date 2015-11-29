@@ -57,5 +57,17 @@ public enum TipoPublicacion {
                 return "Adopciones";
         }
     }
+    public static String getTipoPublicacionToStringSingular(int tipo) {
+        switch (tipo) {
+            case 1:
+                return " está en Adopción.";
+            case 2:
+                return " está Perdida.";
+            case 3:
+                return " está Encontrada.";
+            default:
+                return " está en Adopción.";
+        }
+    }
 
 }

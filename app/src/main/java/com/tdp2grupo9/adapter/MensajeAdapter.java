@@ -86,9 +86,9 @@ public class MensajeAdapter extends BaseAdapter {
         fechaConsulta = (TextView) consultasView.findViewById(R.id.consulta_fecha);
         fechaRespuesta = (TextView) consultasView.findViewById(R.id.respuesta_fecha);
 
-        text_responder= (TextView) consultasView.findViewById(R.id.tv_bloquea);
+        text_responder= (TextView) consultasView.findViewById(R.id.tv_responder);
         btn_responder = (ImageButton)consultasView.findViewById(R.id.imageButton_responder);
-        text_bloquear= (TextView) consultasView.findViewById(R.id.tv_responder);
+        text_bloquear= (TextView) consultasView.findViewById(R.id.tv_bloquea);
         btn_bloquear = (ImageButton)consultasView.findViewById(R.id.imageButton_bloquear);
 
         viewContainer = consultasView.findViewById(R.id.viewsContainer);

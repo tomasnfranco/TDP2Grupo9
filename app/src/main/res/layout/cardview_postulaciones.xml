@@ -8,15 +8,14 @@
     android:layout_gravity="center_horizontal"
     card_view:cardElevation="4dp"
     card_view:cardCornerRadius="12dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp">
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:orientation="vertical"
         android:focusable="false"
         android:backgroundTint="#ff000000"
@@ -26,7 +25,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp">
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
@@ -46,7 +48,9 @@
                 android:src="@drawable/ic_icono" />
         </RelativeLayout>
 
-        <View style="@style/HorizontalDivider"/>
+        <View style="@style/HorizontalDivider"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -60,7 +64,8 @@
                 android:id="@+id/textView4"
                 android:layout_marginTop="10dp"
                 android:textStyle="bold"
-                android:textColor="#ffa9a9a9" />
+                android:textColor="#ffa9a9a9"
+                android:layout_marginLeft="16dp" />
 
             <ExpandableListView
                 android:id="@+id/listView_quieren_adoptar"
@@ -87,7 +92,8 @@
                 android:id="@+id/ofrecenHogar"
                 android:layout_marginTop="10dp"
                 android:textStyle="bold"
-                android:textColor="#ffa9a9a9" />
+                android:textColor="#ffa9a9a9"
+                android:layout_marginLeft="16dp" />
 
             <ExpandableListView
                 android:id="@+id/listView_ofrecen_transito"
@@ -114,7 +120,8 @@
                 android:id="@+id/reclamanMascota"
                 android:layout_marginTop="10dp"
                 android:textStyle="bold"
-                android:textColor="#ffa9a9a9" />
+                android:textColor="#ffa9a9a9"
+                android:layout_marginLeft="16dp" />
 
             <ExpandableListView
                 android:id="@+id/listView_reclaman_mascota"

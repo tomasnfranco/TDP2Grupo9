@@ -191,6 +191,7 @@ public class LoginActivity extends InitialActivity implements LoaderCallbacks<Cu
 
             @Override
             public void onError(FacebookException e) {
+                Log.e("FACEBOOKERROR", e.getMessage());
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

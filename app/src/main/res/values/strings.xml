@@ -22,7 +22,6 @@
     <!-- Drawer Menu items -->
     <string-array name="nav_drawer_items">
         <item>Inicio</item>
-        <item>Mi Perfil</item>
         <item>Mis Publicaciones</item>
         <item>Mis Postulaciones</item>
         <item>Notificaciones</item>

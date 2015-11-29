@@ -86,9 +86,9 @@
     <string name="tipo_publicacion">Tipo de publicación</string>
     <string name="requiere_transito">Requiere hogar de tránsito</string>
     <string name="publicaciones">Publicaciones</string>
-    <string name="encontrados">Encontrados</string>
-    <string name="perdidos">Perdidos</string>
-    <string name="adopciones">Adopciones</string>
+    <string name="encontrados">Encontrado</string>
+    <string name="perdidos">Perdido</string>
+    <string name="adopciones">Adopción</string>
     <string name="si">Sí</string>
     <string name="no">No</string>
 

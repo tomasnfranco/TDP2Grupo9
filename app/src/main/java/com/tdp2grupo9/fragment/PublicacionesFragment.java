@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.share.widget.ShareDialog;
 import com.tdp2grupo9.R;
 import com.tdp2grupo9.modelo.Publicacion;
 import com.tdp2grupo9.modelo.Usuario;

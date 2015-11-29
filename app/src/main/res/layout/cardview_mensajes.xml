@@ -8,10 +8,10 @@
     android:layout_gravity="center_horizontal"
     card_view:cardElevation="4dp"
     card_view:cardCornerRadius="12dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp">
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -61,25 +61,14 @@
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_enviar_consulta" />
 
-            <EditText
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/consulta_para_enviar"
-                android:textColor="#96868686"
-                android:textColorHint="#96868686"
-                android:textSize="14sp"
-                android:maxLength="255"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/btn_responder"
-                android:singleLine="true"
-                android:hint="@string/escriba_su_consulta" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/replica_consulta" />
+                android:id="@+id/replica_consulta"
+                android:text="Consultar"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btn_enviar_consulta"
+                android:layout_toStartOf="@+id/btn_enviar_consulta" />
 
         </RelativeLayout>
 

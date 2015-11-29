@@ -8,19 +8,20 @@
     android:layout_gravity="center_horizontal"
     card_view:cardElevation="4dp"
     card_view:cardCornerRadius="12dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp">
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
@@ -28,7 +29,9 @@
                 android:text="@string/tipo_publicacion"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:textColor="#ffa9a9a9" />
+                android:textColor="#ffa9a9a9"
+                android:textSize="18dp"
+                android:textStyle="italic" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -37,20 +40,30 @@
                 android:layout_alignParentStart="false"
                 android:layout_centerVertical="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_icono" />
+                android:src="@drawable/ic_icono"
+                android:layout_marginRight="16dp" />
         </RelativeLayout>
-        <View style="@style/HorizontalDivider"/>
+        <View style="@style/HorizontalDivider"
+            android:layout_width="fill_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
 
             <RadioGroup
                 android:id="@+id/radio_group_tipo_publicacion"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_horizontal">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -60,7 +73,8 @@
                     android:textColor="#ffa9a9a9"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:singleLine="true" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -71,7 +85,8 @@
                     android:layout_toRightOf="@+id/btn_adopciones"
                     android:layout_toEndOf="@+id/btn_adopciones"
                     android:textColor="#ffa9a9a9"
-                    android:layout_marginLeft="7dp" />
+                    android:layout_marginLeft="3dp"
+                    android:singleLine="true" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -83,7 +98,8 @@
                     android:layout_alignParentEnd="true"
                     android:textColor="#ffa9a9a9"
                     android:layout_toRightOf="@+id/btn_perdidos"
-                    android:layout_marginLeft="7dp" />
+                    android:layout_marginLeft="3dp"
+                    android:singleLine="true" />
 
             </RadioGroup>
         </RelativeLayout>

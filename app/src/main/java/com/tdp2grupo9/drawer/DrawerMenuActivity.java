@@ -141,18 +141,15 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
                 navigateToTabbedFragment(null);
                 break;
             case 2:
-                navigateToMiPerfil(null);
-                break;
-            case 3:
                 navigateToMisPublicaciones(null);
                 break;
-            case 4:
+            case 3:
                 navigateToMisPostulaciones(null);
                 break;
-            case 5:
+            case 4:
                 navigateToMisNotificaciones(null);
                 break;
-            case 6:
+            case 5:
                 logoutTask = new UserLogoutTask();
                 logoutTask.execute((Void) null);;
                 break;
@@ -251,18 +248,18 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     }
 
     public void showUpdatePostulaciones() {
-        setFragment(4, MisPostulacionesFragment.class, null);
+        setFragment(3, MisPostulacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
     }
 
     public void showUpdateCancelPostulaciones() {
-        setFragment(4, MisPostulacionesFragment.class, null);
+        setFragment(3, MisPostulacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((MisPostulacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
     }
 
     public void showUpdateConcretarPostulacion() {
-        setFragment(3, MisPublicacionesFragment.class, null);
+        setFragment(2, MisPublicacionesFragment.class, null);
         getSupportFragmentManager().executePendingTransactions();
         ((MisPublicacionesFragment) getSupportFragmentManager().getFragments().get(0)).updateFragment();
     }
@@ -323,15 +320,15 @@ public class DrawerMenuActivity extends FragmentActivity implements AdapterView.
     }
 
     public void navigateToMisPublicaciones(Integer itemId) {
-        setFragment(3, MisPublicacionesFragment.class, itemId);
+        setFragment(2, MisPublicacionesFragment.class, itemId);
     }
 
     public void navigateToMisPostulaciones(Integer itemId) {
-        setFragment(4, MisPostulacionesFragment.class, itemId);
+        setFragment(3, MisPostulacionesFragment.class, itemId);
     }
 
     public void navigateToMisNotificaciones(Integer itemId) {
-        setFragment(5, MisNotificacionesFragment.class, itemId);
+        setFragment(4, MisNotificacionesFragment.class, itemId);
     }
 
     public void setToolbarTitle(String title) {

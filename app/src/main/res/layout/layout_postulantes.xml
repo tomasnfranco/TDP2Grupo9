@@ -9,8 +9,8 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/icono_postulante"
             android:layout_margin="10dp"
             android:src="@drawable/ic_perfil_usuario" />
@@ -24,11 +24,11 @@
             android:layout_toRightOf="@+id/icono_postulante"
             android:gravity="center"
             android:textIsSelectable="false"
-            android:textSize="16dp" />
+            android:textSize="14dp" />
 
         <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:id="@+id/btnConcretar"
             android:layout_alignTop="@+id/tv_username_postulante"
             android:layout_alignParentRight="true"
@@ -37,8 +37,8 @@
             android:layout_marginTop="10dp" />
 
         <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:id="@+id/btnSendMail"
             android:layout_alignTop="@+id/btnConcretar"
             android:layout_toLeftOf="@+id/btnConcretar"
